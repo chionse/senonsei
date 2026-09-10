@@ -170,27 +170,6 @@ article p {
   margin-bottom: 1rem;
 }
 
-/* メニュー(千遠生へのメッセージ、日数で解禁) */
-.message-entry {
-  border-bottom: 1px solid var(--line-color);
-  padding: 0.8rem 0;
-}
-
-.message-entry .message-day {
-  font-size: 0.8rem;
-  opacity: 0.8;
-  margin-bottom: 0.3rem;
-}
-
-.message-entry .message-text {
-  line-height: 1.6;
-  white-space: pre-wrap;
-}
-
-.message-entry.locked .message-text {
-  color: #999999;
-}
-
 /* プロフィール */
 .profile-box {
   border: 1px solid var(--line-color);

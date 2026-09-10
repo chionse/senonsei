@@ -2,42 +2,39 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <title>千遠生へのメッセージ</title>
+  <title>千遠生のメモ2</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="sen.css" />
 </head>
 <body>
   <header>
-    <h1>メニュー</h1>
+    <h1>メモ2</h1>
   </header>
 
-  <p class="keyword-count">ブログが始まって 0 日目 / 解禁済み 1 / 全 5 通</p>
-  <p>時間が経つごとに、少しずつメッセージが読めるようになります。</p>
+  <p class="keyword-count">ブログが始まって 0 日目 / 解禁済み 1 / 全 5 個</p>
+  <p>日がたつと「◯◯日」が見えるようになり、クリックするとメッセージが読めます。</p>
 
-  <div class="message-entry">
-    <div class="message-day">0日目に解禁</div>
-    <div class="message-text">(ここに0日目=ブログを始めた日に見せたいメッセージを書いてください)</div>
-  </div>
-  <div class="message-entry locked">
-    <div class="message-day">7日目に解禁</div>
-    <div class="message-text">???</div>
-  </div>
-  <div class="message-entry locked">
-    <div class="message-day">14日目に解禁</div>
-    <div class="message-text">???</div>
-  </div>
-  <div class="message-entry locked">
-    <div class="message-day">30日目に解禁</div>
-    <div class="message-text">???</div>
-  </div>
-  <div class="message-entry locked">
-    <div class="message-day">60日目に解禁</div>
-    <div class="message-text">???</div>
-  </div>
+  <ul class="keyword-list">
+    <li>
+      <div class="kw-word" onclick="toggleKw(this)">0日</div>
+      <div class="kw-content">(ここに0日目=ブログを始めた日に見せたいメッセージを書いてください)</div>
+    </li>
+    <li class="locked">???</li>
+    <li class="locked">???</li>
+    <li class="locked">???</li>
+    <li class="locked">???</li>
+  </ul>
 
   <nav>
     <a href="index.html">トップページへ戻る</a>
-    <a href="keyword.html">キーワードメモへ</a>
+    <a href="keyword.html">メモ1へ</a>
   </nav>
+
+  <script>
+    function toggleKw(elem) {
+      var contentDiv = elem.nextElementSibling;
+      contentDiv.style.display = (contentDiv.style.display === 'block') ? 'none' : 'block';
+    }
+  </script>
 </body>
 </html>
