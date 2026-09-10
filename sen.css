@@ -1,14 +1,174 @@
+:root {
+  --main-color: #0029ae;
+  --bg-color: #fafaf7;
+  --line-color: #ccd3e8;
+}
+
 body {
-  background-color: #fafaf7;
-  font-family: 'MS PGothic', monospace, sans-serif;
-  color: #222;
+  background-color: var(--bg-color);
+  font-family: 'Yu Mincho', '游明朝', 'MS Mincho', 'MS PMincho', serif;
+  color: var(--main-color);
   margin: 20px auto;
   max-width: 700px;
   padding: 0 10px;
+  line-height: 1.6;
 }
-.container {
-  display: flex;
-  gap: 1rem;
-  max-width: 700px;
-  margin: 0 auto;
+
+header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+h1 {
+  margin: 0;
+  font-size: 2rem;
+  color: var(--main-color);
+}
+
+h2 {
+  color: var(--main-color);
+}
+
+a {
+  color: var(--main-color);
+}
+
+nav {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+nav a {
+  text-decoration: none;
+  color: var(--main-color);
+  margin: 0 1rem;
+}
+
+nav a:hover {
+  text-decoration: underline;
+}
+
+/* トップページ: 最新ブログ */
+article {
+  padding: 1rem 0;
+  margin-bottom: 1rem;
+}
+
+article h2 {
+  margin: 0 0 0.3rem;
+  font-size: 1.2rem;
+}
+
+article .date {
+  font-size: 0.8rem;
+  margin-bottom: 0.6rem;
+  opacity: 0.8;
+}
+
+article p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.section-title {
+  font-size: 1rem;
+  border-bottom: 1px solid var(--main-color);
+  padding-bottom: 0.3rem;
+  margin: 2rem 0 1rem;
+}
+
+.recent-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.recent-list li {
+  margin: 0.6rem 0;
+  font-size: 0.95rem;
+}
+
+.recent-list .date {
+  font-size: 0.8rem;
+  opacity: 0.8;
+  margin-right: 0.5rem;
+}
+
+.more-link {
+  text-align: right;
+  margin-top: 0.5rem;
+}
+
+/* 過去ログ(アコーディオン) */
+.entry {
+  border-bottom: 1px solid var(--line-color);
+  margin-bottom: 1rem;
+}
+
+.entry .title {
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1.1rem;
+  padding: 0.5rem 0;
+}
+
+.entry .date {
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+.entry .content {
+  display: none;
+  padding: 0.5rem 0 1rem;
+  line-height: 1.5;
+}
+
+/* キーワードメモ */
+.keyword-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.keyword-list li {
+  margin: 0.5em 0;
+}
+
+.keyword-list a {
+  text-decoration: none;
+  font-size: 1.1rem;
+}
+
+.keyword-list a:hover {
+  text-decoration: underline;
+}
+
+.keyword-list li.locked {
+  color: #999999;
+  font-size: 1.1rem;
+  cursor: default;
+}
+
+.keyword-count {
+  font-size: 0.85rem;
+  opacity: 0.8;
+  margin-bottom: 1rem;
+}
+
+/* プロフィール */
+.profile-box {
+  border: 1px solid var(--line-color);
+  padding: 1rem 1.2rem;
+  margin: 1.5rem 0;
+}
+
+.profile-box dt {
+  font-weight: bold;
+  margin-top: 0.6rem;
+}
+
+.profile-box dt:first-child {
+  margin-top: 0;
+}
+
+.profile-box dd {
+  margin: 0.2rem 0 0;
 }

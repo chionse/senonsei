@@ -3,7 +3,10 @@ import json
 import os
 
 ARTICLES_FILE = "articles.json"
+KEYWORDS_FILE = "keywords.json"
 BLOG_FOLDER = "blogs"
+RECENT_COUNT = 5  # トップページに表示する直近記事の件数(最新1件を除く)
+
 
 def load_articles():
     if os.path.exists(ARTICLES_FILE):
@@ -11,138 +14,275 @@ def load_articles():
             return json.load(f)
     return []
 
+
 def save_articles(articles):
     with open(ARTICLES_FILE, "w", encoding="utf-8") as f:
         json.dump(articles, f, ensure_ascii=False, indent=2)
 
-def generate_blog_html(date_str, content):
+
+def sorted_articles(articles):
+    return sorted(articles, key=lambda a: (a["date"], a.get("time", "")), reverse=True)
+
+
+def load_keywords():
+    if os.path.exists(KEYWORDS_FILE):
+        with open(KEYWORDS_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return []
+
+
+def save_keywords(keywords):
+    with open(KEYWORDS_FILE, "w", encoding="utf-8") as f:
+        json.dump(keywords, f, ensure_ascii=False, indent=2)
+
+
+def update_keywords(articles):
+    """ブログ本文にキーワードが登場したらロックを解除する。"""
+    keywords = load_keywords()
+    ordered = sorted(articles, key=lambda a: (a["date"], a.get("time", "")))  # 古い順
+    changed = False
+
+    for kw in keywords:
+        if kw["unlocked"]:
+            continue
+        for art in ordered:
+            if kw["word"] in art["content"] or kw["word"] in art["title"]:
+                kw["unlocked"] = True
+                kw["unlocked_date"] = art["date"]
+                changed = True
+                break
+
+    if changed:
+        save_keywords(keywords)
+    return keywords
+
+
+def find_first_article_date(word, articles):
+    for art in sorted_articles(articles)[::-1]:  # 古い順に探して最初の登場を返す
+        if word in art["content"] or word in art["title"]:
+            return art["date"]
+    return None
+
+
+def generate_keyword_html(keywords, articles):
+    unlocked_count = sum(1 for kw in keywords if kw["unlocked"])
+    total_count = len(keywords)
+
+    items_html = ""
+    for kw in keywords:
+        if kw["unlocked"]:
+            link_date = kw.get("unlocked_date") or find_first_article_date(kw["word"], articles)
+            href = f"kakodogu.html#entry-{link_date}" if link_date else "kakodogu.html"
+            items_html += f'    <li><a href="{href}">{kw["word"]}</a></li>\n'
+        else:
+            items_html += '    <li class="locked">???</li>\n'
+
+    html = f"""<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>千遠生のキーワードメモ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="sen.css" />
+</head>
+<body>
+  <header>
+    <h1>キーワードメモ</h1>
+  </header>
+
+  <p class="keyword-count">解除済み {unlocked_count} / 全 {total_count} 個</p>
+  <p>ブログの中にそのキーワードが出てくると、ロックが解けて言葉が見えるようになります。</p>
+
+  <ul class="keyword-list">
+{items_html}  </ul>
+
+  <nav>
+    <a href="index.html">トップページへ戻る</a>
+    <a href="kakodogu.html">過去ログへ</a>
+  </nav>
+</body>
+</html>
+"""
+    with open("keyword.html", "w", encoding="utf-8") as f:
+        f.write(html)
+
+
+def generate_blog_html(article):
+    date_str = article["date"]
     filename = os.path.join(BLOG_FOLDER, f"blog_{date_str}.html")
     html_content = f"""<!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8" />
-<title>千遠生ブログ {date_str}</title>
+<title>千遠生ブログ {date_str}「{article['title']}」</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<style>
-body {{
-    background-color: #fafaf7;
-    font-family: 'Yu Mincho', '游明朝', 'MS Mincho', serif;
-    color: #0029ae;
-    margin: 20px auto;
-    max-width: 700px;
-    padding: 0 10px;
-}}
-header {{
-    text-align: center;
-    margin-bottom: 1rem;
-}}
-h1 {{
-    margin: 0;
-    font-size: 2rem;
-    color: #0029ae;
-}}
-article {{
-    padding: 1rem 0;
-    margin-bottom: 1rem;
-}}
-</style>
+<link rel="stylesheet" href="../sen.css" />
 </head>
 <body>
 <header>
-  <h1>千遠生ブログ {date_str}</h1>
-  <p><a href="../kakodogu.html">過去ログページへ戻る</a></p>
+  <h1>千遠生のブログ</h1>
 </header>
 <article>
-  <p>{content}</p>
+  <h2>{article['title']}</h2>
+  <div class="date">{date_str} {article.get('time', '')}</div>
+  <p>{article['content']}</p>
 </article>
+<nav>
+  <a href="../index.html">トップページへ</a>
+  <a href="../kakodogu.html">過去ログへ</a>
+</nav>
 </body>
-</html>"""
+</html>
+"""
     os.makedirs(BLOG_FOLDER, exist_ok=True)
     with open(filename, "w", encoding="utf-8") as f:
         f.write(html_content)
 
-def generate_index_html(articles):
-    html = """<!DOCTYPE html>
+
+def generate_kakodogu_html(articles):
+    entries_html = ""
+    for art in sorted_articles(articles):
+        entries_html += f"""  <div class="entry" id="entry-{art['date']}">
+    <div class="title" onclick="toggleContent(this)">{art['date']} {art['title']}</div>
+    <div class="date">{art['date']} {art.get('time', '')}</div>
+    <div class="content">{art['content']}</div>
+  </div>
+"""
+
+    html = f"""<!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <title>千遠生のブログ一覧</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    body {{
-      background-color: #fafaf7;
-      font-family: 'Yu Mincho', '游明朝', 'MS Mincho', serif;
-      color: #0029ae;
-      margin: 20px auto;
-      max-width: 700px;
-      padding: 0 10px;
-    }}
-    header {{
-      text-align: center;
-      margin-bottom: 1rem;
-    }}
-    h1 {{
-      margin: 0;
-      font-size: 2rem;
-      color: #0029ae;
-    }}
-    article {{
-      padding: 1rem 0;
-      margin-bottom: 1rem;
-    }}
-    article h2 {{
-      margin: 0 0 0.5rem;
-      font-size: 1.2rem;
-      color: #001d78;
-    }}
-    article .date {{
-      font-size: 0.8rem;
-      color: #0031a4;
-      margin-bottom: 0.4rem;
-    }}
-    article p {{
-      margin: 0;
-      line-height: 1.4;
-      max-height: 4.2em;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }}
-  </style>
+<meta charset="UTF-8" />
+<title>千遠生の過去ログ</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="sen.css" />
 </head>
 <body>
-<header>
-  <h1>千遠生のブログ一覧</h1>
-</header>
-"""
-    for art in sorted(articles, key=lambda x: x["date"], reverse=True):
-        html += f"""<article>
-  <h2><a href="{BLOG_FOLDER}/blog_{art['date']}.html">{art['date']} 「{art['title']}」</a></h2>
-  <div class="date">{art['date']}</div>
-  <p>{art['content']}</p>
-</article>
-"""
-    html += """
-<nav>
-  <a href="index.html">トップページへ</a>
-</nav>
+  <header>
+    <h1>千遠生の過去ログ</h1>
+  </header>
+
+{entries_html}
+  <nav>
+    <a href="index.html">トップページへ戻る</a>
+    <a href="keyword.html">キーワードメモへ</a>
+  </nav>
+
+  <script>
+    function toggleContent(elem) {{
+      var contentDiv = elem.parentElement.querySelector('.content');
+      contentDiv.style.display = (contentDiv.style.display === 'block') ? 'none' : 'block';
+    }}
+    if (location.hash) {{
+      var target = document.querySelector(location.hash);
+      if (target) {{
+        target.querySelector('.content').style.display = 'block';
+        target.scrollIntoView();
+      }}
+    }}
+  </script>
 </body>
-</html>"""
+</html>
+"""
     with open("kakodogu.html", "w", encoding="utf-8") as f:
         f.write(html)
 
-def add_new_article(title, content):
-    today = datetime.date.today().strftime('%Y-%m-%d')
+
+def generate_index_html(articles):
+    ordered = sorted_articles(articles)
+
+    if not ordered:
+        latest_html = "<p>まだブログ記事がありません。</p>"
+        recent_html = ""
+    else:
+        latest = ordered[0]
+        latest_html = f"""<article>
+    <h2>{latest['title']}</h2>
+    <div class="date">{latest['date']} {latest.get('time', '')}</div>
+    <p>{latest['content']}</p>
+  </article>"""
+
+        recent = ordered[1:1 + RECENT_COUNT]
+        if recent:
+            items = "\n".join(
+                f'    <li><span class="date">{a["date"]}</span>'
+                f'<a href="{BLOG_FOLDER}/blog_{a["date"]}.html">{a["title"]}</a></li>'
+                for a in recent
+            )
+            recent_html = f"""<div class="section-title">直近のブログ</div>
+  <ul class="recent-list">
+{items}
+  </ul>
+  <div class="more-link"><a href="kakodogu.html">More...</a></div>"""
+        else:
+            recent_html = ""
+
+    html = f"""<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>千遠生のブログ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="sen.css" />
+</head>
+<body>
+  <header>
+    <h1>千遠生のサイト</h1>
+  </header>
+
+  <div class="section-title">今日のブログ</div>
+  {latest_html}
+
+  {recent_html}
+
+  <nav>
+    <a href="kakodogu.html">過去ログ</a>
+    <a href="keyword.html">キーワードメモ</a>
+    <a href="profile.html">プロフィール</a>
+  </nav>
+</body>
+</html>
+"""
+    with open("index.html", "w", encoding="utf-8") as f:
+        f.write(html)
+
+
+def regenerate_pages(articles):
+    for art in articles:
+        generate_blog_html(art)
+    generate_kakodogu_html(articles)
+    generate_index_html(articles)
+    keywords = update_keywords(articles)
+    generate_keyword_html(keywords, articles)
+
+
+def add_new_article(title, content, date_str=None):
+    """記事を1件追加してページを再生成する。同じ日付の記事が既にある場合は追加しない(重複投稿の防止)。"""
+    now = datetime.datetime.now()
+    date_str = date_str or now.strftime('%Y-%m-%d')
+
     articles = load_articles()
+    if any(a["date"] == date_str for a in articles):
+        print(f"{date_str} の記事は既に存在するため追加しません。ページのみ再生成します。")
+        regenerate_pages(articles)
+        return
+
     new_article = {
-        "date": today,
+        "date": date_str,
+        "time": now.strftime('%H:%M'),
         "title": title,
-        "content": content
+        "content": content,
     }
     articles.append(new_article)
     save_articles(articles)
-    generate_blog_html(today, content)
-    generate_index_html(articles)
-    print(f"{today} のブログ記事を追加し、ファイル生成しました。")
+    regenerate_pages(articles)
+    print(f"{date_str} のブログ記事を追加し、ページを再生成しました。")
+
 
 if __name__ == "__main__":
-    add_new_article("千遠生の日記", "これは自動生成された最新のブログ記事です。AIが少しずつ学習を進めています。")
+    # AI連携がまだ無いため、ここでは新規記事の自動生成は行わない。
+    # 既存の articles.json からページ(トップ・過去ログ・個別記事)を再生成するだけに留める。
+    # AIによる記事生成が実装され次第、add_new_article(title, content) をここから呼び出す。
+    articles = load_articles()
+    regenerate_pages(articles)
+    print("AI連携は未実装のため新規記事は追加していません。既存データからページを再生成しました。")
