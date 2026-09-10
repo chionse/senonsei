@@ -31,7 +31,7 @@ jobs:
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "actions@github.com"
-          git add kakodogu.html articles.json blogs/
+          git add index.html kakodogu.html articles.json blogs/
           git commit -m "Auto update blogs and past logs [skip ci]" || echo "No changes to commit"
           git push
         
