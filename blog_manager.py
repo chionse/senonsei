@@ -58,32 +58,39 @@ def update_keywords(articles):
     return keywords
 
 
-def generate_keyword_html(keywords, articles):
-    unlocked_count = sum(1 for kw in keywords if kw["unlocked"])
-    total_count = len(keywords)
-
+def render_unlockable_list(entries):
+    """entries: [(unlocked: bool, label: str, content: str), ...] から
+    ロック中は「???」、解除済みはクリックで本文が開くリストのHTMLを作る。"""
     items_html = ""
-    for kw in keywords:
-        if kw["unlocked"]:
+    for unlocked, label, content in entries:
+        if unlocked:
             items_html += f"""    <li>
-      <div class="kw-word" onclick="toggleKw(this)">{kw['word']}</div>
-      <div class="kw-content">{kw.get('content', '')}</div>
+      <div class="kw-word" onclick="toggleKw(this)">{label}</div>
+      <div class="kw-content">{content}</div>
     </li>
 """
         else:
             items_html += '    <li class="locked">???</li>\n'
+    return items_html
+
+
+def generate_keyword_html(keywords, articles):
+    unlocked_count = sum(1 for kw in keywords if kw["unlocked"])
+    total_count = len(keywords)
+    entries = [(kw["unlocked"], kw["word"], kw.get("content", "")) for kw in keywords]
+    items_html = render_unlockable_list(entries)
 
     html = f"""<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <title>千遠生のキーワードメモ</title>
+  <title>千遠生のメモ1</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="sen.css" />
 </head>
 <body>
   <header>
-    <h1>キーワードメモ</h1>
+    <h1>メモ1</h1>
   </header>
 
   <p class="keyword-count">解除済み {unlocked_count} / 全 {total_count} 個</p>
@@ -95,7 +102,7 @@ def generate_keyword_html(keywords, articles):
   <nav>
     <a href="index.html">トップページへ戻る</a>
     <a href="kakodogu.html">過去ログへ</a>
-    <a href="menu.html">メニューへ</a>
+    <a href="menu.html">メモ2へ</a>
   </nav>
 
   <script>
@@ -130,45 +137,45 @@ def generate_menu_html(menu_items, articles):
     start_date = blog_start_date(articles)
     elapsed_days = max(0, (datetime.date.today() - start_date).days)
 
-    unlocked_count = 0
-    entries_html = ""
-    for item in sorted(menu_items, key=lambda m: m["unlock_day"]):
-        if elapsed_days >= item["unlock_day"]:
-            unlocked_count += 1
-            entries_html += f"""  <div class="message-entry">
-    <div class="message-day">{item['unlock_day']}日目に解禁</div>
-    <div class="message-text">{item['message']}</div>
-  </div>
-"""
-        else:
-            entries_html += f"""  <div class="message-entry locked">
-    <div class="message-day">{item['unlock_day']}日目に解禁</div>
-    <div class="message-text">???</div>
-  </div>
-"""
-    total_count = len(menu_items)
+    ordered_items = sorted(menu_items, key=lambda m: m["unlock_day"])
+    unlocked_count = sum(1 for m in ordered_items if elapsed_days >= m["unlock_day"])
+    total_count = len(ordered_items)
+    entries = [
+        (elapsed_days >= item["unlock_day"], f"{item['unlock_day']}日", item["message"])
+        for item in ordered_items
+    ]
+    items_html = render_unlockable_list(entries)
 
     html = f"""<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <title>千遠生へのメッセージ</title>
+  <title>千遠生のメモ2</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="sen.css" />
 </head>
 <body>
   <header>
-    <h1>メニュー</h1>
+    <h1>メモ2</h1>
   </header>
 
-  <p class="keyword-count">ブログが始まって {elapsed_days} 日目 / 解禁済み {unlocked_count} / 全 {total_count} 通</p>
-  <p>時間が経つごとに、少しずつメッセージが読めるようになります。</p>
+  <p class="keyword-count">ブログが始まって {elapsed_days} 日目 / 解禁済み {unlocked_count} / 全 {total_count} 個</p>
+  <p>日がたつと「◯◯日」が見えるようになり、クリックするとメッセージが読めます。</p>
 
-{entries_html}
+  <ul class="keyword-list">
+{items_html}  </ul>
+
   <nav>
     <a href="index.html">トップページへ戻る</a>
-    <a href="keyword.html">キーワードメモへ</a>
+    <a href="keyword.html">メモ1へ</a>
   </nav>
+
+  <script>
+    function toggleKw(elem) {{
+      var contentDiv = elem.nextElementSibling;
+      contentDiv.style.display = (contentDiv.style.display === 'block') ? 'none' : 'block';
+    }}
+  </script>
 </body>
 </html>
 """
@@ -234,8 +241,8 @@ def generate_kakodogu_html(articles):
 {entries_html}
   <nav>
     <a href="index.html">トップページへ戻る</a>
-    <a href="keyword.html">キーワードメモへ</a>
-    <a href="menu.html">メニューへ</a>
+    <a href="keyword.html">メモ1へ</a>
+    <a href="menu.html">メモ2へ</a>
   </nav>
 
   <script>
@@ -307,8 +314,8 @@ def generate_index_html(articles):
 
   <nav>
     <a href="kakodogu.html">過去ログ</a>
-    <a href="keyword.html">キーワードメモ</a>
-    <a href="menu.html">メニュー</a>
+    <a href="keyword.html">メモ1</a>
+    <a href="menu.html">メモ2</a>
     <a href="profile.html">プロフィール</a>
   </nav>
 </body>
