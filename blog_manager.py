@@ -141,7 +141,7 @@ def generate_menu_html(menu_items, articles):
     unlocked_count = sum(1 for m in ordered_items if elapsed_days >= m["unlock_day"])
     total_count = len(ordered_items)
     entries = [
-        (elapsed_days >= item["unlock_day"], f"{item['unlock_day']}日", item["message"])
+        (elapsed_days >= item["unlock_day"], "???", item["message"])
         for item in ordered_items
     ]
     items_html = render_unlockable_list(entries)
@@ -160,7 +160,7 @@ def generate_menu_html(menu_items, articles):
   </header>
 
   <p class="keyword-count">ブログが始まって {elapsed_days} 日目 / 解禁済み {unlocked_count} / 全 {total_count} 個</p>
-  <p>日がたつと「◯◯日」が見えるようになり、クリックするとメッセージが読めます。</p>
+  <p>日がたつと、いくつかの「???」がクリックできるようになり、メッセージが読めます。</p>
 
   <ul class="keyword-list">
 {items_html}  </ul>
