@@ -4,6 +4,7 @@ import os
 
 ARTICLES_FILE = "articles.json"
 KEYWORDS_FILE = "keywords.json"
+MENU_FILE = "menu.json"
 BLOG_FOLDER = "blogs"
 RECENT_COUNT = 5  # トップページに表示する直近記事の件数(最新1件を除く)
 
@@ -57,13 +58,6 @@ def update_keywords(articles):
     return keywords
 
 
-def find_first_article_date(word, articles):
-    for art in sorted_articles(articles)[::-1]:  # 古い順に探して最初の登場を返す
-        if word in art["content"] or word in art["title"]:
-            return art["date"]
-    return None
-
-
 def generate_keyword_html(keywords, articles):
     unlocked_count = sum(1 for kw in keywords if kw["unlocked"])
     total_count = len(keywords)
@@ -71,9 +65,11 @@ def generate_keyword_html(keywords, articles):
     items_html = ""
     for kw in keywords:
         if kw["unlocked"]:
-            link_date = kw.get("unlocked_date") or find_first_article_date(kw["word"], articles)
-            href = f"kakodogu.html#entry-{link_date}" if link_date else "kakodogu.html"
-            items_html += f'    <li><a href="{href}">{kw["word"]}</a></li>\n'
+            items_html += f"""    <li>
+      <div class="kw-word" onclick="toggleKw(this)">{kw['word']}</div>
+      <div class="kw-content">{kw.get('content', '')}</div>
+    </li>
+"""
         else:
             items_html += '    <li class="locked">???</li>\n'
 
@@ -99,11 +95,84 @@ def generate_keyword_html(keywords, articles):
   <nav>
     <a href="index.html">トップページへ戻る</a>
     <a href="kakodogu.html">過去ログへ</a>
+    <a href="menu.html">メニューへ</a>
   </nav>
+
+  <script>
+    function toggleKw(elem) {{
+      var contentDiv = elem.nextElementSibling;
+      contentDiv.style.display = (contentDiv.style.display === 'block') ? 'none' : 'block';
+    }}
+  </script>
 </body>
 </html>
 """
     with open("keyword.html", "w", encoding="utf-8") as f:
+        f.write(html)
+
+
+def load_menu():
+    if os.path.exists(MENU_FILE):
+        with open(MENU_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return []
+
+
+def blog_start_date(articles):
+    """ブログが始まった日(=一番古い記事の日付)を返す。記事が無ければ今日にする。"""
+    if not articles:
+        return datetime.date.today()
+    earliest = min(a["date"] for a in articles)
+    return datetime.date.fromisoformat(earliest)
+
+
+def generate_menu_html(menu_items, articles):
+    start_date = blog_start_date(articles)
+    elapsed_days = max(0, (datetime.date.today() - start_date).days)
+
+    unlocked_count = 0
+    entries_html = ""
+    for item in sorted(menu_items, key=lambda m: m["unlock_day"]):
+        if elapsed_days >= item["unlock_day"]:
+            unlocked_count += 1
+            entries_html += f"""  <div class="message-entry">
+    <div class="message-day">{item['unlock_day']}日目に解禁</div>
+    <div class="message-text">{item['message']}</div>
+  </div>
+"""
+        else:
+            entries_html += f"""  <div class="message-entry locked">
+    <div class="message-day">{item['unlock_day']}日目に解禁</div>
+    <div class="message-text">???</div>
+  </div>
+"""
+    total_count = len(menu_items)
+
+    html = f"""<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>千遠生へのメッセージ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="sen.css" />
+</head>
+<body>
+  <header>
+    <h1>メニュー</h1>
+  </header>
+
+  <p class="keyword-count">ブログが始まって {elapsed_days} 日目 / 解禁済み {unlocked_count} / 全 {total_count} 通</p>
+  <p>時間が経つごとに、少しずつメッセージが読めるようになります。</p>
+
+{entries_html}
+  <nav>
+    <a href="index.html">トップページへ戻る</a>
+    <a href="keyword.html">キーワードメモへ</a>
+  </nav>
+</body>
+</html>
+"""
+    with open("menu.html", "w", encoding="utf-8") as f:
         f.write(html)
 
 
@@ -166,6 +235,7 @@ def generate_kakodogu_html(articles):
   <nav>
     <a href="index.html">トップページへ戻る</a>
     <a href="keyword.html">キーワードメモへ</a>
+    <a href="menu.html">メニューへ</a>
   </nav>
 
   <script>
@@ -238,6 +308,7 @@ def generate_index_html(articles):
   <nav>
     <a href="kakodogu.html">過去ログ</a>
     <a href="keyword.html">キーワードメモ</a>
+    <a href="menu.html">メニュー</a>
     <a href="profile.html">プロフィール</a>
   </nav>
 </body>
@@ -254,6 +325,7 @@ def regenerate_pages(articles):
     generate_index_html(articles)
     keywords = update_keywords(articles)
     generate_keyword_html(keywords, articles)
+    generate_menu_html(load_menu(), articles)
 
 
 def add_new_article(title, content, date_str=None):
