@@ -3,6 +3,7 @@ import json
 import os
 
 ARTICLES_FILE = "articles.json"
+KEYWORDS_FILE = "keywords.json"
 BLOG_FOLDER = "blogs"
 RECENT_COUNT = 5  # トップページに表示する直近記事の件数(最新1件を除く)
 
@@ -21,6 +22,89 @@ def save_articles(articles):
 
 def sorted_articles(articles):
     return sorted(articles, key=lambda a: (a["date"], a.get("time", "")), reverse=True)
+
+
+def load_keywords():
+    if os.path.exists(KEYWORDS_FILE):
+        with open(KEYWORDS_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return []
+
+
+def save_keywords(keywords):
+    with open(KEYWORDS_FILE, "w", encoding="utf-8") as f:
+        json.dump(keywords, f, ensure_ascii=False, indent=2)
+
+
+def update_keywords(articles):
+    """ブログ本文にキーワードが登場したらロックを解除する。"""
+    keywords = load_keywords()
+    ordered = sorted(articles, key=lambda a: (a["date"], a.get("time", "")))  # 古い順
+    changed = False
+
+    for kw in keywords:
+        if kw["unlocked"]:
+            continue
+        for art in ordered:
+            if kw["word"] in art["content"] or kw["word"] in art["title"]:
+                kw["unlocked"] = True
+                kw["unlocked_date"] = art["date"]
+                changed = True
+                break
+
+    if changed:
+        save_keywords(keywords)
+    return keywords
+
+
+def find_first_article_date(word, articles):
+    for art in sorted_articles(articles)[::-1]:  # 古い順に探して最初の登場を返す
+        if word in art["content"] or word in art["title"]:
+            return art["date"]
+    return None
+
+
+def generate_keyword_html(keywords, articles):
+    unlocked_count = sum(1 for kw in keywords if kw["unlocked"])
+    total_count = len(keywords)
+
+    items_html = ""
+    for kw in keywords:
+        if kw["unlocked"]:
+            link_date = kw.get("unlocked_date") or find_first_article_date(kw["word"], articles)
+            href = f"kakodogu.html#entry-{link_date}" if link_date else "kakodogu.html"
+            items_html += f'    <li><a href="{href}">{kw["word"]}</a></li>\n'
+        else:
+            items_html += '    <li class="locked">???</li>\n'
+
+    html = f"""<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>千遠生のキーワードメモ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="sen.css" />
+</head>
+<body>
+  <header>
+    <h1>キーワードメモ</h1>
+  </header>
+
+  <p class="keyword-count">解除済み {unlocked_count} / 全 {total_count} 個</p>
+  <p>ブログの中にそのキーワードが出てくると、ロックが解けて言葉が見えるようになります。</p>
+
+  <ul class="keyword-list">
+{items_html}  </ul>
+
+  <nav>
+    <a href="index.html">トップページへ戻る</a>
+    <a href="kakodogu.html">過去ログへ</a>
+  </nav>
+</body>
+</html>
+"""
+    with open("keyword.html", "w", encoding="utf-8") as f:
+        f.write(html)
 
 
 def generate_blog_html(article):
@@ -58,7 +142,7 @@ def generate_blog_html(article):
 def generate_kakodogu_html(articles):
     entries_html = ""
     for art in sorted_articles(articles):
-        entries_html += f"""  <div class="entry">
+        entries_html += f"""  <div class="entry" id="entry-{art['date']}">
     <div class="title" onclick="toggleContent(this)">{art['date']} {art['title']}</div>
     <div class="date">{art['date']} {art.get('time', '')}</div>
     <div class="content">{art['content']}</div>
@@ -88,6 +172,13 @@ def generate_kakodogu_html(articles):
     function toggleContent(elem) {{
       var contentDiv = elem.parentElement.querySelector('.content');
       contentDiv.style.display = (contentDiv.style.display === 'block') ? 'none' : 'block';
+    }}
+    if (location.hash) {{
+      var target = document.querySelector(location.hash);
+      if (target) {{
+        target.querySelector('.content').style.display = 'block';
+        target.scrollIntoView();
+      }}
     }}
   </script>
 </body>
@@ -161,6 +252,8 @@ def regenerate_pages(articles):
         generate_blog_html(art)
     generate_kakodogu_html(articles)
     generate_index_html(articles)
+    keywords = update_keywords(articles)
+    generate_keyword_html(keywords, articles)
 
 
 def add_new_article(title, content, date_str=None):

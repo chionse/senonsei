@@ -11,7 +11,7 @@
     <h1>千遠生の過去ログ</h1>
   </header>
 
-  <div class="entry">
+  <div class="entry" id="entry-2026-09-11">
     <div class="title" onclick="toggleContent(this)">2026-09-11 千遠生の日記</div>
     <div class="date">2026-09-11 </div>
     <div class="content">これは自動生成された最新のブログ記事です。AIが少しずつ学習を進めています。</div>
@@ -26,6 +26,13 @@
     function toggleContent(elem) {
       var contentDiv = elem.parentElement.querySelector('.content');
       contentDiv.style.display = (contentDiv.style.display === 'block') ? 'none' : 'block';
+    }
+    if (location.hash) {
+      var target = document.querySelector(location.hash);
+      if (target) {
+        target.querySelector('.content').style.display = 'block';
+        target.scrollIntoView();
+      }
     }
   </script>
 </body>
