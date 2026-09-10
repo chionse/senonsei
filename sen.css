@@ -122,14 +122,17 @@ article p {
   line-height: 1.5;
 }
 
-/* キーワードメモ */
+/* キーワードメモ(画面幅に応じて3〜5列くらいに自動で折り返す) */
 .keyword-list {
   list-style: none;
   padding-left: 0;
+  column-width: 110px;
+  column-gap: 1.5rem;
 }
 
 .keyword-list li {
   margin: 0.5em 0;
+  break-inside: avoid;
 }
 
 .keyword-list a {
