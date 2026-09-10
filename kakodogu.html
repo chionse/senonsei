@@ -1,62 +1,83 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <title>千遠生のブログ一覧</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    body {
-      background-color: #fafaf7;
-      font-family: 'Yu Mincho', '游明朝', 'MS Mincho', serif;
-      color: #0029ae;
-      margin: 20px auto;
-      max-width: 700px;
-      padding: 0 10px;
-    }
-    header {
-      text-align: center;
-      margin-bottom: 1rem;
-    }
-    h1 {
-      margin: 0;
-      font-size: 2rem;
-      color: #0029ae;
-    }
-    article {
-      padding: 1rem 0;
-      margin-bottom: 1rem;
-    }
-    article h2 {
-      margin: 0 0 0.5rem;
-      font-size: 1.2rem;
-      color: #001d78;
-    }
-    article .date {
-      font-size: 0.8rem;
-      color: #0031a4;
-      margin-bottom: 0.4rem;
-    }
-    article p {
-      margin: 0;
-      line-height: 1.4;
-      max-height: 4.2em;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-  </style>
+<meta charset="UTF-8" />
+<title>千遠生の過去ログ（アコーディオン式）</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  body {
+    background-color: #fafaf7;
+    font-family: 'Yu Mincho', serif;
+    color: #0029ae;
+    max-width: 700px;
+    margin: 20px auto;
+    padding: 0 10px;
+  }
+  h1 {
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  .entry {
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 1rem;
+  }
+  .title {
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.2rem;
+    padding: 0.5rem 0;
+  }
+  .date {
+    font-size: 0.8rem;
+    color: #0031a4;
+  }
+  .content {
+    display: none;
+    padding: 0.5rem 0 1rem 0;
+    line-height: 1.4;
+  }
+</style>
 </head>
 <body>
-<header>
-  <h1>千遠生のブログ一覧</h1>
-</header>
-<article>
-  <h2><a href="blogs/blog_2026-09-11.html">2026-09-11 「千遠生の日記」</a></h2>
-  <div class="date">2026-09-11</div>
-  <p>これは自動生成された最新のブログ記事です。AIが少しずつ学習を進めています。</p>
-</article>
+  <h1>千遠生の過去ログ</h1>
 
-<nav>
-  <a href="index.html">トップページへ</a>
-</nav>
+  <div class="entry">
+    <div class="title" onclick="toggleContent(this)">2026-09-10 千遠生の日記</div>
+    <div class="date">2026年9月10日</div>
+    <div class="content">
+      これは千遠生が書いたブログのサンプル本文です。実際はAIが生成した記事がここに入ります。
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="title" onclick="toggleContent(this)">2026-09-09 昨日の記憶</div>
+    <div class="date">2026年9月9日</div>
+    <div class="content">
+      昨日の出来事や心象を綴った短いブログの例です。
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="title" onclick="toggleContent(this)">2026-09-08 海の思い出</div>
+    <div class="date">2026年9月8日</div>
+    <div class="content">
+      海にまつわる思い出を短くまとめたブログ記事のイメージです。
+    </div>
+  </div>
+
+  <nav>
+    <a href="index.html">トップページへ戻る</a>
+  </nav>
+
+  <script>
+    function toggleContent(elem) {
+      var contentDiv = elem.nextElementSibling.nextElementSibling; // dateの次がcontent
+      if(contentDiv.style.display === "block") {
+        contentDiv.style.display = "none";
+      } else {
+        contentDiv.style.display = "block";
+      }
+    }
+  </script>
 </body>
 </html>
