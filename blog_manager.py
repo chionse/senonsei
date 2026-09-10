@@ -94,7 +94,6 @@ def generate_keyword_html(keywords, articles):
   </header>
 
   <p class="keyword-count">解除済み {unlocked_count} / 全 {total_count} 個</p>
-  <p>ブログの中にそのキーワードが出てくると、ロックが解けて言葉が見えるようになります。</p>
 
   <ul class="keyword-list">
 {items_html}  </ul>
@@ -160,7 +159,6 @@ def generate_menu_html(menu_items, articles):
   </header>
 
   <p class="keyword-count">ブログが始まって {elapsed_days} 日目 / 解禁済み {unlocked_count} / 全 {total_count} 個</p>
-  <p>日がたつと、いくつかの「???」がクリックできるようになり、メッセージが読めます。</p>
 
   <ul class="keyword-list">
 {items_html}  </ul>
