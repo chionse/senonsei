@@ -150,6 +150,20 @@ article p {
   cursor: default;
 }
 
+.keyword-list .kw-word {
+  cursor: pointer;
+  font-size: 1.1rem;
+  text-decoration: underline;
+}
+
+.keyword-list .kw-content {
+  display: none;
+  font-size: 0.9rem;
+  margin-top: 0.3rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
 .keyword-count {
   font-size: 0.85rem;
   opacity: 0.8;

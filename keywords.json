@@ -1,32 +1,182 @@
 [
-  {"word": "海", "unlocked": false, "unlocked_date": null},
-  {"word": "雨", "unlocked": false, "unlocked_date": null},
-  {"word": "思い出", "unlocked": false, "unlocked_date": null},
-  {"word": "日常", "unlocked": false, "unlocked_date": null},
-  {"word": "散歩", "unlocked": false, "unlocked_date": null},
-  {"word": "空", "unlocked": false, "unlocked_date": null},
-  {"word": "花", "unlocked": false, "unlocked_date": null},
-  {"word": "音楽", "unlocked": false, "unlocked_date": null},
-  {"word": "写真", "unlocked": false, "unlocked_date": null},
-  {"word": "手紙", "unlocked": false, "unlocked_date": null},
-  {"word": "夢", "unlocked": false, "unlocked_date": null},
-  {"word": "季節", "unlocked": false, "unlocked_date": null},
-  {"word": "朝", "unlocked": false, "unlocked_date": null},
-  {"word": "夜", "unlocked": false, "unlocked_date": null},
-  {"word": "誕生日", "unlocked": false, "unlocked_date": null},
-  {"word": "友達", "unlocked": false, "unlocked_date": null},
-  {"word": "家族", "unlocked": false, "unlocked_date": null},
-  {"word": "学校", "unlocked": false, "unlocked_date": null},
-  {"word": "仕事", "unlocked": false, "unlocked_date": null},
-  {"word": "旅行", "unlocked": false, "unlocked_date": null},
-  {"word": "雪", "unlocked": false, "unlocked_date": null},
-  {"word": "星", "unlocked": false, "unlocked_date": null},
-  {"word": "月", "unlocked": false, "unlocked_date": null},
-  {"word": "風", "unlocked": false, "unlocked_date": null},
-  {"word": "時間", "unlocked": false, "unlocked_date": null},
-  {"word": "記憶", "unlocked": false, "unlocked_date": null},
-  {"word": "言葉", "unlocked": false, "unlocked_date": null},
-  {"word": "心", "unlocked": false, "unlocked_date": null},
-  {"word": "涙", "unlocked": false, "unlocked_date": null},
-  {"word": "笑顔", "unlocked": false, "unlocked_date": null}
+  {
+    "word": "海",
+    "unlocked": false,
+    "unlocked_date": null,
+    "content": "(ここに「海」が解除されたときに見せたい内容を書いてください)"
+  },
+  {
+    "word": "雨",
+    "unlocked": false,
+    "unlocked_date": null,
+    "content": "(ここに「雨」が解除されたときに見せたい内容を書いてください)"
+  },
+  {
+    "word": "思い出",
+    "unlocked": false,
+    "unlocked_date": null,
+    "content": "(ここに「思い出」が解除されたときに見せたい内容を書いてください)"
+  },
+  {
+    "word": "日常",
+    "unlocked": false,
+    "unlocked_date": null,
+    "content": "(ここに「日常」が解除されたときに見せたい内容を書いてください)"
+  },
+  {
+    "word": "散歩",
+    "unlocked": false,
+    "unlocked_date": null,
+    "content": "(ここに「散歩」が解除されたときに見せたい内容を書いてください)"
+  },
+  {
+    "word": "空",
+    "unlocked": false,
+    "unlocked_date": null,
+    "content": "(ここに「空」が解除されたときに見せたい内容を書いてください)"
+  },
+  {
+    "word": "花",
+    "unlocked": false,
+    "unlocked_date": null,
+    "content": "(ここに「花」が解除されたときに見せたい内容を書いてください)"
+  },
+  {
+    "word": "音楽",
+    "unlocked": false,
+    "unlocked_date": null,
+    "content": "(ここに「音楽」が解除されたときに見せたい内容を書いてください)"
+  },
+  {
+    "word": "写真",
+    "unlocked": false,
+    "unlocked_date": null,
+    "content": "(ここに「写真」が解除されたときに見せたい内容を書いてください)"
+  },
+  {
+    "word": "手紙",
+    "unlocked": false,
+    "unlocked_date": null,
+    "content": "(ここに「手紙」が解除されたときに見せたい内容を書いてください)"
+  },
+  {
+    "word": "夢",
+    "unlocked": false,
+    "unlocked_date": null,
+    "content": "(ここに「夢」が解除されたときに見せたい内容を書いてください)"
+  },
+  {
+    "word": "季節",
+    "unlocked": false,
+    "unlocked_date": null,
+    "content": "(ここに「季節」が解除されたときに見せたい内容を書いてください)"
+  },
+  {
+    "word": "朝",
+    "unlocked": false,
+    "unlocked_date": null,
+    "content": "(ここに「朝」が解除されたときに見せたい内容を書いてください)"
+  },
+  {
+    "word": "夜",
+    "unlocked": false,
+    "unlocked_date": null,
+    "content": "(ここに「夜」が解除されたときに見せたい内容を書いてください)"
+  },
+  {
+    "word": "誕生日",
+    "unlocked": false,
+    "unlocked_date": null,
+    "content": "(ここに「誕生日」が解除されたときに見せたい内容を書いてください)"
+  },
+  {
+    "word": "友達",
+    "unlocked": false,
+    "unlocked_date": null,
+    "content": "(ここに「友達」が解除されたときに見せたい内容を書いてください)"
+  },
+  {
+    "word": "家族",
+    "unlocked": false,
+    "unlocked_date": null,
+    "content": "(ここに「家族」が解除されたときに見せたい内容を書いてください)"
+  },
+  {
+    "word": "学校",
+    "unlocked": false,
+    "unlocked_date": null,
+    "content": "(ここに「学校」が解除されたときに見せたい内容を書いてください)"
+  },
+  {
+    "word": "仕事",
+    "unlocked": false,
+    "unlocked_date": null,
+    "content": "(ここに「仕事」が解除されたときに見せたい内容を書いてください)"
+  },
+  {
+    "word": "旅行",
+    "unlocked": false,
+    "unlocked_date": null,
+    "content": "(ここに「旅行」が解除されたときに見せたい内容を書いてください)"
+  },
+  {
+    "word": "雪",
+    "unlocked": false,
+    "unlocked_date": null,
+    "content": "(ここに「雪」が解除されたときに見せたい内容を書いてください)"
+  },
+  {
+    "word": "星",
+    "unlocked": false,
+    "unlocked_date": null,
+    "content": "(ここに「星」が解除されたときに見せたい内容を書いてください)"
+  },
+  {
+    "word": "月",
+    "unlocked": false,
+    "unlocked_date": null,
+    "content": "(ここに「月」が解除されたときに見せたい内容を書いてください)"
+  },
+  {
+    "word": "風",
+    "unlocked": false,
+    "unlocked_date": null,
+    "content": "(ここに「風」が解除されたときに見せたい内容を書いてください)"
+  },
+  {
+    "word": "時間",
+    "unlocked": false,
+    "unlocked_date": null,
+    "content": "(ここに「時間」が解除されたときに見せたい内容を書いてください)"
+  },
+  {
+    "word": "記憶",
+    "unlocked": false,
+    "unlocked_date": null,
+    "content": "(ここに「記憶」が解除されたときに見せたい内容を書いてください)"
+  },
+  {
+    "word": "言葉",
+    "unlocked": false,
+    "unlocked_date": null,
+    "content": "(ここに「言葉」が解除されたときに見せたい内容を書いてください)"
+  },
+  {
+    "word": "心",
+    "unlocked": false,
+    "unlocked_date": null,
+    "content": "(ここに「心」が解除されたときに見せたい内容を書いてください)"
+  },
+  {
+    "word": "涙",
+    "unlocked": false,
+    "unlocked_date": null,
+    "content": "(ここに「涙」が解除されたときに見せたい内容を書いてください)"
+  },
+  {
+    "word": "笑顔",
+    "unlocked": false,
+    "unlocked_date": null,
+    "content": "(ここに「笑顔」が解除されたときに見せたい内容を書いてください)"
+  }
 ]

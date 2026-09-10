@@ -58,13 +58,6 @@ def update_keywords(articles):
     return keywords
 
 
-def find_first_article_date(word, articles):
-    for art in sorted_articles(articles)[::-1]:  # 古い順に探して最初の登場を返す
-        if word in art["content"] or word in art["title"]:
-            return art["date"]
-    return None
-
-
 def generate_keyword_html(keywords, articles):
     unlocked_count = sum(1 for kw in keywords if kw["unlocked"])
     total_count = len(keywords)
@@ -72,9 +65,11 @@ def generate_keyword_html(keywords, articles):
     items_html = ""
     for kw in keywords:
         if kw["unlocked"]:
-            link_date = kw.get("unlocked_date") or find_first_article_date(kw["word"], articles)
-            href = f"kakodogu.html#entry-{link_date}" if link_date else "kakodogu.html"
-            items_html += f'    <li><a href="{href}">{kw["word"]}</a></li>\n'
+            items_html += f"""    <li>
+      <div class="kw-word" onclick="toggleKw(this)">{kw['word']}</div>
+      <div class="kw-content">{kw.get('content', '')}</div>
+    </li>
+"""
         else:
             items_html += '    <li class="locked">???</li>\n'
 
@@ -102,6 +97,13 @@ def generate_keyword_html(keywords, articles):
     <a href="kakodogu.html">過去ログへ</a>
     <a href="menu.html">メニューへ</a>
   </nav>
+
+  <script>
+    function toggleKw(elem) {{
+      var contentDiv = elem.nextElementSibling;
+      contentDiv.style.display = (contentDiv.style.display === 'block') ? 'none' : 'block';
+    }}
+  </script>
 </body>
 </html>
 """
