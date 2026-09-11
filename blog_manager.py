@@ -223,24 +223,23 @@ def generate_kakodogu_html(articles):
     newest_month = None
     log_html = ""
     for year in sorted(grouped, reverse=True):
-        log_html += f'    <div class="log-year">{year}年</div>\n'
         for month in sorted(grouped[year], reverse=True):
             group_id = f"g{year}{month}"
             if newest_month is None:
                 newest_month = group_id
             open_attr = "" if group_id == newest_month else " hidden"
             log_html += (
-                f'    <div class="log-month" onclick="toggleMonth(\'{group_id}\')">'
-                f"{int(month)}月</div>\n"
-                f'    <div class="log-days" id="{group_id}"{open_attr}>\n'
+                f'      <div class="log-month" onclick="toggleMonth(\'{group_id}\')">'
+                f"{year}年{int(month)}月</div>\n"
+                f'      <div class="log-days" id="{group_id}"{open_attr}>\n'
             )
             for art in grouped[year][month]:
                 day = int(art["date"].split("-")[2])
                 log_html += (
-                    f'      <div class="log-day" onclick="showEntry(\'{art["date"]}\')">'
-                    f"{day}日</div>\n"
+                    f'        <span class="log-day" onclick="showEntry(\'{art["date"]}\')">'
+                    f"{day}日</span>\n"
                 )
-            log_html += "    </div>\n"
+            log_html += "      </div>\n"
 
     entries_html = ""
     for index, art in enumerate(ordered):

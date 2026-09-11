@@ -212,33 +212,39 @@ article p {
 .log-layout {
   display: flex;
   gap: 2rem;
-  align-items: flex-start;
+  align-items: stretch;
+  min-height: 16rem;
+  border-top: 1px solid var(--line-color);
+  border-bottom: 1px solid var(--line-color);
+  padding: 1rem 0;
 }
 
 .log-list {
-  flex: 0 0 7rem;
+  flex: 0 0 11rem;
   border-right: 1px solid var(--line-color);
   padding-right: 1rem;
   font-size: 0.85rem;
 }
 
-.log-year {
-  font-weight: bold;
-  margin-top: 0.8rem;
-}
-
 .log-month {
   cursor: pointer;
-  margin: 0.3rem 0 0.2rem 0.5rem;
+  font-weight: bold;
+  margin-top: 0.8rem;
 }
 
 .log-month:hover {
   text-decoration: underline;
 }
 
+.log-days {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 0.6rem;
+  margin: 0.3rem 0 0 0.5rem;
+}
+
 .log-day {
   cursor: pointer;
-  margin: 0.2rem 0 0.2rem 1.5rem;
   opacity: 0.85;
 }
 
@@ -248,8 +254,16 @@ article p {
 
 .log-view {
   flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.log-view .entry {
+  border: 1px solid var(--line-color);
+  padding: 1.5rem 2rem;
   text-align: center;
-  padding-top: 0.8rem;
+  min-width: 60%;
 }
 
 .log-view .entry .date {
