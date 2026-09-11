@@ -356,8 +356,20 @@ def compose_locally(state):
     return sentence[:max_length]
 
 
+def keep_only_what_it_knows(state, text):
+    """見たことのない文字は、そもそも書けない。知らないものを落として返す。"""
+    allowed = set(state["seen_chars"]) | set("".join(state["learned_words"]))
+    allowed |= set("、。 　")
+    kept = "".join(ch for ch in text if ch in allowed)
+    return kept.strip("、。 　")
+
+
 def compose_with_ai(state, seen_titles):
-    """自分で考えられる時は、自分の言葉で書く。"""
+    """自分で考えられる時は、自分の言葉で書く。
+    まだ言葉を持たないうちは、考えるより先に手が動く(拾った文字を置くだけ)。"""
+    if len(state["learned_words"]) < 15:
+        return None
+
     stage_description, max_length = current_stage(state)
     known = "、".join(state["learned_words"][-100:]) or "(まだ一つも無い)"
 
@@ -386,7 +398,10 @@ def compose_with_ai(state, seen_titles):
     )
     if not answer:
         return None
-    return answer.splitlines()[0].strip()[:max_length]
+
+    written = keep_only_what_it_knows(state, answer.splitlines()[0])[:max_length]
+    # 知らない文字を落とした結果、何も残らなかったのなら、それは書けなかったということ
+    return written or None
 
 
 def run_today():
