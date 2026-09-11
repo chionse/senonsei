@@ -211,41 +211,16 @@ def generate_blog_html(article):
 
 
 def generate_kakodogu_html(articles):
-    """左に年・月でまとまったログの列、中央に選んだ記事。"""
+    """左で年・月・日を選び、中央に選んだ記事を出す。"""
     ordered = sorted_articles(articles)
-
-    # 年 -> 月 -> その月の記事、の形にまとめる
-    grouped = {}
-    for art in ordered:
-        year, month, _ = art["date"].split("-")
-        grouped.setdefault(year, {}).setdefault(month, []).append(art)
-
-    newest_month = None
-    log_html = ""
-    for year in sorted(grouped, reverse=True):
-        for month in sorted(grouped[year], reverse=True):
-            group_id = f"g{year}{month}"
-            if newest_month is None:
-                newest_month = group_id
-            open_attr = "" if group_id == newest_month else " hidden"
-            log_html += (
-                f'      <div class="log-month" onclick="toggleMonth(\'{group_id}\')">'
-                f"{year}年{int(month)}月</div>\n"
-                f'      <div class="log-days" id="{group_id}"{open_attr}>\n'
-            )
-            for art in grouped[year][month]:
-                day = int(art["date"].split("-")[2])
-                log_html += (
-                    f'        <span class="log-day" onclick="showEntry(\'{art["date"]}\')">'
-                    f"{day}日</span>\n"
-                )
-            log_html += "      </div>\n"
+    dates = [art["date"] for art in ordered]
 
     entries_html = ""
     for index, art in enumerate(ordered):
         hidden = "" if index == 0 else " hidden"
         entries_html += f"""    <div class="entry" id="entry-{art['date']}"{hidden}>
-      <div class="date">{art['date']} {art.get('time', '')}<span class="article-title">{art['title']}</span></div>
+      <div class="entry-title">{art['title']}</div>
+      <div class="date">{art['date']} {art.get('time', '')}</div>
       <p>{art['content']}</p>
     </div>
 """
@@ -269,25 +244,85 @@ def generate_kakodogu_html(articles):
 
   <div class="log-layout">
     <div class="log-list">
-{log_html}    </div>
+      <div class="log-label">年</div>
+      <div class="log-choices" id="years"></div>
+      <div class="log-label">月</div>
+      <div class="log-choices" id="months"></div>
+      <div class="log-label">日</div>
+      <div class="log-choices" id="days"></div>
+    </div>
     <div class="log-view">
 {entries_html}    </div>
   </div>
 
   <script>
+    var DATES = {json.dumps(dates, ensure_ascii=False)};
+    var picked = {{year: null, month: null}};
+
+    function partsOf(date) {{
+      var p = date.split('-');
+      return {{year: p[0], month: p[1], day: p[2]}};
+    }}
+
+    function drawChoices(boxId, values, current, onPick) {{
+      var box = document.getElementById(boxId);
+      box.innerHTML = '';
+      values.forEach(function (value) {{
+        var item = document.createElement('span');
+        item.className = 'log-choice' + (value === current ? ' here' : '');
+        item.textContent = parseInt(value, 10) + (boxId === 'years' ? '年' : boxId === 'months' ? '月' : '日');
+        item.onclick = function () {{ onPick(value); }};
+        box.appendChild(item);
+      }});
+    }}
+
+    function unique(list) {{
+      return list.filter(function (v, i) {{ return list.indexOf(v) === i; }});
+    }}
+
+    function refresh() {{
+      var years = unique(DATES.map(function (d) {{ return partsOf(d).year; }}));
+      if (!picked.year || years.indexOf(picked.year) < 0) {{ picked.year = years[0]; }}
+      drawChoices('years', years, picked.year, function (y) {{
+        picked.year = y; picked.month = null; refresh();
+      }});
+
+      var months = unique(DATES.filter(function (d) {{
+        return partsOf(d).year === picked.year;
+      }}).map(function (d) {{ return partsOf(d).month; }}));
+      if (!picked.month || months.indexOf(picked.month) < 0) {{ picked.month = months[0]; }}
+      drawChoices('months', months, picked.month, function (m) {{
+        picked.month = m; refresh();
+      }});
+
+      var days = DATES.filter(function (d) {{
+        var p = partsOf(d);
+        return p.year === picked.year && p.month === picked.month;
+      }});
+      var shown = document.querySelector('.log-view .entry:not([hidden])');
+      var currentDate = shown ? shown.id.replace('entry-', '') : null;
+      if (days.indexOf(currentDate) < 0) {{ currentDate = days[0]; showEntry(currentDate); }}
+      drawChoices('days', days.map(function (d) {{ return partsOf(d).day; }}),
+        currentDate ? partsOf(currentDate).day : null,
+        function (day) {{ showEntry(picked.year + '-' + picked.month + '-' + day); refresh(); }});
+    }}
+
     function showEntry(date) {{
       var entries = document.querySelectorAll('.log-view .entry');
       for (var i = 0; i < entries.length; i++) {{
         entries[i].hidden = (entries[i].id !== 'entry-' + date);
       }}
     }}
-    function toggleMonth(id) {{
-      var box = document.getElementById(id);
-      box.hidden = !box.hidden;
-    }}
+
     if (location.hash) {{
-      showEntry(location.hash.replace('#entry-', ''));
+      var wanted = location.hash.replace('#entry-', '');
+      if (DATES.indexOf(wanted) >= 0) {{
+        showEntry(wanted);
+        picked.year = partsOf(wanted).year;
+        picked.month = partsOf(wanted).month;
+      }}
     }}
+    if (DATES.length) {{ refresh(); }}
   </script>
 </body>
 </html>

@@ -226,30 +226,31 @@ article p {
   font-size: 0.85rem;
 }
 
-.log-month {
-  cursor: pointer;
+.log-label {
   font-weight: bold;
-  margin-top: 0.8rem;
+  margin-top: 0.9rem;
 }
 
-.log-month:hover {
-  text-decoration: underline;
-}
-
-.log-days {
+.log-choices {
   display: flex;
   flex-wrap: wrap;
   gap: 0.2rem 0.6rem;
   margin: 0.3rem 0 0 0.5rem;
 }
 
-.log-day {
+.log-choice {
   cursor: pointer;
   opacity: 0.85;
 }
 
-.log-day:hover {
+.log-choice:hover {
   text-decoration: underline;
+}
+
+.log-choice.here {
+  font-weight: bold;
+  opacity: 1;
+  border-bottom: 2px solid var(--main-color);
 }
 
 .log-view {
@@ -266,16 +267,18 @@ article p {
   min-width: 60%;
 }
 
+.log-view .entry-title {
+  font-size: 1.5rem;
+  border-bottom: 1px solid var(--main-color);
+  padding-bottom: 0.2rem;
+  margin: 0 auto;
+  width: fit-content;
+}
+
 .log-view .entry .date {
   font-size: 0.8rem;
   opacity: 0.8;
-  margin-bottom: 1.2rem;
-}
-
-.log-view .entry .article-title {
-  display: block;
-  margin: 0.5rem auto 0;
-  width: fit-content;
+  margin: 0.6rem 0 1.4rem;
 }
 
 .log-view .entry p {
