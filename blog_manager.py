@@ -220,21 +220,17 @@ def generate_kakodogu_html(articles):
         grouped.setdefault((year, month), []).append(art)
 
     log_html = ""
-    newest = None
     for (year, month) in sorted(grouped, reverse=True):
-        group_id = f"g{year}{month}"
-        if newest is None:
-            newest = group_id
-        hidden = "" if group_id == newest else " hidden"
         days = "".join(
-            f'        <div class="log-day" onclick="showEntry(\'{art["date"]}\')">'
-            f'{int(art["date"].split("-")[2])}日</div>\n'
+            f'<span class="log-day" onclick="showEntry(\'{art["date"]}\')">'
+            f'{int(art["date"].split("-")[2])}日</span>'
             for art in grouped[(year, month)]
         )
         log_html += (
-            f'      <div class="log-month" onclick="openMonth(\'{group_id}\')">'
-            f"{year}年 {int(month)}月</div>\n"
-            f'      <div class="log-days" id="{group_id}"{hidden}>\n{days}      </div>\n'
+            f'      <div class="log-row">'
+            f'<span class="log-ym">{year}年 {int(month)}月</span>'
+            f'<span class="log-days">{days}</span>'
+            f"</div>\n"
         )
 
     entries_html = ""
@@ -276,12 +272,6 @@ def generate_kakodogu_html(articles):
       var entries = document.querySelectorAll('.log-view .entry');
       for (var i = 0; i < entries.length; i++) {{
         entries[i].hidden = (entries[i].id !== 'entry-' + date);
-      }}
-    }}
-    function openMonth(id) {{
-      var groups = document.querySelectorAll('.log-days');
-      for (var i = 0; i < groups.length; i++) {{
-        groups[i].hidden = (groups[i].id !== id);
       }}
     }}
     if (location.hash) {{

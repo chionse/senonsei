@@ -15,10 +15,7 @@
 
   <div class="log-layout">
     <div class="log-list">
-      <div class="log-month" onclick="openMonth('g202609')">2026年 9月</div>
-      <div class="log-days" id="g202609">
-        <div class="log-day" onclick="showEntry('2026-09-11')">11日</div>
-      </div>
+      <div class="log-row"><span class="log-ym">2026年 9月</span><span class="log-days"><span class="log-day" onclick="showEntry('2026-09-11')">11日</span></span></div>
     </div>
     <div class="log-view">
     <div class="entry" id="entry-2026-09-11">
@@ -34,12 +31,6 @@
       var entries = document.querySelectorAll('.log-view .entry');
       for (var i = 0; i < entries.length; i++) {
         entries[i].hidden = (entries[i].id !== 'entry-' + date);
-      }
-    }
-    function openMonth(id) {
-      var groups = document.querySelectorAll('.log-days');
-      for (var i = 0; i < groups.length; i++) {
-        groups[i].hidden = (groups[i].id !== id);
       }
     }
     if (location.hash) {

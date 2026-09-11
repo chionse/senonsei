@@ -226,24 +226,28 @@ article p {
   font-size: 0.85rem;
 }
 
-.log-month {
-  cursor: pointer;
-  font-weight: bold;
-  margin-top: 0.8rem;
+.log-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  margin-bottom: 0.6rem;
 }
 
-.log-month:hover {
-  text-decoration: underline;
+.log-ym {
+  flex: 0 0 auto;
+  font-weight: bold;
+  white-space: nowrap;
 }
 
 .log-days {
-  margin: 0.3rem 0 0 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 0.7rem;
 }
 
 .log-day {
   cursor: pointer;
   opacity: 0.85;
-  margin: 0.25rem 0;
 }
 
 .log-day:hover {
