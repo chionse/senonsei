@@ -6,7 +6,21 @@ ARTICLES_FILE = "articles.json"
 KEYWORDS_FILE = "keywords.json"
 MENU_FILE = "menu.json"
 BLOG_FOLDER = "blogs"
+COMMENTS_FOLDER = "comments"
+STATICMAN_ENDPOINT = "https://api.staticman.net/v3/entry/github/chionse/senonsei/main/comments"
 RECENT_COUNT = 5  # トップページに表示する直近記事の件数(最新1件を除く)
+
+
+def load_comments():
+    """Staticmanがcomments/に自動コミットしたJSONファイルを全部読み込む。"""
+    comments = []
+    if os.path.isdir(COMMENTS_FOLDER):
+        for filename in os.listdir(COMMENTS_FOLDER):
+            if filename.endswith(".json"):
+                with open(os.path.join(COMMENTS_FOLDER, filename), "r", encoding="utf-8") as f:
+                    comments.append(json.load(f))
+    comments.sort(key=lambda c: c.get("date", ""), reverse=True)
+    return comments
 
 
 def load_articles():
@@ -84,7 +98,7 @@ def generate_keyword_html(keywords, articles):
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <title>千遠生のメモ1</title>
+  <title>メモ1</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="sen.css" />
 </head>
@@ -100,8 +114,6 @@ def generate_keyword_html(keywords, articles):
 
   <nav>
     <a href="index.html">トップページへ戻る</a>
-    <a href="kakodogu.html">過去ログへ</a>
-    <a href="menu.html">メモ2へ</a>
   </nav>
 
   <script>
@@ -149,7 +161,7 @@ def generate_menu_html(menu_items, articles):
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <title>千遠生のメモ2</title>
+  <title>メモ2</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="sen.css" />
 </head>
@@ -165,7 +177,6 @@ def generate_menu_html(menu_items, articles):
 
   <nav>
     <a href="index.html">トップページへ戻る</a>
-    <a href="keyword.html">メモ1へ</a>
   </nav>
 
   <script>
@@ -202,8 +213,7 @@ def generate_blog_html(article):
   <p>{article['content']}</p>
 </article>
 <nav>
-  <a href="../index.html">トップページへ</a>
-  <a href="../kakodogu.html">過去ログへ</a>
+  <a href="../index.html">トップページへ戻る</a>
 </nav>
 </body>
 </html>
@@ -227,20 +237,18 @@ def generate_kakodogu_html(articles):
 <html lang="ja">
 <head>
 <meta charset="UTF-8" />
-<title>千遠生の過去ログ</title>
+<title>過去ログ</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="stylesheet" href="sen.css" />
 </head>
 <body>
   <header>
-    <h1>千遠生の過去ログ</h1>
+    <h1>過去ログ</h1>
   </header>
 
 {entries_html}
   <nav>
     <a href="index.html">トップページへ戻る</a>
-    <a href="keyword.html">メモ1へ</a>
-    <a href="menu.html">メモ2へ</a>
   </nav>
 
   <script>
@@ -292,6 +300,18 @@ def generate_index_html(articles):
         else:
             recent_html = ""
 
+    comments = load_comments()
+    if comments:
+        comments_html = "\n".join(
+            f"""  <div class="comment-entry">
+    <div class="comment-name">{c.get('name', '名無しさん')}</div>
+    <div class="comment-message">{c.get('message', '')}</div>
+  </div>"""
+            for c in comments
+        )
+    else:
+        comments_html = "  <p>まだコメントはありません。</p>"
+
     html = f"""<!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -303,12 +323,43 @@ def generate_index_html(articles):
 <body>
   <header>
     <h1>千遠生のサイト</h1>
+    <div class="visitor-counter">
+      あなたは
+      <!-- Default Statcounter code for senonsei
+      https://chionse.github.io/senonsei/index.html -->
+      <script type="text/javascript">
+      var sc_project=13354593;
+      var sc_invisible=0;
+      var sc_security="4b65a54b";
+      var scJsHost = "https://";
+      document.write("<sc"+"ript type='text/javascript' src='" + scJsHost+
+      "statcounter.com/counter/counter.js'></"+"script>");
+      </script>
+      <noscript><div class="statcounter"><a title="web stats"
+      href="https://statcounter.com/" target="_blank"><img class="statcounter"
+      src="https://c.statcounter.com/13354593/0/4b65a54b/0/" alt="web stats"
+      referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
+      <!-- End of Statcounter Code -->
+      人目の来訪者です
+    </div>
   </header>
 
   <div class="section-title">今日のブログ</div>
   {latest_html}
 
   {recent_html}
+
+  <div class="section-title" id="comments">コメント</div>
+  <div class="comment-list">
+{comments_html}
+  </div>
+
+  <form class="comment-form" method="POST" action="{STATICMAN_ENDPOINT}">
+    <input type="hidden" name="options[redirect]" value="https://chionse.github.io/senonsei/index.html#comments" />
+    <input type="text" name="fields[name]" placeholder="名前" required />
+    <textarea name="fields[message]" placeholder="コメント" required></textarea>
+    <button type="submit">送信</button>
+  </form>
 
   <nav>
     <a href="kakodogu.html">過去ログ</a>

@@ -1,9 +1,10 @@
-name: Daily Blog Auto Generation
+name: Rebuild Site On New Comment
 
 on:
-  schedule:
-    - cron: '0 0 * * *'  # 毎日午前0時(UTC)に実行
-  workflow_dispatch:    # 手動トリガーも可能
+  push:
+    paths:
+      - 'comments/**'
+  workflow_dispatch:
 
 jobs:
   build:
@@ -18,11 +19,6 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Install requirements
-        run: |
-          python -m pip install --upgrade pip
-          # もし依存パッケージあればここに書く（今は無し）
-
       - name: Run blog manager script
         run: |
           python blog_manager.py
@@ -32,8 +28,5 @@ jobs:
           git config user.name "GitHub Actions Bot"
           git config user.email "actions@github.com"
           git add index.html kakodogu.html keyword.html menu.html articles.json keywords.json menu.json blogs/
-          git commit -m "Auto update blogs and past logs [skip ci]" || echo "No changes to commit"
+          git commit -m "新しいコメントを反映してページを再生成 [skip ci]" || echo "No changes to commit"
           git push
-        
-          env:
-          # GITHUB_TOKEN は自動で設定されているので特に書かなくてOK
