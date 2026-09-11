@@ -227,7 +227,7 @@ def generate_kakodogu_html(articles):
 <html lang="ja">
 <head>
 <meta charset="UTF-8" />
-<title>千遠生の過去ログ</title>
+<title>過去ログ</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="stylesheet" href="sen.css" />
 </head>
