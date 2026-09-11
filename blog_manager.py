@@ -233,7 +233,7 @@ def generate_kakodogu_html(articles):
 </head>
 <body>
   <header>
-    <h1>千遠生の過去ログ</h1>
+    <h1>過去ログ</h1>
   </header>
 
 {entries_html}
