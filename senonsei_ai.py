@@ -31,11 +31,13 @@ GROWTH_STAGES = [
     (20, "見た文字をぽつんと置くだけ", 3),
     (60, "見た文字を繋げてみる(言葉にはならない)", 5),
     (90, "覚えた言葉を1つ書ける", 6),
-    (400, "覚えた言葉が並び始める", 15),
-    (1200, "覚えた言葉をもう少し並べられる", 25),
-    (2500, "たどたどしい短い文", 40),
-    (4000, "簡単な文", 80),
+    (150, "覚えた言葉が並び始める", 15),
+    (400, "文のようなものに踏み出す", 25),
+    (1200, "たどたどしい短い文", 40),
+    (2500, "少しずつ文になっていく", 60),
+    (4000, "簡単な文", 100),
 ]
+PARTICLES = ["は", "が", "を", "に", "の", "と", "で"]
 FULL_STAGE = ("自分の言葉で書ける", 200)
 
 
@@ -153,13 +155,18 @@ def compose_locally(state, days):
         return babble(state, min(max_length, 4))
     if days < 90:
         return random.choice(words)
-    if days < 400:
+    if days < 150:
         return " ".join(random.sample(words, min(len(words), random.randint(2, 3))))
-    if days < 1200:
-        return " ".join(random.sample(words, min(len(words), random.randint(3, 4))))
 
-    picked = random.sample(words, min(len(words), random.randint(3, 5)))
-    return "、".join(picked)[:max_length]
+    # 150日目から、拾った言葉を助詞で繋いで文のようなものを書き始める
+    count = 2 if days < 400 else (3 if days < 1200 else random.randint(3, 4))
+    picked = random.sample(words, min(len(words), count))
+    sentence = picked[0]
+    for word in picked[1:]:
+        sentence += random.choice(PARTICLES) + word
+    if days >= 400:
+        sentence += "。"
+    return sentence[:max_length]
 
 
 def compose_with_ai(state, days, seen_titles):
