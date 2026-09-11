@@ -220,22 +220,28 @@ article p {
 }
 
 .log-list {
-  flex: 0 0 11rem;
+  flex: 0 0 14rem;
   border-right: 1px solid var(--line-color);
   padding-right: 1rem;
   font-size: 0.85rem;
 }
 
+.log-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin-bottom: 0.8rem;
+}
+
 .log-label {
   font-weight: bold;
-  margin-top: 0.9rem;
+  flex: 0 0 auto;
 }
 
 .log-choices {
   display: flex;
   flex-wrap: wrap;
   gap: 0.2rem 0.6rem;
-  margin: 0.3rem 0 0 0.5rem;
 }
 
 .log-choice {
