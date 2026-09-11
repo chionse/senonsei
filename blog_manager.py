@@ -100,45 +100,70 @@ def render_unlockable_list(entries):
     return items_html
 
 
-def generate_keyword_html(keywords, articles):
-    unlocked_count = sum(1 for kw in keywords if kw["unlocked"])
-    total_count = len(keywords)
-    entries = [(kw["unlocked"], kw["word"], kw.get("content", "")) for kw in keywords]
-    items_html = render_unlockable_list(entries)
+def generate_memo_html(keywords, menu_items, articles):
+    """メモ1とメモ2を1つのページに入れ、上のタブで切り替えられるようにする。"""
+    keyword_entries = [(kw["unlocked"], kw["word"], kw.get("content", "")) for kw in keywords]
+    keyword_items = render_unlockable_list(keyword_entries)
+    keyword_unlocked = sum(1 for kw in keywords if kw["unlocked"])
+
+    start_date = blog_start_date(articles)
+    elapsed = max(0, (datetime.date.today() - start_date).days)
+    ordered_menu = sorted(menu_items, key=lambda m: m["unlock_day"])
+    menu_entries = [
+        (elapsed >= item["unlock_day"], "???", item["message"]) for item in ordered_menu
+    ]
+    menu_items_html = render_unlockable_list(menu_entries)
+    menu_unlocked = sum(1 for m in ordered_menu if elapsed >= m["unlock_day"])
 
     html = f"""<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <title>メモ1</title>
+  <title>メモ</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="sen.css" />
 </head>
 <body>
   <div class="top-nav">
     <a href="index.html">←トップ</a>
-    <span class="memo-switch"><span class="here">メモ1</span><a href="menu.html">メモ2</a></span>
+    <span class="memo-switch">
+      <span class="here" id="tab1" onclick="showMemo(1)">メモ1</span>
+      <span id="tab2" onclick="showMemo(2)">メモ2</span>
+    </span>
   </div>
 
   <header>
-    <h1>メモ1</h1>
+    <h1>メモ</h1>
   </header>
 
-  <p class="keyword-count">解除済み {unlocked_count} / 全 {total_count} 個</p>
+  <div id="memo1">
+    <p class="keyword-count">解除済み {keyword_unlocked} / 全 {len(keywords)} 個</p>
+    <ul class="keyword-list">
+{keyword_items}    </ul>
+  </div>
 
-  <ul class="keyword-list">
-{items_html}  </ul>
+  <div id="memo2" hidden>
+    <p class="keyword-count">ブログが始まって {elapsed} 日目 / 解禁済み {menu_unlocked} / 全 {len(ordered_menu)} 個</p>
+    <ul class="keyword-list">
+{menu_items_html}    </ul>
+  </div>
 
   <script>
     function toggleKw(elem) {{
       var contentDiv = elem.nextElementSibling;
       contentDiv.style.display = (contentDiv.style.display === 'block') ? 'none' : 'block';
     }}
+    function showMemo(which) {{
+      document.getElementById('memo1').hidden = (which !== 1);
+      document.getElementById('memo2').hidden = (which !== 2);
+      document.getElementById('tab1').className = (which === 1) ? 'here' : '';
+      document.getElementById('tab2').className = (which === 2) ? 'here' : '';
+    }}
   </script>
 </body>
 </html>
 """
-    with open("keyword.html", "w", encoding="utf-8") as f:
+    with open("memo.html", "w", encoding="utf-8") as f:
         f.write(html)
 
 
@@ -155,55 +180,6 @@ def blog_start_date(articles):
         return datetime.date.today()
     earliest = min(a["date"] for a in articles)
     return datetime.date.fromisoformat(earliest)
-
-
-def generate_menu_html(menu_items, articles):
-    start_date = blog_start_date(articles)
-    elapsed_days = max(0, (datetime.date.today() - start_date).days)
-
-    ordered_items = sorted(menu_items, key=lambda m: m["unlock_day"])
-    unlocked_count = sum(1 for m in ordered_items if elapsed_days >= m["unlock_day"])
-    total_count = len(ordered_items)
-    entries = [
-        (elapsed_days >= item["unlock_day"], "???", item["message"])
-        for item in ordered_items
-    ]
-    items_html = render_unlockable_list(entries)
-
-    html = f"""<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8" />
-  <title>メモ2</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="sen.css" />
-</head>
-<body>
-  <div class="top-nav">
-    <a href="index.html">←トップ</a>
-    <span class="memo-switch"><a href="keyword.html">メモ1</a><span class="here">メモ2</span></span>
-  </div>
-
-  <header>
-    <h1>メモ2</h1>
-  </header>
-
-  <p class="keyword-count">ブログが始まって {elapsed_days} 日目 / 解禁済み {unlocked_count} / 全 {total_count} 個</p>
-
-  <ul class="keyword-list">
-{items_html}  </ul>
-
-  <script>
-    function toggleKw(elem) {{
-      var contentDiv = elem.nextElementSibling;
-      contentDiv.style.display = (contentDiv.style.display === 'block') ? 'none' : 'block';
-    }}
-  </script>
-</body>
-</html>
-"""
-    with open("menu.html", "w", encoding="utf-8") as f:
-        f.write(html)
 
 
 def generate_blog_html(article):
@@ -370,8 +346,7 @@ def generate_index_html(articles):
 
   <nav>
     <a href="kakodogu.html">過去ログ</a>
-    <a href="keyword.html">メモ1</a>
-    <a href="menu.html">メモ2</a>
+    <a href="memo.html">メモ</a>
     <a href="profile.html">プロフィール</a>
   </nav>
 </body>
@@ -387,8 +362,7 @@ def regenerate_pages(articles):
     generate_kakodogu_html(articles)
     generate_index_html(articles)
     keywords = update_keywords(articles)
-    generate_keyword_html(keywords, articles)
-    generate_menu_html(load_menu(), articles)
+    generate_memo_html(keywords, load_menu(), articles)
 
 
 def add_new_article(title, content, date_str=None):

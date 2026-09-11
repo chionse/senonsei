@@ -34,8 +34,9 @@ body {
 }
 
 .memo-switch a,
-.memo-switch .here {
+.memo-switch span {
   margin-left: 1rem;
+  cursor: pointer;
 }
 
 .memo-switch .here {
