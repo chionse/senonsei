@@ -13,23 +13,35 @@
     <h1>過去ログ</h1>
   </header>
 
-  <div class="entry" id="entry-2026-09-11">
-    <div class="title" onclick="toggleContent(this)">2026-09-11 ご</div>
-    <div class="date">2026-09-11 16:44</div>
-    <div class="content">け</div>
+  <div class="log-layout">
+    <div class="log-list">
+    <div class="log-year">2026年</div>
+    <div class="log-month" onclick="toggleMonth('g202609')">9月</div>
+    <div class="log-days" id="g202609">
+      <div class="log-day" onclick="showEntry('2026-09-11')">11日</div>
+    </div>
+    </div>
+    <div class="log-view">
+    <div class="entry" id="entry-2026-09-11">
+      <div class="date">2026-09-11 16:44<span class="article-title">ご</span></div>
+      <p>け</p>
+    </div>
+    </div>
   </div>
 
   <script>
-    function toggleContent(elem) {
-      var contentDiv = elem.parentElement.querySelector('.content');
-      contentDiv.style.display = (contentDiv.style.display === 'block') ? 'none' : 'block';
+    function showEntry(date) {
+      var entries = document.querySelectorAll('.log-view .entry');
+      for (var i = 0; i < entries.length; i++) {
+        entries[i].hidden = (entries[i].id !== 'entry-' + date);
+      }
+    }
+    function toggleMonth(id) {
+      var box = document.getElementById(id);
+      box.hidden = !box.hidden;
     }
     if (location.hash) {
-      var target = document.querySelector(location.hash);
-      if (target) {
-        target.querySelector('.content').style.display = 'block';
-        target.scrollIntoView();
-      }
+      showEntry(location.hash.replace('#entry-', ''));
     }
   </script>
 </body>
