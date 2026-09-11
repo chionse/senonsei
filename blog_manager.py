@@ -211,14 +211,47 @@ def generate_blog_html(article):
 
 
 def generate_kakodogu_html(articles):
+    """左に年・月でまとまったログの列、中央に選んだ記事。"""
+    ordered = sorted_articles(articles)
+
+    # 年 -> 月 -> その月の記事、の形にまとめる
+    grouped = {}
+    for art in ordered:
+        year, month, _ = art["date"].split("-")
+        grouped.setdefault(year, {}).setdefault(month, []).append(art)
+
+    newest_month = None
+    log_html = ""
+    for year in sorted(grouped, reverse=True):
+        log_html += f'    <div class="log-year">{year}年</div>\n'
+        for month in sorted(grouped[year], reverse=True):
+            group_id = f"g{year}{month}"
+            if newest_month is None:
+                newest_month = group_id
+            open_attr = "" if group_id == newest_month else " hidden"
+            log_html += (
+                f'    <div class="log-month" onclick="toggleMonth(\'{group_id}\')">'
+                f"{int(month)}月</div>\n"
+                f'    <div class="log-days" id="{group_id}"{open_attr}>\n'
+            )
+            for art in grouped[year][month]:
+                day = int(art["date"].split("-")[2])
+                log_html += (
+                    f'      <div class="log-day" onclick="showEntry(\'{art["date"]}\')">'
+                    f"{day}日</div>\n"
+                )
+            log_html += "    </div>\n"
+
     entries_html = ""
-    for art in sorted_articles(articles):
-        entries_html += f"""  <div class="entry" id="entry-{art['date']}">
-    <div class="title" onclick="toggleContent(this)">{art['date']} {art['title']}</div>
-    <div class="date">{art['date']} {art.get('time', '')}</div>
-    <div class="content">{art['content']}</div>
-  </div>
+    for index, art in enumerate(ordered):
+        hidden = "" if index == 0 else " hidden"
+        entries_html += f"""    <div class="entry" id="entry-{art['date']}"{hidden}>
+      <div class="date">{art['date']} {art.get('time', '')}<span class="article-title">{art['title']}</span></div>
+      <p>{art['content']}</p>
+    </div>
 """
+    if not ordered:
+        entries_html = "    <p>まだ何も書かれていません。</p>\n"
 
     html = f"""<!DOCTYPE html>
 <html lang="ja">
@@ -235,18 +268,26 @@ def generate_kakodogu_html(articles):
     <h1>過去ログ</h1>
   </header>
 
-{entries_html}
+  <div class="log-layout">
+    <div class="log-list">
+{log_html}    </div>
+    <div class="log-view">
+{entries_html}    </div>
+  </div>
+
   <script>
-    function toggleContent(elem) {{
-      var contentDiv = elem.parentElement.querySelector('.content');
-      contentDiv.style.display = (contentDiv.style.display === 'block') ? 'none' : 'block';
+    function showEntry(date) {{
+      var entries = document.querySelectorAll('.log-view .entry');
+      for (var i = 0; i < entries.length; i++) {{
+        entries[i].hidden = (entries[i].id !== 'entry-' + date);
+      }}
+    }}
+    function toggleMonth(id) {{
+      var box = document.getElementById(id);
+      box.hidden = !box.hidden;
     }}
     if (location.hash) {{
-      var target = document.querySelector(location.hash);
-      if (target) {{
-        target.querySelector('.content').style.display = 'block';
-        target.scrollIntoView();
-      }}
+      showEntry(location.hash.replace('#entry-', ''));
     }}
   </script>
 </body>
