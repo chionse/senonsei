@@ -30,6 +30,6 @@ jobs:
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "actions@github.com"
-          git add index.html kakodogu.html keyword.html menu.html articles.json keywords.json menu.json blogs/
+          git add -A
           git commit -m "新しいコメントを反映してページを再生成 [skip ci]" || echo "No changes to commit"
           git push
