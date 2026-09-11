@@ -19,6 +19,16 @@ header {
   margin-bottom: 1.5rem;
 }
 
+.visitor-counter {
+  font-size: 0.8rem;
+  opacity: 0.8;
+  margin-top: 0.5rem;
+}
+
+.visitor-counter img {
+  vertical-align: middle;
+}
+
 h1 {
   margin: 0;
   font-size: 2rem;
