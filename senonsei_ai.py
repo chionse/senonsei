@@ -28,14 +28,14 @@ WORD_CANDIDATE = re.compile(r"[ァ-ヴー]{2,6}|[一-龯]{2,4}|[ぁ-ん]{2,4}")
 
 # (この日数までが対象, その時点でできること, 書ける文字数の上限)
 GROWTH_STAGES = [
-    (20, "見た文字をぽつんと置くだけ", 3),
-    (60, "見た文字を繋げてみる(言葉にはならない)", 5),
+    (14, "見た文字をぽつんと置くだけ", 3),
+    (45, "見た文字を繋げてみる(言葉にはならない)", 5),
     (90, "覚えた言葉を1つ書ける", 6),
     (150, "覚えた言葉が並び始める", 15),
-    (400, "文のようなものに踏み出す", 25),
-    (1200, "たどたどしい短い文", 40),
-    (2500, "少しずつ文になっていく", 60),
-    (4000, "簡単な文", 100),
+    (250, "文のようなものに踏み出す", 25),
+    (400, "たどたどしい短い文", 40),
+    (550, "少しずつ文になっていく", 60),
+    (730, "簡単な文", 100),
 ]
 PARTICLES = ["は", "が", "を", "に", "の", "と", "で"]
 FULL_STAGE = ("自分の言葉で書ける", 200)
@@ -159,12 +159,12 @@ def compose_locally(state, days):
         return " ".join(random.sample(words, min(len(words), random.randint(2, 3))))
 
     # 150日目から、拾った言葉を助詞で繋いで文のようなものを書き始める
-    count = 2 if days < 400 else (3 if days < 1200 else random.randint(3, 4))
+    count = 2 if days < 250 else (3 if days < 550 else random.randint(3, 4))
     picked = random.sample(words, min(len(words), count))
     sentence = picked[0]
     for word in picked[1:]:
         sentence += random.choice(PARTICLES) + word
-    if days >= 400:
+    if days >= 250:
         sentence += "。"
     return sentence[:max_length]
 
