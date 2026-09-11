@@ -220,7 +220,7 @@ article p {
 }
 
 .log-list {
-  flex: 0 0 14rem;
+  flex: 0 0 20rem;
   border-right: 1px solid var(--line-color);
   padding-right: 1rem;
   font-size: 0.85rem;
@@ -230,33 +230,27 @@ article p {
   display: flex;
   align-items: baseline;
   gap: 0.6rem;
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.7rem;
 }
 
-.log-label {
-  font-weight: bold;
+.log-ym {
   flex: 0 0 auto;
+  font-weight: bold;
 }
 
-.log-choices {
+.log-days {
   display: flex;
   flex-wrap: wrap;
   gap: 0.2rem 0.6rem;
 }
 
-.log-choice {
+.log-day {
   cursor: pointer;
   opacity: 0.85;
 }
 
-.log-choice:hover {
+.log-day:hover {
   text-decoration: underline;
-}
-
-.log-choice.here {
-  font-weight: bold;
-  opacity: 1;
-  border-bottom: 2px solid var(--main-color);
 }
 
 .log-view {
