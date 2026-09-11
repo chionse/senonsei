@@ -105,5 +105,10 @@
   ],
   "notes": [
     "0日目: note ――つくる、つながる、とどける。"
-  ]
+  ],
+  "today_plan": {
+    "date": "2026-09-12",
+    "resting": false,
+    "hour": 20
+  }
 }
