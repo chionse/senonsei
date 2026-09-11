@@ -123,6 +123,13 @@ article p {
   font-size: 0.9rem;
 }
 
+.comment-entry .comment-date {
+  font-weight: normal;
+  font-size: 0.75rem;
+  opacity: 0.7;
+  margin-left: 0.6rem;
+}
+
 .comment-entry .comment-message {
   margin-top: 0.2rem;
   line-height: 1.5;
