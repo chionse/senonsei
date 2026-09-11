@@ -220,8 +220,7 @@ def generate_blog_html(article):
   <h1>千遠生のブログ</h1>
 </header>
 <article>
-  <h2>{article['title']}</h2>
-  <div class="date">{date_str} {article.get('time', '')}</div>
+  <div class="date">{date_str} {article.get('time', '')}<span class="article-title">{article['title']}</span></div>
   <p>{article['content']}</p>
 </article>
 <nav>
@@ -292,8 +291,7 @@ def generate_index_html(articles):
     else:
         latest = ordered[0]
         latest_html = f"""<article>
-    <h2>{latest['title']}</h2>
-    <div class="date">{latest['date']} {latest.get('time', '')}</div>
+    <div class="date">{latest['date']} {latest.get('time', '')}<span class="article-title">{latest['title']}</span></div>
     <p>{latest['content']}</p>
   </article>"""
 
