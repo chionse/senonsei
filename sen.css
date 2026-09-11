@@ -220,43 +220,34 @@ article p {
 }
 
 .log-list {
-  flex: 0 0 14rem;
+  flex: 0 0 10rem;
   border-right: 1px solid var(--line-color);
   padding-right: 1rem;
   font-size: 0.85rem;
 }
 
-.log-row {
-  display: flex;
-  align-items: baseline;
-  gap: 0.6rem;
-  margin-bottom: 0.8rem;
-}
-
-.log-label {
-  font-weight: bold;
-  flex: 0 0 auto;
-}
-
-.log-choices {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.2rem 0.6rem;
-}
-
-.log-choice {
+.log-month {
   cursor: pointer;
-  opacity: 0.85;
+  font-weight: bold;
+  margin-top: 0.8rem;
 }
 
-.log-choice:hover {
+.log-month:hover {
   text-decoration: underline;
 }
 
-.log-choice.here {
-  font-weight: bold;
-  opacity: 1;
-  border-bottom: 2px solid var(--main-color);
+.log-days {
+  margin: 0.3rem 0 0 1rem;
+}
+
+.log-day {
+  cursor: pointer;
+  opacity: 0.85;
+  margin: 0.25rem 0;
+}
+
+.log-day:hover {
+  text-decoration: underline;
 }
 
 .log-view {
