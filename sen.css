@@ -33,9 +33,13 @@ body {
   text-decoration: underline;
 }
 
-.memo-switch a,
+.memo-switch {
+  margin-top: 0.6rem;
+  font-size: 0.95rem;
+}
+
 .memo-switch span {
-  margin-left: 1rem;
+  margin: 0 0.8rem;
   cursor: pointer;
 }
 
@@ -231,13 +235,14 @@ article p {
 .keyword-list {
   list-style: none;
   padding-left: 0;
-  column-width: 110px;
-  column-gap: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 0.6rem 1.5rem;
+  align-items: start;
 }
 
 .keyword-list li {
-  margin: 0.5em 0;
-  break-inside: avoid;
+  margin: 0;
 }
 
 .keyword-list a {
