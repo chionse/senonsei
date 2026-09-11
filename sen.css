@@ -220,34 +220,33 @@ article p {
 }
 
 .log-list {
-  flex: 0 0 10rem;
+  flex: 0 0 13rem;
   border-right: 1px solid var(--line-color);
   padding-right: 1rem;
   font-size: 0.85rem;
+  display: flex;
+  gap: 1.2rem;
+  align-items: flex-start;
 }
 
-.log-month {
-  cursor: pointer;
-  font-weight: bold;
-  margin-top: 0.8rem;
+.log-column {
+  min-width: 3.5rem;
 }
 
-.log-month:hover {
-  text-decoration: underline;
-}
-
-.log-days {
-  margin: 0.3rem 0 0 1rem;
-}
-
-.log-day {
+.log-choice {
   cursor: pointer;
   opacity: 0.85;
-  margin: 0.25rem 0;
+  margin-bottom: 0.35rem;
+  white-space: nowrap;
 }
 
-.log-day:hover {
+.log-choice:hover {
   text-decoration: underline;
+}
+
+.log-choice.here {
+  font-weight: bold;
+  opacity: 1;
 }
 
 .log-view {
