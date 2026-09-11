@@ -44,10 +44,9 @@
   <p>まだコメントはありません。</p>
   </div>
 
-  <form class="comment-form" method="POST" action="https://api.staticman.net/v3/entry/github/chionse/senonsei/main/comments">
-    <input type="hidden" name="options[redirect]" value="https://chionse.github.io/senonsei/index.html#comments" />
-    <input type="text" name="fields[name]" placeholder="名前" required />
-    <textarea name="fields[message]" placeholder="コメント" required></textarea>
+  <form class="comment-form" method="POST" action="https://REPLACE-WITH-YOUR-WORKER-URL.workers.dev">
+    <input type="text" name="name" placeholder="名前" required />
+    <textarea name="message" placeholder="コメント" required></textarea>
     <button type="submit">送信</button>
   </form>
 
