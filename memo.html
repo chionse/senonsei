@@ -9,14 +9,14 @@
 <body>
   <div class="top-nav">
     <a href="index.html">←トップ</a>
-    <span class="memo-switch">
-      <span class="here" id="tab1" onclick="showMemo(1)">メモ1</span>
-      <span id="tab2" onclick="showMemo(2)">メモ2</span>
-    </span>
   </div>
 
   <header>
     <h1>メモ</h1>
+    <div class="memo-switch">
+      <span class="here" id="tab1" onclick="showMemo(1)">メモ1</span>
+      <span id="tab2" onclick="showMemo(2)">メモ2</span>
+    </div>
   </header>
 
   <div id="memo1">
@@ -56,7 +56,7 @@
   </div>
 
   <div id="memo2" hidden>
-    <p class="keyword-count">ブログが始まって 0 日目 / 解禁済み 1 / 全 5 個</p>
+    <p class="keyword-count">解禁済み 1 / 全 5 個</p>
     <ul class="keyword-list">
     <li>
       <div class="kw-word" onclick="toggleKw(this)">???</div>

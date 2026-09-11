@@ -126,14 +126,14 @@ def generate_memo_html(keywords, menu_items, articles):
 <body>
   <div class="top-nav">
     <a href="index.html">←トップ</a>
-    <span class="memo-switch">
-      <span class="here" id="tab1" onclick="showMemo(1)">メモ1</span>
-      <span id="tab2" onclick="showMemo(2)">メモ2</span>
-    </span>
   </div>
 
   <header>
     <h1>メモ</h1>
+    <div class="memo-switch">
+      <span class="here" id="tab1" onclick="showMemo(1)">メモ1</span>
+      <span id="tab2" onclick="showMemo(2)">メモ2</span>
+    </div>
   </header>
 
   <div id="memo1">
@@ -143,7 +143,7 @@ def generate_memo_html(keywords, menu_items, articles):
   </div>
 
   <div id="memo2" hidden>
-    <p class="keyword-count">ブログが始まって {elapsed} 日目 / 解禁済み {menu_unlocked} / 全 {len(ordered_menu)} 個</p>
+    <p class="keyword-count">解禁済み {menu_unlocked} / 全 {len(ordered_menu)} 個</p>
     <ul class="keyword-list">
 {menu_items_html}    </ul>
   </div>
