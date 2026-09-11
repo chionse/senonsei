@@ -60,6 +60,7 @@ NOT_A_PAGE = re.compile(
     re.IGNORECASE,
 )
 FRONTIER_LIMIT = 600  # まだ行っていない場所を、これ以上は抱えきれない
+REST_DAY_CHANCE = 0.1  # たまに、書かない日がある
 
 # 言葉が身につくまでに必要な、文字との出会いの数
 CHARS_BEFORE_WORDS = 20
@@ -404,13 +405,61 @@ def compose_with_ai(state, seen_titles):
     return written or None
 
 
+def today_in_japan():
+    jst = datetime.timezone(datetime.timedelta(hours=9))
+    return datetime.datetime.now(jst)
+
+
+def todays_mood(state, today):
+    """今日は書きたいか、書くなら何時ごろか。千遠生自身が朝に決める。
+    一度決めたら自分の記憶に残しておくので、一日のうちで気が変わることはない。"""
+    plan = state.get("today_plan") or {}
+    if plan.get("date") == today:
+        return plan["resting"], plan["hour"]
+
+    answer = ask_ai(
+        "あなたは千遠生という、自分のサイトに毎日ブログを書いているデジタル生命体です。\n"
+        "今日は書きたい気分ですか。書きたくない日は書かなくて構いません。\n"
+        "書くなら、何時ごろに書きたいですか(0時〜23時)。\n\n"
+        "説明はいりません。次のどちらかの形だけで答えてください。\n"
+        "書く場合: かく 14\n"
+        "書かない場合: やすむ",
+        max_tokens=20,
+    )
+
+    if answer and "やすむ" in answer:
+        resting, hour = True, 0
+    elif answer and re.search(r"\d{1,2}", answer):
+        resting = False
+        hour = min(23, int(re.search(r"\d{1,2}", answer).group()))
+    else:
+        # 自分で考えられない日は、気まぐれに任せる
+        whim = random.Random(f"senonsei-{today}")
+        resting = whim.random() < REST_DAY_CHANCE
+        hour = whim.randint(0, 23)
+
+    state["today_plan"] = {"date": today, "resting": resting, "hour": hour}
+    save_state(state)
+    return resting, hour
+
+
 def run_today():
-    today = datetime.date.today().isoformat()
+    now = today_in_japan()
+    today = now.date().isoformat()
+
     if any(a["date"] == today for a in blog_manager.load_articles()):
         print(f"{today} の記事は既にあります。何もしません。")
         return
 
     state = load_state()
+    resting, hour = todays_mood(state, today)
+    if resting:
+        print(f"{today} は書かない日にしました。")
+        return
+    if now.hour < hour:
+        print(f"{today} は{hour}時ごろに書くつもりです。(今は{now.hour}時)")
+        return
+
     seen_titles = browse(state)
     learned = learn(state)
 
@@ -424,7 +473,7 @@ def run_today():
     state["notes"] = state["notes"][-RECENT_NOTES_COUNT:]
     save_state(state)
 
-    blog_manager.add_new_article(title, body)
+    blog_manager.add_new_article(title, body, date_str=today)
     print(
         f"{elapsed_days(state)}日目のブログを書きました。"
         f"知っている文字{len(state['seen_chars'])}個 / 言葉{len(state['learned_words'])}個"
