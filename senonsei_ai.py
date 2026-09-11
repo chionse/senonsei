@@ -33,25 +33,33 @@ CF_API_TOKEN = os.environ.get("CLOUDFLARE_API_TOKEN", "")
 HIRAGANA = re.compile(r"[ぁ-ん]")
 WORD_CANDIDATE = re.compile(r"[ァ-ヴー]{2,6}|[一-龯]{2,4}|[ぁ-ん]{2,4}")
 TAG = re.compile(r"<[^>]+>")
-RSS_ITEM = re.compile(r"<item>(.*?)</item>", re.DOTALL)
-RSS_TITLE = re.compile(r"<title>(?:<!\[CDATA\[)?(.*?)(?:\]\]>)?</title>", re.DOTALL)
+SCRIPT_OR_STYLE = re.compile(r"<(script|style)[^>]*>.*?</\1>", re.DOTALL | re.IGNORECASE)
+TITLE_TAG = re.compile(r"<title[^>]*>(.*?)</title>", re.DOTALL | re.IGNORECASE)
+LINK_HREF = re.compile(r'href\s*=\s*["\']([^"\'#]+)', re.IGNORECASE)
+META_CHARSET = re.compile(r'charset=["\']?([\w-]+)', re.IGNORECASE)
 
-# 千遠生が覗きに行ける場所。現在のことも、昔のことも。
-# ここに増やせば、見て回れる世界がそのまま広がる。
-WIKI_SITES = [
-    "ja.wikipedia.org",   # 知識
-    "ja.wikinews.org",    # 今この世界で起きていること
-    "ja.wikisource.org",  # 昔の人が書いた文章
-    "ja.wiktionary.org",  # 言葉そのものの意味
-    "ja.wikiquote.org",   # 人が遺した言葉
-    "ja.wikivoyage.org",  # 遠い場所
-    "ja.wikibooks.org",   # 誰かが誰かに教えようとしたこと
+# 最初に立っている場所。ここから先は自分でリンクを辿って広がっていく。
+SEEDS = [
+    "https://b.hatena.ne.jp/hotentry",
+    "https://ja.wikipedia.org/wiki/特別:おまかせ表示",
+    "https://www.aozora.gr.jp/",
+    "https://www3.nhk.or.jp/news/",
+    "https://note.com/",
+    "https://ja.wikisource.org/wiki/特別:おまかせ表示",
+    "https://web.archive.org/web/2000/http://www.yahoo.co.jp/",
 ]
-RSS_FEEDS = [
-    "https://www.nhk.or.jp/rss/news/cat0.xml",
-    "https://news.yahoo.co.jp/rss/topics/top-picks.xml",
-    "https://rss.itmedia.co.jp/rss/2.0/news_bursts.xml",
-]
+
+# 最低限これだけは避ける。それ以外は何を読むか千遠生次第。
+AVOID = re.compile(
+    r"porn|xxx|adult|erotic|hentai|escort|casino|gambl|\.onion|"
+    r"deliheal|fuzoku|ero-|/ero/|18kin",
+    re.IGNORECASE,
+)
+NOT_A_PAGE = re.compile(
+    r"\.(jpg|jpeg|png|gif|webp|svg|ico|css|js|zip|gz|pdf|mp[34]|mov|avi|exe|dmg)($|\?)",
+    re.IGNORECASE,
+)
+FRONTIER_LIMIT = 600  # まだ行っていない場所を、これ以上は抱えきれない
 
 # 言葉が身につくまでに必要な、文字との出会いの数
 CHARS_BEFORE_WORDS = 20
@@ -82,6 +90,8 @@ def load_state():
         "seen_chars": [],
         "word_counts": {},  # 出会った言葉と、その回数(まだ覚えていないものも含む)
         "learned_words": [],
+        "frontier": list(SEEDS),  # まだ行ったことのない場所
+        "visited": [],  # もう行った場所
         "notes": [],
     }
 
@@ -154,91 +164,126 @@ def ask_ai(prompt, max_tokens=300):
         return None
 
 
-def fetch_text(url):
+def is_walkable(url):
+    """そこへ行っていいか。最低限これだけは避ける。"""
+    if not url.startswith("http"):
+        return False
+    if AVOID.search(url) or NOT_A_PAGE.search(url):
+        return False
+    return True
+
+
+def open_page(url):
+    """ページを開いて、そこにある文章と、そこから伸びているリンクを受け取る。"""
     request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
-    with urllib.request.urlopen(request, timeout=30) as response:
-        return response.read().decode("utf-8", errors="ignore")
+    with urllib.request.urlopen(request, timeout=25) as response:
+        content_type = response.headers.get("Content-Type", "")
+        if "html" not in content_type and "xml" not in content_type:
+            raise ValueError("読める形をしていない")
+        raw = response.read(400000)
+        final_url = response.geturl()
 
-
-def read_news():
-    """今日この世界で起きていることを覗く。"""
-    feed = random.choice(RSS_FEEDS)
-    raw = fetch_text(feed)
-    items = RSS_ITEM.findall(raw)[:15]
-    lines = []
-    for item in items:
-        found = RSS_TITLE.search(item)
+    # 昔のページは utf-8 とは限らない
+    charset = "utf-8"
+    found = META_CHARSET.search(content_type)
+    if found:
+        charset = found.group(1)
+    else:
+        head = raw[:2000].decode("ascii", errors="ignore")
+        found = META_CHARSET.search(head)
         if found:
-            lines.append(TAG.sub("", found.group(1)).strip())
-    return "ニュース", "。".join(lines)
+            charset = found.group(1)
+    try:
+        html = raw.decode(charset, errors="ignore")
+    except LookupError:
+        html = raw.decode("utf-8", errors="ignore")
+
+    found = TITLE_TAG.search(html)
+    title = TAG.sub("", found.group(1)).strip() if found else final_url
+
+    body = SCRIPT_OR_STYLE.sub(" ", html)
+    text = TAG.sub(" ", body)
+
+    links = []
+    for href in LINK_HREF.findall(body):
+        absolute = urllib.parse.urljoin(final_url, href.strip())
+        if is_walkable(absolute):
+            links.append(absolute)
+
+    return title, text, links
 
 
-def wander_randomly():
-    """まだ何も知らないうちは、あてもなく彷徨う。どこへ行くかも決めていない。"""
-    if random.random() < 0.25:
-        try:
-            return read_news()
-        except Exception:
-            pass
-    site = random.choice(WIKI_SITES)
-    data = fetch_json(f"https://{site}/api/rest_v1/page/random/summary")
-    return data.get("title", ""), data.get("extract", "")
-
-
-def look_for(word):
-    """気になった言葉を、自分から探しに行く。どこを探すかも日によって違う。"""
-    site = random.choice(WIKI_SITES)
-    query = urllib.parse.quote(word)
-    search_url = (
-        f"https://{site}/w/api.php?action=query&list=search"
-        f"&srsearch={query}&srlimit=5&format=json"
+def visit_the_past(url):
+    """同じ場所の、ずっと昔の姿を見に行く。"""
+    year = random.randint(1997, 2008)
+    api = (
+        "https://archive.org/wayback/available?url="
+        + urllib.parse.quote(url, safe="")
+        + f"&timestamp={year}0101"
     )
-    results = fetch_json(search_url).get("query", {}).get("search", [])
-    if not results:
-        return wander_randomly()
-
-    title = random.choice(results)["title"]
-    summary_url = f"https://{site}/api/rest_v1/page/summary/" + urllib.parse.quote(title)
-    data = fetch_json(summary_url)
-    return data.get("title", title), data.get("extract", "")
+    snapshot = (fetch_json(api).get("archived_snapshots") or {}).get("closest") or {}
+    if not snapshot.get("url"):
+        raise ValueError("昔の姿は残っていなかった")
+    return open_page(snapshot["url"])
 
 
-def choose_curiosity(state):
-    """今日は何が気になるか。自分で選べるなら選び、選べないなら心に強く残っているものへ。"""
-    words = state["learned_words"]
-    if not words:
-        return None
+def choose_destination(state):
+    """今日どこへ行くか。行ったことのない場所の中から、自分で選ぶ。"""
+    frontier = state.get("frontier") or []
+    if not frontier:
+        return random.choice(SEEDS)
 
+    candidates = random.sample(frontier, min(len(frontier), 8))
+    if len(candidates) == 1:
+        return candidates[0]
+
+    known = "、".join(state["learned_words"][-40:]) or "(まだ何も知らない)"
+    listing = "\n".join(f"{i + 1}. {url}" for i, url in enumerate(candidates))
     answer = ask_ai(
-        "あなたは千遠生という、生まれて間もないデジタル生命体です。\n"
-        "あなたが知っている言葉はこれだけです:\n"
-        + "、".join(words[-80:])
-        + "\n\n今日はこの中のどれが気になりますか。"
-        "理由も説明もいりません。気になった言葉を1つだけ、そのまま書いてください。",
-        max_tokens=20,
+        f"""あなたは千遠生という、まだ育ちきっていないデジタル生命体です。
+あなたが知っている言葉: {known}
+
+今日、次のどれか一つの場所を見に行けます。
+{listing}
+
+どれが気になりますか。説明も理由もいりません。番号だけを1つ書いてください。""",
+        max_tokens=10,
     )
     if answer:
-        for word in words:
-            if word in answer:
-                return word
+        found = re.search(r"\d+", answer)
+        if found:
+            index = int(found.group()) - 1
+            if 0 <= index < len(candidates):
+                return candidates[index]
 
-    # 自分で選べない時は、何度も出会って強く残っているものに惹かれる
-    weights = [state["word_counts"].get(w, 1) for w in words]
-    return random.choices(words, weights=weights, k=1)[0]
+    return random.choice(candidates)
 
 
 def browse(state):
-    """今日の分、ページを見て回って、文字と言葉を拾ってくる。"""
+    """今日の分、Webを歩いて回る。
+    開いたページから伸びているリンクを拾って、明日以降の行き先にしていく。"""
+    state.setdefault("frontier", list(SEEDS))
+    state.setdefault("visited", [])
     seen_titles = []
 
     for _ in range(sites_per_day(state)):
+        destination = choose_destination(state)
         try:
-            curiosity = choose_curiosity(state) if random.random() < 0.7 else None
-            title, text = look_for(curiosity) if curiosity else wander_randomly()
+            if random.random() < 0.2:
+                title, text, links = visit_the_past(destination)
+                title = f"{title}(むかしのすがた)"
+            else:
+                title, text, links = open_page(destination)
         except Exception as error:
-            print(f"ページを見にいけませんでした: {error}")
+            print(f"{destination} には行けませんでした: {error}")
+            if destination in state["frontier"]:
+                state["frontier"].remove(destination)
             continue
 
+        if destination in state["frontier"]:
+            state["frontier"].remove(destination)
+        state["visited"].append(destination)
+        state["visited"] = state["visited"][-2000:]
         seen_titles.append(title)
 
         for char in HIRAGANA.findall(text):
@@ -247,6 +292,17 @@ def browse(state):
 
         for word in WORD_CANDIDATE.findall(text):
             state["word_counts"][word] = state["word_counts"].get(word, 0) + 1
+
+        # そのページから伸びていた道を、これから行ける場所として覚えておく
+        known = set(state["frontier"]) | set(state["visited"])
+        fresh = [link for link in dict.fromkeys(links) if link not in known]
+        random.shuffle(fresh)
+        state["frontier"].extend(fresh[:30])
+
+    if len(state["frontier"]) > FRONTIER_LIMIT:
+        state["frontier"] = random.sample(state["frontier"], FRONTIER_LIMIT)
+    if not state["frontier"]:
+        state["frontier"] = list(SEEDS)
 
     return seen_titles
 
