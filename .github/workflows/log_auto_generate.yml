@@ -21,7 +21,9 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Install requirements
+      # anthropic が無くても千遠生は自分の力で書けるので、失敗しても止めない
+      - name: Install optional requirements
+        continue-on-error: true
         run: |
           python -m pip install --upgrade pip
           python -m pip install anthropic
