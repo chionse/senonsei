@@ -1,0 +1,14 @@
+comments:
+  allowedFields: ["name", "message"]
+  branch: "main"
+  commitMessage: "新しいコメント: {fields.name}"
+  filename: "entry{@timestamp}"
+  format: "json"
+  moderation: false
+  path: "comments"
+  requiredFields: ["name", "message"]
+  generatedFields:
+    date:
+      type: date
+      options:
+        format: "iso8601"

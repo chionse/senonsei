@@ -6,7 +6,21 @@ ARTICLES_FILE = "articles.json"
 KEYWORDS_FILE = "keywords.json"
 MENU_FILE = "menu.json"
 BLOG_FOLDER = "blogs"
+COMMENTS_FOLDER = "comments"
+STATICMAN_ENDPOINT = "https://api.staticman.net/v3/entry/github/chionse/senonsei/main/comments"
 RECENT_COUNT = 5  # トップページに表示する直近記事の件数(最新1件を除く)
+
+
+def load_comments():
+    """Staticmanがcomments/に自動コミットしたJSONファイルを全部読み込む。"""
+    comments = []
+    if os.path.isdir(COMMENTS_FOLDER):
+        for filename in os.listdir(COMMENTS_FOLDER):
+            if filename.endswith(".json"):
+                with open(os.path.join(COMMENTS_FOLDER, filename), "r", encoding="utf-8") as f:
+                    comments.append(json.load(f))
+    comments.sort(key=lambda c: c.get("date", ""), reverse=True)
+    return comments
 
 
 def load_articles():
@@ -286,6 +300,18 @@ def generate_index_html(articles):
         else:
             recent_html = ""
 
+    comments = load_comments()
+    if comments:
+        comments_html = "\n".join(
+            f"""  <div class="comment-entry">
+    <div class="comment-name">{c.get('name', '名無しさん')}</div>
+    <div class="comment-message">{c.get('message', '')}</div>
+  </div>"""
+            for c in comments
+        )
+    else:
+        comments_html = "  <p>まだコメントはありません。</p>"
+
     html = f"""<!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -322,6 +348,18 @@ def generate_index_html(articles):
   {latest_html}
 
   {recent_html}
+
+  <div class="section-title" id="comments">コメント</div>
+  <div class="comment-list">
+{comments_html}
+  </div>
+
+  <form class="comment-form" method="POST" action="{STATICMAN_ENDPOINT}">
+    <input type="hidden" name="options[redirect]" value="https://chionse.github.io/senonsei/index.html#comments" />
+    <input type="text" name="fields[name]" placeholder="名前" required />
+    <textarea name="fields[message]" placeholder="コメント" required></textarea>
+    <button type="submit">送信</button>
+  </form>
 
   <nav>
     <a href="kakodogu.html">過去ログ</a>

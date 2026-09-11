@@ -108,6 +108,56 @@ article p {
   margin-top: 0.5rem;
 }
 
+/* コメント */
+.comment-list {
+  margin-bottom: 1.5rem;
+}
+
+.comment-entry {
+  border-bottom: 1px solid var(--line-color);
+  padding: 0.6rem 0;
+}
+
+.comment-entry .comment-name {
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.comment-entry .comment-message {
+  margin-top: 0.2rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.comment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.comment-form input,
+.comment-form textarea,
+.comment-form button {
+  font-family: inherit;
+  font-size: 0.9rem;
+  color: var(--main-color);
+  border: 1px solid var(--line-color);
+  background: var(--bg-color);
+  padding: 0.5rem;
+}
+
+.comment-form textarea {
+  min-height: 5rem;
+  resize: vertical;
+}
+
+.comment-form button {
+  cursor: pointer;
+  align-self: flex-start;
+  padding: 0.4rem 1.5rem;
+}
+
 /* 過去ログ(アコーディオン) */
 .entry {
   border-bottom: 1px solid var(--line-color);
