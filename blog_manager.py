@@ -419,9 +419,8 @@ def add_new_article(title, content, date_str=None):
 
 
 if __name__ == "__main__":
-    # AI連携がまだ無いため、ここでは新規記事の自動生成は行わない。
-    # 既存の articles.json からページ(トップ・過去ログ・個別記事)を再生成するだけに留める。
-    # AIによる記事生成が実装され次第、add_new_article(title, content) をここから呼び出す。
+    # 新しい記事を書くのは senonsei_ai.py の役目。
+    # ここは既存データから全ページを組み直すだけ(コメント反映などで使う)。
     articles = load_articles()
     regenerate_pages(articles)
-    print("AI連携は未実装のため新規記事は追加していません。既存データからページを再生成しました。")
+    print("既存データからページを再生成しました。")
