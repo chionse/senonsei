@@ -21,16 +21,11 @@ jobs:
         with:
           python-version: '3.x'
 
-      # anthropic が無くても千遠生は自分の力で書けるので、失敗しても止めない
-      - name: Install optional requirements
-        continue-on-error: true
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install anthropic
-
+      # 外部ライブラリは一切使わないので、ここでの準備は不要
       - name: Senonsei browses the web and writes today's blog
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: |
           python senonsei_ai.py
 
