@@ -84,7 +84,7 @@ def generate_keyword_html(keywords, articles):
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <title>千遠生のメモ1</title>
+  <title>メモ1</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="sen.css" />
 </head>
@@ -149,7 +149,7 @@ def generate_menu_html(menu_items, articles):
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <title>千遠生のメモ2</title>
+  <title>メモ2</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="sen.css" />
 </head>
