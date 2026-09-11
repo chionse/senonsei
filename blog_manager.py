@@ -137,13 +137,13 @@ def generate_memo_html(keywords, menu_items, articles):
   </header>
 
   <div id="memo1">
-    <p class="keyword-count">解除済み {keyword_unlocked} / 全 {len(keywords)} 個</p>
+    <p class="keyword-count">解除済み 全{keyword_unlocked} / {len(keywords)} 個</p>
     <ul class="keyword-list">
 {keyword_items}    </ul>
   </div>
 
   <div id="memo2" hidden>
-    <p class="keyword-count">解禁済み {menu_unlocked} / 全 {len(ordered_menu)} 個</p>
+    <p class="keyword-count">解禁済み 全{menu_unlocked} / {len(ordered_menu)} 個</p>
     <ul class="keyword-list">
 {menu_items_html}    </ul>
   </div>
