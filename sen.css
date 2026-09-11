@@ -212,11 +212,15 @@ article p {
 .log-layout {
   display: flex;
   gap: 2rem;
-  align-items: flex-start;
+  align-items: stretch;
+  min-height: 16rem;
+  border-top: 1px solid var(--line-color);
+  border-bottom: 1px solid var(--line-color);
+  padding: 1rem 0;
 }
 
 .log-list {
-  flex: 0 0 7rem;
+  flex: 0 0 8rem;
   border-right: 1px solid var(--line-color);
   padding-right: 1rem;
   font-size: 0.85rem;
