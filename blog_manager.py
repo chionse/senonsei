@@ -115,6 +115,11 @@ def generate_keyword_html(keywords, articles):
   <link rel="stylesheet" href="sen.css" />
 </head>
 <body>
+  <div class="top-nav">
+    <a href="index.html">←トップ</a>
+    <span class="memo-switch"><span class="here">メモ1</span><a href="menu.html">メモ2</a></span>
+  </div>
+
   <header>
     <h1>メモ1</h1>
   </header>
@@ -123,10 +128,6 @@ def generate_keyword_html(keywords, articles):
 
   <ul class="keyword-list">
 {items_html}  </ul>
-
-  <nav>
-    <a href="index.html">トップページへ戻る</a>
-  </nav>
 
   <script>
     function toggleKw(elem) {{
@@ -178,6 +179,11 @@ def generate_menu_html(menu_items, articles):
   <link rel="stylesheet" href="sen.css" />
 </head>
 <body>
+  <div class="top-nav">
+    <a href="index.html">←トップ</a>
+    <span class="memo-switch"><a href="keyword.html">メモ1</a><span class="here">メモ2</span></span>
+  </div>
+
   <header>
     <h1>メモ2</h1>
   </header>
@@ -186,10 +192,6 @@ def generate_menu_html(menu_items, articles):
 
   <ul class="keyword-list">
 {items_html}  </ul>
-
-  <nav>
-    <a href="index.html">トップページへ戻る</a>
-  </nav>
 
   <script>
     function toggleKw(elem) {{
@@ -216,6 +218,7 @@ def generate_blog_html(article):
 <link rel="stylesheet" href="../sen.css" />
 </head>
 <body>
+<div class="top-nav"><a href="../index.html">←トップ</a></div>
 <header>
   <h1>千遠生のブログ</h1>
 </header>
@@ -223,9 +226,6 @@ def generate_blog_html(article):
   <div class="date">{date_str} {article.get('time', '')}<span class="article-title">{article['title']}</span></div>
   <p>{article['content']}</p>
 </article>
-<nav>
-  <a href="../index.html">トップページへ戻る</a>
-</nav>
 </body>
 </html>
 """
@@ -253,15 +253,13 @@ def generate_kakodogu_html(articles):
 <link rel="stylesheet" href="sen.css" />
 </head>
 <body>
+  <div class="top-nav"><a href="index.html">←トップ</a></div>
+
   <header>
     <h1>過去ログ</h1>
   </header>
 
 {entries_html}
-  <nav>
-    <a href="index.html">トップページへ戻る</a>
-  </nav>
-
   <script>
     function toggleContent(elem) {{
       var contentDiv = elem.parentElement.querySelector('.content');
