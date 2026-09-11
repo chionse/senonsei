@@ -100,8 +100,6 @@ def generate_keyword_html(keywords, articles):
 
   <nav>
     <a href="index.html">トップページへ戻る</a>
-    <a href="kakodogu.html">過去ログへ</a>
-    <a href="menu.html">メモ2へ</a>
   </nav>
 
   <script>
@@ -165,7 +163,6 @@ def generate_menu_html(menu_items, articles):
 
   <nav>
     <a href="index.html">トップページへ戻る</a>
-    <a href="keyword.html">メモ1へ</a>
   </nav>
 
   <script>
@@ -202,8 +199,7 @@ def generate_blog_html(article):
   <p>{article['content']}</p>
 </article>
 <nav>
-  <a href="../index.html">トップページへ</a>
-  <a href="../kakodogu.html">過去ログへ</a>
+  <a href="../index.html">トップページへ戻る</a>
 </nav>
 </body>
 </html>
@@ -239,8 +235,6 @@ def generate_kakodogu_html(articles):
 {entries_html}
   <nav>
     <a href="index.html">トップページへ戻る</a>
-    <a href="keyword.html">メモ1へ</a>
-    <a href="menu.html">メモ2へ</a>
   </nav>
 
   <script>
