@@ -28,10 +28,11 @@ WORD_CANDIDATE = re.compile(r"[ァ-ヴー]{2,6}|[一-龯]{2,4}|[ぁ-ん]{2,4}")
 
 # (この日数までが対象, その時点でできること, 書ける文字数の上限)
 GROWTH_STAGES = [
-    (90, "見た文字をぽつんと置くだけ", 3),
-    (450, "見た文字を繋げてみる(言葉にはならない)", 5),
-    (800, "覚えた言葉を1つ書ける", 6),
-    (1500, "覚えた言葉を並べられる", 15),
+    (20, "見た文字をぽつんと置くだけ", 3),
+    (60, "見た文字を繋げてみる(言葉にはならない)", 5),
+    (90, "覚えた言葉を1つ書ける", 6),
+    (400, "覚えた言葉が並び始める", 15),
+    (1200, "覚えた言葉をもう少し並べられる", 25),
     (2500, "たどたどしい短い文", 40),
     (4000, "簡単な文", 80),
 ]
@@ -67,7 +68,7 @@ def sites_per_day(days):
 
 def max_new_words(days):
     """1日に覚えられる言葉の数。最初はまだ何も覚えられない。"""
-    if days < 90:
+    if days < 20:
         return 0
     if days < 1500:
         return 1
@@ -148,12 +149,14 @@ def compose_locally(state, days):
     _, max_length = current_stage(days)
     words = state["learned_words"]
 
-    if days < 450 or not words:
+    if days < 60 or not words:
         return babble(state, min(max_length, 4))
-    if days < 800:
+    if days < 90:
         return random.choice(words)
-    if days < 1500:
+    if days < 400:
         return " ".join(random.sample(words, min(len(words), random.randint(2, 3))))
+    if days < 1200:
+        return " ".join(random.sample(words, min(len(words), random.randint(3, 4))))
 
     picked = random.sample(words, min(len(words), random.randint(3, 5)))
     return "、".join(picked)[:max_length]
