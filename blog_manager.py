@@ -404,6 +404,12 @@ def generate_index_html(articles):
 
   {recent_html}
 
+  <nav>
+    <a href="kakodogu.html">過去ログ</a>
+    <a href="memo.html">メモ</a>
+    <a href="profile.html">プロフィール</a>
+  </nav>
+
   <div class="section-title" id="comments">コメント</div>
   <div class="comment-list">
 {comments_html}
@@ -414,12 +420,6 @@ def generate_index_html(articles):
     <textarea name="message" placeholder="コメント" required></textarea>
     <button type="submit">送信</button>
   </form>
-
-  <nav>
-    <a href="kakodogu.html">過去ログ</a>
-    <a href="memo.html">メモ</a>
-    <a href="profile.html">プロフィール</a>
-  </nav>
 </body>
 </html>
 """
