@@ -7,7 +7,7 @@ KEYWORDS_FILE = "keywords.json"
 MENU_FILE = "menu.json"
 BLOG_FOLDER = "blogs"
 COMMENTS_FOLDER = "comments"
-COMMENT_WORKER_ENDPOINT = "https://REPLACE-WITH-YOUR-WORKER-URL.workers.dev"
+COMMENT_WORKER_ENDPOINT = "https://senonsei-comments.chitomatsu.workers.dev/"
 RECENT_COUNT = 5  # トップページに表示する直近記事の件数(最新1件を除く)
 
 
