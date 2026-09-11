@@ -7,7 +7,7 @@ KEYWORDS_FILE = "keywords.json"
 MENU_FILE = "menu.json"
 BLOG_FOLDER = "blogs"
 COMMENTS_FOLDER = "comments"
-STATICMAN_ENDPOINT = "https://api.staticman.net/v3/entry/github/chionse/senonsei/main/comments"
+COMMENT_WORKER_ENDPOINT = "https://senonsei-comments.chitomatsu.workers.dev/"
 RECENT_COUNT = 5  # トップページに表示する直近記事の件数(最新1件を除く)
 
 
@@ -354,10 +354,9 @@ def generate_index_html(articles):
 {comments_html}
   </div>
 
-  <form class="comment-form" method="POST" action="{STATICMAN_ENDPOINT}">
-    <input type="hidden" name="options[redirect]" value="https://chionse.github.io/senonsei/index.html#comments" />
-    <input type="text" name="fields[name]" placeholder="名前" required />
-    <textarea name="fields[message]" placeholder="コメント" required></textarea>
+  <form class="comment-form" method="POST" action="{COMMENT_WORKER_ENDPOINT}">
+    <input type="text" name="name" placeholder="名前" required />
+    <textarea name="message" placeholder="コメント" required></textarea>
     <button type="submit">送信</button>
   </form>
 
