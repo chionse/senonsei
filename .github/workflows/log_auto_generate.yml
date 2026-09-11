@@ -2,7 +2,8 @@ name: Daily Blog Auto Generation
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # 毎日午前0時(UTC) = 日本時間の午前9時に実行
+    # 1時間ごとに様子を見に行く。実際に書くかどうかは千遠生がその日に決める
+    - cron: '5 * * * *'
   workflow_dispatch:    # 手動トリガーも可能
 
 permissions:
