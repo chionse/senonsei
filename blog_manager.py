@@ -12,7 +12,7 @@ RECENT_COUNT = 5  # トップページに表示する直近記事の件数(最�
 
 
 def load_comments():
-    """Staticmanがcomments/に自動コミットしたJSONファイルを全部読み込む。"""
+    """Cloudflare Workerがcomments/に自動コミットしたJSONファイルを全部読み込む。"""
     comments = []
     if os.path.isdir(COMMENTS_FOLDER):
         for filename in os.listdir(COMMENTS_FOLDER):
@@ -21,6 +21,18 @@ def load_comments():
                     comments.append(json.load(f))
     comments.sort(key=lambda c: c.get("date", ""), reverse=True)
     return comments
+
+
+def format_comment_date(iso_string):
+    """コメントに記録されたUTC時刻を、日本時間の秒までの表示にする。"""
+    if not iso_string:
+        return ""
+    try:
+        dt = datetime.datetime.fromisoformat(iso_string.replace("Z", "+00:00"))
+    except ValueError:
+        return ""
+    jst = dt.astimezone(datetime.timezone(datetime.timedelta(hours=9)))
+    return jst.strftime("%Y-%m-%d %H:%M:%S")
 
 
 def load_articles():
@@ -304,7 +316,7 @@ def generate_index_html(articles):
     if comments:
         comments_html = "\n".join(
             f"""  <div class="comment-entry">
-    <div class="comment-name">{c.get('name', '名無しさん')}</div>
+    <div class="comment-name">{c.get('name', '名無しさん')}<span class="comment-date">{format_comment_date(c.get('date', ''))}</span></div>
     <div class="comment-message">{c.get('message', '')}</div>
   </div>"""
             for c in comments
