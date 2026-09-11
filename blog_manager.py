@@ -211,27 +211,9 @@ def generate_blog_html(article):
 
 
 def generate_kakodogu_html(articles):
-    """月ごとに1行、ログが溜まると下に積み重なっていく。"""
+    """左に年・月・日の3列。それぞれの中で下に積み重なり、選ぶと隣の列が変わる。"""
     ordered = sorted_articles(articles)
-
-    grouped = {}
-    for art in ordered:
-        year, month, _ = art["date"].split("-")
-        grouped.setdefault((year, month), []).append(art)
-
-    log_html = ""
-    for (year, month) in sorted(grouped, reverse=True):
-        days = "".join(
-            f'<span class="log-day" onclick="showEntry(\'{art["date"]}\')">'
-            f'{int(art["date"].split("-")[2])}日</span>'
-            for art in grouped[(year, month)]
-        )
-        log_html += (
-            f'      <div class="log-row">'
-            f'<span class="log-ym">{year}年 {int(month)}月</span>'
-            f'<span class="log-days">{days}</span>'
-            f"</div>\n"
-        )
+    dates = [art["date"] for art in ordered]
 
     entries_html = ""
     for index, art in enumerate(ordered):
@@ -262,21 +244,81 @@ def generate_kakodogu_html(articles):
 
   <div class="log-layout">
     <div class="log-list">
-{log_html}    </div>
+      <div class="log-column" id="years"></div>
+      <div class="log-column" id="months"></div>
+      <div class="log-column" id="days"></div>
+    </div>
     <div class="log-view">
 {entries_html}    </div>
   </div>
 
   <script>
+    var DATES = {json.dumps(dates, ensure_ascii=False)};
+    var picked = {{year: null, month: null, day: null}};
+
+    function partsOf(date) {{
+      var p = date.split('-');
+      return {{year: p[0], month: p[1], day: p[2]}};
+    }}
+
+    function unique(list) {{
+      return list.filter(function (v, i) {{ return list.indexOf(v) === i; }});
+    }}
+
+    function draw(boxId, values, suffix, current, onPick) {{
+      var box = document.getElementById(boxId);
+      box.innerHTML = '';
+      values.forEach(function (value) {{
+        var item = document.createElement('div');
+        item.className = 'log-choice' + (value === current ? ' here' : '');
+        item.textContent = parseInt(value, 10) + suffix;
+        item.onclick = function () {{ onPick(value); }};
+        box.appendChild(item);
+      }});
+    }}
+
+    function refresh() {{
+      var years = unique(DATES.map(function (d) {{ return partsOf(d).year; }}));
+      if (years.indexOf(picked.year) < 0) {{ picked.year = years[0]; picked.month = null; }}
+      draw('years', years, '年', picked.year, function (y) {{
+        picked.year = y; picked.month = null; picked.day = null; refresh();
+      }});
+
+      var months = unique(DATES.filter(function (d) {{
+        return partsOf(d).year === picked.year;
+      }}).map(function (d) {{ return partsOf(d).month; }}));
+      if (months.indexOf(picked.month) < 0) {{ picked.month = months[0]; picked.day = null; }}
+      draw('months', months, '月', picked.month, function (m) {{
+        picked.month = m; picked.day = null; refresh();
+      }});
+
+      var days = DATES.filter(function (d) {{
+        var p = partsOf(d);
+        return p.year === picked.year && p.month === picked.month;
+      }}).map(function (d) {{ return partsOf(d).day; }});
+      if (days.indexOf(picked.day) < 0) {{ picked.day = days[0]; }}
+      draw('days', days, '日', picked.day, function (day) {{
+        picked.day = day; refresh();
+      }});
+
+      showEntry(picked.year + '-' + picked.month + '-' + picked.day);
+    }}
+
     function showEntry(date) {{
       var entries = document.querySelectorAll('.log-view .entry');
       for (var i = 0; i < entries.length; i++) {{
         entries[i].hidden = (entries[i].id !== 'entry-' + date);
       }}
     }}
+
     if (location.hash) {{
-      showEntry(location.hash.replace('#entry-', ''));
+      var wanted = location.hash.replace('#entry-', '');
+      if (DATES.indexOf(wanted) >= 0) {{
+        var p = partsOf(wanted);
+        picked.year = p.year; picked.month = p.month; picked.day = p.day;
+      }}
     }}
+    if (DATES.length) {{ refresh(); }}
   </script>
 </body>
 </html>
