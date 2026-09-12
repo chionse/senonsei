@@ -1,0 +1,29 @@
+name: Seed probe (temporary)
+
+on:
+  push:
+    branches:
+      - claude/project-progress-update-t2tukz
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Check that every entrance is reachable
+        run: |
+          python - <<'PY'
+          import senonsei_ai as s
+          for url in s.SEEDS:
+              try:
+                  title, text, links = s.open_page(url)
+                  print(f"OK   chars={len(text):>7}  links={len(links):>3}  {title[:40]!r}  {url}")
+              except Exception as e:
+                  print(f"DEAD {str(e)[:60]:<60}  {url}")
+          PY
