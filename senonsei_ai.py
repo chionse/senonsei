@@ -37,6 +37,11 @@ TAG = re.compile(r"<[^>]+>")
 SCRIPT_OR_STYLE = re.compile(r"<(script|style)[^>]*>.*?</\1>", re.DOTALL | re.IGNORECASE)
 TITLE_TAG = re.compile(r"<title[^>]*>(.*?)</title>", re.DOTALL | re.IGNORECASE)
 LINK_HREF = re.compile(r'href\s*=\s*["\']([^"\'#]+)', re.IGNORECASE)
+# 90年代のページは画面を枠で分割する作りが多く、入口には文字が一つも無い。
+# 中身は別のファイルに入っているので、その道も拾わないと空っぽに見えてしまう
+FRAME_SRC = re.compile(
+    r'<i?frame[^>]+src\s*=\s*["\']([^"\'#]+)', re.IGNORECASE
+)
 META_CHARSET = re.compile(r'charset=["\']?([\w-]+)', re.IGNORECASE)
 # 昔のページのURLに埋め込まれている、元のページのURL
 INNER_URL = re.compile(r"/(https?://\S+)$", re.IGNORECASE)
@@ -284,7 +289,7 @@ def open_page(url):
     text = TAG.sub(" ", body)
 
     links = []
-    for href in LINK_HREF.findall(body):
+    for href in FRAME_SRC.findall(body) + LINK_HREF.findall(body):
         absolute = urllib.parse.urljoin(final_url, unescape(href.strip()))
         if is_walkable(absolute):
             links.append(absolute)
@@ -427,15 +432,34 @@ def choose_destination(state):
     return random.choice(candidates), random.random() < 0.2
 
 
+def remember_paths(state, origin, links):
+    """そのページから伸びていた道を、これから行ける場所として覚える。
+    よその場所へ続く道を先に取る。同じ場所の中の道ばかり抱えても、そこから出られない。"""
+    known = set(state["frontier"]) | set(state["visited"])
+    fresh = [link for link in dict.fromkeys(links) if link not in known]
+    random.shuffle(fresh)
+    here = place_of(origin)
+    outward = [link for link in fresh if place_of(link) != here]
+    inward = [link for link in fresh if place_of(link) == here]
+    state["frontier"].extend(
+        outward[:LINKS_TAKEN] + inward[: max(0, LINKS_TAKEN - len(outward))]
+    )
+    tidy_frontier(state)
+    if len(state["frontier"]) > FRONTIER_LIMIT:
+        state["frontier"] = random.sample(state["frontier"], FRONTIER_LIMIT)
+    if not state["frontier"]:
+        state["frontier"] = list(SEEDS)
+
+
 def walk_once(state):
     """ひとつだけ、どこかのページを訪ねる。
+
+    行ってみたらもう無くなっていたり、枠だけで文字が一つも無い入口だったりする。
+    そういう時はそこで散歩を終わりにせず、先へ続く道だけ持ち帰って別のところへ行く。
     そこから伸びているリンクは、これから行ける場所として覚えておく。"""
     state.setdefault("frontier", list(SEEDS))
     state.setdefault("visited", [])
 
-    # 行ってみたらもう無くなっている場所もある。
-    # そういう時は、そこで散歩を終わりにせず、別のところへ行ってみる
-    destination = None
     for attempt in range(TRIES_BEFORE_GIVING_UP):
         destination, wants_the_past = choose_destination(state)
         try:
@@ -444,46 +468,32 @@ def walk_once(state):
                 title = f"{title}(むかしのすがた)"
             else:
                 title, text, links = open_page(destination)
-            break
         except Exception as error:
             print(f"{destination} には行けませんでした: {error}")
             if destination in state["frontier"]:
                 state["frontier"].remove(destination)
-            destination = None
-    if destination is None:
-        return None
+            continue
 
-    if destination in state["frontier"]:
-        state["frontier"].remove(destination)
-    state["visited"].append(destination)
-    state["visited"] = state["visited"][-2000:]
+        if destination in state["frontier"]:
+            state["frontier"].remove(destination)
+        state["visited"].append(destination)
+        state["visited"] = state["visited"][-2000:]
+        remember_paths(state, destination, links)
 
-    for char in HIRAGANA.findall(text):
-        if char not in state["seen_chars"]:
-            state["seen_chars"].append(char)
+        if not JAPANESE.search(text):
+            # 枠だけの入口。読むものは無いが、奥へ続く道はある
+            print(f"{destination} には読むものがありませんでした")
+            continue
 
-    for word in WORD_CANDIDATE.findall(text):
-        state["word_counts"][word] = state["word_counts"].get(word, 0) + 1
+        for char in HIRAGANA.findall(text):
+            if char not in state["seen_chars"]:
+                state["seen_chars"].append(char)
+        for word in WORD_CANDIDATE.findall(text):
+            state["word_counts"][word] = state["word_counts"].get(word, 0) + 1
 
-    known = set(state["frontier"]) | set(state["visited"])
-    fresh = [link for link in dict.fromkeys(links) if link not in known]
-    random.shuffle(fresh)
+        return title
 
-    # そのページから伸びていた道のうち、覚えて帰るぶん。
-    # よその場所へ続く道を先に取る。同じ場所の中の道ばかり抱えても、そこから出られない
-    here = place_of(destination)
-    outward = [link for link in fresh if place_of(link) != here]
-    inward = [link for link in fresh if place_of(link) == here]
-    taking = outward[:LINKS_TAKEN] + inward[: max(0, LINKS_TAKEN - len(outward))]
-    state["frontier"].extend(taking)
-    tidy_frontier(state)
-
-    if len(state["frontier"]) > FRONTIER_LIMIT:
-        state["frontier"] = random.sample(state["frontier"], FRONTIER_LIMIT)
-    if not state["frontier"]:
-        state["frontier"] = list(SEEDS)
-
-    return title
+    return None
 
 
 def be_alone(state, now):

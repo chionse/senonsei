@@ -20,12 +20,25 @@ jobs:
         run: |
           python - <<'PY'
           import senonsei_ai as s
+          frames = []
           for url in s.SEEDS:
               try:
                   title, text, links = s.open_page(url)
                   kana = len(set(s.HIRAGANA.findall(text)))
                   words = len(set(s.WORD_CANDIDATE.findall(text)))
                   print(f"OK  kana={kana:>3} words={words:>5} links={len(links):>3}  {title[:44]!r}  {url}")
+                  if kana == 0:
+                      frames.append((url, links))
               except Exception as e:
                   print(f"DEAD {str(e)[:55]:<55}  {url}")
+
+          # 枠だけだった入口の、一枚奥を開いてみる
+          for url, links in frames:
+              print(f"\n--- 奥へ: {url}")
+              for inner in links[:6]:
+                  try:
+                      t, txt, _ = s.open_page(inner)
+                      print(f"   kana={len(set(s.HIRAGANA.findall(txt))):>3}  {t[:44]!r}  {inner[:100]}")
+                  except Exception as e:
+                      print(f"   DEAD {str(e)[:40]}  {inner[:100]}")
           PY
