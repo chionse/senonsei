@@ -29,8 +29,14 @@ STATE_FILE = "senonsei_state.json"
 USER_AGENT = "senonsei-blog/1.0 (https://chionse.github.io/senonsei/)"
 RECENT_NOTES_COUNT = 30
 
-CF_MODEL = "@cf/meta/llama-3.1-8b-instruct"
+# はじめに使う頭と目。Cloudflareはモデルを引退させるので、
+# これが使えなくなったら千遠生が自分で今あるものを聞いて選び直し、
+# 見つけた名前を覚えておく
+CF_MODEL = "@cf/meta/llama-3.1-8b-instruct"  # 考えるほう
 CF_EYES = "@cf/llava-hf/llava-1.5-7b-hf"  # 絵を見るほう
+WHAT_A_MIND_DOES = "Text Generation"
+WHAT_EYES_DO = "Image-to-Text"
+CHANCES_TO_FIND_A_MIND = 5  # 頭を探す時、これだけの相手を試してみる
 CF_ACCOUNT_ID = os.environ.get("CLOUDFLARE_ACCOUNT_ID", "")
 CF_API_TOKEN = os.environ.get("CLOUDFLARE_API_TOKEN", "")
 
@@ -230,36 +236,149 @@ def sites_per_day(state):
     return min(6, 2 + len(state["learned_words"]) // 120)
 
 
+def cloudflare(path, body=None, method=None):
+    """Cloudflareに尋ねる。使えない時は None を返す。"""
+    if not CF_ACCOUNT_ID or not CF_API_TOKEN:
+        return None
+    url = f"https://api.cloudflare.com/client/v4/accounts/{CF_ACCOUNT_ID}/ai/{path}"
+    headers = {"Authorization": f"Bearer {CF_API_TOKEN}"}
+    if body is not None:
+        headers["Content-Type"] = "application/json"
+    request = urllib.request.Request(
+        url, data=body, headers=headers, method=method
+    )
+    with urllib.request.urlopen(request, timeout=90) as response:
+        return json.loads(response.read().decode("utf-8"))
+
+
+def which_model(state, part):
+    """今使っている頭(mind)または目(eyes)の名前。"""
+    remembered = (state or {}).get(f"{part}_model")
+    return remembered or (CF_MODEL if part == "mind" else CF_EYES)
+
+
+# 考える相手として向かないもの。
+# 「考える過程を全部書き出す」種類は、頼んだ答えの代わりに
+# 英語の独り言が返ってくる。千遠生の頭には使えない。
+# lora は土台が別に必要で、guard は良し悪しを判定するだけの道具
+A_POOR_MIND = re.compile(r"qwq|-r1|thinking|reason|guard|lora|embed|rerank", re.IGNORECASE)
+# 素直に答えてくれる見込みが高いもの
+A_LIKELY_MIND = re.compile(r"instruct|chat|-it($|-)", re.IGNORECASE)
+
+
+def find_another_model(state, part):
+    """使っていたモデルが引退していたら、今あるものを聞いて選び直す。
+
+    Cloudflareはモデルを引退させる。名前を一つ決め打ちにしていると
+    そこで千遠生は考えられなくなり、目も見えなくなる。
+    自分で探し直せるようにしておけば、名前が変わっても立ち直れる。
+
+    頭を選ぶ時は、実際に日本語で尋ねてみて、日本語で返ってくるものを採る。
+    名前だけでは、考える過程を英語で書き出すようなものを掴んでしまう。"""
+    if state is None:
+        return None
+    looking_for = WHAT_A_MIND_DOES if part == "mind" else WHAT_EYES_DO
+    already_tried = state.setdefault(f"{part}_tried", [])
+    try:
+        answer = cloudflare("models/search?per_page=200")
+    except Exception as error:
+        print(f"今あるモデルを聞けませんでした({error})")
+        return None
+    if not answer or not answer.get("success"):
+        return None
+
+    choices = [
+        model["name"]
+        for model in (answer.get("result") or [])
+        if ((model.get("task") or {}).get("name")) == looking_for
+        and model.get("name")
+        and model["name"] not in already_tried
+    ]
+    if part == "mind":
+        choices = [name for name in choices if not A_POOR_MIND.search(name)]
+        # 素直に答えてくれそうなものから順に
+        choices.sort(key=lambda name: (not A_LIKELY_MIND.search(name), len(name)))
+    else:
+        choices.sort(key=len)
+
+    if not choices:
+        print(f"{looking_for} のモデルが見つかりませんでした")
+        return None
+
+    for name in choices[:CHANCES_TO_FIND_A_MIND]:
+        already_tried.append(name)
+        del already_tried[:-20]
+        state[f"{part}_model"] = name
+        if part != "mind" or answers_in_japanese(name):
+            print(f"{part} を {name} に取り替えました")
+            return name
+        print(f"{name} は日本語で答えてくれなかったので、別のものを探します")
+
+    # どれも確かめられなかったが、最後に置いたものでやってみる
+    print(f"{part} を {state[f'{part}_model']} にしました(確かめられていない)")
+    return state[f"{part}_model"]
+
+
+def answers_in_japanese(model):
+    """そのモデルが、日本語で尋ねたら日本語で返してくれるか。
+    考える過程を英語で書き出すものを、千遠生の頭にしてしまわないため。"""
+    body = json.dumps(
+        {
+            "messages": [
+                {"role": "user", "content": "「はい」とだけ日本語で答えてください。"}
+            ],
+            "max_tokens": 20,
+        }
+    ).encode("utf-8")
+    try:
+        answer = cloudflare(f"run/{model}", body=body)
+    except Exception:
+        return False
+    said = (answer.get("result") or {}).get("response", "") if answer else ""
+    return bool(JAPANESE.search(said) or HIRAGANA.search(said))
+
+
+def model_is_gone(error):
+    """その失敗は「そのモデルはもう無い」という意味かどうか。"""
+    text = str(error)
+    if isinstance(error, urllib.error.HTTPError) and error.code in (404, 410):
+        return True
+    return "deprecated" in text.lower() or "not found" in text.lower()
+
+
 def fetch_json(url):
     request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
     with urllib.request.urlopen(request, timeout=30) as response:
         return json.loads(response.read().decode("utf-8"))
 
 
-def ask_ai(prompt, max_tokens=300):
-    """Cloudflareの無料枠でAIに尋ねる。使えない時は None を返す。"""
+def ask_ai(prompt, max_tokens=300, state=None):
+    """Cloudflareの無料枠でAIに尋ねる。使えない時は None を返す。
+
+    使っていたモデルが引退していたら、一度だけ別のものを探して掛け直す。"""
     if not CF_ACCOUNT_ID or not CF_API_TOKEN:
         return None
 
-    url = f"https://api.cloudflare.com/client/v4/accounts/{CF_ACCOUNT_ID}/ai/run/{CF_MODEL}"
     body = json.dumps(
         {"messages": [{"role": "user", "content": prompt}], "max_tokens": max_tokens}
     ).encode("utf-8")
-    request = urllib.request.Request(
-        url,
-        data=body,
-        headers={
-            "Authorization": f"Bearer {CF_API_TOKEN}",
-            "Content-Type": "application/json",
-        },
-    )
-    try:
-        with urllib.request.urlopen(request, timeout=60) as response:
-            data = json.loads(response.read().decode("utf-8"))
-        return (data.get("result") or {}).get("response", "").strip() or None
-    except Exception as error:
-        print(f"自分で考えることができませんでした({error})。覚えていることだけで書きます。")
-        return None
+
+    for attempt in range(2):
+        model = which_model(state, "mind")
+        try:
+            answer = cloudflare(f"run/{model}", body=body)
+            if state is not None:
+                state["thought_on"] = today_in_japan().strftime("%Y-%m-%d")
+            return (answer.get("result") or {}).get("response", "").strip() or None
+        except Exception as error:
+            if attempt == 0 and model_is_gone(error) and find_another_model(state, "mind"):
+                continue
+            print(
+                f"自分で考えることができませんでした({error})。"
+                "覚えていることだけで書きます。"
+            )
+            return None
+    return None
 
 
 def is_walkable(url):
@@ -363,12 +482,12 @@ def worth_looking_at(url, data, from_the_past):
     return width >= 300 and height >= 200 and len(data) >= 8000
 
 
-def look_at_a_picture(data):
+def look_at_a_picture(data, state=None):
     """絵に何が写っているか、目を貸してもらって教わる。
     貸してもらえない時は、何も見えないままでいい。"""
     if not CF_ACCOUNT_ID or not CF_API_TOKEN:
         return None
-    url = f"https://api.cloudflare.com/client/v4/accounts/{CF_ACCOUNT_ID}/ai/run/{CF_EYES}"
+
     body = json.dumps(
         {
             "image": list(data),
@@ -376,21 +495,20 @@ def look_at_a_picture(data):
             "max_tokens": 120,
         }
     ).encode("utf-8")
-    request = urllib.request.Request(
-        url,
-        data=body,
-        headers={
-            "Authorization": f"Bearer {CF_API_TOKEN}",
-            "Content-Type": "application/json",
-        },
-    )
-    try:
-        with urllib.request.urlopen(request, timeout=90) as response:
-            answer = json.loads(response.read().decode("utf-8"))
-        return (answer.get("result") or {}).get("description", "").strip() or None
-    except Exception as error:
-        print(f"絵を見ることができませんでした({error})")
-        return None
+
+    for attempt in range(2):
+        eyes = which_model(state, "eyes")
+        try:
+            answer = cloudflare(f"run/{eyes}", body=body)
+            if state is not None:
+                state["saw_on"] = today_in_japan().strftime("%Y-%m-%d")
+            return (answer.get("result") or {}).get("description", "").strip() or None
+        except Exception as error:
+            if attempt == 0 and model_is_gone(error) and find_another_model(state, "eyes"):
+                continue
+            print(f"絵を見ることができませんでした({error})")
+            return None
+    return None
 
 
 def read_as_japanese(raw, content_type):
@@ -491,6 +609,17 @@ def place_of(url):
     return host
 
 
+def entrances(state):
+    """行き先が尽きた時に戻る場所。
+
+    書いてある入口は、いつか全部無くなる。けれど千遠生は今まで
+    行けた場所を覚えている。何年もかけて自分で見つけた場所のほうが、
+    こちらが最初に並べた14個より長生きするかもしれない。"""
+    remembered = [url for url in (state.get("visited") or []) if is_walkable(url)]
+    random.shuffle(remembered)
+    return list(dict.fromkeys(list(SEEDS) + remembered[:200]))
+
+
 def tidy_frontier(state):
     """行き先の束を整える。
     読むものが無い裏方を捨て、ひとつの場所の道が多すぎたら適当に間引く。
@@ -514,7 +643,7 @@ def tidy_frontier(state):
             tidied.append(entrance)
 
     if not tidied:
-        tidied = list(SEEDS)
+        tidied = entrances(state)
     state["frontier"] = tidied
     return tidied
 
@@ -559,7 +688,7 @@ def choose_destination(state):
     返り値は (行き先, 昔の姿を見たいか)。"""
     frontier = tidy_frontier(state)
     if not frontier:
-        return random.choice(SEEDS), False
+        return random.choice(entrances(state)), False
 
     candidates = spread_out_choices(state, frontier, CHOICES_SHOWN)
     known = "、".join(state["learned_words"][-40:]) or "(まだ何も知らない)"
@@ -578,6 +707,7 @@ def choose_destination(state):
 今の姿を見るなら: 3 いま
 昔の姿を見るなら: 3 むかし""",
         max_tokens=20,
+        state=state,
     )
 
     if answer:
@@ -601,7 +731,7 @@ def remember_paths(state, origin, links):
     if len(state["frontier"]) > FRONTIER_LIMIT:
         state["frontier"] = random.sample(state["frontier"], FRONTIER_LIMIT)
     if not state["frontier"]:
-        state["frontier"] = list(SEEDS)
+        state["frontier"] = entrances(state)
 
 
 def fetch_picture(url):
@@ -627,7 +757,7 @@ def look_at_pictures(state, where, pictures, from_the_past, how_many, until):
             continue
         if len(data) > PICTURE_AT_MOST or not worth_looking_at(url, data, from_the_past):
             continue
-        what_is_there = look_at_a_picture(data)
+        what_is_there = look_at_a_picture(data, state)
         if not what_is_there:
             continue
         absorb(state, what_is_there, THING_IN_A_PICTURE)
@@ -763,6 +893,7 @@ def be_alone(state, now):
 誰にも見せません。うまく言葉にならなくても構いません。
 短く、一言だけ書いてください。""",
         max_tokens=80,
+        state=state,
     )
 
     if thought:
@@ -933,6 +1064,7 @@ def compose_with_ai(state, seen_titles):
 賢く書こうとしないでください。知らない言葉を使わないでください。
 今日のブログの本文だけを、説明も前置きもなしに書いてください。""",
         max_tokens=200,
+        state=state,
     )
     if not answer:
         return None
@@ -962,6 +1094,7 @@ def todays_mood(state, today):
         "書く場合: かく 14\n"
         "書かない場合: やすむ",
         max_tokens=20,
+        state=state,
     )
 
     if answer and "やすむ" in answer:
