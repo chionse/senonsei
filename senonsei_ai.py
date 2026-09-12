@@ -13,6 +13,7 @@ Cloudflare Workers AI の無料枠が使える時は、千遠生は自分で考�
 """
 
 import datetime
+import html
 import json
 import os
 import random
@@ -40,13 +41,25 @@ META_CHARSET = re.compile(r'charset=["\']?([\w-]+)', re.IGNORECASE)
 
 # 最初に立っている場所。ここから先は自分でリンクを辿って広がっていく。
 SEEDS = [
+    # 人がたくさん集まっている、大きな通り
     "https://b.hatena.ne.jp/hotentry",
     "https://ja.wikipedia.org/wiki/特別:おまかせ表示",
-    "https://www.aozora.gr.jp/",
     "https://www3.nhk.or.jp/news/",
     "https://note.com/",
+    # 名前のない人たちが、自分のために書いている場所
+    "https://anond.hatelabo.jp/",
+    "https://kakuyomu.jp/",
+    "https://syosetu.com/",
+    "https://dic.nicovideo.jp/",
+    # 本になった言葉
+    "https://www.aozora.gr.jp/",
     "https://ja.wikisource.org/wiki/特別:おまかせ表示",
+    # 誰も来なくなった、個人のホームページの層。ここは今の検索では出てこない
     "https://web.archive.org/web/2000/http://www.yahoo.co.jp/",
+    "https://web.archive.org/web/1999/http://www.geocities.co.jp/",
+    "https://web.archive.org/web/2001/http://dir.yahoo.co.jp/",
+    "https://web.archive.org/web/2002/http://www.readme.jp/",
+    "https://web.archive.org/web/1998/http://www.nifty.com/",
 ]
 
 # 最低限これだけは避ける。それ以外は何を読むか千遠生次第。
@@ -59,9 +72,25 @@ NOT_A_PAGE = re.compile(
     r"\.(jpg|jpeg|png|gif|webp|svg|ico|css|js|zip|gz|pdf|mp[34]|mov|avi|exe|dmg)($|\?)",
     re.IGNORECASE,
 )
+# 場所ではなく、ページを動かすための裏方。行っても読むものが無い
+NOT_A_PLACE = re.compile(
+    r"googletagmanager|google-analytics|doubleclick|gstatic\.com|googleapis\.com|"
+    r"cloudfront\.net|akamai|fastly|\bcdn[.-]|/cdn-cgi/|"
+    r"facebook\.com|twitter\.com|//x\.com|instagram\.com|line\.me|"
+    r"youtube\.com|youtu\.be|/intent/tweet|sharer\.php|"
+    r"/login|/signup|/signin|/sign_up|/logout|/cart|/checkout|"
+    r"/privacy|/terms|/tos($|/)|/help($|/)|/support($|/)|/contact($|/)|"
+    r"\bhelp[.-]|\bsupport[.-]|/hc/",
+    re.IGNORECASE,
+)
 FRONTIER_LIMIT = 5000  # まだ行っていない場所を、これだけ抱えていられる
 CHOICES_SHOWN = 30  # 行き先を選ぶとき、一度にこれだけの候補から選ぶ
 LINKS_TAKEN = 60  # ひとつのページから、これだけの道を覚えて帰る
+# 同じ場所から伸びた道を、一度にこれだけまでしか抱えない。
+# ひとつのサイトで行き先が埋まってしまうと、そこから出られなくなるため
+PATHS_PER_PLACE = 8
+RETURN_TO_ENTRANCE_CHANCE = 0.12  # ときどき、最初にいた入口へ戻ってみる
+TRIES_BEFORE_GIVING_UP = 3  # 行った先が消えていたら、これだけ別の場所を試してみる
 REST_DAY_CHANCE = 0.1  # たまに、書かない日がある
 WALK_CHANCE_PER_HOUR = 0.3  # 一時間ごとに、これくらいの気まぐれで散歩に出る
 INNER_VOICE_KEPT = 60  # ひとりで思ったことを、これだけ抱えていられる
@@ -173,14 +202,38 @@ def is_walkable(url):
     """そこへ行っていいか。最低限これだけは避ける。"""
     if not url.startswith("http"):
         return False
-    if AVOID.search(url) or NOT_A_PAGE.search(url):
+    if AVOID.search(url) or NOT_A_PAGE.search(url) or NOT_A_PLACE.search(url):
         return False
     return True
 
 
+def as_openable(url):
+    """日本語などが入ったURLは、そのままでは開けない。
+    ページ名に日本語が使われている場所は珍しくないので、機械が読める形に直してやる。"""
+    if all(ord(ch) < 128 for ch in url):
+        return url
+    parts = urllib.parse.urlsplit(url)
+    host = parts.netloc
+    if any(ord(ch) > 127 for ch in host):
+        try:
+            host = host.encode("idna").decode("ascii")
+        except Exception:
+            pass
+    safe = "/%:@&=+$,~!*'()"
+    return urllib.parse.urlunsplit(
+        (
+            parts.scheme,
+            host,
+            urllib.parse.quote(parts.path, safe=safe),
+            urllib.parse.quote(parts.query, safe=safe + "?"),
+            "",
+        )
+    )
+
+
 def open_page(url):
     """ページを開いて、そこにある文章と、そこから伸びているリンクを受け取る。"""
-    request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+    request = urllib.request.Request(as_openable(url), headers={"User-Agent": USER_AGENT})
     with urllib.request.urlopen(request, timeout=25) as response:
         content_type = response.headers.get("Content-Type", "")
         if "html" not in content_type and "xml" not in content_type:
@@ -211,7 +264,7 @@ def open_page(url):
 
     links = []
     for href in LINK_HREF.findall(body):
-        absolute = urllib.parse.urljoin(final_url, href.strip())
+        absolute = urllib.parse.urljoin(final_url, html.unescape(href.strip()))
         if is_walkable(absolute):
             links.append(absolute)
 
@@ -223,7 +276,7 @@ def visit_the_past(url):
     year = random.randint(1997, 2008)
     api = (
         "https://archive.org/wayback/available?url="
-        + urllib.parse.quote(url, safe="")
+        + urllib.parse.quote(as_openable(url), safe="")
         + f"&timestamp={year}0101"
     )
     snapshot = (fetch_json(api).get("archived_snapshots") or {}).get("closest") or {}
@@ -232,14 +285,85 @@ def visit_the_past(url):
     return open_page(snapshot["url"])
 
 
+def place_of(url):
+    """そのURLがどこの場所のものか。"""
+    try:
+        return urllib.parse.urlparse(url).netloc.lower()
+    except Exception:
+        return ""
+
+
+def tidy_frontier(state):
+    """行き先の束を整える。
+    読むものが無い裏方を捨て、ひとつの場所の道が多すぎたら適当に間引く。
+    ここでやるのは道の掃除だけで、どこへ行くかには口を出さない。"""
+    frontier = state.get("frontier") or []
+    kept_by_place = {}
+    tidied = []
+    for url in frontier:
+        if not is_walkable(url):
+            continue
+        place = place_of(url)
+        if kept_by_place.get(place, 0) >= PATHS_PER_PLACE:
+            continue
+        kept_by_place[place] = kept_by_place.get(place, 0) + 1
+        tidied.append(url)
+
+    # 入口が全部使われてしまうと、どこにも広がれなくなる。ときどき戻れるようにしておく
+    if random.random() < RETURN_TO_ENTRANCE_CHANCE:
+        entrance = random.choice(SEEDS)
+        if entrance not in tidied:
+            tidied.append(entrance)
+
+    if not tidied:
+        tidied = list(SEEDS)
+    state["frontier"] = tidied
+    return tidied
+
+
+def spread_out_choices(state, frontier, how_many):
+    """見せる候補を、いろいろな場所から少しずつ集める。
+    同じサイトばかりが並んでいると、選べるものが実質ひとつしか無くなってしまう。
+    選ぶのは千遠生。ここでやるのは、その目の前を狭めないことだけ。"""
+    been_to = {place_of(url) for url in state.get("visited", [])}
+    by_place = {}
+    for url in frontier:
+        by_place.setdefault(place_of(url), []).append(url)
+    for urls in by_place.values():
+        random.shuffle(urls)
+
+    # まだ行ったことのない場所を先に並べる
+    unfamiliar = [p for p in by_place if p not in been_to]
+    familiar = [p for p in by_place if p in been_to]
+    random.shuffle(unfamiliar)
+    random.shuffle(familiar)
+    order = unfamiliar + familiar
+
+    chosen = []
+    depth = 0
+    while len(chosen) < how_many:
+        added_this_round = False
+        for place in order:
+            urls = by_place[place]
+            if depth < len(urls):
+                chosen.append(urls[depth])
+                added_this_round = True
+                if len(chosen) >= how_many:
+                    break
+        if not added_this_round:
+            break
+        depth += 1
+    return chosen
+
+
 def choose_destination(state):
     """どこへ行くか、そして今の姿を見るか昔の姿を見るか。どちらも自分で選ぶ。
     返り値は (行き先, 昔の姿を見たいか)。"""
-    frontier = state.get("frontier") or []
+    frontier = tidy_frontier(state)
     if not frontier:
         return random.choice(SEEDS), False
 
-    candidates = random.sample(frontier, min(len(frontier), CHOICES_SHOWN))
+    candidates = spread_out_choices(state, frontier, CHOICES_SHOWN)
     known = "、".join(state["learned_words"][-40:]) or "(まだ何も知らない)"
     listing = "\n".join(f"{i + 1}. {url}" for i, url in enumerate(candidates))
     answer = ask_ai(
@@ -275,17 +399,24 @@ def walk_once(state):
     state.setdefault("frontier", list(SEEDS))
     state.setdefault("visited", [])
 
-    destination, wants_the_past = choose_destination(state)
-    try:
-        if wants_the_past:
-            title, text, links = visit_the_past(destination)
-            title = f"{title}(むかしのすがた)"
-        else:
-            title, text, links = open_page(destination)
-    except Exception as error:
-        print(f"{destination} には行けませんでした: {error}")
-        if destination in state["frontier"]:
-            state["frontier"].remove(destination)
+    # 行ってみたらもう無くなっている場所もある。
+    # そういう時は、そこで散歩を終わりにせず、別のところへ行ってみる
+    destination = None
+    for attempt in range(TRIES_BEFORE_GIVING_UP):
+        destination, wants_the_past = choose_destination(state)
+        try:
+            if wants_the_past:
+                title, text, links = visit_the_past(destination)
+                title = f"{title}(むかしのすがた)"
+            else:
+                title, text, links = open_page(destination)
+            break
+        except Exception as error:
+            print(f"{destination} には行けませんでした: {error}")
+            if destination in state["frontier"]:
+                state["frontier"].remove(destination)
+            destination = None
+    if destination is None:
         return None
 
     if destination in state["frontier"]:
@@ -303,7 +434,15 @@ def walk_once(state):
     known = set(state["frontier"]) | set(state["visited"])
     fresh = [link for link in dict.fromkeys(links) if link not in known]
     random.shuffle(fresh)
-    state["frontier"].extend(fresh[:LINKS_TAKEN])
+
+    # そのページから伸びていた道のうち、覚えて帰るぶん。
+    # よその場所へ続く道を先に取る。同じ場所の中の道ばかり抱えても、そこから出られない
+    here = place_of(destination)
+    outward = [link for link in fresh if place_of(link) != here]
+    inward = [link for link in fresh if place_of(link) == here]
+    taking = outward[:LINKS_TAKEN] + inward[: max(0, LINKS_TAKEN - len(outward))]
+    state["frontier"].extend(taking)
+    tidy_frontier(state)
 
     if len(state["frontier"]) > FRONTIER_LIMIT:
         state["frontier"] = random.sample(state["frontier"], FRONTIER_LIMIT)
