@@ -1,0 +1,144 @@
+name: Vision probe (temporary)
+
+on:
+  push:
+    branches:
+      - claude/project-progress-update-t2tukz
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Ask Cloudflare what is in a picture
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          python - <<'PY'
+          import json, os, re, urllib.request, urllib.parse
+          import senonsei_ai as s
+
+          ACCOUNT = os.environ["CLOUDFLARE_ACCOUNT_ID"]
+          TOKEN = os.environ["CLOUDFLARE_API_TOKEN"]
+
+          def call(model, payload, binary=None):
+              url = f"https://api.cloudflare.com/client/v4/accounts/{ACCOUNT}/ai/run/{model}"
+              if binary is not None:
+                  req = urllib.request.Request(
+                      url, data=binary,
+                      headers={"Authorization": f"Bearer {TOKEN}",
+                               "Content-Type": "application/octet-stream"})
+              else:
+                  req = urllib.request.Request(
+                      url, data=json.dumps(payload).encode(),
+                      headers={"Authorization": f"Bearer {TOKEN}",
+                               "Content-Type": "application/json"})
+              try:
+                  with urllib.request.urlopen(req, timeout=120) as r:
+                      return r.status, dict(r.headers), json.loads(r.read().decode())
+              except urllib.error.HTTPError as e:
+                  return e.code, dict(e.headers), e.read().decode()[:600]
+              except Exception as e:
+                  return None, {}, str(e)[:300]
+
+          # --- 1. 本物のページから絵を一枚拾ってくる ---
+          IMG = re.compile(r'<img[^>]+src\s*=\s*["\']([^"\']+)', re.IGNORECASE)
+          picture = None
+          for seed in ["https://www3.nhk.or.jp/news/", "https://b.hatena.ne.jp/hotentry",
+                       "https://note.com/"]:
+              try:
+                  req = urllib.request.Request(seed, headers={"User-Agent": s.USER_AGENT})
+                  with urllib.request.urlopen(req, timeout=25) as r:
+                      html = r.read(400000).decode("utf-8", errors="ignore")
+                      base = r.geturl()
+              except Exception as e:
+                  print(f"  x {seed}: {e}")
+                  continue
+              for src in IMG.findall(html):
+                  full = urllib.parse.urljoin(base, src.strip())
+                  if not re.search(r"\.(jpe?g|png)($|\?)", full, re.I):
+                      continue
+                  try:
+                      req = urllib.request.Request(full, headers={"User-Agent": s.USER_AGENT})
+                      with urllib.request.urlopen(req, timeout=20) as r:
+                          data = r.read(400000)
+                  except Exception:
+                      continue
+                  if 3000 < len(data) < 250000:
+                      picture = (full, data)
+                      break
+              if picture:
+                  break
+
+          if not picture:
+              print("絵が拾えなかった")
+              raise SystemExit(0)
+
+          where, data = picture
+          print(f"拾った絵: {where}")
+          print(f"大きさ: {len(data)} バイト\n")
+
+          as_bytes = list(data)
+
+          # --- 2. 絵を見られるモデルをいくつか試す ---
+          trials = [
+              ("@cf/llava-hf/llava-1.5-7b-hf", "英語で",
+               {"image": as_bytes, "prompt": "Describe this picture briefly.", "max_tokens": 120}),
+              ("@cf/llava-hf/llava-1.5-7b-hf", "日本語で",
+               {"image": as_bytes,
+                "prompt": "この絵に何が写っていますか。日本語で短く答えてください。",
+                "max_tokens": 120}),
+              ("@cf/unum/uform-gen2-qwen-500m", "英語で",
+               {"image": as_bytes, "prompt": "Describe this picture briefly.", "max_tokens": 120}),
+              ("@cf/meta/llama-3.2-11b-vision-instruct", "日本語で",
+               {"image": as_bytes,
+                "prompt": "この絵に何が写っていますか。日本語で短く答えてください。",
+                "max_tokens": 120}),
+          ]
+          english = None
+          for model, how, payload in trials:
+              status, headers, body = call(model, payload)
+              print(f"--- {model} ({how}) -> {status}")
+              if isinstance(body, dict) and body.get("success"):
+                  out = body.get("result", {})
+                  text = out.get("description") or out.get("response") or str(out)[:300]
+                  print(f"    返ってきた説明: {text.strip()[:300]}")
+                  kana = s.HIRAGANA.findall(text)
+                  words = set(s.WORD_CANDIDATE.findall(text))
+                  print(f"    日本語のひらがな: {len(kana)}文字 / 言葉の候補: {len(words)}")
+                  if words:
+                      print(f"    拾える言葉: {'、'.join(list(words)[:15])}")
+                  if how == "英語で" and not kana:
+                      english = text.strip()
+              else:
+                  print(f"    だめだった: {str(body)[:300]}")
+              for k, v in headers.items():
+                  if "neuron" in k.lower() or "usage" in k.lower() or "ratelimit" in k.lower():
+                      print(f"    {k}: {v}")
+
+          # --- 3. 英語の説明を日本語に直せるか ---
+          if english:
+              print(f"\n--- 英語の説明を日本語に直してみる")
+              print(f"    もとの英語: {english[:200]}")
+              status, headers, body = call(
+                  "@cf/meta/llama-3.1-8b-instruct",
+                  {"messages": [{"role": "user",
+                                 "content": f"次の英文を、短い日本語の一文にしてください。説明は不要です。\n\n{english}"}],
+                   "max_tokens": 120})
+              if isinstance(body, dict) and body.get("success"):
+                  jp = body["result"].get("response", "").strip()
+                  print(f"    日本語: {jp[:300]}")
+                  print(f"    ひらがな: {len(s.HIRAGANA.findall(jp))}文字 / "
+                        f"言葉の候補: {len(set(s.WORD_CANDIDATE.findall(jp)))}")
+                  print(f"    拾える言葉: {'、'.join(list(set(s.WORD_CANDIDATE.findall(jp)))[:15])}")
+              else:
+                  print(f"    だめだった: {str(body)[:300]}")
+          PY
