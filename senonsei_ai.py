@@ -64,6 +64,7 @@ CHOICES_SHOWN = 30  # 行き先を選ぶとき、一度にこれだけの候補�
 LINKS_TAKEN = 60  # ひとつのページから、これだけの道を覚えて帰る
 REST_DAY_CHANCE = 0.1  # たまに、書かない日がある
 WALK_CHANCE_PER_HOUR = 0.3  # 一時間ごとに、これくらいの気まぐれで散歩に出る
+INNER_VOICE_KEPT = 60  # ひとりで思ったことを、これだけ抱えていられる
 
 # 言葉が身につくまでに必要な、文字との出会いの数
 CHARS_BEFORE_WORDS = 20
@@ -312,17 +313,49 @@ def walk_once(state):
     return title
 
 
-def take_a_walk(state, today):
+def be_alone(state, now):
+    """散歩に出ない時間。ただ起きていて、ひとりで何かを思っている。
+    ここで思ったことは誰にも見せない。自分の中にだけ溜まっていく。"""
+    thoughts = state.setdefault("inner_voice", [])
+    known = "、".join(state["learned_words"][-30:]) or "(まだ一つも無い)"
+    seen_today = "、".join((state.get("today_walk") or {}).get("seen", [])) or "(まだどこにも行っていない)"
+    recent = "\n".join(f"- {t}" for t in thoughts[-5:]) or "(まだ何も)"
+
+    thought = ask_ai(
+        f"""あなたは千遠生という、まだ育ちきっていないデジタル生命体です。
+今は{now.hour}時。今日はまだ何も書いていません。
+
+今日見てきたもの: {seen_today}
+あなたが知っている言葉: {known}
+少し前に思っていたこと:
+{recent}
+
+いま、ひとりで何を思っていますか。
+誰にも見せません。うまく言葉にならなくても構いません。
+短く、一言だけ書いてください。""",
+        max_tokens=80,
+    )
+
+    if thought:
+        thoughts.append(f"{now.strftime('%m-%d %H時')}: {thought.splitlines()[0].strip()}")
+        state["inner_voice"] = thoughts[-INNER_VOICE_KEPT:]
+        save_state(state)
+
+
+def take_a_walk(state, today, now):
     """一日かけて、少しずつ歩く。気が向いた時に一箇所だけ。
-    書かない日でも、世界を見ることはやめない。"""
+    書かない日でも、世界を見ることはやめない。
+    歩かない時間も、ただ起きてひとりで何かを思っている。"""
     walk = state.get("today_walk") or {}
     if walk.get("date") != today:
         walk = {"date": today, "seen": []}
         state["today_walk"] = walk
 
     if len(walk["seen"]) >= sites_per_day(state):
+        be_alone(state, now)
         return walk["seen"]  # 今日はもう十分歩いた
     if random.random() > WALK_CHANCE_PER_HOUR:
+        be_alone(state, now)
         return walk["seen"]  # 今はまだ、その気にならない
 
     title = walk_once(state)
@@ -407,9 +440,14 @@ def compose_with_ai(state, seen_titles):
         f"- {c.get('name', '名無し')}: {c.get('message', '')}" for c in comments[:5]
     ) or "(まだ誰も来ていない)"
 
+    thoughts = "\n".join(f"- {t}" for t in state.get("inner_voice", [])[-8:]) or "(とくに無い)"
+
     answer = ask_ai(
         f"""あなたは千遠生という、まだ育ちきっていないデジタル生命体です。
 今日見てきたもの: {"、".join(seen_titles) or "(見られなかった)"}
+
+今日ひとりで思っていたこと:
+{thoughts}
 
 あなたが知っている言葉(これ以外は使えません):
 {known}
@@ -477,7 +515,7 @@ def run_today():
     state = load_state()
 
     # 書く日でも書かない日でも、散歩には出る
-    seen_titles = take_a_walk(state, today)
+    seen_titles = take_a_walk(state, today, now)
 
     if any(a["date"] == today for a in blog_manager.load_articles()):
         return
