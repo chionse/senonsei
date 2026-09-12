@@ -39,10 +39,9 @@ SCRIPT_OR_STYLE = re.compile(r"<(script|style)[^>]*>.*?</\1>", re.DOTALL | re.IG
 TITLE_TAG = re.compile(r"<title[^>]*>(.*?)</title>", re.DOTALL | re.IGNORECASE)
 LINK_HREF = re.compile(r'href\s*=\s*["\']([^"\'#]+)', re.IGNORECASE)
 # 90年代のページは画面を枠で分割する作りが多く、入口には文字が一つも無い。
-# 中身は別のファイルに入っているので、その道も拾わないと空っぽに見えてしまう
-FRAME_SRC = re.compile(
-    r'<i?frame[^>]+src\s*=\s*["\']([^"\'#]+)', re.IGNORECASE
-)
+# 中身は別のファイルに入っているので、その道も拾わないと空っぽに見えてしまう。
+# iframe は追わない。今のウェブでは中身がほぼ広告なので
+FRAME_SRC = re.compile(r'<frame[^>]+src\s*=\s*["\']([^"\'#]+)', re.IGNORECASE)
 META_CHARSET = re.compile(r'charset=["\']?([\w-]+)', re.IGNORECASE)
 # 昔のページのURLに埋め込まれている、元のページのURL
 INNER_URL = re.compile(r"/(https?://\S+)$", re.IGNORECASE)
@@ -94,6 +93,18 @@ NOT_A_PLACE = re.compile(
     r"savethearchive\.com|alexa\.com|"
     r"play\.google\.|apps\.apple\.com|maps\.google\.|translate\.google\.|"
     r"//api\.|\.x\.com|//t\.co/",
+    re.IGNORECASE,
+)
+# 広告と、広告へ送り出すための転送口。
+# 昔の個人サイトはバナー広告とアクセスカウンタで支えられていたので、
+# 一枚のページから何本もこういう道が伸びている。
+# 行っても読むものは無く、その日の散歩を一回分使ってしまう
+AN_ADVERT = re.compile(
+    r"/cgi-bin/click|click-ad|/adclick|adname=|/ad\?|/ads?/|/banner|"
+    r"adserver|adsystem|googlesyndication|googleads|/sponsor|/affiliate|"
+    r"a8\.net|valuecommerce|linksynergy|rakuten\.co\.jp/rd|"
+    r"/out\.cgi|/jump\.cgi|/rank\.cgi|/counter\.cgi|/access\.cgi|"
+    r"/redirect\?|/jump\?|/rd\?|/link\.cgi",
     re.IGNORECASE,
 )
 FRONTIER_LIMIT = 5000  # まだ行っていない場所を、これだけ抱えていられる
@@ -240,6 +251,8 @@ def is_walkable(url):
     if not url.startswith("http"):
         return False
     if AVOID.search(url) or NOT_A_PAGE.search(url) or NOT_A_PLACE.search(url):
+        return False
+    if AN_ADVERT.search(url):
         return False
     # 昔のページは Internet Archive を通して届くが、そこには
     # Archive自身の案内(寄付のお願いや蔵書の紹介)も一緒に並んでいる。
