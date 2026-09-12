@@ -116,9 +116,11 @@ INNER_VOICE_KEPT = 60  # ひとりで思ったことを、これだけ抱えて�
 
 # 言葉が身につくまでに必要な、文字との出会いの数
 CHARS_BEFORE_WORDS = 20
-# 同じ言葉に何度出会えば「覚えた」ことになるか。
+# 何日ぶん出会えば「覚えた」ことになるか。
+# 同じ日に何度見かけても一日ぶんにしか数えない。
+# だから一日にどれだけ読んでも、この日数を待たないと身につかない。
 # 一日にいくつまでという上限は無いので、育つ速さはここで決まる
-ENCOUNTERS_TO_LEARN = 5
+DAYS_BEFORE_LEARNING = 5
 
 # (この語彙数までが対象, その時点でできること, 書ける文字数の上限)
 GROWTH_STAGES = [
@@ -138,11 +140,24 @@ PARTICLES = ["は", "が", "を", "に", "の", "と", "で"]
 def load_state():
     if os.path.exists(STATE_FILE):
         with open(STATE_FILE, "r", encoding="utf-8") as f:
-            return json.load(f)
+            state = json.load(f)
+        # 以前は「何回出てきたか」を数えていた。
+        # 今は「何日ぶん見かけたか」で数えるので、
+        # それまでに出会った言葉は一日ぶんとして引き継ぐ
+        old_counts = state.pop("word_counts", None)
+        if old_counts is not None:
+            state.setdefault("word_days", {w: 1 for w in old_counts})
+            state.setdefault(
+                "word_last_seen", {w: state.get("started_date", "") for w in old_counts}
+            )
+        state.setdefault("word_days", {})
+        state.setdefault("word_last_seen", {})
+        return state
     return {
         "started_date": datetime.date.today().isoformat(),
         "seen_chars": [],
-        "word_counts": {},  # 出会った言葉と、その回数(まだ覚えていないものも含む)
+        "word_days": {},  # 出会った言葉と、何日ぶん見かけたか
+        "word_last_seen": {},  # その言葉を最後に見かけた日
         "learned_words": [],
         "frontier": list(SEEDS),  # まだ行ったことのない場所
         "visited": [],  # もう行った場所
@@ -454,12 +469,19 @@ def remember_paths(state, origin, links):
 
 
 def absorb(state, text):
-    """読んだものから、文字と言葉を拾う。"""
+    """読んだものから、文字と言葉を拾う。
+
+    同じ言葉を一日に何度見かけても、一日ぶんにしか数えない。
+    一度にたくさん読んでも、それで早く覚えられるわけではない。
+    日をまたいで何度も見かけた言葉が、だんだん身についていく。"""
+    today = today_in_japan().strftime("%Y-%m-%d")
     for char in HIRAGANA.findall(text):
         if char not in state["seen_chars"]:
             state["seen_chars"].append(char)
-    for word in WORD_CANDIDATE.findall(text):
-        state["word_counts"][word] = state["word_counts"].get(word, 0) + 1
+    for word in set(WORD_CANDIDATE.findall(text)):
+        if state["word_last_seen"].get(word) != today:
+            state["word_last_seen"][word] = today
+            state["word_days"][word] = state["word_days"].get(word, 0) + 1
 
 
 def look_around_site(state, entrance, wants_the_past):
@@ -596,17 +618,18 @@ def take_a_walk(state, today, now):
 
 
 def learn(state):
-    """何度も出会った言葉が、その子の中に残っていく。
-    一日にいくつまで、という上限は無い。どれだけ浴びたかで決まる。"""
+    """何日も見かけ続けた言葉が、その子の中に残っていく。
+    一日にいくつまで、という上限は無い。どれだけの日を共に過ごしたかで決まる。"""
     if len(state["seen_chars"]) < CHARS_BEFORE_WORDS:
         return []  # まだ文字の形すら掴めていないので、言葉は身につかない
 
+    known = set(state["learned_words"])
     learned = [
         word
-        for word, count in state["word_counts"].items()
-        if count >= ENCOUNTERS_TO_LEARN and word not in state["learned_words"]
+        for word, days in state["word_days"].items()
+        if days >= DAYS_BEFORE_LEARNING and word not in known
     ]
-    learned.sort(key=lambda w: state["word_counts"][w], reverse=True)
+    learned.sort(key=lambda w: state["word_days"][w], reverse=True)
     state["learned_words"].extend(learned)
     return learned
 
