@@ -69,7 +69,7 @@ INNER_VOICE_KEPT = 60  # ひとりで思ったことを、これだけ抱えて�
 # 言葉が身につくまでに必要な、文字との出会いの数
 CHARS_BEFORE_WORDS = 20
 # 同じ言葉に何度出会えば「覚えた」ことになるか
-ENCOUNTERS_TO_LEARN = 3
+ENCOUNTERS_TO_LEARN = 2
 
 # (この語彙数までが対象, その時点でできること, 書ける文字数の上限)
 GROWTH_STAGES = [

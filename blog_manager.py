@@ -438,7 +438,7 @@ def regenerate_pages(articles):
 
 def add_new_article(title, content, date_str=None):
     """記事を1件追加してページを再生成する。同じ日付の記事が既にある場合は追加しない(重複投稿の防止)。"""
-    now = datetime.datetime.now()
+    now = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=9)))
     date_str = date_str or now.strftime('%Y-%m-%d')
 
     articles = load_articles()
