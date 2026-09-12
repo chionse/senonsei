@@ -125,6 +125,11 @@ DAYS_BEFORE_LEARNING = 5
 # 薄れきった言葉は出会ったことすら消える。
 # ただし一度身についた言葉は忘れない
 FADE_AFTER_DAYS = 7
+# この語数を覚えるごとに、覚えかけを抱えていられる日数が一日伸びる。
+# 知っている言葉が増えるほど記憶は長く持つようになり、
+# はじめは毎日見かける言葉しか掴めなかった子が、
+# やがて季節に一度しか出会わない言葉も覚えられるようになる
+MEMORY_GROWS_EVERY = 40
 
 # (この語彙数までが対象, その時点でできること, 書ける文字数の上限)
 GROWTH_STAGES = [
@@ -625,6 +630,14 @@ def take_a_walk(state, today, now):
     return walk["seen"]
 
 
+def how_long_it_holds(state):
+    """覚えかけの言葉を、どれだけの間抱えていられるか。
+
+    知っている言葉が増えるほど、記憶は長く持つようになる。
+    言葉を知っていること自体が、新しい言葉を引っ掛ける釘になる。"""
+    return FADE_AFTER_DAYS + len(state["learned_words"]) // MEMORY_GROWS_EVERY
+
+
 def days_held(state, word):
     """その言葉を、今どれだけ抱えているか。
 
@@ -638,7 +651,7 @@ def days_held(state, word):
         gap = (today_in_japan().date() - datetime.date.fromisoformat(last)).days
     except ValueError:
         return days
-    return days - max(0, gap) // FADE_AFTER_DAYS
+    return days - max(0, gap) // how_long_it_holds(state)
 
 
 def forget(state):
