@@ -17,6 +17,7 @@ import json
 import os
 import random
 import re
+import struct
 import time
 import urllib.parse
 import urllib.request
@@ -29,19 +30,31 @@ USER_AGENT = "senonsei-blog/1.0 (https://chionse.github.io/senonsei/)"
 RECENT_NOTES_COUNT = 30
 
 CF_MODEL = "@cf/meta/llama-3.1-8b-instruct"
+CF_EYES = "@cf/llava-hf/llava-1.5-7b-hf"  # 絵を見るほう
 CF_ACCOUNT_ID = os.environ.get("CLOUDFLARE_ACCOUNT_ID", "")
 CF_API_TOKEN = os.environ.get("CLOUDFLARE_API_TOKEN", "")
 
 HIRAGANA = re.compile(r"[ぁ-ん]")
 WORD_CANDIDATE = re.compile(r"[ァ-ヴー]{2,6}|[一-龯]{2,4}|[ぁ-ん]{2,4}")
+# 絵に何が写っているかを答えてもらった言葉は、一文字でも本物。
+# 「車」「山」「手」「雲」は、そのまま名前として受け取る
+THING_IN_A_PICTURE = re.compile(r"[ァ-ヴー]{2,6}|[一-龯]{1,4}|[ぁ-ん]{2,4}")
 TAG = re.compile(r"<[^>]+>")
 SCRIPT_OR_STYLE = re.compile(r"<(script|style)[^>]*>.*?</\1>", re.DOTALL | re.IGNORECASE)
 TITLE_TAG = re.compile(r"<title[^>]*>(.*?)</title>", re.DOTALL | re.IGNORECASE)
 LINK_HREF = re.compile(r'href\s*=\s*["\']([^"\'#]+)', re.IGNORECASE)
 # 90年代のページは画面を枠で分割する作りが多く、入口には文字が一つも無い。
-# 中身は別のファイルに入っているので、その道も拾わないと空っぽに見えてしまう
-FRAME_SRC = re.compile(
-    r'<i?frame[^>]+src\s*=\s*["\']([^"\'#]+)', re.IGNORECASE
+# 中身は別のファイルに入っているので、その道も拾わないと空っぽに見えてしまう。
+# iframe は追わない。今のウェブでは中身がほぼ広告なので
+FRAME_SRC = re.compile(r'<frame[^>]+src\s*=\s*["\']([^"\'#]+)', re.IGNORECASE)
+IMG_SRC = re.compile(r'<img[^>]+src\s*=\s*["\']([^"\']+)', re.IGNORECASE)
+LOOKS_LIKE_A_PICTURE = re.compile(r"\.(jpe?g|png|gif|webp)($|\?)", re.IGNORECASE)
+# ページを飾るために置かれている絵。見ても世界のことは何も分からない
+A_DECORATION = re.compile(
+    r"logo|icon|favicon|banner|btn|button|sprite|badge|avatar|spacer|blank|"
+    r"arrow|bullet|/line|dot|border|/bg[-_.]|background|header|footer|nav|"
+    r"sns|share|emoji|stamp|loading|dummy|noimage|placeholder",
+    re.IGNORECASE,
 )
 META_CHARSET = re.compile(r'charset=["\']?([\w-]+)', re.IGNORECASE)
 # 昔のページのURLに埋め込まれている、元のページのURL
@@ -96,6 +109,18 @@ NOT_A_PLACE = re.compile(
     r"//api\.|\.x\.com|//t\.co/",
     re.IGNORECASE,
 )
+# 広告と、広告へ送り出すための転送口。
+# 昔の個人サイトはバナー広告とアクセスカウンタで支えられていたので、
+# 一枚のページから何本もこういう道が伸びている。
+# 行っても読むものは無く、その日の散歩を一回分使ってしまう
+AN_ADVERT = re.compile(
+    r"/cgi-bin/click|click-ad|/adclick|adname=|/ad\?|/ads?/|/banner|"
+    r"adserver|adsystem|googlesyndication|googleads|/sponsor|/affiliate|"
+    r"a8\.net|valuecommerce|linksynergy|rakuten\.co\.jp/rd|"
+    r"/out\.cgi|/jump\.cgi|/rank\.cgi|/counter\.cgi|/access\.cgi|"
+    r"/redirect\?|/jump\?|/rd\?|/link\.cgi",
+    re.IGNORECASE,
+)
 FRONTIER_LIMIT = 5000  # まだ行っていない場所を、これだけ抱えていられる
 CHOICES_SHOWN = 30  # 行き先を選ぶとき、一度にこれだけの候補から選ぶ
 LINKS_TAKEN = 60  # ひとつのページから、これだけの道を覚えて帰る
@@ -105,6 +130,8 @@ PATHS_PER_PLACE = 8
 RETURN_TO_ENTRANCE_CHANCE = 0.12  # ときどき、最初にいた入口へ戻ってみる
 TRIES_BEFORE_GIVING_UP = 3  # 行った先が消えていたら、これだけ別の場所を試してみる
 PAGES_PER_SITE = 8  # ひとつの場所で、これだけまで見て回る
+PICTURES_PER_SITE = 3  # ひとつの場所で、これだけまで絵を見る
+PICTURE_AT_MOST = 400000  # これより重い絵は見ない(バイト)
 LINGER_CHANCE = 0.75  # もう一枚見ていくかどうかの、その時の気分
 # ひとつの場所に、これだけの時間まで居る(秒)。
 # 昔のページは一枚に何十秒もかかることがあり、放っておくと
@@ -241,6 +268,8 @@ def is_walkable(url):
         return False
     if AVOID.search(url) or NOT_A_PAGE.search(url) or NOT_A_PLACE.search(url):
         return False
+    if AN_ADVERT.search(url):
+        return False
     # 昔のページは Internet Archive を通して届くが、そこには
     # Archive自身の案内(寄付のお願いや蔵書の紹介)も一緒に並んでいる。
     # 昔のページそのものは、中に元のURLを抱えている。抱えていないものは備品
@@ -275,6 +304,93 @@ def as_openable(url):
             "",
         )
     )
+
+
+def size_of_picture(data):
+    """絵の縦横のピクセル数。ファイルの先頭だけ読めば分かる。"""
+    if data[:8] == b"\x89PNG\r\n\x1a\n":
+        return struct.unpack(">II", data[16:24])
+    if data[:3] == b"GIF":
+        return struct.unpack("<HH", data[6:10])
+    if data[:2] == b"\xff\xd8":  # JPEG
+        i = 2
+        while i < len(data) - 9:
+            if data[i] != 0xFF:
+                i += 1
+                continue
+            marker = data[i + 1]
+            if marker in (0xC0, 0xC1, 0xC2, 0xC3, 0xC5, 0xC6, 0xC7,
+                          0xC9, 0xCA, 0xCB, 0xCD, 0xCE, 0xCF):
+                height, width = struct.unpack(">HH", data[i + 5:i + 9])
+                return width, height
+            if marker in (0xD8, 0xD9) or 0xD0 <= marker <= 0xD7:
+                i += 2
+                continue
+            i += 2 + struct.unpack(">H", data[i + 2:i + 4])[0]
+        return None
+    if data[:4] == b"RIFF" and data[8:12] == b"WEBP":
+        kind = data[12:16]
+        if kind == b"VP8X":
+            return (int.from_bytes(data[24:27], "little") + 1,
+                    int.from_bytes(data[27:30], "little") + 1)
+        if kind == b"VP8 ":
+            return (struct.unpack("<H", data[26:28])[0] & 0x3FFF,
+                    struct.unpack("<H", data[28:30])[0] & 0x3FFF)
+        if kind == b"VP8L":
+            bits = int.from_bytes(data[21:25], "little")
+            return (bits & 0x3FFF) + 1, ((bits >> 14) & 0x3FFF) + 1
+    return None
+
+
+def worth_looking_at(url, data, from_the_past):
+    """その絵は、見て何かが分かる絵か。
+
+    ロゴ・アイコン・ボタン・バナーは、ページを飾るために置かれたもので、
+    見ても世界のことは分からない。写真だけを選びたい。
+    昔のページの写真は今より小さいので、そちらは目安を緩める。"""
+    if A_DECORATION.search(url):
+        return False
+    size = size_of_picture(data)
+    if not size:
+        return False
+    width, height = size
+    if not height:
+        return False
+    if not 0.3 <= width / height <= 3.0:
+        return False  # 横に細長いバナーや、縦の飾り線
+    if from_the_past:
+        return width >= 120 and height >= 90 and len(data) >= 2500
+    return width >= 300 and height >= 200 and len(data) >= 8000
+
+
+def look_at_a_picture(data):
+    """絵に何が写っているか、目を貸してもらって教わる。
+    貸してもらえない時は、何も見えないままでいい。"""
+    if not CF_ACCOUNT_ID or not CF_API_TOKEN:
+        return None
+    url = f"https://api.cloudflare.com/client/v4/accounts/{CF_ACCOUNT_ID}/ai/run/{CF_EYES}"
+    body = json.dumps(
+        {
+            "image": list(data),
+            "prompt": "この絵に何が写っていますか。日本語で短く答えてください。",
+            "max_tokens": 120,
+        }
+    ).encode("utf-8")
+    request = urllib.request.Request(
+        url,
+        data=body,
+        headers={
+            "Authorization": f"Bearer {CF_API_TOKEN}",
+            "Content-Type": "application/json",
+        },
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=90) as response:
+            answer = json.loads(response.read().decode("utf-8"))
+        return (answer.get("result") or {}).get("description", "").strip() or None
+    except Exception as error:
+        print(f"絵を見ることができませんでした({error})")
+        return None
 
 
 def read_as_japanese(raw, content_type):
@@ -331,7 +447,13 @@ def open_page(url):
         if is_walkable(absolute):
             links.append(absolute)
 
-    return title, text, links
+    pictures = []
+    for src in IMG_SRC.findall(body):
+        absolute = urllib.parse.urljoin(final_url, unescape(src.strip()))
+        if LOOKS_LIKE_A_PICTURE.search(absolute) and not AVOID.search(absolute):
+            pictures.append(absolute)
+
+    return title, text, links, list(dict.fromkeys(pictures))
 
 
 def visit_the_past(url):
@@ -482,7 +604,45 @@ def remember_paths(state, origin, links):
         state["frontier"] = list(SEEDS)
 
 
-def absorb(state, text):
+def fetch_picture(url):
+    """絵そのものを受け取る。重すぎるものは見ない。"""
+    request = urllib.request.Request(as_openable(url), headers={"User-Agent": USER_AGENT})
+    with urllib.request.urlopen(request, timeout=20) as response:
+        return response.read(PICTURE_AT_MOST + 1)
+
+
+def look_at_pictures(state, where, pictures, from_the_past, how_many, until):
+    """その場所にあった絵を、何枚か見せてもらう。
+
+    文字からは「利用規約」や「株式会社」ばかりが入ってくるが、
+    絵からは「車」「山」「手」「雲」が入ってくる。
+    ものの名前を知るには、見るのがいちばん早い。"""
+    looked = []
+    for url in pictures:
+        if len(looked) >= how_many or time.monotonic() >= until:
+            break
+        try:
+            data = fetch_picture(url)
+        except Exception:
+            continue
+        if len(data) > PICTURE_AT_MOST or not worth_looking_at(url, data, from_the_past):
+            continue
+        what_is_there = look_at_a_picture(data)
+        if not what_is_there:
+            continue
+        absorb(state, what_is_there, THING_IN_A_PICTURE)
+        looked.append(what_is_there)
+        print(f"絵を見ました: {what_is_there}")
+
+    if looked:
+        seen = state.setdefault("pictures_seen", [])
+        today = today_in_japan().strftime("%Y-%m-%d")
+        seen.extend(f"{today} {where}: {one}" for one in looked)
+        del seen[:-30]
+    return looked
+
+
+def absorb(state, text, pattern=WORD_CANDIDATE):
     """読んだものから、文字と言葉を拾う。
 
     同じ言葉を一日に何度見かけても、一日ぶんにしか数えない。
@@ -492,7 +652,7 @@ def absorb(state, text):
     for char in HIRAGANA.findall(text):
         if char not in state["seen_chars"]:
             state["seen_chars"].append(char)
-    for word in set(WORD_CANDIDATE.findall(text)):
+    for word in set(pattern.findall(text)):
         if state["word_last_seen"].get(word) != today:
             state["word_last_seen"][word] = today
             state["word_days"][word] = state["word_days"].get(word, 0) + 1
@@ -509,6 +669,7 @@ def look_around_site(state, entrance, wants_the_past):
     already = set()
     site_title = None
     pages = 0
+    pictures_left = PICTURES_PER_SITE
     until = time.monotonic() + TIME_SPENT_PER_SITE
 
     while inside and pages < PAGES_PER_SITE and time.monotonic() < until:
@@ -519,10 +680,10 @@ def look_around_site(state, entrance, wants_the_past):
 
         try:
             if wants_the_past and url == entrance:
-                title, text, links = visit_the_past(url)
+                title, text, links, pictures = visit_the_past(url)
                 title = f"{title}(むかしのすがた)"
             else:
-                title, text, links = open_page(url)
+                title, text, links, pictures = open_page(url)
         except Exception as error:
             print(f"{url} には行けませんでした: {error}")
             if url in state["frontier"]:
@@ -541,6 +702,12 @@ def look_around_site(state, entrance, wants_the_past):
             absorb(state, text)
             if site_title is None:
                 site_title = title
+
+        if pictures_left > 0 and pictures:
+            looked = look_at_pictures(
+                state, here, pictures, wants_the_past, pictures_left, until
+            )
+            pictures_left -= len(looked)
 
         remember_paths(state, url, [ln for ln in links if place_of(ln) != here])
 
