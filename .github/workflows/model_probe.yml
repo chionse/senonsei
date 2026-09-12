@@ -1,0 +1,64 @@
+name: Model probe (temporary)
+
+on:
+  push:
+    branches:
+      - claude/project-progress-update-t2tukz
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Can Senonsei ask Cloudflare which models exist
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          python - <<'PY'
+          import json, os, urllib.request, urllib.parse
+
+          ACCOUNT = os.environ["CLOUDFLARE_ACCOUNT_ID"]
+          TOKEN = os.environ["CLOUDFLARE_API_TOKEN"]
+
+          def ask(path):
+              url = f"https://api.cloudflare.com/client/v4/accounts/{ACCOUNT}/ai/{path}"
+              req = urllib.request.Request(
+                  url, headers={"Authorization": f"Bearer {TOKEN}"})
+              try:
+                  with urllib.request.urlopen(req, timeout=60) as r:
+                      return r.status, json.loads(r.read().decode())
+              except urllib.error.HTTPError as e:
+                  return e.code, e.read().decode()[:400]
+              except Exception as e:
+                  return None, str(e)[:300]
+
+          for path in ["models/search", "models/search?per_page=200"]:
+              status, body = ask(path)
+              print(f"--- ai/{path} -> {status}")
+              if not isinstance(body, dict) or not body.get("success"):
+                  print(f"    だめだった: {str(body)[:300]}")
+                  continue
+              models = body.get("result") or []
+              print(f"    返ってきたモデル数: {len(models)}")
+              by_task = {}
+              for m in models:
+                  task = ((m.get("task") or {}).get("name")) or "?"
+                  by_task.setdefault(task, []).append(m.get("name"))
+              print("    仕事の種類ごとの数:")
+              for task, names in sorted(by_task.items(), key=lambda kv: -len(kv[1])):
+                  print(f"      {task}: {len(names)}")
+              for task in ("Text Generation", "Image-to-Text"):
+                  names = by_task.get(task, [])
+                  print(f"\n    [{task}] {len(names)}個")
+                  for n in names[:14]:
+                      print(f"       {n}")
+              break
+          PY
