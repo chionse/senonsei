@@ -13,13 +13,13 @@ Cloudflare Workers AI の無料枠が使える時は、千遠生は自分で考�
 """
 
 import datetime
-import html
 import json
 import os
 import random
 import re
 import urllib.parse
 import urllib.request
+from html import unescape
 
 import blog_manager
 
@@ -38,6 +38,8 @@ SCRIPT_OR_STYLE = re.compile(r"<(script|style)[^>]*>.*?</\1>", re.DOTALL | re.IG
 TITLE_TAG = re.compile(r"<title[^>]*>(.*?)</title>", re.DOTALL | re.IGNORECASE)
 LINK_HREF = re.compile(r'href\s*=\s*["\']([^"\'#]+)', re.IGNORECASE)
 META_CHARSET = re.compile(r'charset=["\']?([\w-]+)', re.IGNORECASE)
+# 昔のページのURLに埋め込まれている、元のページのURL
+INNER_URL = re.compile(r"/(https?://\S+)$", re.IGNORECASE)
 
 # 最初に立っている場所。ここから先は自分でリンクを辿って広がっていく。
 SEEDS = [
@@ -50,7 +52,6 @@ SEEDS = [
     "https://anond.hatelabo.jp/",
     "https://kakuyomu.jp/",
     "https://syosetu.com/",
-    "https://dic.nicovideo.jp/",
     # 本になった言葉
     "https://www.aozora.gr.jp/",
     "https://ja.wikisource.org/wiki/特別:おまかせ表示",
@@ -264,7 +265,7 @@ def open_page(url):
 
     links = []
     for href in LINK_HREF.findall(body):
-        absolute = urllib.parse.urljoin(final_url, html.unescape(href.strip()))
+        absolute = urllib.parse.urljoin(final_url, unescape(href.strip()))
         if is_walkable(absolute):
             links.append(absolute)
 
@@ -286,11 +287,24 @@ def visit_the_past(url):
 
 
 def place_of(url):
-    """そのURLがどこの場所のものか。"""
+    """そのURLがどこの場所のものか。
+
+    昔のページは web.archive.org という一つの入れ物に入って届く。
+    中身はそれぞれ別の個人サイトなので、入れ物ではなく中身の場所を見る。
+    そうしないと、昔の個人サイトの層がまとめて一箇所として扱われ、
+    いちばん強く絞られてしまう。"""
     try:
-        return urllib.parse.urlparse(url).netloc.lower()
+        host = urllib.parse.urlparse(url).netloc.lower()
     except Exception:
         return ""
+    if host.endswith("archive.org"):
+        inner = INNER_URL.search(url)
+        if inner:
+            try:
+                return urllib.parse.urlparse(inner.group(1)).netloc.lower() or host
+            except Exception:
+                return host
+    return host
 
 
 def tidy_frontier(state):
