@@ -16,29 +16,31 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.x'
-      - name: Check every entrance, and whether it is readable as Japanese
+      - name: Simulate several days of walking and measure what is learned
         run: |
           python - <<'PY'
+          import json, random
           import senonsei_ai as s
-          frames = []
-          for url in s.SEEDS:
-              try:
-                  title, text, links = s.open_page(url)
-                  kana = len(set(s.HIRAGANA.findall(text)))
-                  words = len(set(s.WORD_CANDIDATE.findall(text)))
-                  print(f"OK  kana={kana:>3} words={words:>5} links={len(links):>3}  {title[:44]!r}  {url}")
-                  if kana == 0:
-                      frames.append((url, links))
-              except Exception as e:
-                  print(f"DEAD {str(e)[:55]:<55}  {url}")
 
-          # 枠だけだった入口の、一枚奥を開いてみる
-          for url, links in frames:
-              print(f"\n--- 奥へ: {url}")
-              for inner in links[:6]:
-                  try:
-                      t, txt, _ = s.open_page(inner)
-                      print(f"   kana={len(set(s.HIRAGANA.findall(txt))):>3}  {t[:44]!r}  {inner[:100]}")
-                  except Exception as e:
-                      print(f"   DEAD {str(e)[:40]}  {inner[:100]}")
+          # 本物の記憶を写して使う。書き戻しはしない
+          s.save_state = lambda state: None
+          state = json.load(open('senonsei_state.json', encoding='utf-8'))
+
+          print(f"はじめ: 見た文字 {len(state['seen_chars'])} / "
+                f"出会った言葉 {len(state['word_counts'])} / "
+                f"覚えた言葉 {len(state['learned_words'])}")
+          print(f"1日に見て回る場所: {s.sites_per_day(state)}\n")
+
+          for day in range(1, 6):
+              for _ in range(s.sites_per_day(state)):
+                  title = s.walk_once(state)
+                  if title:
+                      learned = s.learn(state)
+                      print(f"  {day}日目 {title[:40]!r}  +{len(learned)}語")
+              stage, limit = s.current_stage(state)
+              print(f"{day}日目おわり: 文字 {len(state['seen_chars'])} / "
+                    f"出会い {len(state['word_counts'])} / "
+                    f"覚えた {len(state['learned_words'])}  [{stage} / {limit}字]\n")
+
+          print("覚えた言葉(先頭40):", "、".join(state['learned_words'][:40]))
           PY

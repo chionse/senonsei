@@ -89,7 +89,8 @@ NOT_A_PLACE = re.compile(
     r"youtube\.com|youtu\.be|/intent/tweet|sharer\.php|"
     r"/login|/signup|/signin|/sign_up|/logout|/cart|/checkout|"
     r"/privacy|/terms|/tos($|/)|/help($|/)|/support($|/)|/contact($|/)|"
-    r"\bhelp[.-]|\bsupport[.-]|/hc/",
+    r"\bhelp[.-]|\bsupport[.-]|/hc/|"
+    r"savethearchive\.com|alexa\.com",
     re.IGNORECASE,
 )
 FRONTIER_LIMIT = 5000  # まだ行っていない場所を、これだけ抱えていられる
@@ -100,6 +101,8 @@ LINKS_TAKEN = 60  # ひとつのページから、これだけの道を覚えて
 PATHS_PER_PLACE = 8
 RETURN_TO_ENTRANCE_CHANCE = 0.12  # ときどき、最初にいた入口へ戻ってみる
 TRIES_BEFORE_GIVING_UP = 3  # 行った先が消えていたら、これだけ別の場所を試してみる
+PAGES_PER_SITE = 8  # ひとつの場所で、これだけまで見て回る
+LINGER_CHANCE = 0.75  # もう一枚見ていくかどうかの、その時の気分
 REST_DAY_CHANCE = 0.1  # たまに、書かない日がある
 WALK_CHANCE_PER_HOUR = 0.3  # 一時間ごとに、これくらいの気まぐれで散歩に出る
 INNER_VOICE_KEPT = 60  # ひとりで思ったことを、これだけ抱えていられる
@@ -163,18 +166,6 @@ def sites_per_day(state):
     return min(6, 2 + len(state["learned_words"]) // 120)
 
 
-def absorption_capacity(state):
-    """1日に覚えられる言葉の数。知っている言葉が多いほど、新しい言葉も入りやすくなる。"""
-    if len(state["seen_chars"]) < CHARS_BEFORE_WORDS:
-        return 0  # まだ文字の形すら掴めていないので、言葉は身につかない
-    vocabulary = len(state["learned_words"])
-    if vocabulary < 200:
-        return 1
-    if vocabulary < 500:
-        return 2
-    return 3
-
-
 def fetch_json(url):
     request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
     with urllib.request.urlopen(request, timeout=30) as response:
@@ -212,6 +203,15 @@ def is_walkable(url):
     if not url.startswith("http"):
         return False
     if AVOID.search(url) or NOT_A_PAGE.search(url) or NOT_A_PLACE.search(url):
+        return False
+    # 昔のページは Internet Archive を通して届くが、そこには
+    # Archive自身の案内(寄付のお願いや蔵書の紹介)も一緒に並んでいる。
+    # 昔のページそのものは、中に元のURLを抱えている。抱えていないものは備品
+    try:
+        host = urllib.parse.urlparse(url).netloc.lower()
+    except Exception:
+        return False
+    if host.endswith("archive.org") and place_of(url) == host:
         return False
     return True
 
@@ -433,17 +433,11 @@ def choose_destination(state):
 
 
 def remember_paths(state, origin, links):
-    """そのページから伸びていた道を、これから行ける場所として覚える。
-    よその場所へ続く道を先に取る。同じ場所の中の道ばかり抱えても、そこから出られない。"""
+    """よその場所へ続く道を、これから行ける場所として覚える。"""
     known = set(state["frontier"]) | set(state["visited"])
     fresh = [link for link in dict.fromkeys(links) if link not in known]
     random.shuffle(fresh)
-    here = place_of(origin)
-    outward = [link for link in fresh if place_of(link) != here]
-    inward = [link for link in fresh if place_of(link) == here]
-    state["frontier"].extend(
-        outward[:LINKS_TAKEN] + inward[: max(0, LINKS_TAKEN - len(outward))]
-    )
+    state["frontier"].extend(fresh[:LINKS_TAKEN])
     tidy_frontier(state)
     if len(state["frontier"]) > FRONTIER_LIMIT:
         state["frontier"] = random.sample(state["frontier"], FRONTIER_LIMIT)
@@ -451,48 +445,88 @@ def remember_paths(state, origin, links):
         state["frontier"] = list(SEEDS)
 
 
-def walk_once(state):
-    """ひとつだけ、どこかのページを訪ねる。
+def absorb(state, text):
+    """読んだものから、文字と言葉を拾う。"""
+    for char in HIRAGANA.findall(text):
+        if char not in state["seen_chars"]:
+            state["seen_chars"].append(char)
+    for word in WORD_CANDIDATE.findall(text):
+        state["word_counts"][word] = state["word_counts"].get(word, 0) + 1
 
-    行ってみたらもう無くなっていたり、枠だけで文字が一つも無い入口だったりする。
-    そういう時はそこで散歩を終わりにせず、先へ続く道だけ持ち帰って別のところへ行く。
-    そこから伸びているリンクは、これから行ける場所として覚えておく。"""
+
+def look_around_site(state, entrance, wants_the_past):
+    """ひとつの場所を、入口から中まで見て回る。
+
+    一枚だけ見て帰るのではなく、気の向くまま奥へ入っていく。
+    枠だけで文字の無い入口も、奥に入れば中身がある。
+    よその場所へ続く道は、次の散歩のために持ち帰る。"""
+    here = place_of(entrance)
+    inside = [entrance]  # この場所の中で、これから見るところ
+    already = set()
+    site_title = None
+    pages = 0
+
+    while inside and pages < PAGES_PER_SITE:
+        url = inside.pop(0)
+        if url in already:
+            continue
+        already.add(url)
+
+        try:
+            if wants_the_past and url == entrance:
+                title, text, links = visit_the_past(url)
+                title = f"{title}(むかしのすがた)"
+            else:
+                title, text, links = open_page(url)
+        except Exception as error:
+            print(f"{url} には行けませんでした: {error}")
+            if url in state["frontier"]:
+                state["frontier"].remove(url)
+            if url == entrance:
+                return None, 0  # 入口から入れなかった
+            continue
+
+        pages += 1
+        if url in state["frontier"]:
+            state["frontier"].remove(url)
+        state["visited"].append(url)
+        state["visited"] = state["visited"][-2000:]
+
+        if JAPANESE.search(text):
+            absorb(state, text)
+            if site_title is None:
+                site_title = title
+
+        remember_paths(state, url, [ln for ln in links if place_of(ln) != here])
+
+        deeper = [ln for ln in links if place_of(ln) == here and ln not in already]
+        random.shuffle(deeper)
+        inside.extend(deeper[:PAGES_PER_SITE])
+
+        if pages > 1 and random.random() > LINGER_CHANCE:
+            break  # もう十分見た
+
+    if site_title:
+        print(f"{here} を{pages}ページ見てきました。")
+    return site_title, pages
+
+
+def walk_once(state):
+    """ひとつの場所を訪ねる。
+
+    行ってみたらもう無くなっていたり、読むものが何も無かったりする。
+    そういう時はそこで散歩を終わりにせず、別のところへ行ってみる。"""
     state.setdefault("frontier", list(SEEDS))
     state.setdefault("visited", [])
 
     for attempt in range(TRIES_BEFORE_GIVING_UP):
-        destination, wants_the_past = choose_destination(state)
-        try:
-            if wants_the_past:
-                title, text, links = visit_the_past(destination)
-                title = f"{title}(むかしのすがた)"
-            else:
-                title, text, links = open_page(destination)
-        except Exception as error:
-            print(f"{destination} には行けませんでした: {error}")
-            if destination in state["frontier"]:
-                state["frontier"].remove(destination)
-            continue
-
-        if destination in state["frontier"]:
-            state["frontier"].remove(destination)
-        state["visited"].append(destination)
-        state["visited"] = state["visited"][-2000:]
-        remember_paths(state, destination, links)
-
-        if not JAPANESE.search(text):
-            # 枠だけの入口。読むものは無いが、奥へ続く道はある
-            print(f"{destination} には読むものがありませんでした")
-            continue
-
-        for char in HIRAGANA.findall(text):
-            if char not in state["seen_chars"]:
-                state["seen_chars"].append(char)
-        for word in WORD_CANDIDATE.findall(text):
-            state["word_counts"][word] = state["word_counts"].get(word, 0) + 1
-
-        return title
-
+        entrance, wants_the_past = choose_destination(state)
+        title, pages = look_around_site(state, entrance, wants_the_past)
+        if title:
+            return title
+        print(f"{entrance} には読むものがありませんでした")
+        if entrance in state["frontier"]:
+            state["frontier"].remove(entrance)
     return None
 
 
@@ -553,19 +587,17 @@ def take_a_walk(state, today, now):
 
 
 def learn(state):
-    """何度も出会った言葉が、その子の中に残っていく。"""
-    capacity = absorption_capacity(state)
-    if capacity <= 0:
-        return []
+    """何度も出会った言葉が、その子の中に残っていく。
+    一日にいくつまで、という上限は無い。どれだけ浴びたかで決まる。"""
+    if len(state["seen_chars"]) < CHARS_BEFORE_WORDS:
+        return []  # まだ文字の形すら掴めていないので、言葉は身につかない
 
-    ready = [
+    learned = [
         word
         for word, count in state["word_counts"].items()
         if count >= ENCOUNTERS_TO_LEARN and word not in state["learned_words"]
     ]
-    ready.sort(key=lambda w: state["word_counts"][w], reverse=True)
-
-    learned = ready[:capacity]
+    learned.sort(key=lambda w: state["word_counts"][w], reverse=True)
     state["learned_words"].extend(learned)
     return learned
 
