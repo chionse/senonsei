@@ -40,6 +40,12 @@ jobs:
           print(f"  答え: {got!r}")
           print(f"  試した記録: {broken.get('mind_tried')}")
 
+          print("\n=== 選んだ頭が、日本語でまともに答えるか ===")
+          got = s.ask_ai("空を三文字以内の日本語で言ってください。", 20, broken)
+          print(f"  答え: {got!r}")
+          has_jp = bool(got and (s.JAPANESE.search(got) or s.HIRAGANA.search(got)))
+          print(f"  日本語が入っている: {has_jp}")
+
           print("\n=== 目が引退していた場合、自分で探し直せるか ===")
           # 小さな絵を一枚こしらえる(赤い四角)
           import struct, zlib

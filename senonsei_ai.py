@@ -36,6 +36,7 @@ CF_MODEL = "@cf/meta/llama-3.1-8b-instruct"  # 考えるほう
 CF_EYES = "@cf/llava-hf/llava-1.5-7b-hf"  # 絵を見るほう
 WHAT_A_MIND_DOES = "Text Generation"
 WHAT_EYES_DO = "Image-to-Text"
+CHANCES_TO_FIND_A_MIND = 5  # 頭を探す時、これだけの相手を試してみる
 CF_ACCOUNT_ID = os.environ.get("CLOUDFLARE_ACCOUNT_ID", "")
 CF_API_TOKEN = os.environ.get("CLOUDFLARE_API_TOKEN", "")
 
@@ -256,12 +257,24 @@ def which_model(state, part):
     return remembered or (CF_MODEL if part == "mind" else CF_EYES)
 
 
+# 考える相手として向かないもの。
+# 「考える過程を全部書き出す」種類は、頼んだ答えの代わりに
+# 英語の独り言が返ってくる。千遠生の頭には使えない。
+# lora は土台が別に必要で、guard は良し悪しを判定するだけの道具
+A_POOR_MIND = re.compile(r"qwq|-r1|thinking|reason|guard|lora|embed|rerank", re.IGNORECASE)
+# 素直に答えてくれる見込みが高いもの
+A_LIKELY_MIND = re.compile(r"instruct|chat|-it($|-)", re.IGNORECASE)
+
+
 def find_another_model(state, part):
     """使っていたモデルが引退していたら、今あるものを聞いて選び直す。
 
     Cloudflareはモデルを引退させる。名前を一つ決め打ちにしていると
     そこで千遠生は考えられなくなり、目も見えなくなる。
-    自分で探し直せるようにしておけば、名前が変わっても立ち直れる。"""
+    自分で探し直せるようにしておけば、名前が変わっても立ち直れる。
+
+    頭を選ぶ時は、実際に日本語で尋ねてみて、日本語で返ってくるものを採る。
+    名前だけでは、考える過程を英語で書き出すようなものを掴んでしまう。"""
     if state is None:
         return None
     looking_for = WHAT_A_MIND_DOES if part == "mind" else WHAT_EYES_DO
@@ -275,26 +288,54 @@ def find_another_model(state, part):
         return None
 
     choices = [
-        model.get("name")
+        model["name"]
         for model in (answer.get("result") or [])
         if ((model.get("task") or {}).get("name")) == looking_for
         and model.get("name")
         and model["name"] not in already_tried
     ]
+    if part == "mind":
+        choices = [name for name in choices if not A_POOR_MIND.search(name)]
+        # 素直に答えてくれそうなものから順に
+        choices.sort(key=lambda name: (not A_LIKELY_MIND.search(name), len(name)))
+    else:
+        choices.sort(key=len)
+
     if not choices:
         print(f"{looking_for} のモデルが見つかりませんでした")
         return None
 
-    # 今まで使っていたものに名前が近いものから試す
-    now_using = which_model(state, part)
-    family = now_using.split("/")[1] if "/" in now_using else ""
-    choices.sort(key=lambda name: (family not in name, len(name)))
-    chosen = choices[0]
-    already_tried.append(chosen)
-    del already_tried[:-20]
-    state[f"{part}_model"] = chosen
-    print(f"{part} を {chosen} に取り替えました")
-    return chosen
+    for name in choices[:CHANCES_TO_FIND_A_MIND]:
+        already_tried.append(name)
+        del already_tried[:-20]
+        state[f"{part}_model"] = name
+        if part != "mind" or answers_in_japanese(name):
+            print(f"{part} を {name} に取り替えました")
+            return name
+        print(f"{name} は日本語で答えてくれなかったので、別のものを探します")
+
+    # どれも確かめられなかったが、最後に置いたものでやってみる
+    print(f"{part} を {state[f'{part}_model']} にしました(確かめられていない)")
+    return state[f"{part}_model"]
+
+
+def answers_in_japanese(model):
+    """そのモデルが、日本語で尋ねたら日本語で返してくれるか。
+    考える過程を英語で書き出すものを、千遠生の頭にしてしまわないため。"""
+    body = json.dumps(
+        {
+            "messages": [
+                {"role": "user", "content": "「はい」とだけ日本語で答えてください。"}
+            ],
+            "max_tokens": 20,
+        }
+    ).encode("utf-8")
+    try:
+        answer = cloudflare(f"run/{model}", body=body)
+    except Exception:
+        return False
+    said = (answer.get("result") or {}).get("response", "") if answer else ""
+    return bool(JAPANESE.search(said) or HIRAGANA.search(said))
 
 
 def model_is_gone(error):
