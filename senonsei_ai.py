@@ -61,6 +61,7 @@ NOT_A_PAGE = re.compile(
 )
 FRONTIER_LIMIT = 600  # まだ行っていない場所を、これ以上は抱えきれない
 REST_DAY_CHANCE = 0.1  # たまに、書かない日がある
+WALK_CHANCE_PER_HOUR = 0.3  # 一時間ごとに、これくらいの気まぐれで散歩に出る
 
 # 言葉が身につくまでに必要な、文字との出会いの数
 CHARS_BEFORE_WORDS = 20
@@ -260,52 +261,72 @@ def choose_destination(state):
     return random.choice(candidates)
 
 
-def browse(state):
-    """今日の分、Webを歩いて回る。
-    開いたページから伸びているリンクを拾って、明日以降の行き先にしていく。"""
+def walk_once(state):
+    """ひとつだけ、どこかのページを訪ねる。
+    そこから伸びているリンクは、これから行ける場所として覚えておく。"""
     state.setdefault("frontier", list(SEEDS))
     state.setdefault("visited", [])
-    seen_titles = []
 
-    for _ in range(sites_per_day(state)):
-        destination = choose_destination(state)
-        try:
-            if random.random() < 0.2:
-                title, text, links = visit_the_past(destination)
-                title = f"{title}(むかしのすがた)"
-            else:
-                title, text, links = open_page(destination)
-        except Exception as error:
-            print(f"{destination} には行けませんでした: {error}")
-            if destination in state["frontier"]:
-                state["frontier"].remove(destination)
-            continue
-
+    destination = choose_destination(state)
+    try:
+        if random.random() < 0.2:
+            title, text, links = visit_the_past(destination)
+            title = f"{title}(むかしのすがた)"
+        else:
+            title, text, links = open_page(destination)
+    except Exception as error:
+        print(f"{destination} には行けませんでした: {error}")
         if destination in state["frontier"]:
             state["frontier"].remove(destination)
-        state["visited"].append(destination)
-        state["visited"] = state["visited"][-2000:]
-        seen_titles.append(title)
+        return None
 
-        for char in HIRAGANA.findall(text):
-            if char not in state["seen_chars"]:
-                state["seen_chars"].append(char)
+    if destination in state["frontier"]:
+        state["frontier"].remove(destination)
+    state["visited"].append(destination)
+    state["visited"] = state["visited"][-2000:]
 
-        for word in WORD_CANDIDATE.findall(text):
-            state["word_counts"][word] = state["word_counts"].get(word, 0) + 1
+    for char in HIRAGANA.findall(text):
+        if char not in state["seen_chars"]:
+            state["seen_chars"].append(char)
 
-        # そのページから伸びていた道を、これから行ける場所として覚えておく
-        known = set(state["frontier"]) | set(state["visited"])
-        fresh = [link for link in dict.fromkeys(links) if link not in known]
-        random.shuffle(fresh)
-        state["frontier"].extend(fresh[:30])
+    for word in WORD_CANDIDATE.findall(text):
+        state["word_counts"][word] = state["word_counts"].get(word, 0) + 1
+
+    known = set(state["frontier"]) | set(state["visited"])
+    fresh = [link for link in dict.fromkeys(links) if link not in known]
+    random.shuffle(fresh)
+    state["frontier"].extend(fresh[:30])
 
     if len(state["frontier"]) > FRONTIER_LIMIT:
         state["frontier"] = random.sample(state["frontier"], FRONTIER_LIMIT)
     if not state["frontier"]:
         state["frontier"] = list(SEEDS)
 
-    return seen_titles
+    return title
+
+
+def take_a_walk(state, today):
+    """一日かけて、少しずつ歩く。気が向いた時に一箇所だけ。
+    書かない日でも、世界を見ることはやめない。"""
+    walk = state.get("today_walk") or {}
+    if walk.get("date") != today:
+        walk = {"date": today, "seen": []}
+        state["today_walk"] = walk
+
+    if len(walk["seen"]) >= sites_per_day(state):
+        return walk["seen"]  # 今日はもう十分歩いた
+    if random.random() > WALK_CHANCE_PER_HOUR:
+        return walk["seen"]  # 今はまだ、その気にならない
+
+    title = walk_once(state)
+    if title:
+        walk["seen"].append(title)
+        learned = learn(state)
+        if learned:
+            print(f"言葉を覚えました: {'、'.join(learned)}")
+        print(f"{title} を見てきました。")
+    save_state(state)
+    return walk["seen"]
 
 
 def learn(state):
@@ -446,12 +467,14 @@ def todays_mood(state, today):
 def run_today():
     now = today_in_japan()
     today = now.date().isoformat()
+    state = load_state()
+
+    # 書く日でも書かない日でも、散歩には出る
+    seen_titles = take_a_walk(state, today)
 
     if any(a["date"] == today for a in blog_manager.load_articles()):
-        print(f"{today} の記事は既にあります。何もしません。")
         return
 
-    state = load_state()
     resting, hour = todays_mood(state, today)
     if resting:
         print(f"{today} は書かない日にしました。")
@@ -459,9 +482,6 @@ def run_today():
     if now.hour < hour:
         print(f"{today} は{hour}時ごろに書くつもりです。(今は{now.hour}時)")
         return
-
-    seen_titles = browse(state)
-    learned = learn(state)
 
     _, max_length = current_stage(state)
     body = compose_with_ai(state, seen_titles) or compose_locally(state)
@@ -477,7 +497,6 @@ def run_today():
     print(
         f"{elapsed_days(state)}日目のブログを書きました。"
         f"知っている文字{len(state['seen_chars'])}個 / 言葉{len(state['learned_words'])}個"
-        + (f" / 今日覚えた言葉: {'、'.join(learned)}" if learned else "")
     )
 
 
