@@ -17,64 +17,90 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.x'
-      - name: Compare three ways of counting an encounter
+      - name: Project the growth curve over a year
         run: |
           python - <<'PY'
-          import json
+          import datetime, random, re
           import senonsei_ai as s
 
-          s.save_state = lambda state: None
-          s.TIME_SPENT_PER_SITE = 45
-          DAYS = 5
+          random.seed(20260912)
 
-          state = json.load(open('senonsei_state.json', encoding='utf-8'))
-          state['word_counts'] = {}          # 数え方を比べたいので、出会いは白紙から
+          # --- 1. 本物のページを集める ---
+          pool = []
+          for seed in s.SEEDS:
+              try:
+                  title, text, links = s.open_page(seed)
+              except Exception as e:
+                  print(f"  x {seed} ({str(e)[:40]})")
+                  continue
+              here = s.place_of(seed)
+              pages = [(title, text)]
+              inward = [l for l in dict.fromkeys(links) if s.place_of(l) == here]
+              random.shuffle(inward)
+              for link in inward[:3]:
+                  try:
+                      t, tx, _ = s.open_page(link)
+                      pages.append((t, tx))
+                  except Exception:
+                      pass
+              for t, tx in pages:
+                  words = set(s.WORD_CANDIDATE.findall(tx))
+                  kana = set(s.HIRAGANA.findall(tx))
+                  if words:
+                      pool.append((words, kana))
+              print(f"  o {here}: {len(pages)}ページ")
 
-          raw = {}        # 出てきた回数
-          on_pages = {}   # 別々のページで何回
-          on_days = {}    # 別々の日に何回
-          seen_pages = {}
-          seen_days = {}
-          curve = []
+          print(f"\n集まった材料: {len(pool)}ページ / "
+                f"異なる言葉 {len(set().union(*[w for w, k in pool]))}")
 
-          real_absorb = s.absorb
-          today = [0]
+          PAGES_A_DAY = 16   # 1日2箇所 x 最大8ページ
+          MILESTONES = [3, 5, 7, 10, 14, 21, 30, 60, 90, 120, 180, 270, 365]
 
-          def absorb(st, text):
-              real_absorb(st, text)
-              page = len(st['visited'])
-              for w in set(s.WORD_CANDIDATE.findall(text)):
-                  if w not in seen_pages or seen_pages[w] != page:
-                      seen_pages[w] = page
-                      on_pages[w] = on_pages.get(w, 0) + 1
-                  if w not in seen_days or seen_days[w] != today[0]:
-                      seen_days[w] = today[0]
-                      on_days[w] = on_days.get(w, 0) + 1
-              for w in s.WORD_CANDIDATE.findall(text):
-                  raw[w] = raw.get(w, 0) + 1
+          def project(days_needed, fade):
+              s.DAYS_BEFORE_LEARNING = days_needed
+              s.FADE_AFTER_DAYS = fade
+              state = {"seen_chars": [], "word_days": {}, "word_last_seen": {},
+                       "learned_words": []}
+              start = datetime.date(2026, 9, 13)
+              result = {}
+              for day in range(1, max(MILESTONES) + 1):
+                  when = start + datetime.timedelta(days=day - 1)
+                  s.today_in_japan = lambda w=when: datetime.datetime(
+                      w.year, w.month, w.day)
+                  stamp = when.isoformat()
+                  seen_today = set()
+                  for words, kana in random.sample(pool, min(len(pool), PAGES_A_DAY)):
+                      seen_today |= words
+                      for ch in kana:
+                          if ch not in state["seen_chars"]:
+                              state["seen_chars"].append(ch)
+                  for word in seen_today:
+                      if state["word_last_seen"].get(word) != stamp:
+                          state["word_last_seen"][word] = stamp
+                          state["word_days"][word] = state["word_days"].get(word, 0) + 1
+                  s.forget(state)
+                  s.learn(state)
+                  if day in MILESTONES:
+                      result[day] = len(state["learned_words"])
+              return result, state
 
-          s.absorb = absorb
+          combos = [(5, 7), (5, 14), (10, 7), (20, 7), (30, 14), (60, 30), (90, 30)]
+          curves = {}
+          for d, f in combos:
+              curves[(d, f)], last = project(d, f)
+              if (d, f) == (5, 7):
+                  sample = last["learned_words"][:30]
 
-          for day in range(1, DAYS + 1):
-              today[0] = day
-              for _ in range(s.sites_per_day(state)):
-                  s.walk_once(state)
-              curve.append((day, len(state['visited']), len(raw)))
-              print(f"{day}日目: 累計 {len(state['visited'])}ページ / "
-                    f"出会った言葉 {len(raw)}")
+          print("\n覚えている言葉の数の見通し")
+          head = "  日数 |" + "".join(f"{d:>4}日/薄{f:<3}|" for d, f in combos)
+          print(head)
+          print("  " + "-" * (len(head) - 2))
+          for m in MILESTONES:
+              row = f"{m:>5}日 |"
+              for c in combos:
+                  row += f"{curves[c][m]:>9}|"
+              print("  " + row)
 
-          def table(name, counts, thresholds):
-              print(f"\n=== {name} ===")
-              for n in thresholds:
-                  got = sum(1 for c in counts.values() if c >= n)
-                  print(f"  {n:>4}回で覚える -> {DAYS}日後に {got:>6} 語")
-
-          table("出てきた回数(今の数え方)", raw, (5, 20, 50, 100, 300, 1000, 3000))
-          table("別々のページで何回", on_pages, (3, 5, 10, 20, 30, 50, 80))
-          table("別々の日に何回", on_days, (2, 3, 4, 5))
-
-          print("\n--- よく出会った言葉 ---")
-          for name, counts in (("回数", raw), ("ページ数", on_pages), ("日数", on_days)):
-              top = sorted(counts.items(), key=lambda kv: -kv[1])[:12]
-              print(f"  {name}: " + "、".join(f"{w}({c})" for w, c in top))
+          print("\n段階の区切り(今): 15 / 60 / 120 / 200 / 320 / 480 / 700")
+          print("\n5日/薄7 で最初に覚える言葉:", "、".join(sample))
           PY
