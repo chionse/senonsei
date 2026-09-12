@@ -121,6 +121,10 @@ CHARS_BEFORE_WORDS = 20
 # だから一日にどれだけ読んでも、この日数を待たないと身につかない。
 # 一日にいくつまでという上限は無いので、育つ速さはここで決まる
 DAYS_BEFORE_LEARNING = 5
+# 覚えかけたまま、これだけの日数見かけないと、一日ぶん薄れる。
+# 薄れきった言葉は出会ったことすら消える。
+# ただし一度身についた言葉は忘れない
+FADE_AFTER_DAYS = 7
 
 # (この語彙数までが対象, その時点でできること, 書ける文字数の上限)
 GROWTH_STAGES = [
@@ -598,6 +602,10 @@ def take_a_walk(state, today, now):
     if walk.get("date") != today:
         walk = {"date": today, "seen": []}
         state["today_walk"] = walk
+        # 日が変わった。覚えかけたまま薄れきった言葉を手放す
+        faded = forget(state)
+        if faded:
+            print(f"薄れて消えた言葉: {len(faded)}語")
 
     if len(walk["seen"]) >= sites_per_day(state):
         be_alone(state, now)
@@ -617,6 +625,37 @@ def take_a_walk(state, today, now):
     return walk["seen"]
 
 
+def days_held(state, word):
+    """その言葉を、今どれだけ抱えているか。
+
+    見かけた日数から、見かけなくなってからの時間ぶんを引く。
+    覚えかけたまま放っておかれた言葉は、だんだん薄れていく。"""
+    days = state["word_days"].get(word, 0)
+    last = state["word_last_seen"].get(word)
+    if not last:
+        return days
+    try:
+        gap = (today_in_japan().date() - datetime.date.fromisoformat(last)).days
+    except ValueError:
+        return days
+    return days - max(0, gap) // FADE_AFTER_DAYS
+
+
+def forget(state):
+    """薄れきってしまった言葉は、出会ったことすら消える。
+    一度身についた言葉は忘れない。"""
+    known = set(state["learned_words"])
+    faded = [
+        word
+        for word in list(state["word_days"])
+        if word not in known and days_held(state, word) <= 0
+    ]
+    for word in faded:
+        state["word_days"].pop(word, None)
+        state["word_last_seen"].pop(word, None)
+    return faded
+
+
 def learn(state):
     """何日も見かけ続けた言葉が、その子の中に残っていく。
     一日にいくつまで、という上限は無い。どれだけの日を共に過ごしたかで決まる。"""
@@ -626,10 +665,10 @@ def learn(state):
     known = set(state["learned_words"])
     learned = [
         word
-        for word, days in state["word_days"].items()
-        if days >= DAYS_BEFORE_LEARNING and word not in known
+        for word in state["word_days"]
+        if word not in known and days_held(state, word) >= DAYS_BEFORE_LEARNING
     ]
-    learned.sort(key=lambda w: state["word_days"][w], reverse=True)
+    learned.sort(key=lambda w: days_held(state, w), reverse=True)
     state["learned_words"].extend(learned)
     return learned
 
