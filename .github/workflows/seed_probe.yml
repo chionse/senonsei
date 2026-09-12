@@ -16,31 +16,42 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.x'
-      - name: Simulate several days of walking and measure what is learned
+      - name: Measure how fast Senonsei would grow at each threshold
         run: |
           python - <<'PY'
-          import json, random
+          import json
           import senonsei_ai as s
 
-          # 本物の記憶を写して使う。書き戻しはしない
           s.save_state = lambda state: None
           state = json.load(open('senonsei_state.json', encoding='utf-8'))
-
-          print(f"はじめ: 見た文字 {len(state['seen_chars'])} / "
-                f"出会った言葉 {len(state['word_counts'])} / "
-                f"覚えた言葉 {len(state['learned_words'])}")
+          start_words = len(state['word_counts'])
+          print(f"はじめ: 文字 {len(state['seen_chars'])} / 出会い {start_words} / "
+                f"覚えた {len(state['learned_words'])}")
           print(f"1日に見て回る場所: {s.sites_per_day(state)}\n")
 
-          for day in range(1, 6):
+          pages_per_day = []
+          for day in range(1, 4):
+              before_pages = len(state['visited'])
               for _ in range(s.sites_per_day(state)):
                   title = s.walk_once(state)
                   if title:
-                      learned = s.learn(state)
-                      print(f"  {day}日目 {title[:40]!r}  +{len(learned)}語")
-              stage, limit = s.current_stage(state)
-              print(f"{day}日目おわり: 文字 {len(state['seen_chars'])} / "
-                    f"出会い {len(state['word_counts'])} / "
-                    f"覚えた {len(state['learned_words'])}  [{stage} / {limit}字]\n")
+                      print(f"  {day}日目 {title[:44]!r}")
+              pages = len(state['visited']) - before_pages
+              pages_per_day.append(pages)
+              print(f"{day}日目おわり: {pages}ページ読んだ / 文字 {len(state['seen_chars'])} / "
+                    f"出会い {len(state['word_counts'])}\n")
 
-          print("覚えた言葉(先頭40):", "、".join(state['learned_words'][:40]))
+          counts = state['word_counts']
+          print(f"3日で {sum(pages_per_day)} ページ、"
+                f"異なる言葉 {len(counts)} 個に出会った")
+          print("\nしきい値ごとに、この3日で身につく言葉の数:")
+          for n in (2, 3, 5, 8, 12, 20, 30, 50):
+              got = sum(1 for c in counts.values() if c >= n)
+              mark = "  <- 今の設定" if n == s.ENCOUNTERS_TO_LEARN else ""
+              print(f"  {n:>2}回出会ったら覚える -> {got:>5} 語{mark}")
+
+          print("\n段階の区切り: 15=文字を繋げる 60=言葉を1つ書ける "
+                "120=言葉が並ぶ 200=文に踏み出す 700=簡単な文")
+          ranked = sorted(counts.items(), key=lambda kv: -kv[1])
+          print("\nよく出会った言葉:", "、".join(f"{w}({c})" for w, c in ranked[:25]))
           PY
