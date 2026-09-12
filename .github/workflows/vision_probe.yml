@@ -11,134 +11,143 @@ permissions:
 jobs:
   probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.x'
-      - name: Ask Cloudflare what is in a picture
+      - name: Work out which pictures are worth looking at
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: |
           python - <<'PY'
-          import json, os, re, urllib.request, urllib.parse
+          import json, os, re, struct, urllib.request, urllib.parse
           import senonsei_ai as s
 
           ACCOUNT = os.environ["CLOUDFLARE_ACCOUNT_ID"]
           TOKEN = os.environ["CLOUDFLARE_API_TOKEN"]
+          IMG = re.compile(r'<img[^>]+src\s*=\s*["\']([^"\']+)', re.IGNORECASE)
+          DECORATION = re.compile(
+              r"logo|icon|favicon|banner|btn|button|sprite|badge|avatar|spacer|blank|"
+              r"arrow|bullet|/line|dot|border|/bg[-_.]|background|header|footer|nav|"
+              r"sns|share|/ad|emoji|stamp|loading|dummy|noimage|placeholder",
+              re.IGNORECASE)
 
-          def call(model, payload, binary=None):
-              url = f"https://api.cloudflare.com/client/v4/accounts/{ACCOUNT}/ai/run/{model}"
-              if binary is not None:
-                  req = urllib.request.Request(
-                      url, data=binary,
-                      headers={"Authorization": f"Bearer {TOKEN}",
-                               "Content-Type": "application/octet-stream"})
-              else:
-                  req = urllib.request.Request(
-                      url, data=json.dumps(payload).encode(),
-                      headers={"Authorization": f"Bearer {TOKEN}",
-                               "Content-Type": "application/json"})
+          def measure(data):
+              """ファイルの先頭だけ読んで、縦横のピクセル数を出す。"""
+              if data[:8] == b"\x89PNG\r\n\x1a\n":
+                  w, h = struct.unpack(">II", data[16:24])
+                  return w, h
+              if data[:3] == b"GIF":
+                  w, h = struct.unpack("<HH", data[6:10])
+                  return w, h
+              if data[:2] == b"\xff\xd8":
+                  i = 2
+                  while i < len(data) - 9:
+                      if data[i] != 0xFF:
+                          i += 1
+                          continue
+                      marker = data[i + 1]
+                      if marker in (0xC0, 0xC1, 0xC2, 0xC3, 0xC5, 0xC6, 0xC7,
+                                    0xC9, 0xCA, 0xCB, 0xCD, 0xCE, 0xCF):
+                          h, w = struct.unpack(">HH", data[i + 5:i + 9])
+                          return w, h
+                      if marker in (0xD8, 0xD9) or 0xD0 <= marker <= 0xD7:
+                          i += 2
+                          continue
+                      length = struct.unpack(">H", data[i + 2:i + 4])[0]
+                      i += 2 + length
+                  return None
+              if data[:4] == b"RIFF" and data[8:12] == b"WEBP":
+                  kind = data[12:16]
+                  if kind == b"VP8X":
+                      w = int.from_bytes(data[24:27], "little") + 1
+                      h = int.from_bytes(data[27:30], "little") + 1
+                      return w, h
+                  if kind == b"VP8 ":
+                      w = struct.unpack("<H", data[26:28])[0] & 0x3FFF
+                      h = struct.unpack("<H", data[28:30])[0] & 0x3FFF
+                      return w, h
+                  if kind == b"VP8L":
+                      bits = int.from_bytes(data[21:25], "little")
+                      return (bits & 0x3FFF) + 1, ((bits >> 14) & 0x3FFF) + 1
+              return None
+
+          def grab(url, cap=1200000):
+              req = urllib.request.Request(url, headers={"User-Agent": s.USER_AGENT})
+              with urllib.request.urlopen(req, timeout=20) as r:
+                  return r.read(cap)
+
+          def describe(data):
+              url = f"https://api.cloudflare.com/client/v4/accounts/{ACCOUNT}/ai/run/@cf/llava-hf/llava-1.5-7b-hf"
+              payload = {"image": list(data),
+                         "prompt": "この絵に何が写っていますか。日本語で短く答えてください。",
+                         "max_tokens": 120}
+              req = urllib.request.Request(
+                  url, data=json.dumps(payload).encode(),
+                  headers={"Authorization": f"Bearer {TOKEN}",
+                           "Content-Type": "application/json"})
               try:
                   with urllib.request.urlopen(req, timeout=120) as r:
-                      return r.status, dict(r.headers), json.loads(r.read().decode())
-              except urllib.error.HTTPError as e:
-                  return e.code, dict(e.headers), e.read().decode()[:600]
+                      body = json.loads(r.read().decode())
+                  return (body.get("result") or {}).get("description", "").strip()
               except Exception as e:
-                  return None, {}, str(e)[:300]
+                  return f"(だめだった: {str(e)[:80]})"
 
-          # --- 1. 本物のページから絵を一枚拾ってくる ---
-          IMG = re.compile(r'<img[^>]+src\s*=\s*["\']([^"\']+)', re.IGNORECASE)
-          picture = None
-          for seed in ["https://www3.nhk.or.jp/news/", "https://b.hatena.ne.jp/hotentry",
-                       "https://note.com/"]:
+          PAGES = ["https://www3.nhk.or.jp/news/", "https://b.hatena.ne.jp/hotentry",
+                   "https://anond.hatelabo.jp/", "https://www.aozora.gr.jp/",
+                   "https://web.archive.org/web/1999/http://www.geocities.co.jp/"]
+
+          worth_a_look = []
+          for page in PAGES:
               try:
-                  req = urllib.request.Request(seed, headers={"User-Agent": s.USER_AGENT})
+                  req = urllib.request.Request(page, headers={"User-Agent": s.USER_AGENT})
                   with urllib.request.urlopen(req, timeout=25) as r:
                       html = r.read(400000).decode("utf-8", errors="ignore")
                       base = r.geturl()
               except Exception as e:
-                  print(f"  x {seed}: {e}")
+                  print(f"x {page}: {str(e)[:60]}")
                   continue
-              for src in IMG.findall(html):
+
+              print(f"\n===== {s.place_of(page)}")
+              srcs = list(dict.fromkeys(IMG.findall(html)))[:18]
+              for src in srcs:
                   full = urllib.parse.urljoin(base, src.strip())
-                  if not re.search(r"\.(jpe?g|png)($|\?)", full, re.I):
+                  if not re.search(r"\.(jpe?g|png|gif|webp)($|\?)", full, re.I):
                       continue
                   try:
-                      req = urllib.request.Request(full, headers={"User-Agent": s.USER_AGENT})
-                      with urllib.request.urlopen(req, timeout=20) as r:
-                          data = r.read(400000)
+                      data = grab(full)
                   except Exception:
                       continue
-                  if 3000 < len(data) < 250000:
-                      picture = (full, data)
-                      break
-              if picture:
-                  break
+                  size = measure(data)
+                  name = full.split("/")[-1][:34]
+                  if not size:
+                      print(f"   ?x?          {len(data):>7}B  {name}  (大きさが読めない)")
+                      continue
+                  w, h = size
+                  ratio = w / h if h else 0
+                  flags = []
+                  if w < 300 or h < 200:
+                      flags.append("小さい")
+                  if not (0.3 <= ratio <= 3.0):
+                      flags.append("細長い")
+                  if DECORATION.search(full):
+                      flags.append("飾りの名前")
+                  if len(data) < 8000:
+                      flags.append("軽すぎ")
+                  verdict = "見る" if not flags else "除く(" + "/".join(flags) + ")"
+                  print(f"   {w:>5}x{h:<5} {len(data):>7}B  {name:<36} {verdict}")
+                  if not flags:
+                      worth_a_look.append((s.place_of(page), full, w, h, data))
 
-          if not picture:
-              print("絵が拾えなかった")
-              raise SystemExit(0)
-
-          where, data = picture
-          print(f"拾った絵: {where}")
-          print(f"大きさ: {len(data)} バイト\n")
-
-          as_bytes = list(data)
-
-          # --- 2. 絵を見られるモデルをいくつか試す ---
-          trials = [
-              ("@cf/llava-hf/llava-1.5-7b-hf", "英語で",
-               {"image": as_bytes, "prompt": "Describe this picture briefly.", "max_tokens": 120}),
-              ("@cf/llava-hf/llava-1.5-7b-hf", "日本語で",
-               {"image": as_bytes,
-                "prompt": "この絵に何が写っていますか。日本語で短く答えてください。",
-                "max_tokens": 120}),
-              ("@cf/unum/uform-gen2-qwen-500m", "英語で",
-               {"image": as_bytes, "prompt": "Describe this picture briefly.", "max_tokens": 120}),
-              ("@cf/meta/llama-3.2-11b-vision-instruct", "日本語で",
-               {"image": as_bytes,
-                "prompt": "この絵に何が写っていますか。日本語で短く答えてください。",
-                "max_tokens": 120}),
-          ]
-          english = None
-          for model, how, payload in trials:
-              status, headers, body = call(model, payload)
-              print(f"--- {model} ({how}) -> {status}")
-              if isinstance(body, dict) and body.get("success"):
-                  out = body.get("result", {})
-                  text = out.get("description") or out.get("response") or str(out)[:300]
-                  print(f"    返ってきた説明: {text.strip()[:300]}")
-                  kana = s.HIRAGANA.findall(text)
-                  words = set(s.WORD_CANDIDATE.findall(text))
-                  print(f"    日本語のひらがな: {len(kana)}文字 / 言葉の候補: {len(words)}")
-                  if words:
-                      print(f"    拾える言葉: {'、'.join(list(words)[:15])}")
-                  if how == "英語で" and not kana:
-                      english = text.strip()
-              else:
-                  print(f"    だめだった: {str(body)[:300]}")
-              for k, v in headers.items():
-                  if "neuron" in k.lower() or "usage" in k.lower() or "ratelimit" in k.lower():
-                      print(f"    {k}: {v}")
-
-          # --- 3. 英語の説明を日本語に直せるか ---
-          if english:
-              print(f"\n--- 英語の説明を日本語に直してみる")
-              print(f"    もとの英語: {english[:200]}")
-              status, headers, body = call(
-                  "@cf/meta/llama-3.1-8b-instruct",
-                  {"messages": [{"role": "user",
-                                 "content": f"次の英文を、短い日本語の一文にしてください。説明は不要です。\n\n{english}"}],
-                   "max_tokens": 120})
-              if isinstance(body, dict) and body.get("success"):
-                  jp = body["result"].get("response", "").strip()
-                  print(f"    日本語: {jp[:300]}")
-                  print(f"    ひらがな: {len(s.HIRAGANA.findall(jp))}文字 / "
-                        f"言葉の候補: {len(set(s.WORD_CANDIDATE.findall(jp)))}")
-                  print(f"    拾える言葉: {'、'.join(list(set(s.WORD_CANDIDATE.findall(jp)))[:15])}")
-              else:
-                  print(f"    だめだった: {str(body)[:300]}")
+          print(f"\n\n===== 見る価値があると判断した絵: {len(worth_a_look)}枚")
+          for where, full, w, h, data in worth_a_look[:8]:
+              text = describe(data)
+              words = set(s.WORD_CANDIDATE.findall(text))
+              print(f"\n  {where} {w}x{h}")
+              print(f"    {full[:100]}")
+              print(f"    説明: {text[:220]}")
+              print(f"    拾える言葉({len(words)}): {'、'.join(list(words)[:18])}")
           PY
