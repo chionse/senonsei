@@ -40,6 +40,9 @@ LINK_HREF = re.compile(r'href\s*=\s*["\']([^"\'#]+)', re.IGNORECASE)
 META_CHARSET = re.compile(r'charset=["\']?([\w-]+)', re.IGNORECASE)
 # 昔のページのURLに埋め込まれている、元のページのURL
 INNER_URL = re.compile(r"/(https?://\S+)$", re.IGNORECASE)
+JAPANESE = re.compile(r"[ぁ-んァ-ヶ一-龯]")
+# 日本語の書き表し方。昔のページのために、今は使われないものも試す
+WAYS_OF_WRITING = ("utf-8", "euc-jp", "shift_jis", "cp932", "iso2022_jp", "latin-1")
 
 # 最初に立っている場所。ここから先は自分でリンクを辿って広がっていく。
 SEEDS = [
@@ -232,6 +235,36 @@ def as_openable(url):
     )
 
 
+def read_as_japanese(raw, content_type):
+    """バイトの並びを、文字に戻す。
+
+    90年代のページは今と文字の表し方が違う(EUC-JPやShift_JISなど)。
+    しかも Internet Archive を通すと、元のページの申告ではなく
+    Archive自身の申告が届くため、素直に信じると全部文字化けする。
+    化けたまま読むと千遠生は何も覚えられないので、
+    何通りか試して、いちばん日本語らしく読めたものを採る。"""
+    declared = []
+    found = META_CHARSET.search(content_type)
+    if found:
+        declared.append(found.group(1))
+    found = META_CHARSET.search(raw[:4000].decode("ascii", errors="ignore"))
+    if found:
+        declared.append(found.group(1))
+
+    best_text = ""
+    best_score = None
+    for name in list(dict.fromkeys(declared)) + list(WAYS_OF_WRITING):
+        try:
+            text = raw.decode(name, errors="replace")
+        except (LookupError, UnicodeError, ValueError):
+            continue
+        # 日本語として読めた文字が多いほど良い。読めなかった箇所は重く引く
+        score = len(JAPANESE.findall(text)) - text.count("\ufffd") * 5
+        if best_score is None or score > best_score:
+            best_text, best_score = text, score
+    return best_text or raw.decode("utf-8", errors="ignore")
+
+
 def open_page(url):
     """ページを開いて、そこにある文章と、そこから伸びているリンクを受け取る。"""
     request = urllib.request.Request(as_openable(url), headers={"User-Agent": USER_AGENT})
@@ -242,20 +275,7 @@ def open_page(url):
         raw = response.read(400000)
         final_url = response.geturl()
 
-    # 昔のページは utf-8 とは限らない
-    charset = "utf-8"
-    found = META_CHARSET.search(content_type)
-    if found:
-        charset = found.group(1)
-    else:
-        head = raw[:2000].decode("ascii", errors="ignore")
-        found = META_CHARSET.search(head)
-        if found:
-            charset = found.group(1)
-    try:
-        html = raw.decode(charset, errors="ignore")
-    except LookupError:
-        html = raw.decode("utf-8", errors="ignore")
+    html = read_as_japanese(raw, content_type)
 
     found = TITLE_TAG.search(html)
     title = TAG.sub("", found.group(1)).strip() if found else final_url
