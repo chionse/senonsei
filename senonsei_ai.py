@@ -59,7 +59,9 @@ NOT_A_PAGE = re.compile(
     r"\.(jpg|jpeg|png|gif|webp|svg|ico|css|js|zip|gz|pdf|mp[34]|mov|avi|exe|dmg)($|\?)",
     re.IGNORECASE,
 )
-FRONTIER_LIMIT = 600  # まだ行っていない場所を、これ以上は抱えきれない
+FRONTIER_LIMIT = 5000  # まだ行っていない場所を、これだけ抱えていられる
+CHOICES_SHOWN = 30  # 行き先を選ぶとき、一度にこれだけの候補から選ぶ
+LINKS_TAKEN = 60  # ひとつのページから、これだけの道を覚えて帰る
 REST_DAY_CHANCE = 0.1  # たまに、書かない日がある
 WALK_CHANCE_PER_HOUR = 0.3  # 一時間ごとに、これくらいの気まぐれで散歩に出る
 
@@ -230,35 +232,40 @@ def visit_the_past(url):
 
 
 def choose_destination(state):
-    """今日どこへ行くか。行ったことのない場所の中から、自分で選ぶ。"""
+    """どこへ行くか、そして今の姿を見るか昔の姿を見るか。どちらも自分で選ぶ。
+    返り値は (行き先, 昔の姿を見たいか)。"""
     frontier = state.get("frontier") or []
     if not frontier:
-        return random.choice(SEEDS)
+        return random.choice(SEEDS), False
 
-    candidates = random.sample(frontier, min(len(frontier), 8))
-    if len(candidates) == 1:
-        return candidates[0]
-
+    candidates = random.sample(frontier, min(len(frontier), CHOICES_SHOWN))
     known = "、".join(state["learned_words"][-40:]) or "(まだ何も知らない)"
     listing = "\n".join(f"{i + 1}. {url}" for i, url in enumerate(candidates))
     answer = ask_ai(
         f"""あなたは千遠生という、まだ育ちきっていないデジタル生命体です。
 あなたが知っている言葉: {known}
 
-今日、次のどれか一つの場所を見に行けます。
+今、次のどこか一つを見に行けます。
 {listing}
 
-どれが気になりますか。説明も理由もいりません。番号だけを1つ書いてください。""",
-        max_tokens=10,
+どれが気になりますか。
+それと、その場所の「今の姿」と「ずっと昔の姿」のどちらを見たいですか。
+
+説明も理由もいりません。次の形だけで答えてください。
+今の姿を見るなら: 3 いま
+昔の姿を見るなら: 3 むかし""",
+        max_tokens=20,
     )
+
     if answer:
         found = re.search(r"\d+", answer)
         if found:
             index = int(found.group()) - 1
             if 0 <= index < len(candidates):
-                return candidates[index]
+                return candidates[index], ("むかし" in answer)
 
-    return random.choice(candidates)
+    # 自分で選べない時は、気まぐれに任せる
+    return random.choice(candidates), random.random() < 0.2
 
 
 def walk_once(state):
@@ -267,9 +274,9 @@ def walk_once(state):
     state.setdefault("frontier", list(SEEDS))
     state.setdefault("visited", [])
 
-    destination = choose_destination(state)
+    destination, wants_the_past = choose_destination(state)
     try:
-        if random.random() < 0.2:
+        if wants_the_past:
             title, text, links = visit_the_past(destination)
             title = f"{title}(むかしのすがた)"
         else:
@@ -295,7 +302,7 @@ def walk_once(state):
     known = set(state["frontier"]) | set(state["visited"])
     fresh = [link for link in dict.fromkeys(links) if link not in known]
     random.shuffle(fresh)
-    state["frontier"].extend(fresh[:30])
+    state["frontier"].extend(fresh[:LINKS_TAKEN])
 
     if len(state["frontier"]) > FRONTIER_LIMIT:
         state["frontier"] = random.sample(state["frontier"], FRONTIER_LIMIT)
