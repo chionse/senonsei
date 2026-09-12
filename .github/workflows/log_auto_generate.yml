@@ -9,6 +9,12 @@ on:
 permissions:
   contents: write
 
+# 散歩が長引いた時に、次の起動と重なって両方がコミットしようとするのを防ぐ。
+# 前の回がまだ歩いている間は、新しい回を始めない
+concurrency:
+  group: senonsei-walk
+  cancel-in-progress: false
+
 jobs:
   build:
     runs-on: ubuntu-latest

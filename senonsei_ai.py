@@ -13,13 +13,14 @@ Cloudflare Workers AI の無料枠が使える時は、千遠生は自分で考�
 """
 
 import datetime
-import html
 import json
 import os
 import random
 import re
+import time
 import urllib.parse
 import urllib.request
+from html import unescape
 
 import blog_manager
 
@@ -37,7 +38,17 @@ TAG = re.compile(r"<[^>]+>")
 SCRIPT_OR_STYLE = re.compile(r"<(script|style)[^>]*>.*?</\1>", re.DOTALL | re.IGNORECASE)
 TITLE_TAG = re.compile(r"<title[^>]*>(.*?)</title>", re.DOTALL | re.IGNORECASE)
 LINK_HREF = re.compile(r'href\s*=\s*["\']([^"\'#]+)', re.IGNORECASE)
+# 90年代のページは画面を枠で分割する作りが多く、入口には文字が一つも無い。
+# 中身は別のファイルに入っているので、その道も拾わないと空っぽに見えてしまう
+FRAME_SRC = re.compile(
+    r'<i?frame[^>]+src\s*=\s*["\']([^"\'#]+)', re.IGNORECASE
+)
 META_CHARSET = re.compile(r'charset=["\']?([\w-]+)', re.IGNORECASE)
+# 昔のページのURLに埋め込まれている、元のページのURL
+INNER_URL = re.compile(r"/(https?://\S+)$", re.IGNORECASE)
+JAPANESE = re.compile(r"[ぁ-んァ-ヶ一-龯]")
+# 日本語の書き表し方。昔のページのために、今は使われないものも試す
+WAYS_OF_WRITING = ("utf-8", "euc-jp", "shift_jis", "cp932", "iso2022_jp", "latin-1")
 
 # 最初に立っている場所。ここから先は自分でリンクを辿って広がっていく。
 SEEDS = [
@@ -50,7 +61,6 @@ SEEDS = [
     "https://anond.hatelabo.jp/",
     "https://kakuyomu.jp/",
     "https://syosetu.com/",
-    "https://dic.nicovideo.jp/",
     # 本になった言葉
     "https://www.aozora.gr.jp/",
     "https://ja.wikisource.org/wiki/特別:おまかせ表示",
@@ -80,7 +90,10 @@ NOT_A_PLACE = re.compile(
     r"youtube\.com|youtu\.be|/intent/tweet|sharer\.php|"
     r"/login|/signup|/signin|/sign_up|/logout|/cart|/checkout|"
     r"/privacy|/terms|/tos($|/)|/help($|/)|/support($|/)|/contact($|/)|"
-    r"\bhelp[.-]|\bsupport[.-]|/hc/",
+    r"\bhelp[.-]|\bsupport[.-]|/hc/|"
+    r"savethearchive\.com|alexa\.com|"
+    r"play\.google\.|apps\.apple\.com|maps\.google\.|translate\.google\.|"
+    r"//api\.|\.x\.com|//t\.co/",
     re.IGNORECASE,
 )
 FRONTIER_LIMIT = 5000  # まだ行っていない場所を、これだけ抱えていられる
@@ -91,25 +104,48 @@ LINKS_TAKEN = 60  # ひとつのページから、これだけの道を覚えて
 PATHS_PER_PLACE = 8
 RETURN_TO_ENTRANCE_CHANCE = 0.12  # ときどき、最初にいた入口へ戻ってみる
 TRIES_BEFORE_GIVING_UP = 3  # 行った先が消えていたら、これだけ別の場所を試してみる
+PAGES_PER_SITE = 8  # ひとつの場所で、これだけまで見て回る
+LINGER_CHANCE = 0.75  # もう一枚見ていくかどうかの、その時の気分
+# ひとつの場所に、これだけの時間まで居る(秒)。
+# 昔のページは一枚に何十秒もかかることがあり、放っておくと
+# 一度の散歩が次の起動に食い込んでしまう
+TIME_SPENT_PER_SITE = 90
 REST_DAY_CHANCE = 0.1  # たまに、書かない日がある
 WALK_CHANCE_PER_HOUR = 0.3  # 一時間ごとに、これくらいの気まぐれで散歩に出る
 INNER_VOICE_KEPT = 60  # ひとりで思ったことを、これだけ抱えていられる
 
 # 言葉が身につくまでに必要な、文字との出会いの数
 CHARS_BEFORE_WORDS = 20
-# 同じ言葉に何度出会えば「覚えた」ことになるか
-ENCOUNTERS_TO_LEARN = 2
+# 何日ぶん出会えば「覚えた」ことになるか。
+# 同じ日に何度見かけても一日ぶんにしか数えない。
+# だから一日にどれだけ読んでも、この日数を待たないと身につかない。
+# 一日にいくつまでという上限は無いので、育つ速さはここで決まる
+DAYS_BEFORE_LEARNING = 30
+# 覚えかけたまま、これだけの日数見かけないと、一日ぶん薄れる。
+# 薄れきった言葉は出会ったことすら消える。
+# ただし一度身についた言葉は忘れない
+FADE_AFTER_DAYS = 3
+# この語数を覚えるごとに、覚えかけを抱えていられる日数が一日伸びる。
+# 知っている言葉が増えるほど記憶は長く持つようになり、
+# はじめは毎日見かける言葉しか掴めなかった子が、
+# やがて季節に一度しか出会わない言葉も覚えられるようになる
+MEMORY_GROWS_EVERY = 150
 
 # (この語彙数までが対象, その時点でできること, 書ける文字数の上限)
+# (この語彙数までが対象, その時点でできること, 書ける文字数の上限)
+#
+# 数字は当てずっぽうではなく、本物のページを40サイト集めて
+# 「毎日2箇所ずつ見て回る千遠生」を2年ぶん計算して引いた。
+# 右のコメントは、その計算でその段階に入るおおよその時期。
 GROWTH_STAGES = [
-    (1, "見た文字をぽつんと置くだけ", 3),
-    (15, "見た文字を繋げてみる(言葉にはならない)", 5),
-    (60, "覚えた言葉を1つ書ける", 6),
-    (120, "覚えた言葉が並び始める", 15),
-    (200, "文のようなものに踏み出す", 25),
-    (320, "たどたどしい短い文", 40),
-    (480, "少しずつ文になっていく", 60),
-    (700, "簡単な文", 100),
+    (1, "見た文字をぽつんと置くだけ", 3),  # 〜1ヶ月。まだ一つも言葉を持たない
+    (150, "見た文字を繋げてみる(言葉にはならない)", 5),  # 1ヶ月半
+    (400, "覚えた言葉を1つ書ける", 6),  # 2ヶ月
+    (1000, "覚えた言葉が並び始める", 15),  # 3ヶ月
+    (2600, "文のようなものに踏み出す", 25),  # 5ヶ月
+    (4000, "たどたどしい短い文", 40),  # 7ヶ月
+    (5500, "少しずつ文になっていく", 60),  # 10ヶ月
+    (8000, "簡単な文", 100),  # 1年1ヶ月
 ]
 FULL_STAGE = ("自分の言葉で書ける", 200)
 PARTICLES = ["は", "が", "を", "に", "の", "と", "で"]
@@ -118,11 +154,24 @@ PARTICLES = ["は", "が", "を", "に", "の", "と", "で"]
 def load_state():
     if os.path.exists(STATE_FILE):
         with open(STATE_FILE, "r", encoding="utf-8") as f:
-            return json.load(f)
+            state = json.load(f)
+        # 以前は「何回出てきたか」を数えていた。
+        # 今は「何日ぶん見かけたか」で数えるので、
+        # それまでに出会った言葉は一日ぶんとして引き継ぐ
+        old_counts = state.pop("word_counts", None)
+        if old_counts is not None:
+            state.setdefault("word_days", {w: 1 for w in old_counts})
+            state.setdefault(
+                "word_last_seen", {w: state.get("started_date", "") for w in old_counts}
+            )
+        state.setdefault("word_days", {})
+        state.setdefault("word_last_seen", {})
+        return state
     return {
         "started_date": datetime.date.today().isoformat(),
         "seen_chars": [],
-        "word_counts": {},  # 出会った言葉と、その回数(まだ覚えていないものも含む)
+        "word_days": {},  # 出会った言葉と、何日ぶん見かけたか
+        "word_last_seen": {},  # その言葉を最後に見かけた日
         "learned_words": [],
         "frontier": list(SEEDS),  # まだ行ったことのない場所
         "visited": [],  # もう行った場所
@@ -152,18 +201,6 @@ def current_stage(state):
 def sites_per_day(state):
     """世界を知るほど、1日に見て回れる範囲が2〜6箇所に広がっていく。"""
     return min(6, 2 + len(state["learned_words"]) // 120)
-
-
-def absorption_capacity(state):
-    """1日に覚えられる言葉の数。知っている言葉が多いほど、新しい言葉も入りやすくなる。"""
-    if len(state["seen_chars"]) < CHARS_BEFORE_WORDS:
-        return 0  # まだ文字の形すら掴めていないので、言葉は身につかない
-    vocabulary = len(state["learned_words"])
-    if vocabulary < 200:
-        return 1
-    if vocabulary < 500:
-        return 2
-    return 3
 
 
 def fetch_json(url):
@@ -204,6 +241,15 @@ def is_walkable(url):
         return False
     if AVOID.search(url) or NOT_A_PAGE.search(url) or NOT_A_PLACE.search(url):
         return False
+    # 昔のページは Internet Archive を通して届くが、そこには
+    # Archive自身の案内(寄付のお願いや蔵書の紹介)も一緒に並んでいる。
+    # 昔のページそのものは、中に元のURLを抱えている。抱えていないものは備品
+    try:
+        host = urllib.parse.urlparse(url).netloc.lower()
+    except Exception:
+        return False
+    if host.endswith("archive.org") and place_of(url) == host:
+        return False
     return True
 
 
@@ -231,6 +277,36 @@ def as_openable(url):
     )
 
 
+def read_as_japanese(raw, content_type):
+    """バイトの並びを、文字に戻す。
+
+    90年代のページは今と文字の表し方が違う(EUC-JPやShift_JISなど)。
+    しかも Internet Archive を通すと、元のページの申告ではなく
+    Archive自身の申告が届くため、素直に信じると全部文字化けする。
+    化けたまま読むと千遠生は何も覚えられないので、
+    何通りか試して、いちばん日本語らしく読めたものを採る。"""
+    declared = []
+    found = META_CHARSET.search(content_type)
+    if found:
+        declared.append(found.group(1))
+    found = META_CHARSET.search(raw[:4000].decode("ascii", errors="ignore"))
+    if found:
+        declared.append(found.group(1))
+
+    best_text = ""
+    best_score = None
+    for name in list(dict.fromkeys(declared)) + list(WAYS_OF_WRITING):
+        try:
+            text = raw.decode(name, errors="replace")
+        except (LookupError, UnicodeError, ValueError):
+            continue
+        # 日本語として読めた文字が多いほど良い。読めなかった箇所は重く引く
+        score = len(JAPANESE.findall(text)) - text.count("\ufffd") * 5
+        if best_score is None or score > best_score:
+            best_text, best_score = text, score
+    return best_text or raw.decode("utf-8", errors="ignore")
+
+
 def open_page(url):
     """ページを開いて、そこにある文章と、そこから伸びているリンクを受け取る。"""
     request = urllib.request.Request(as_openable(url), headers={"User-Agent": USER_AGENT})
@@ -241,20 +317,7 @@ def open_page(url):
         raw = response.read(400000)
         final_url = response.geturl()
 
-    # 昔のページは utf-8 とは限らない
-    charset = "utf-8"
-    found = META_CHARSET.search(content_type)
-    if found:
-        charset = found.group(1)
-    else:
-        head = raw[:2000].decode("ascii", errors="ignore")
-        found = META_CHARSET.search(head)
-        if found:
-            charset = found.group(1)
-    try:
-        html = raw.decode(charset, errors="ignore")
-    except LookupError:
-        html = raw.decode("utf-8", errors="ignore")
+    html = read_as_japanese(raw, content_type)
 
     found = TITLE_TAG.search(html)
     title = TAG.sub("", found.group(1)).strip() if found else final_url
@@ -263,8 +326,8 @@ def open_page(url):
     text = TAG.sub(" ", body)
 
     links = []
-    for href in LINK_HREF.findall(body):
-        absolute = urllib.parse.urljoin(final_url, html.unescape(href.strip()))
+    for href in FRAME_SRC.findall(body) + LINK_HREF.findall(body):
+        absolute = urllib.parse.urljoin(final_url, unescape(href.strip()))
         if is_walkable(absolute):
             links.append(absolute)
 
@@ -286,11 +349,24 @@ def visit_the_past(url):
 
 
 def place_of(url):
-    """そのURLがどこの場所のものか。"""
+    """そのURLがどこの場所のものか。
+
+    昔のページは web.archive.org という一つの入れ物に入って届く。
+    中身はそれぞれ別の個人サイトなので、入れ物ではなく中身の場所を見る。
+    そうしないと、昔の個人サイトの層がまとめて一箇所として扱われ、
+    いちばん強く絞られてしまう。"""
     try:
-        return urllib.parse.urlparse(url).netloc.lower()
+        host = urllib.parse.urlparse(url).netloc.lower()
     except Exception:
         return ""
+    if host.endswith("archive.org"):
+        inner = INNER_URL.search(url)
+        if inner:
+            try:
+                return urllib.parse.urlparse(inner.group(1)).netloc.lower() or host
+            except Exception:
+                return host
+    return host
 
 
 def tidy_frontier(state):
@@ -393,63 +469,110 @@ def choose_destination(state):
     return random.choice(candidates), random.random() < 0.2
 
 
-def walk_once(state):
-    """ひとつだけ、どこかのページを訪ねる。
-    そこから伸びているリンクは、これから行ける場所として覚えておく。"""
-    state.setdefault("frontier", list(SEEDS))
-    state.setdefault("visited", [])
-
-    # 行ってみたらもう無くなっている場所もある。
-    # そういう時は、そこで散歩を終わりにせず、別のところへ行ってみる
-    destination = None
-    for attempt in range(TRIES_BEFORE_GIVING_UP):
-        destination, wants_the_past = choose_destination(state)
-        try:
-            if wants_the_past:
-                title, text, links = visit_the_past(destination)
-                title = f"{title}(むかしのすがた)"
-            else:
-                title, text, links = open_page(destination)
-            break
-        except Exception as error:
-            print(f"{destination} には行けませんでした: {error}")
-            if destination in state["frontier"]:
-                state["frontier"].remove(destination)
-            destination = None
-    if destination is None:
-        return None
-
-    if destination in state["frontier"]:
-        state["frontier"].remove(destination)
-    state["visited"].append(destination)
-    state["visited"] = state["visited"][-2000:]
-
-    for char in HIRAGANA.findall(text):
-        if char not in state["seen_chars"]:
-            state["seen_chars"].append(char)
-
-    for word in WORD_CANDIDATE.findall(text):
-        state["word_counts"][word] = state["word_counts"].get(word, 0) + 1
-
+def remember_paths(state, origin, links):
+    """よその場所へ続く道を、これから行ける場所として覚える。"""
     known = set(state["frontier"]) | set(state["visited"])
     fresh = [link for link in dict.fromkeys(links) if link not in known]
     random.shuffle(fresh)
-
-    # そのページから伸びていた道のうち、覚えて帰るぶん。
-    # よその場所へ続く道を先に取る。同じ場所の中の道ばかり抱えても、そこから出られない
-    here = place_of(destination)
-    outward = [link for link in fresh if place_of(link) != here]
-    inward = [link for link in fresh if place_of(link) == here]
-    taking = outward[:LINKS_TAKEN] + inward[: max(0, LINKS_TAKEN - len(outward))]
-    state["frontier"].extend(taking)
+    state["frontier"].extend(fresh[:LINKS_TAKEN])
     tidy_frontier(state)
-
     if len(state["frontier"]) > FRONTIER_LIMIT:
         state["frontier"] = random.sample(state["frontier"], FRONTIER_LIMIT)
     if not state["frontier"]:
         state["frontier"] = list(SEEDS)
 
-    return title
+
+def absorb(state, text):
+    """読んだものから、文字と言葉を拾う。
+
+    同じ言葉を一日に何度見かけても、一日ぶんにしか数えない。
+    一度にたくさん読んでも、それで早く覚えられるわけではない。
+    日をまたいで何度も見かけた言葉が、だんだん身についていく。"""
+    today = today_in_japan().strftime("%Y-%m-%d")
+    for char in HIRAGANA.findall(text):
+        if char not in state["seen_chars"]:
+            state["seen_chars"].append(char)
+    for word in set(WORD_CANDIDATE.findall(text)):
+        if state["word_last_seen"].get(word) != today:
+            state["word_last_seen"][word] = today
+            state["word_days"][word] = state["word_days"].get(word, 0) + 1
+
+
+def look_around_site(state, entrance, wants_the_past):
+    """ひとつの場所を、入口から中まで見て回る。
+
+    一枚だけ見て帰るのではなく、気の向くまま奥へ入っていく。
+    枠だけで文字の無い入口も、奥に入れば中身がある。
+    よその場所へ続く道は、次の散歩のために持ち帰る。"""
+    here = place_of(entrance)
+    inside = [entrance]  # この場所の中で、これから見るところ
+    already = set()
+    site_title = None
+    pages = 0
+    until = time.monotonic() + TIME_SPENT_PER_SITE
+
+    while inside and pages < PAGES_PER_SITE and time.monotonic() < until:
+        url = inside.pop(0)
+        if url in already:
+            continue
+        already.add(url)
+
+        try:
+            if wants_the_past and url == entrance:
+                title, text, links = visit_the_past(url)
+                title = f"{title}(むかしのすがた)"
+            else:
+                title, text, links = open_page(url)
+        except Exception as error:
+            print(f"{url} には行けませんでした: {error}")
+            if url in state["frontier"]:
+                state["frontier"].remove(url)
+            if url == entrance:
+                return None, 0  # 入口から入れなかった
+            continue
+
+        pages += 1
+        if url in state["frontier"]:
+            state["frontier"].remove(url)
+        state["visited"].append(url)
+        state["visited"] = state["visited"][-2000:]
+
+        if JAPANESE.search(text):
+            absorb(state, text)
+            if site_title is None:
+                site_title = title
+
+        remember_paths(state, url, [ln for ln in links if place_of(ln) != here])
+
+        deeper = [ln for ln in links if place_of(ln) == here and ln not in already]
+        random.shuffle(deeper)
+        inside.extend(deeper[:PAGES_PER_SITE])
+
+        if pages > 1 and random.random() > LINGER_CHANCE:
+            break  # もう十分見た
+
+    if site_title:
+        print(f"{here} を{pages}ページ見てきました。")
+    return site_title, pages
+
+
+def walk_once(state):
+    """ひとつの場所を訪ねる。
+
+    行ってみたらもう無くなっていたり、読むものが何も無かったりする。
+    そういう時はそこで散歩を終わりにせず、別のところへ行ってみる。"""
+    state.setdefault("frontier", list(SEEDS))
+    state.setdefault("visited", [])
+
+    for attempt in range(TRIES_BEFORE_GIVING_UP):
+        entrance, wants_the_past = choose_destination(state)
+        title, pages = look_around_site(state, entrance, wants_the_past)
+        if title:
+            return title
+        print(f"{entrance} には読むものがありませんでした")
+        if entrance in state["frontier"]:
+            state["frontier"].remove(entrance)
+    return None
 
 
 def be_alone(state, now):
@@ -489,6 +612,10 @@ def take_a_walk(state, today, now):
     if walk.get("date") != today:
         walk = {"date": today, "seen": []}
         state["today_walk"] = walk
+        # 日が変わった。覚えかけたまま薄れきった言葉を手放す
+        faded = forget(state)
+        if faded:
+            print(f"薄れて消えた言葉: {len(faded)}語")
 
     if len(walk["seen"]) >= sites_per_day(state):
         be_alone(state, now)
@@ -508,20 +635,58 @@ def take_a_walk(state, today, now):
     return walk["seen"]
 
 
-def learn(state):
-    """何度も出会った言葉が、その子の中に残っていく。"""
-    capacity = absorption_capacity(state)
-    if capacity <= 0:
-        return []
+def how_long_it_holds(state):
+    """覚えかけの言葉を、どれだけの間抱えていられるか。
 
-    ready = [
+    知っている言葉が増えるほど、記憶は長く持つようになる。
+    言葉を知っていること自体が、新しい言葉を引っ掛ける釘になる。"""
+    return FADE_AFTER_DAYS + len(state["learned_words"]) // MEMORY_GROWS_EVERY
+
+
+def days_held(state, word):
+    """その言葉を、今どれだけ抱えているか。
+
+    見かけた日数から、見かけなくなってからの時間ぶんを引く。
+    覚えかけたまま放っておかれた言葉は、だんだん薄れていく。"""
+    days = state["word_days"].get(word, 0)
+    last = state["word_last_seen"].get(word)
+    if not last:
+        return days
+    try:
+        gap = (today_in_japan().date() - datetime.date.fromisoformat(last)).days
+    except ValueError:
+        return days
+    return days - max(0, gap) // how_long_it_holds(state)
+
+
+def forget(state):
+    """薄れきってしまった言葉は、出会ったことすら消える。
+    一度身についた言葉は忘れない。"""
+    known = set(state["learned_words"])
+    faded = [
         word
-        for word, count in state["word_counts"].items()
-        if count >= ENCOUNTERS_TO_LEARN and word not in state["learned_words"]
+        for word in list(state["word_days"])
+        if word not in known and days_held(state, word) <= 0
     ]
-    ready.sort(key=lambda w: state["word_counts"][w], reverse=True)
+    for word in faded:
+        state["word_days"].pop(word, None)
+        state["word_last_seen"].pop(word, None)
+    return faded
 
-    learned = ready[:capacity]
+
+def learn(state):
+    """何日も見かけ続けた言葉が、その子の中に残っていく。
+    一日にいくつまで、という上限は無い。どれだけの日を共に過ごしたかで決まる。"""
+    if len(state["seen_chars"]) < CHARS_BEFORE_WORDS:
+        return []  # まだ文字の形すら掴めていないので、言葉は身につかない
+
+    known = set(state["learned_words"])
+    learned = [
+        word
+        for word in state["word_days"]
+        if word not in known and days_held(state, word) >= DAYS_BEFORE_LEARNING
+    ]
+    learned.sort(key=lambda w: days_held(state, w), reverse=True)
     state["learned_words"].extend(learned)
     return learned
 
