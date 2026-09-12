@@ -90,7 +90,9 @@ NOT_A_PLACE = re.compile(
     r"/login|/signup|/signin|/sign_up|/logout|/cart|/checkout|"
     r"/privacy|/terms|/tos($|/)|/help($|/)|/support($|/)|/contact($|/)|"
     r"\bhelp[.-]|\bsupport[.-]|/hc/|"
-    r"savethearchive\.com|alexa\.com",
+    r"savethearchive\.com|alexa\.com|"
+    r"play\.google\.|apps\.apple\.com|maps\.google\.|translate\.google\.|"
+    r"//api\.|\.x\.com|//t\.co/",
     re.IGNORECASE,
 )
 FRONTIER_LIMIT = 5000  # まだ行っていない場所を、これだけ抱えていられる
@@ -111,7 +113,7 @@ INNER_VOICE_KEPT = 60  # ひとりで思ったことを、これだけ抱えて�
 CHARS_BEFORE_WORDS = 20
 # 同じ言葉に何度出会えば「覚えた」ことになるか。
 # 一日にいくつまでという上限は無いので、育つ速さはここで決まる
-ENCOUNTERS_TO_LEARN = 3
+ENCOUNTERS_TO_LEARN = 5
 
 # (この語彙数までが対象, その時点でできること, 書ける文字数の上限)
 GROWTH_STAGES = [
