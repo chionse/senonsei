@@ -33,7 +33,7 @@
     "メインコンテ": 1,
     "ンツ": 1,
     "スキップ": 1,
-    "プレミアム": 1,
+    "プレミアム": 2,
     "ヘルプ": 1,
     "プライバシー": 1,
     "フィードバッ": 1,
@@ -59,7 +59,8 @@
     "運営会社": 1,
     "採用情報": 1,
     "利用企業": 1,
-    "一覧": 1
+    "一覧": 1,
+    "ノート": 1
   },
   "learned_words": [],
   "frontier": [
@@ -73,7 +74,6 @@
     "https://note.com/terms/investment_disclaimer",
     "https://note.jp/",
     "https://x.com/note_PR",
-    "https://premium.lp-note.com",
     "https://note.com/tag/A20%20Pro",
     "https://note.com/terms/seller_creators",
     "https://note.com/tag/iPhone%20Duo",
@@ -97,10 +97,13 @@
     "https://note.com/terms/paid_point",
     "https://terms.help-note.com/hc/ja/articles/44943817565465",
     "https://note.com/trend",
-    "https://note.com/terms/payment_service_act"
+    "https://note.com/terms/payment_service_act",
+    "https://fonts.gstatic.com",
+    "https://storage.googleapis.com/production-os-assets/assets/83409411-2636-405e-8ffd-d4cca18c109a"
   ],
   "visited": [
-    "https://note.com/"
+    "https://note.com/",
+    "https://premium.lp-note.com"
   ],
   "notes": [
     "0日目: note ――つくる、つながる、とどける。",
@@ -113,7 +116,9 @@
   },
   "today_walk": {
     "date": "2026-09-12",
-    "seen": []
+    "seen": [
+      "noteプレミアム｜note（ノート）"
+    ]
   },
   "inner_voice": [
     "09-12 18時: 私がまだ知らない言葉がたくさんあるはずなので、それらを探してみたくて心が躍ります。",
