@@ -121,8 +121,8 @@ def current_stage(state):
 
 
 def sites_per_day(state):
-    """世界を知るほど、1日に見て回れる範囲が1〜5個に広がっていく。"""
-    return min(5, 1 + len(state["learned_words"]) // 120)
+    """世界を知るほど、1日に見て回れる範囲が2〜6箇所に広がっていく。"""
+    return min(6, 2 + len(state["learned_words"]) // 120)
 
 
 def absorption_capacity(state):
