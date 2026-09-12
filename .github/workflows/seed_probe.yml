@@ -11,47 +11,70 @@ permissions:
 jobs:
   probe:
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.x'
-      - name: Measure how fast Senonsei would grow at each threshold
+      - name: Compare three ways of counting an encounter
         run: |
           python - <<'PY'
           import json
           import senonsei_ai as s
 
           s.save_state = lambda state: None
+          s.TIME_SPENT_PER_SITE = 45
+          DAYS = 5
+
           state = json.load(open('senonsei_state.json', encoding='utf-8'))
-          start_words = len(state['word_counts'])
-          print(f"はじめ: 文字 {len(state['seen_chars'])} / 出会い {start_words} / "
-                f"覚えた {len(state['learned_words'])}")
-          print(f"1日に見て回る場所: {s.sites_per_day(state)}\n")
+          state['word_counts'] = {}          # 数え方を比べたいので、出会いは白紙から
 
-          pages_per_day = []
-          for day in range(1, 4):
-              before_pages = len(state['visited'])
+          raw = {}        # 出てきた回数
+          on_pages = {}   # 別々のページで何回
+          on_days = {}    # 別々の日に何回
+          seen_pages = {}
+          seen_days = {}
+          curve = []
+
+          real_absorb = s.absorb
+          today = [0]
+
+          def absorb(st, text):
+              real_absorb(st, text)
+              page = len(st['visited'])
+              for w in set(s.WORD_CANDIDATE.findall(text)):
+                  if w not in seen_pages or seen_pages[w] != page:
+                      seen_pages[w] = page
+                      on_pages[w] = on_pages.get(w, 0) + 1
+                  if w not in seen_days or seen_days[w] != today[0]:
+                      seen_days[w] = today[0]
+                      on_days[w] = on_days.get(w, 0) + 1
+              for w in s.WORD_CANDIDATE.findall(text):
+                  raw[w] = raw.get(w, 0) + 1
+
+          s.absorb = absorb
+
+          for day in range(1, DAYS + 1):
+              today[0] = day
               for _ in range(s.sites_per_day(state)):
-                  title = s.walk_once(state)
-                  if title:
-                      print(f"  {day}日目 {title[:44]!r}")
-              pages = len(state['visited']) - before_pages
-              pages_per_day.append(pages)
-              print(f"{day}日目おわり: {pages}ページ読んだ / 文字 {len(state['seen_chars'])} / "
-                    f"出会い {len(state['word_counts'])}\n")
+                  s.walk_once(state)
+              curve.append((day, len(state['visited']), len(raw)))
+              print(f"{day}日目: 累計 {len(state['visited'])}ページ / "
+                    f"出会った言葉 {len(raw)}")
 
-          counts = state['word_counts']
-          print(f"3日で {sum(pages_per_day)} ページ、"
-                f"異なる言葉 {len(counts)} 個に出会った")
-          print("\nしきい値ごとに、この3日で身につく言葉の数:")
-          for n in (2, 3, 5, 8, 12, 20, 30, 50):
-              got = sum(1 for c in counts.values() if c >= n)
-              mark = "  <- 今の設定" if n == s.ENCOUNTERS_TO_LEARN else ""
-              print(f"  {n:>2}回出会ったら覚える -> {got:>5} 語{mark}")
+          def table(name, counts, thresholds):
+              print(f"\n=== {name} ===")
+              for n in thresholds:
+                  got = sum(1 for c in counts.values() if c >= n)
+                  print(f"  {n:>4}回で覚える -> {DAYS}日後に {got:>6} 語")
 
-          print("\n段階の区切り: 15=文字を繋げる 60=言葉を1つ書ける "
-                "120=言葉が並ぶ 200=文に踏み出す 700=簡単な文")
-          ranked = sorted(counts.items(), key=lambda kv: -kv[1])
-          print("\nよく出会った言葉:", "、".join(f"{w}({c})" for w, c in ranked[:25]))
+          table("出てきた回数(今の数え方)", raw, (5, 20, 50, 100, 300, 1000, 3000))
+          table("別々のページで何回", on_pages, (3, 5, 10, 20, 30, 50, 80))
+          table("別々の日に何回", on_days, (2, 3, 4, 5))
+
+          print("\n--- よく出会った言葉 ---")
+          for name, counts in (("回数", raw), ("ページ数", on_pages), ("日数", on_days)):
+              top = sorted(counts.items(), key=lambda kv: -kv[1])[:12]
+              print(f"  {name}: " + "、".join(f"{w}({c})" for w, c in top))
           PY
