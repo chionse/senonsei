@@ -17,6 +17,7 @@ import json
 import os
 import random
 import re
+import time
 import urllib.parse
 import urllib.request
 from html import unescape
@@ -105,6 +106,10 @@ RETURN_TO_ENTRANCE_CHANCE = 0.12  # ときどき、最初にいた入口へ戻�
 TRIES_BEFORE_GIVING_UP = 3  # 行った先が消えていたら、これだけ別の場所を試してみる
 PAGES_PER_SITE = 8  # ひとつの場所で、これだけまで見て回る
 LINGER_CHANCE = 0.75  # もう一枚見ていくかどうかの、その時の気分
+# ひとつの場所に、これだけの時間まで居る(秒)。
+# 昔のページは一枚に何十秒もかかることがあり、放っておくと
+# 一度の散歩が次の起動に食い込んでしまう
+TIME_SPENT_PER_SITE = 90
 REST_DAY_CHANCE = 0.1  # たまに、書かない日がある
 WALK_CHANCE_PER_HOUR = 0.3  # 一時間ごとに、これくらいの気まぐれで散歩に出る
 INNER_VOICE_KEPT = 60  # ひとりで思ったことを、これだけ抱えていられる
@@ -468,8 +473,9 @@ def look_around_site(state, entrance, wants_the_past):
     already = set()
     site_title = None
     pages = 0
+    until = time.monotonic() + TIME_SPENT_PER_SITE
 
-    while inside and pages < PAGES_PER_SITE:
+    while inside and pages < PAGES_PER_SITE and time.monotonic() < until:
         url = inside.pop(0)
         if url in already:
             continue
