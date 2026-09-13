@@ -1,0 +1,77 @@
+name: Translate probe (temporary)
+
+on:
+  push:
+    branches:
+      - claude/project-progress-update-t2tukz
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Can Senonsei read a page written in another language
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          python - <<'PY'
+          import json, re
+          import senonsei_ai as s
+
+          print("=== 翻訳できるモデルを探す ===")
+          try:
+              answer = s.cloudflare("models/search?per_page=200")
+              models = answer.get("result") or []
+          except Exception as e:
+              print(f"  聞けなかった: {e}")
+              models = []
+          by_task = {}
+          for m in models:
+              task = ((m.get("task") or {}).get("name")) or "?"
+              by_task.setdefault(task, []).append(m.get("name"))
+          for name in by_task.get("Translation", []):
+              print(f"  翻訳専用: {name}")
+
+          SAMPLES = [
+            ("英語", "The cat sat quietly by the window, watching the rain fall over the garden. "
+                     "It had been raining since morning, and the streets were empty."),
+            ("フランス語", "Le chat s'assit tranquillement pres de la fenetre et regarda la pluie "
+                          "tomber sur le jardin."),
+            ("韓国語", "고양이가 창가에 조용히 앉아 정원에 비가 내리는 것을 바라보았다."),
+          ]
+
+          print("\n=== 翻訳専用のモデルで試す ===")
+          for model in by_task.get("Translation", []):
+              print(f"\n--- {model}")
+              for label, text in SAMPLES[:1]:
+                  body = json.dumps({"text": text, "source_lang": "english",
+                                     "target_lang": "japanese"}).encode()
+                  try:
+                      got = s.cloudflare(f"run/{model}", body=body)
+                      out = (got.get("result") or {}).get("translated_text", "")
+                      print(f"    {label}: {out[:160]}")
+                      print(f"      拾える言葉: {len(set(s.WORD_CANDIDATE.findall(out)))}")
+                  except Exception as e:
+                      print(f"    {label}: だめだった {str(e)[:120]}")
+
+          print("\n=== 考えるほうのモデルに頼んで訳してもらう ===")
+          for label, text in SAMPLES:
+              got = s.ask_ai(
+                  "次の文章を日本語に訳してください。訳文だけを書いてください。\n\n" + text,
+                  max_tokens=300, state={})
+              if got:
+                  words = set(s.WORD_CANDIDATE.findall(got))
+                  print(f"\n  [{label}] {got[:200]}")
+                  print(f"      拾える言葉({len(words)}): {'、'.join(list(words)[:12])}")
+                  print(f"      日本語が入っている: {bool(s.JAPANESE.search(got))}")
+              else:
+                  print(f"\n  [{label}] 訳せなかった")
+          PY
