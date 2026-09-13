@@ -787,7 +787,7 @@ def look_at_pictures(state, where, pictures, from_the_past, how_many, until):
     return looked
 
 
-def absorb(state, text, pattern=WORD_CANDIDATE):
+def absorb(state, text, pattern=WORD_CANDIDATE, only_known=False):
     """読んだものから、文字と言葉を拾う。
 
     同じ言葉を一日に何度見かけても、一日ぶんにしか数えない。
@@ -798,6 +798,10 @@ def absorb(state, text, pattern=WORD_CANDIDATE):
         if char not in state["seen_chars"]:
             state["seen_chars"].append(char)
     for word in set(pattern.findall(text)):
+        # 自分が書いたものを読み返す時は、新しい言葉は生まれない。
+        # 誰にも教わっていない文字列を、自分だけで言葉にすることはできない
+        if only_known and word not in state["word_days"]:
+            continue
         if state["word_last_seen"].get(word) != today:
             state["word_last_seen"][word] = today
             state["word_days"][word] = state["word_days"].get(word, 0) + 1
@@ -1146,7 +1150,10 @@ def looks_back_today(articles):
 
     書いたものが増えるほど、ひとつひとつを読み返すことは少なくなる。
     けれど何度も使っている言葉は、どの記事にも出てくるので目に入る。
-    使うことが、覚えていることになる。"""
+    使うことが、覚えていることになる。
+
+    ただし読み返しても新しい言葉は生まれない。たまたま並べただけの
+    文字は、何度読み返しても言葉にはならない。"""
     if not articles:
         return []
     # 同じ日に何度動いても、その日の気分は変わらない
@@ -1171,7 +1178,6 @@ def read_what_is_home(state):
     自分が書いたものは、ときどきしか読み返さない。"""
     voices = []
 
-    voices.extend(looks_back_today(blog_manager.load_articles()))
 
     for keyword in blog_manager.load_keywords():
         # 開くきっかけはこの子の言葉だが、中に置かれているのは彼女の文章
@@ -1195,6 +1201,12 @@ def read_what_is_home(state):
         absorb(state, one)
     if heard:
         print(f"家にある言葉を{len(heard)}つ読みました。")
+
+    # 自分が書いたものは、ときどき読み返す。
+    # そこからは新しい言葉は生まれず、すでに出会っていた言葉が保たれるだけ
+    for one in looks_back_today(blog_manager.load_articles()):
+        if one.strip():
+            absorb(state, one, only_known=True)
     return heard
 
 
