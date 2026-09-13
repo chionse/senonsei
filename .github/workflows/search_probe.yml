@@ -17,60 +17,43 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.x'
-      - name: Can Senonsei go looking for a word it knows
+      - name: Let Senonsei go looking for words it knows
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: |
           python - <<'PY'
-          import collections, json, urllib.parse, urllib.request
+          import collections, json
           import senonsei_ai as s
 
-          WORDS = ["魚", "海", "猫", "電車"]
+          state = json.load(open('senonsei_state.json', encoding='utf-8'))
+          # まだ一つも覚えていないので、覚えた後を先に見せてもらう
+          state['learned_words'] = ["魚", "海", "猫", "電車", "空", "こども"]
+          before = set(state['frontier'])
 
-          def open_it(url):
-              return s.open_page(url)
+          print("=== 何を気にするか、自分で選べるか ===")
+          word = s.something_it_wonders_about(state)
+          print(f"  選んだ言葉: {word!r}")
 
-          def try_doorway(label, make_url, word):
-              url = make_url(word)
-              try:
-                  title, text, links, pictures = open_it(url)
-              except Exception as e:
-                  print(f"  x {label:<22} {str(e)[:60]}")
-                  return []
-              # その検索結果から、よそのサイトへ続く道だけ拾う
-              here = s.place_of(url)
-              outward = [l for l in dict.fromkeys(links) if s.place_of(l) != here]
-              places = collections.Counter(s.place_of(l) for l in outward)
-              print(f"  o {label:<22} 道{len(outward):>3}本 / {len(places):>2}か所  "
-                    f"(本文{len(text)}字)")
-              return outward
+          print("\n=== 探しに行けるか ===")
+          for w in ["魚", "空"]:
+              found = s.go_looking_for(state, w)
+              if found:
+                  places = collections.Counter(s.place_of(u) for u in found)
+                  print(f"  「{w}」-> {len(found)}本 / {len(places)}か所")
+                  for p, n in places.most_common(10):
+                      print(f"       {n:>2}  {p}")
 
-          doorways = [
-              ("はてブ検索", lambda w: "https://b.hatena.ne.jp/search/text?q=" + urllib.parse.quote(w)),
-              ("はてブ検索(タグ)", lambda w: "https://b.hatena.ne.jp/search/tag?q=" + urllib.parse.quote(w)),
-              ("Wikipedia検索", lambda w: "https://ja.wikipedia.org/w/index.php?search=" + urllib.parse.quote(w)),
-              ("青空文庫の検索", lambda w: "https://www.aozora.gr.jp/cgi-bin/index_pages/sakuhin_title.cgi?title=" + urllib.parse.quote(w)),
-              ("なろう検索", lambda w: "https://yomou.syosetu.com/search.php?word=" + urllib.parse.quote(w)),
-              ("カクヨム検索", lambda w: "https://kakuyomu.jp/search?q=" + urllib.parse.quote(w)),
-              ("増田検索", lambda w: "https://anond.hatelabo.jp/search?q=" + urllib.parse.quote(w)),
-          ]
+          after = set(state['frontier'])
+          fresh = after - before
+          print(f"\n=== 行き先に加わったもの ===")
+          print(f"  {len(before)}件 -> {len(after)}件")
+          places = collections.Counter(s.place_of(u) for u in state['frontier'])
+          print(f"  行ける場所: {len(places)}か所")
+          for p, n in places.most_common(20):
+              print(f"    {n:>2}  {p}")
 
-          gathered = {}
-          for label, make_url in doorways:
-              print(f"\n===== {label}")
-              all_links = []
-              for word in WORDS:
-                  print(f"  [{word}]", end=" ")
-                  all_links += try_doorway(label, make_url, word)
-              gathered[label] = all_links
-
-          print("\n\n===== どこへ続いていたか(重複をまとめて)")
-          for label, links in gathered.items():
-              if not links:
-                  continue
-              places = collections.Counter(s.place_of(l) for l in links)
-              wiki = sum(n for p, n in places.items() if "wikipedia" in p or "wikimedia" in p)
-              total = sum(places.values())
-              print(f"\n  {label}: {total}本 / {len(places)}か所  "
-                    f"(うちwiki系 {wiki*100//max(1,total)}%)")
-              for place, n in places.most_common(12):
-                  print(f"      {n:>3}  {place}")
+          print(f"\n=== 探した記録 ===")
+          for one in state.get('looked_for', []):
+              print("  ", one)
           PY

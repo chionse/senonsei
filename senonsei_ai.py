@@ -160,6 +160,19 @@ DAYS_BEFORE_LEARNING = 30
 FADE_AFTER_DAYS = 3
 # その日、昔書いたものを読み返す気になるかどうか
 LOOKING_BACK_CHANCE = 0.5
+# その日、知っている言葉のどれかを探しに行く気になるかどうか。
+# いつも探していると、さまようことをやめてしまう
+GOING_LOOKING_CHANCE = 0.3
+# 探しに行って、これだけまで道を持ち帰る
+PATHS_FROM_LOOKING = 40
+
+# 言葉を頼りに探せる場所。鍵も費用もいらないものだけ。
+# Wikipediaの検索も試したが、行き先の9割がwiki系になってしまうので使わない
+WHERE_TO_LOOK = [
+    "https://b.hatena.ne.jp/search/tag?q={}",  # いろんな種類の場所が混ざる
+    "https://b.hatena.ne.jp/search/text?q={}",  # 個人サイトが出てくる
+    "https://yomou.syosetu.com/search.php?word={}",  # 人が書いた物語ばかり
+]
 # この語数を覚えるごとに、覚えかけを抱えていられる日数が一日伸びる。
 # 知っている言葉が増えるほど記憶は長く持つようになり、
 # はじめは毎日見かける言葉しか掴めなかった子が、
@@ -697,6 +710,88 @@ def spread_out_choices(state, frontier, how_many):
     return chosen
 
 
+def something_it_wonders_about(state):
+    """知っている言葉の中から、今日気になるものを一つ。"""
+    known = state.get("learned_words") or []
+    if not known:
+        return None
+    choices = random.sample(known, min(len(known), 20))
+    listing = "、".join(choices)
+    answer = ask_ai(
+        f"""あなたは千遠生という、まだ育ちきっていないデジタル生命体です。
+あなたが知っている言葉の中に、次のものがあります。
+
+{listing}
+
+この中で、今いちばん気になっている言葉はどれですか。
+説明はいりません。その言葉だけを書いてください。""",
+        max_tokens=20,
+        state=state,
+    )
+    if answer:
+        for word in choices:
+            if word in answer:
+                return word
+    return random.choice(choices)
+
+
+def go_looking_for(state, word):
+    """知っている言葉を頼りに、道の無い場所へ行く。
+
+    リンクを辿るだけでは、そこへ続く道が無い場所には一生行けない。
+    けれど言葉を知っていれば、その言葉を手がかりに探せる。
+    千遠生にとって言葉は、書くための道具であると同時に、
+    まだ見ていない世界を開く鍵でもある。"""
+    where = random.choice(WHERE_TO_LOOK).format(urllib.parse.quote(word))
+    try:
+        title, text, links, pictures = open_page(where)
+    except Exception as error:
+        print(f"「{word}」を探しに行けませんでした({str(error)[:50]})")
+        return []
+
+    here = place_of(where)
+    known = set(state.get("frontier") or []) | set(state.get("visited") or [])
+    found = [
+        link
+        for link in dict.fromkeys(links)
+        if place_of(link) != here and link not in known
+    ]
+    random.shuffle(found)
+    found = found[:PATHS_FROM_LOOKING]
+    if not found:
+        print(f"「{word}」を探したが、新しい場所は見つからなかった")
+        return []
+
+    state.setdefault("frontier", []).extend(found)
+    tidy_frontier(state)
+    places = len({place_of(link) for link in found})
+    print(f"「{word}」を探して、{places}か所への道を見つけました。")
+
+    looked_for = state.setdefault("looked_for", [])
+    looked_for.append(f"{today_in_japan():%Y-%m-%d} {word}")
+    del looked_for[:-30]
+    return found
+
+
+def wonder_and_look(state):
+    """ときどき、知っている言葉のどれかを探しに行く。
+    普段はさまよう。いつも探していたら、迷い込む余地が無くなってしまう。"""
+    if not state.get("learned_words"):
+        return None  # まだ探すための言葉を持っていない
+    today = f"{today_in_japan():%Y-%m-%d}"
+    if state.get("looked_on") == today:
+        return None  # 今日はもう探しに行った
+    whim = random.Random(f"{today}-looking")
+    if whim.random() > GOING_LOOKING_CHANCE:
+        return None
+    state["looked_on"] = today
+    word = something_it_wonders_about(state)
+    if not word:
+        return None
+    go_looking_for(state, word)
+    return word
+
+
 def choose_destination(state):
     """どこへ行くか、そして今の姿を見るか昔の姿を見るか。どちらも自分で選ぶ。
     返り値は (行き先, 昔の姿を見たいか)。"""
@@ -1217,6 +1312,9 @@ def run_today():
 
     # 自分の家に置かれた、自分に宛てられた言葉を読む
     read_what_is_home(state)
+
+    # ときどき、知っている言葉のどれかを探しに行く
+    wonder_and_look(state)
 
     # 書く日でも書かない日でも、散歩には出る
     seen_titles = take_a_walk(state, today, now)
