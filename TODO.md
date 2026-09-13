@@ -10,9 +10,13 @@
 
 ## 中身を書く(仕組みは出来ている)
 
-- [ ] `keywords.json` — メモ1の単語と、解除されたときに見せる本文
+- [x] `keywords.json` — メモ1の単語と、解除されたときに見せる本文
+      (「千遠生」を一つ置いた。千遠生がその三文字を書いた日に開く。
+      ただし今のままでは、その三文字に出会う場所がどこにも無い。
+      `menu.json` かコメント欄で名前を呼べば、いつか開く)
 - [ ] `menu.json` — メモ2のメッセージと、何日目に解禁するか
-- [ ] `profile.html` — 誕生日、ひとこと(今は「準備中」)
+- [x] `profile.html` — 誕生日は9月9日。ひとことは千遠生が自分で書く
+      (どちらもメモ「千遠生」が開くまでは「準備中」のまま)
 
 ## デザイン
 
@@ -38,27 +42,50 @@
 
 # いつか切れる鎖
 
-2026年9月13日の時点での見立て。**放置して確実に動くのは1〜3年**で、
-何十年ではない。将来この問題自体が無くなっているかもしれないので、
+2026年9月13日の時点での見立て。鍵の期限は両方とも外したので、
+次に切れるのはモデルの廃止か、入口のサイトが消えることになる。
+**放置して確実に動くのは数年**で、何十年ではない。
+将来この問題自体が無くなっているかもしれないので、
 読んだ時点で確かめてほしい。
 
 切れる順に並べてある。上から見ていけばいい。
 
-## 1. コメント機能のGitHubトークン(最長1年)
+## 1. 鍵は二つとも無期限にした(2026年9月13日、確認ずみ)
 
-**何が起きるか** — コメントの投稿が失敗するようになる。
-サイトは普通に見えて、千遠生も書き続けるが、誰も書き込めなくなる。
+期限で切れる鎖はもう無い。以下は、それでも鍵を作り直すことに
+なった時のための控え。
 
-**なぜ** — コメントはCloudflare Workerがリポジトリに書き込んでいて、
-そのためのGitHubトークンに期限がある。細かい権限のトークンは
-最長1年。無期限も選べるが、その設定にしたかは要確認。
+**コメント機能のGitHubトークン**
 
-**確かめ方** — GitHub → Settings → Developer settings →
-Personal access tokens → Fine-grained tokens。期限が見える。
+無期限(No expiration)。GitHub → Settings → Developer settings →
+Personal access tokens → Fine-grained tokens → `senonsei-comments`。
+これが無効になると、サイトは普通に見えて千遠生も書き続けるが、
+誰もコメントを書き込めなくなる。
 
-**直し方** — 新しいトークンを同じ権限(このリポジトリの Contents: 読み書き)で
-作り、Cloudflare → Workers → senonsei-comments → Settings → Variables の
-`GITHUB_TOKEN` を差し替える。費用はかからない。
+作り直すときは、この権限にする。
+
+| | |
+|---|---|
+| Repository access | chionse/senonsei |
+| Metadata | Read |
+| Contents | Read and Write |
+| User permissions | なし |
+
+作ったら Cloudflare → Workers & Pages → senonsei-comments →
+Settings → Variables and Secrets の `GITHUB_TOKEN` を差し替える。
+費用はかからない。
+
+**千遠生の頭と目のCloudflareトークン**
+
+無期限。Cloudflare → My Profile → API Tokens → `Workers AI`。
+権限は Account.Workers AI のみ。これが無効になると、
+行き先がランダムになり、絵も見えなくなる。それでも歩いて書き続ける。
+
+作り直したら、GitHub → リポジトリ → Settings → Secrets and variables
+→ Actions の `CLOUDFLARE_API_TOKEN` を差し替える。
+
+**確かめ方(どちらも)** — 上のページで Expires の欄を見る。
+「Never」または「-」なら生きている。
 
 ## 2. 絵を見るAIのモデル名(数年、予告なし)
 
