@@ -90,35 +90,53 @@ def update_keywords(articles):
     return keywords
 
 
-def render_unlockable_list(entries):
+def render_unlockable_list(entries, prefix):
     """entries: [(unlocked: bool, label: str, content: str), ...] から
-    ロック中は「???」、解除済みはクリックで本文が開くリストのHTMLを作る。"""
+    ロック中は「???」、解除済みは押すと本文の画面に移るリストを作る。
+
+    本文はその場で開かず、一枚の画面として別に作っておく。
+    (リストのHTML, 本文の画面たちのHTML) を返す。"""
     items_html = ""
-    for unlocked, label, content in entries:
-        if unlocked:
-            items_html += f"""    <li>
-      <div class="kw-word" onclick="toggleKw(this)">{label}</div>
-      <div class="kw-content">{content}</div>
-    </li>
-"""
-        else:
+    pages_html = ""
+    for number, entry in enumerate(entries):
+        unlocked, label, content = entry[:3]
+        # 一覧では「???」のままにしておきたいものもあるので、
+        # 開いた画面の見出しは別に持てるようにしておく
+        heading = entry[3] if len(entry) > 3 else label
+        if not unlocked:
             items_html += '    <li class="locked">???</li>\n'
-    return items_html
+            continue
+        page_id = f"{prefix}{number}"
+        items_html += f'    <li><a href="#{page_id}">{label}</a></li>\n'
+        pages_html += f"""  <div class="memo-page" id="{page_id}" hidden>
+    <div class="memo-back"><a href="#">←戻る</a></div>
+    <div class="memo-word">{heading}</div>
+    <div class="memo-body">{content}</div>
+  </div>
+
+"""
+    return items_html, pages_html
 
 
 def generate_memo_html(keywords, menu_items, articles):
     """メモ1とメモ2を1つのページに入れ、上のタブで切り替えられるようにする。"""
     keyword_entries = [(kw["unlocked"], kw["word"], kw.get("content", "")) for kw in keywords]
-    keyword_items = render_unlockable_list(keyword_entries)
+    keyword_items, keyword_pages = render_unlockable_list(keyword_entries, "kw")
     keyword_unlocked = sum(1 for kw in keywords if kw["unlocked"])
 
     start_date = blog_start_date(articles)
     elapsed = max(0, (today_in_japan() - start_date).days)
     ordered_menu = sorted(menu_items, key=lambda m: m["unlock_day"])
     menu_entries = [
-        (elapsed >= item["unlock_day"], "???", item["message"]) for item in ordered_menu
+        (
+            elapsed >= item["unlock_day"],
+            "???",  # 一覧では何番目かも見せない
+            item["message"],
+            f"{item['unlock_day']}日目",  # 開けば、いつのものかは分かる
+        )
+        for item in ordered_menu
     ]
-    menu_items_html = render_unlockable_list(menu_entries)
+    menu_items_html, menu_pages = render_unlockable_list(menu_entries, "mn")
     menu_unlocked = sum(1 for m in ordered_menu if elapsed >= m["unlock_day"])
 
     html = f"""<!DOCTYPE html>
@@ -130,41 +148,58 @@ def generate_memo_html(keywords, menu_items, articles):
   <link rel="stylesheet" href="sen.css" />
 </head>
 <body>
-  <div class="top-nav">
-    <a href="index.html">←トップ</a>
-  </div>
-
-  <header>
-    <h1>メモ</h1>
-    <div class="memo-switch">
-      <span class="here" id="tab1" onclick="showMemo(1)">メモ1</span>
-      <span id="tab2" onclick="showMemo(2)">メモ2</span>
+  <div id="memo-index">
+    <div class="top-nav">
+      <a href="index.html">←トップ</a>
     </div>
-  </header>
 
-  <div id="memo1">
-    <p class="keyword-count">解除済み 全{keyword_unlocked} / {len(keywords)} 個</p>
-    <ul class="keyword-list">
-{keyword_items}    </ul>
+    <header>
+      <h1>メモ</h1>
+      <div class="memo-switch">
+        <span class="here" id="tab1" onclick="showMemo(1)">メモ1</span>
+        <span id="tab2" onclick="showMemo(2)">メモ2</span>
+      </div>
+    </header>
+
+    <div id="memo1">
+      <p class="keyword-count">解除済み 全{keyword_unlocked} / {len(keywords)} 個</p>
+      <ul class="keyword-list">
+{keyword_items}      </ul>
+    </div>
+
+    <div id="memo2" hidden>
+      <p class="keyword-count">解禁済み 全{menu_unlocked} / {len(ordered_menu)} 個</p>
+      <ul class="keyword-list">
+{menu_items_html}      </ul>
+    </div>
   </div>
 
-  <div id="memo2" hidden>
-    <p class="keyword-count">解禁済み 全{menu_unlocked} / {len(ordered_menu)} 個</p>
-    <ul class="keyword-list">
-{menu_items_html}    </ul>
-  </div>
-
-  <script>
-    function toggleKw(elem) {{
-      var contentDiv = elem.nextElementSibling;
-      contentDiv.style.display = (contentDiv.style.display === 'block') ? 'none' : 'block';
-    }}
+{keyword_pages}{menu_pages}  <script>
     function showMemo(which) {{
       document.getElementById('memo1').hidden = (which !== 1);
       document.getElementById('memo2').hidden = (which !== 2);
       document.getElementById('tab1').className = (which === 1) ? 'here' : '';
       document.getElementById('tab2').className = (which === 2) ? 'here' : '';
     }}
+    // 本文はページの中の別画面。住所(#)で切り替えるので、
+    // 端末の戻るボタンでも一覧に帰ってこられる
+    function showWhatTheAddressSays() {{
+      var pages = document.querySelectorAll('.memo-page');
+      var wanted = location.hash.slice(1);
+      var open = null;
+      for (var i = 0; i < pages.length; i++) {{
+        var here = (pages[i].id === wanted);
+        pages[i].hidden = !here;
+        if (here) {{ open = pages[i]; }}
+      }}
+      document.getElementById('memo-index').hidden = !!open;
+      if (open) {{
+        showMemo(open.id.indexOf('mn') === 0 ? 2 : 1);
+        window.scrollTo(0, 0);
+      }}
+    }}
+    window.addEventListener('hashchange', showWhatTheAddressSays);
+    showWhatTheAddressSays();
   </script>
 </body>
 </html>

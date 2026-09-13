@@ -7,49 +7,69 @@
   <link rel="stylesheet" href="sen.css" />
 </head>
 <body>
-  <div class="top-nav">
-    <a href="index.html">←トップ</a>
-  </div>
-
-  <header>
-    <h1>メモ</h1>
-    <div class="memo-switch">
-      <span class="here" id="tab1" onclick="showMemo(1)">メモ1</span>
-      <span id="tab2" onclick="showMemo(2)">メモ2</span>
+  <div id="memo-index">
+    <div class="top-nav">
+      <a href="index.html">←トップ</a>
     </div>
-  </header>
 
-  <div id="memo1">
-    <p class="keyword-count">解除済み 全0 / 0 個</p>
-    <ul class="keyword-list">
-    </ul>
+    <header>
+      <h1>メモ</h1>
+      <div class="memo-switch">
+        <span class="here" id="tab1" onclick="showMemo(1)">メモ1</span>
+        <span id="tab2" onclick="showMemo(2)">メモ2</span>
+      </div>
+    </header>
+
+    <div id="memo1">
+      <p class="keyword-count">解除済み 全0 / 0 個</p>
+      <ul class="keyword-list">
+      </ul>
+    </div>
+
+    <div id="memo2" hidden>
+      <p class="keyword-count">解禁済み 全1 / 5 個</p>
+      <ul class="keyword-list">
+    <li><a href="#mn0">???</a></li>
+    <li class="locked">???</li>
+    <li class="locked">???</li>
+    <li class="locked">???</li>
+    <li class="locked">???</li>
+      </ul>
+    </div>
   </div>
 
-  <div id="memo2" hidden>
-    <p class="keyword-count">解禁済み 全1 / 5 個</p>
-    <ul class="keyword-list">
-    <li>
-      <div class="kw-word" onclick="toggleKw(this)">???</div>
-      <div class="kw-content">(ここに0日目=ブログを始めた日に見せたいメッセージを書いてください)</div>
-    </li>
-    <li class="locked">???</li>
-    <li class="locked">???</li>
-    <li class="locked">???</li>
-    <li class="locked">???</li>
-    </ul>
+  <div class="memo-page" id="mn0" hidden>
+    <div class="memo-back"><a href="#">←戻る</a></div>
+    <div class="memo-word">0日目</div>
+    <div class="memo-body">(ここに0日目=ブログを始めた日に見せたいメッセージを書いてください)</div>
   </div>
 
   <script>
-    function toggleKw(elem) {
-      var contentDiv = elem.nextElementSibling;
-      contentDiv.style.display = (contentDiv.style.display === 'block') ? 'none' : 'block';
-    }
     function showMemo(which) {
       document.getElementById('memo1').hidden = (which !== 1);
       document.getElementById('memo2').hidden = (which !== 2);
       document.getElementById('tab1').className = (which === 1) ? 'here' : '';
       document.getElementById('tab2').className = (which === 2) ? 'here' : '';
     }
+    // 本文はページの中の別画面。住所(#)で切り替えるので、
+    // 端末の戻るボタンでも一覧に帰ってこられる
+    function showWhatTheAddressSays() {
+      var pages = document.querySelectorAll('.memo-page');
+      var wanted = location.hash.slice(1);
+      var open = null;
+      for (var i = 0; i < pages.length; i++) {
+        var here = (pages[i].id === wanted);
+        pages[i].hidden = !here;
+        if (here) { open = pages[i]; }
+      }
+      document.getElementById('memo-index').hidden = !!open;
+      if (open) {
+        showMemo(open.id.indexOf('mn') === 0 ? 2 : 1);
+        window.scrollTo(0, 0);
+      }
+    }
+    window.addEventListener('hashchange', showWhatTheAddressSays);
+    showWhatTheAddressSays();
   </script>
 </body>
 </html>
