@@ -279,7 +279,7 @@ def generate_kakodogu_html(articles):
 <html lang="ja">
 <head>
 <meta charset="UTF-8" />
-<title>過去ログ</title>
+<title>過去のブログ</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="stylesheet" href="sen.css" />
 </head>
@@ -287,7 +287,7 @@ def generate_kakodogu_html(articles):
   <div class="top-nav"><a href="index.html">←トップ</a></div>
 
   <header>
-    <h1>過去ログ</h1>
+    <h1>過去のブログ</h1>
   </header>
 
   <div class="log-layout">
@@ -392,7 +392,7 @@ def generate_index_html(articles):
         if recent:
             items = "\n".join(
                 f'    <li><span class="date">{a["date"]}</span>'
-                f'<a href="{BLOG_FOLDER}/blog_{a["date"]}.html">{a["title"]}</a></li>'
+                f'<a href="kakodogu.html#entry-{a["date"]}">{a["title"]}</a></li>'
                 for a in recent
             )
             recent_html = f"""<div class="section-title">直近のブログ</div>
@@ -447,13 +447,13 @@ def generate_index_html(articles):
     </div>
   </header>
 
-  <div class="section-title">今日のブログ</div>
+  <div class="section-title">☆今日のブログ☆</div>
   {latest_html}
 
   {recent_html}
 
   <nav>
-    <a href="kakodogu.html">過去ログ</a>
+    <a href="kakodogu.html">過去のブログ</a>
     <a href="memo.html">メモ</a>
     <a href="profile.html">プロフィール</a>
   </nav>
