@@ -8,6 +8,8 @@ STATE_FILE = "senonsei_state.json"
 # この子の名前。自分の名前の由来を知った日から、
 # プロフィールは本人が書くようになる
 ITS_OWN_NAME = "千遠生"
+# 誕生日。ブログが動きはじめた日とは別に、彼女が決めた日
+ITS_BIRTHDAY = "2026-09-09"
 MENU_FILE = "menu.json"
 BLOG_FOLDER = "blogs"
 COMMENTS_FOLDER = "comments"
@@ -497,9 +499,9 @@ def generate_profile_html(keywords, state):
     said = state.get("a_word_about_itself") or {}
 
     birthday = "準備中"
-    if knows and state.get("started_date"):
+    if knows:
         try:
-            born = datetime.date.fromisoformat(state["started_date"])
+            born = datetime.date.fromisoformat(ITS_BIRTHDAY)
             birthday = f"{born.year}年{born.month}月{born.day}日"
         except ValueError:
             pass
