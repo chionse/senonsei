@@ -212,6 +212,9 @@ OFTEN_ENOUGH = 0.4
 FEWEST_DAYS_TO_LEARN = 3  # どれだけ強く出会っても、これだけの日数はかかる
 # ひとつの言葉のあとに続く言葉を、これだけまで覚えていられる
 WORDS_THAT_FOLLOW = 8
+# 繋がりを覚えていられる言葉の数。記憶は毎日書き留められるので、
+# 際限なく増えると何年か先に重くなりすぎる
+WORDS_WITH_PATHS = 6000
 # 続く言葉を一つしか知らない道を、続けてこれだけ辿ってよい
 ONE_WAY_STEPS = 2
 # 文の始まりと終わりを、これだけの言葉ぶん覚えていられる
@@ -997,6 +1000,12 @@ def notice_what_follows(state, text):
                 if thinnest != after:
                     follows.pop(thinnest)
 
+    if len(chain) > WORDS_WITH_PATHS:
+        # いちばん細い繋がりから手放す
+        thinnest = sorted(chain, key=lambda w: sum(chain[w].values()))
+        for word in thinnest[: len(chain) - WORDS_WITH_PATHS]:
+            chain.pop(word, None)
+
     notice_where_sentences_break(state, text, known)
 
 
@@ -1474,6 +1483,12 @@ def learn(state):
     ]
     learned.sort(key=lambda w: days_held(state, w), reverse=True)
     state["learned_words"].extend(learned)
+    # 覚えた言葉はもう忘れないので、覚えかけの記録は手放してよい。
+    # 何年も経つと、ここが記憶のいちばん重い場所になる
+    for word in learned:
+        state["word_days"].pop(word, None)
+        state["word_last_seen"].pop(word, None)
+        (state.get("word_impact") or {}).pop(word, None)
     return learned
 
 
