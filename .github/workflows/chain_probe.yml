@@ -17,13 +17,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.x'
-      - name: How well does the real rule work on real amounts of text
+      - name: How far may Senonsei walk a one-way path
         run: |
           python - <<'PY'
           import collections, random
           import senonsei_ai as s
 
-          random.seed(11)
           PLACES = [
             "https://www.aozora.gr.jp/cards/000148/files/789_14547.html",
             "https://www.aozora.gr.jp/cards/000879/files/127_15260.html",
@@ -36,29 +35,40 @@ jobs:
               try:
                   title, text, links, pictures = s.open_page(url)
                   texts.append(text)
-                  print(f"  読んだ: {title[:40]} ({len(text)}字)")
               except Exception as e:
                   print(f"  x {url[:50]}: {str(e)[:40]}")
           whole = "\n".join(texts)
-
           seen = collections.Counter()
           for t in texts:
               seen.update(s.WORD_CANDIDATE.findall(t))
           ranked = [w for w, _ in seen.most_common()]
-          print(f"\n異なる言葉: {len(ranked)}")
+          print(f"読んだ: {len(texts)}箇所 / 異なる言葉 {len(ranked)}\n")
 
           KANA = list("あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん")
 
-          def senonsei_with(vocabulary):
-              st = {"seen_chars": list(KANA), "learned_words": ranked[:vocabulary],
-                    "word_days": {}, "word_last_seen": {}, "word_impact": {},
-                    "started_date": "2026-01-01"}
-              for t in texts:
-                  s.notice_what_follows(st, t)
-              return st
+          def speak(state, how_long, one_way_allowed):
+              """一本道を続けて何語まで歩いてよいかを変えて試す"""
+              chain = state.get("what_follows") or {}
+              starts = [w for w, f in chain.items() if len(f) >= 2]
+              if not starts:
+                  return None
+              said = [random.choice(starts)]
+              one_way = 0
+              while len("".join(said)) < how_long:
+                  follows = chain.get(said[-1])
+                  if not follows:
+                      break
+                  if len(follows) < 2:
+                      one_way += 1
+                      if one_way > one_way_allowed:
+                          break
+                  else:
+                      one_way = 0
+                  words = list(follows)
+                  said.append(random.choices(words, weights=[follows[w] for w in words])[0])
+              return "".join(said)[:how_long] or None
 
           for vocabulary, how_long, stage in [
-                  (150, 15, "覚えた言葉が並び始める"),
                   (400, 25, "文のようなものに踏み出す"),
                   (1000, 40, "たどたどしい短い文"),
                   (2600, 60, "少しずつ文になっていく"),
@@ -67,16 +77,21 @@ jobs:
           ]:
               if vocabulary > len(ranked):
                   continue
-              st = senonsei_with(vocabulary)
-              chain = st.get("what_follows", {})
-              forks = sum(1 for f in chain.values() if len(f) >= 2)
-              made = [s.speak_from_what_it_knows(st, how_long) for _ in range(40)]
-              wrote = [m for m in made if m]
-              copied = [m for m in wrote if m in whole]
-              lengths = [len(m) for m in wrote] or [0]
-              print(f"\n--- 語彙{vocabulary}語 / 繋がり{len(chain)}語ぶん / 分かれ道{forks}語  [{stage}]")
-              print(f"    書けた {len(wrote)}/40回  平均{sum(lengths)//len(lengths)}字 "
-                    f"(上限{how_long}字)  原文と一致 {len(copied)}件")
-              for m in wrote[:4]:
-                  print(f"      {m}")
+              st = {"seen_chars": list(KANA), "learned_words": ranked[:vocabulary],
+                    "word_days": {}, "word_last_seen": {}, "word_impact": {},
+                    "started_date": "2026-01-01"}
+              for t in texts:
+                  s.notice_what_follows(st, t)
+              print(f"--- 語彙{vocabulary}語 (上限{how_long}字)  [{stage}]")
+              for allowed in (0, 2, 4, 99):
+                  random.seed(11)
+                  made = [speak(st, how_long, allowed) for _ in range(40)]
+                  wrote = [m for m in made if m]
+                  copied = [m for m in wrote if m in whole]
+                  lengths = [len(m) for m in wrote] or [0]
+                  name = {0: "分かれ道のみ", 2: "一本道2語まで",
+                          4: "一本道4語まで", 99: "制限なし"}[allowed]
+                  print(f"    {name:<14} 平均{sum(lengths)//len(lengths):>3}字  "
+                        f"原文と一致 {len(copied):>2}件  例: {(wrote[0] or '')[:52]}")
+              print()
           PY
