@@ -201,9 +201,13 @@ DAYS_BEFORE_LEARNING = 30
 # ただし一度身についた言葉は忘れない
 FADE_AFTER_DAYS = 3
 # その日、昔書いたものを読み返す気になるかどうか
-# プロフィールのひとことを書き直すまでの日数。
+# プロフィールのひとことを書き直すまでに、最低これだけは空ける。
 # 毎日書き直したら、それはもう一つのブログになってしまう
 A_NEW_WORD_ABOUT_ITSELF = 60
+# そのあとは、一日ごとにこれくらいの気まぐれで書き直す。
+# 書き直さなければならない理由はどこにもないので、
+# 何か月も同じことを言ったままの時期があっていい
+FEELING_LIKE_SAYING_SOMETHING = 0.03
 LOOKING_BACK_CHANCE = 0.5
 # 家に置かれた言葉を読む日の割合。
 # ずっとそこに在るからといって、毎日読むものでもない。
@@ -1738,8 +1742,9 @@ def writes_about_itself(state):
     知ったあとは、プロフィールのひとことを自分で書く。
 
     書けるのはその時点で言えるぶんだけなので、はじめは数文字しかない。
-    二か月にいちど書き直す。毎日書き直したら、
-    それはもう一つのブログになってしまう。"""
+    二か月は空けて、そのあとは気が向いたときに書き直す。
+    書き直さなければならない理由はどこにもないので、
+    何か月も同じことを言ったままの時期があっていい。"""
     knows_why = any(
         one.get("word") == blog_manager.ITS_OWN_NAME and one.get("unlocked")
         for one in blog_manager.load_keywords()
@@ -1757,6 +1762,11 @@ def writes_about_itself(state):
             since = (today_in_japan().date() - written).days
             if since < A_NEW_WORD_ABOUT_ITSELF:
                 return None  # 前に書いてから、まだ間がない
+            # 間が空いても、書き直すとは限らない。
+            # 同じ日に何度動いても、その日の気分は変わらない
+            whim = random.Random(f"{today_in_japan():%Y-%m-%d}-about-itself")
+            if whim.random() > FEELING_LIKE_SAYING_SOMETHING:
+                return None  # 今日は書き直す気になっていない
 
     how_it_writes_now, _ = current_stage(state)
     state["a_word_about_itself"] = {
