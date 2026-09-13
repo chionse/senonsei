@@ -192,7 +192,9 @@ def generate_memo_html(keywords, menu_items, articles):
         pages[i].hidden = !here;
         if (here) {{ open = pages[i]; }}
       }}
-      // 後ろの一覧は消さない。どこを開いているのかが見えたほうがいい
+      // 後ろの一覧は消さない。どこを開いているのかが見えたほうがいい。
+      // ただし薄くして、それが後ろだと分かるようにする
+      document.getElementById('memo-index').className = open ? 'behind' : '';
       if (open) {{
         showMemo(open.id.indexOf('mn') === 0 ? 2 : 1);
       }}
