@@ -212,6 +212,8 @@ OFTEN_ENOUGH = 0.4
 FEWEST_DAYS_TO_LEARN = 3  # どれだけ強く出会っても、これだけの日数はかかる
 # ひとつの言葉のあとに続く言葉を、これだけまで覚えていられる
 WORDS_THAT_FOLLOW = 8
+# 続く言葉を一つしか知らない道を、続けてこれだけ辿ってよい
+ONE_WAY_STEPS = 2
 # 文の切れ目。タグを消すと別々の見出しが空白で隣り合うので、空白でも切る
 A_BREAK = re.compile(r"[\s。．、，！？!?・…]+")
 
@@ -998,13 +1000,21 @@ def speak_from_what_it_knows(state, how_long):
     if not starts:
         return None
     said = [random.choice(starts)]
+    one_way = 0
     while len("".join(said)) < how_long:
         follows = chain.get(said[-1])
-        # 続く言葉を一つしか知らないなら、そこで止まる。
-        # 進めばそれは読んだ文をなぞるだけで、この子の言葉にならない。
-        # 分かれ道でだけ進む
-        if not follows or len(follows) < 2:
+        if not follows:
             break
+        # 続く言葉を一つしか知らない道は、少しだけ辿ってよい。
+        # そこを一切通らないと文が短く切れてしまい、短い断片は
+        # かえって読んだ文と同じ並びになりやすかった。
+        # 長く書くほど、どこかで必ず別の道へ逸れる
+        if len(follows) < 2:
+            one_way += 1
+            if one_way > ONE_WAY_STEPS:
+                break
+        else:
+            one_way = 0
         words = list(follows)
         said.append(random.choices(words, weights=[follows[w] for w in words])[0])
     return "".join(said)[:how_long] or None
