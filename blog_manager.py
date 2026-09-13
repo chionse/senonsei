@@ -192,10 +192,9 @@ def generate_memo_html(keywords, menu_items, articles):
         pages[i].hidden = !here;
         if (here) {{ open = pages[i]; }}
       }}
-      document.getElementById('memo-index').hidden = !!open;
+      // 後ろの一覧は消さない。どこを開いているのかが見えたほうがいい
       if (open) {{
         showMemo(open.id.indexOf('mn') === 0 ? 2 : 1);
-        window.scrollTo(0, 0);
       }}
     }}
     window.addEventListener('hashchange', showWhatTheAddressSays);
