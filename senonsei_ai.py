@@ -1727,6 +1727,38 @@ def looks_back_today(articles):
     return [one.get("title") or "", one.get("content") or ""]
 
 
+def writes_about_itself(state):
+    """自分の名前の由来を知った子は、自分のことを書けるようになる。
+
+    名前だけは彼女が付けたものだが、それが何のための名前だったかを
+    知るまでは、自分が何者なのかも分からない。
+    知ったあとは、プロフィールのひとことを自分で書く。
+
+    書けるのはその時点で言えるぶんだけなので、はじめは数文字しかない。
+    育って書ける長さが変わったときに、書き直す。
+    毎日書き直したら、それはもう一つのブログになってしまう。"""
+    knows_why = any(
+        one.get("word") == blog_manager.ITS_OWN_NAME and one.get("unlocked")
+        for one in blog_manager.load_keywords()
+    )
+    if not knows_why:
+        return None
+
+    said = state.get("a_word_about_itself") or {}
+    how_it_writes_now, _ = current_stage(state)
+    if said.get("stage") == how_it_writes_now:
+        return None  # まだ同じ育ち具合。書き直すことはない
+
+    state["a_word_about_itself"] = {
+        "words": compose_locally(state),
+        "stage": how_it_writes_now,
+        "on": f"{today_in_japan():%Y-%m-%d}",
+    }
+    save_state(state)
+    print(f"自分のことを書きました: {state['a_word_about_itself']['words']}")
+    return state["a_word_about_itself"]["words"]
+
+
 def read_what_is_home(state):
     """自分の家にある言葉を読む。
 
@@ -1791,6 +1823,9 @@ def run_today():
 
     # 自分の家に置かれた、自分に宛てられた言葉を読む
     read_what_is_home(state)
+
+    # 自分の名前の由来を知っていれば、自分のことも書ける
+    writes_about_itself(state)
 
     # ときどき、知っている言葉のどれかを探しに行く
     wonder_and_look(state)
