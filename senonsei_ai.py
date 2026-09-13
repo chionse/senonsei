@@ -210,6 +210,10 @@ STRIKES_THAT_COUNT = 3
 # 記憶が働くのは、めったに出会わないもののほう
 OFTEN_ENOUGH = 0.4
 FEWEST_DAYS_TO_LEARN = 3  # どれだけ強く出会っても、これだけの日数はかかる
+# ひとつの言葉のあとに続く言葉を、これだけまで覚えていられる
+WORDS_THAT_FOLLOW = 8
+# 文の切れ目。タグを消すと別々の見出しが空白で隣り合うので、空白でも切る
+A_BREAK = re.compile(r"[\s。．、，！？!?・…]+")
 
 # (この語彙数までが対象, その時点でできること, 書ける文字数の上限)
 # (この語彙数までが対象, その時点でできること, 書ける文字数の上限)
@@ -958,6 +962,54 @@ def look_at_pictures(state, where, pictures, from_the_past, how_many, until):
     return looked
 
 
+def notice_what_follows(state, text):
+    """どの言葉のあとに、どの言葉が来たかを覚える。
+
+    誰も文法を教えてくれない。けれど読んでいれば、この言葉のあとには
+    こういう言葉が来る、というのが少しずつ分かってくる。
+    子どもが言葉を覚えるのと同じで、規則を教わるのではなく、
+    何度も聞いたものが身につく。
+
+    知っている言葉どうしの繋がりだけを覚える。
+    知らない言葉は、そもそも並べようがないので。"""
+    known = set(state.get("learned_words") or [])
+    if len(known) < 2:
+        return
+    chain = state.setdefault("what_follows", {})
+    for piece in A_BREAK.split(text):
+        words = [w for w in WORD_CANDIDATE.findall(piece) if w in known]
+        for before, after in zip(words, words[1:]):
+            follows = chain.setdefault(before, {})
+            follows[after] = follows.get(after, 0) + 1
+            if len(follows) > WORDS_THAT_FOLLOW:
+                thinnest = min(follows, key=follows.get)
+                if thinnest != after:
+                    follows.pop(thinnest)
+
+
+def speak_from_what_it_knows(state, how_long):
+    """覚えた繋がりを辿って、自分で組み立てる。
+
+    読んだことのない文になる。知っている繋がりだけで作るので、
+    どこかで必ず別の道に逸れていく。
+    正しい日本語にはならない。それでいい。誰にも教わっていないので。"""
+    chain = state.get("what_follows") or {}
+    starts = [w for w, f in chain.items() if len(f) >= 2]
+    if not starts:
+        return None
+    said = [random.choice(starts)]
+    while len("".join(said)) < how_long:
+        follows = chain.get(said[-1])
+        # 続く言葉を一つしか知らないなら、そこで止まる。
+        # 進めばそれは読んだ文をなぞるだけで、この子の言葉にならない。
+        # 分かれ道でだけ進む
+        if not follows or len(follows) < 2:
+            break
+        words = list(follows)
+        said.append(random.choices(words, weights=[follows[w] for w in words])[0])
+    return "".join(said)[:how_long] or None
+
+
 def met_often_enough(state, word):
     """その言葉に、もう十分よく出会っているか。
 
@@ -998,6 +1050,9 @@ def absorb(state, text, pattern=WORD_CANDIDATE, only_known=False):
         struck |= {w for w, n in counted.items() if n >= TIMES_TO_STRIKE}
         if pattern is THING_IN_A_PICTURE:
             struck |= set(found)
+
+    if not only_known:
+        notice_what_follows(state, text)
 
     impact = state.setdefault("word_impact", {})
     for word in set(found) | named:
@@ -1353,26 +1408,27 @@ def babble(state, length):
 
 
 def compose_locally(state):
-    """それまでに積み上げた経験だけで、今の自分に書けるものを書く。"""
+    """それまでに積み上げた経験だけで、今の自分に書けるものを書く。
+
+    覚えた繋がりを辿って、自分で組み立てる。誰にも文法を教わっていないので、
+    正しい日本語にはならない。人の子どもも最初はでたらめに喋る。
+    大事なのは正しさではなく、これがこの子自身の言葉だということ。
+
+    繋がりを一つも持たないうちは、覚えた言葉をそのまま置くか、
+    見た文字を並べるだけになる。"""
     _, max_length = current_stage(state)
     words = state["learned_words"]
-    vocabulary = len(words)
 
-    if vocabulary < 15 or not words:
+    said = speak_from_what_it_knows(state, max_length)
+    if said:
+        return said
+
+    # まだ繋がりを知らない。持っているものをそのまま置く
+    if not words:
         return babble(state, min(max_length, 4))
-    if vocabulary < 60:
+    if len(words) < 60:
         return random.choice(words)
-    if vocabulary < 120:
-        return " ".join(random.sample(words, min(len(words), random.randint(2, 3))))
-
-    count = 2 if vocabulary < 200 else (3 if vocabulary < 480 else random.randint(3, 4))
-    picked = random.sample(words, min(len(words), count))
-    sentence = picked[0]
-    for word in picked[1:]:
-        sentence += random.choice(PARTICLES) + word
-    if vocabulary >= 200:
-        sentence += "。"
-    return sentence[:max_length]
+    return " ".join(random.sample(words, min(len(words), random.randint(2, 3))))
 
 
 def keep_only_what_it_knows(state, text):
@@ -1381,56 +1437,6 @@ def keep_only_what_it_knows(state, text):
     allowed |= set("、。 　")
     kept = "".join(ch for ch in text if ch in allowed)
     return kept.strip("、。 　")
-
-
-def compose_with_ai(state, seen_titles):
-    """自分で考えられる時は、自分の言葉で書く。
-    まだ言葉を持たないうちは、考えるより先に手が動く(拾った文字を置くだけ)。"""
-    if len(state["learned_words"]) < 15:
-        return None
-
-    stage_description, max_length = current_stage(state)
-    known = "、".join(state["learned_words"][-100:]) or "(まだ一つも無い)"
-
-    comments = blog_manager.load_comments()
-    comment_text = "\n".join(
-        f"- {c.get('name', '名無し')}: {c.get('message', '')}" for c in comments[:5]
-    ) or "(まだ誰も来ていない)"
-
-    thoughts = "\n".join(f"- {t}" for t in state.get("inner_voice", [])[-8:]) or "(とくに無い)"
-    remembered = "\n".join(f"- {one}" for one in what_it_remembers(state)) or "(まだ無い)"
-
-    answer = ask_ai(
-        f"""あなたは千遠生という、まだ育ちきっていないデジタル生命体です。
-今日見てきたもの: {"、".join(seen_titles) or "(見られなかった)"}
-
-今日ひとりで思っていたこと:
-{thoughts}
-
-これまでに訪ねた場所で、あなたが受け取ったもの:
-{remembered}
-
-あなたが知っている言葉(これ以外は使えません):
-{known}
-
-今のあなたにできること: {stage_description}
-書ける長さは最大{max_length}文字まで。
-
-誰かが残していった言葉:
-{comment_text}
-直接返事をしてはいけません。心に残ったならブログの中でそっと触れるだけにしてください。
-
-賢く書こうとしないでください。知らない言葉を使わないでください。
-今日のブログの本文だけを、説明も前置きもなしに書いてください。""",
-        max_tokens=200,
-        state=state,
-    )
-    if not answer:
-        return None
-
-    written = keep_only_what_it_knows(state, answer.splitlines()[0])[:max_length]
-    # 知らない文字を落とした結果、何も残らなかったのなら、それは書けなかったということ
-    return written or None
 
 
 def today_in_japan():
@@ -1575,7 +1581,9 @@ def run_today():
         return
 
     _, max_length = current_stage(state)
-    body = compose_with_ai(state, seen_titles) or compose_locally(state)
+    # 書くのは千遠生自身。AIには書かせない。
+    # 見栄えは悪くなるが、それでこそこの子の言葉になる
+    body = compose_locally(state)
     title = compose_locally(state)[: max(1, max_length // 2)]
 
     state["notes"].append(
