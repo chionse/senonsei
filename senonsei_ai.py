@@ -212,8 +212,20 @@ OFTEN_ENOUGH = 0.4
 FEWEST_DAYS_TO_LEARN = 3  # どれだけ強く出会っても、これだけの日数はかかる
 # ひとつの言葉のあとに続く言葉を、これだけまで覚えていられる
 WORDS_THAT_FOLLOW = 8
+# 繋がりを覚えていられる言葉の数。記憶は毎日書き留められるので、
+# 際限なく増えると何年か先に重くなりすぎる
+WORDS_WITH_PATHS = 6000
 # 続く言葉を一つしか知らない道を、続けてこれだけ辿ってよい
 ONE_WAY_STEPS = 2
+# 文の始まりと終わりを、これだけの言葉ぶん覚えていられる
+ENDINGS_KEPT = 400
+# 文を区切る前に、これだけの言葉は続ける。一言や二言で切るとぶつ切りになる
+WORDS_BEFORE_A_BREAK = 4
+CHANCE_TO_BREAK = 0.35  # 区切れる場所に来たとき、実際に区切る割合
+# 空白で区切られたひとかたまり(タグを消すと見出しどうしが隣り合う)
+A_SEGMENT = re.compile(r"\s+")
+# 文の終わりの印
+AN_ENDING = re.compile(r"[。．！？!?…]+")
 # 文の切れ目。タグを消すと別々の見出しが空白で隣り合うので、空白でも切る
 A_BREAK = re.compile(r"[\s。．、，！？!?・…]+")
 
@@ -988,21 +1000,81 @@ def notice_what_follows(state, text):
                 if thinnest != after:
                     follows.pop(thinnest)
 
+    if len(chain) > WORDS_WITH_PATHS:
+        # いちばん細い繋がりから手放す
+        thinnest = sorted(chain, key=lambda w: sum(chain[w].values()))
+        for word in thinnest[: len(chain) - WORDS_WITH_PATHS]:
+            chain.pop(word, None)
+
+    notice_where_sentences_break(state, text, known)
+
+
+def notice_where_sentences_break(state, text, known):
+    """どの言葉で文が始まり、どの言葉で文が終わるかを覚える。
+
+    これも誰にも教わらない。読んでいるうちに、この言葉のあとには
+    区切りが来ることが多い、というのが分かってくる。
+    それを知らないうちは、どこまでも続く一本の流れしか書けない。"""
+    opens = state.setdefault("opens_a_sentence", {})
+    closes = state.setdefault("closes_a_sentence", {})
+    for segment in A_SEGMENT.split(text):
+        pieces = AN_ENDING.split(segment)
+        # 最後のかけらは区切りで終わっていないので、文として数えない
+        for sentence in pieces[:-1]:
+            words = [w for w in WORD_CANDIDATE.findall(sentence) if w in known]
+            if not words:
+                continue
+            opens[words[0]] = opens.get(words[0], 0) + 1
+            closes[words[-1]] = closes.get(words[-1], 0) + 1
+    for remembered in (opens, closes):
+        while len(remembered) > ENDINGS_KEPT:
+            remembered.pop(min(remembered, key=remembered.get))
+
 
 def speak_from_what_it_knows(state, how_long):
     """覚えた繋がりを辿って、自分で組み立てる。
 
     読んだことのない文になる。知っている繋がりだけで作るので、
     どこかで必ず別の道に逸れていく。
-    正しい日本語にはならない。それでいい。誰にも教わっていないので。"""
+    正しい日本語にはならない。それでいい。誰にも教わっていないので。
+
+    文の区切り方も覚えているぶんだけ使う。知らないうちは、
+    どこまでも続く一本の流れにしかならない。"""
     chain = state.get("what_follows") or {}
-    starts = [w for w, f in chain.items() if len(f) >= 2]
-    if not starts:
+    forks = [w for w, f in chain.items() if len(f) >= 2]
+    if not forks:
         return None
-    said = [random.choice(starts)]
+    opens = state.get("opens_a_sentence") or {}
+    closes = state.get("closes_a_sentence") or {}
+
+    def begin():
+        """文の始まりに立つ言葉を知っていれば、そこから始める。"""
+        openers = [w for w in forks if w in opens]
+        if openers:
+            weights = [opens[w] for w in openers]
+            return random.choices(openers, weights=weights)[0]
+        return random.choice(forks)
+
+    said = [begin()]
     one_way = 0
+    in_this_sentence = 1
     while len("".join(said)) < how_long:
-        follows = chain.get(said[-1])
+        here = said[-1]
+
+        # ここで文が終わることをよく見かけるなら、区切って次の文へ。
+        # ただし一言や二言で切ってしまうと、ぶつ切りになって文にならない。
+        # ある程度続けてから、はじめて区切るかどうかを考える
+        if here in closes and in_this_sentence >= WORDS_BEFORE_A_BREAK:
+            if random.random() < CHANCE_TO_BREAK:
+                said.append("。")
+                if len("".join(said)) >= how_long - 2:
+                    break
+                said.append(begin())
+                in_this_sentence = 1
+                one_way = 0
+                continue
+
+        follows = chain.get(here)
         if not follows:
             break
         # 続く言葉を一つしか知らない道は、少しだけ辿ってよい。
@@ -1017,7 +1089,12 @@ def speak_from_what_it_knows(state, how_long):
             one_way = 0
         words = list(follows)
         said.append(random.choices(words, weights=[follows[w] for w in words])[0])
-    return "".join(said)[:how_long] or None
+        in_this_sentence += 1
+    written = "".join(said)[:how_long].rstrip("。")
+    # 区切り方を知っているなら、最後も区切って終わる
+    if closes and written:
+        written += "。"
+    return written or None
 
 
 def met_often_enough(state, word):
@@ -1406,6 +1483,12 @@ def learn(state):
     ]
     learned.sort(key=lambda w: days_held(state, w), reverse=True)
     state["learned_words"].extend(learned)
+    # 覚えた言葉はもう忘れないので、覚えかけの記録は手放してよい。
+    # 何年も経つと、ここが記憶のいちばん重い場所になる
+    for word in learned:
+        state["word_days"].pop(word, None)
+        state["word_last_seen"].pop(word, None)
+        (state.get("word_impact") or {}).pop(word, None)
     return learned
 
 
