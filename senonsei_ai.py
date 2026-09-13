@@ -197,6 +197,10 @@ WHERE_TO_LOOK = [
 # はじめは毎日見かける言葉しか掴めなかった子が、
 # やがて季節に一度しか出会わない言葉も覚えられるようになる
 MEMORY_GROWS_EVERY = 150
+# 強く出会った言葉は、これだけの日数ぶん見たのと同じだけ忘れにくくなる
+STRUCK_IS_WORTH = 12
+# ひとつのページで、これだけ繰り返し出てきた言葉は「その話だった」とみなす
+TIMES_TO_STRIKE = 5
 
 # (この語彙数までが対象, その時点でできること, 書ける文字数の上限)
 # (この語彙数までが対象, その時点でできること, 書ける文字数の上限)
@@ -963,7 +967,21 @@ def absorb(state, text, pattern=WORD_CANDIDATE, only_known=False):
         for one in A_NAME_IN_BRACKETS.findall(text)
         if not A_SENTENCE.search(one)
     }
-    for word in set(pattern.findall(text)) | named:
+    found = pattern.findall(text)
+
+    # そのページが何の話だったか。繰り返し出てきた言葉は強く残る。
+    # 名前として差し出されたものも、絵から受け取ったものも強い
+    struck = set(named)
+    if not only_known:
+        counted = {}
+        for word in found:
+            counted[word] = counted.get(word, 0) + 1
+        struck |= {w for w, n in counted.items() if n >= TIMES_TO_STRIKE}
+        if pattern is THING_IN_A_PICTURE:
+            struck |= set(found)
+
+    impact = state.setdefault("word_impact", {})
+    for word in set(found) | named:
         # 自分が書いたものを読み返す時は、新しい言葉は生まれない。
         # 誰にも教わっていない文字列を、自分だけで言葉にすることはできない
         if only_known and word not in state["word_days"]:
@@ -971,6 +989,8 @@ def absorb(state, text, pattern=WORD_CANDIDATE, only_known=False):
         if state["word_last_seen"].get(word) != today:
             state["word_last_seen"][word] = today
             state["word_days"][word] = state["word_days"].get(word, 0) + 1
+            if word in struck:
+                impact[word] = impact.get(word, 0) + 1
 
 
 def read_in_another_tongue(text, state):
@@ -1228,7 +1248,16 @@ def days_held(state, word):
     """その言葉を、今どれだけ抱えているか。
 
     見かけた日数から、見かけなくなってからの時間ぶんを引く。
-    覚えかけたまま放っておかれた言葉は、だんだん薄れていく。"""
+    覚えかけたまま放っておかれた言葉は、だんだん薄れていく。
+
+    ただし何度も見た言葉ほど忘れにくい。二十日ぶん見た言葉は
+    二十倍長く抱えていられる。十年ぶりの言葉を思い出せるのは、
+    昔たくさん聞いたからで、一度しか聞いていない言葉はすぐ消える。
+
+    そして一度出会ったことだけは、身につき具合が尽きても消えない。
+    覚えていなくても「見たことがある」という感じは残る。
+    それが無いと、二度目に出会う前に必ず忘れてしまい、
+    珍しい言葉は永遠に一度目を繰り返すことになる。"""
     days = state["word_days"].get(word, 0)
     last = state["word_last_seen"].get(word)
     if not last:
@@ -1237,7 +1266,20 @@ def days_held(state, word):
         gap = (today_in_japan().date() - datetime.date.fromisoformat(last)).days
     except ValueError:
         return days
-    return days - max(0, gap) // how_long_it_holds(state)
+    holds_for = how_long_it_holds(state) * max(1, days + struck_by(state, word))
+    faded = days - max(0, gap) // holds_for
+    return max(1, faded) if days >= 1 else faded
+
+
+def struck_by(state, word):
+    """その言葉に、どれだけ強く出会ったか。
+
+    ページの隅に一度出てきた言葉と、そのページ全体がその話だった
+    言葉は、同じではない。絵を見て受け取った言葉や、名前として
+    差し出された言葉も強い。
+
+    一年に一度しか出会わなくても、強く出会えば残る。"""
+    return (state.get("word_impact") or {}).get(word, 0) * STRUCK_IS_WORTH
 
 
 def forget(state):
@@ -1252,6 +1294,7 @@ def forget(state):
     for word in faded:
         state["word_days"].pop(word, None)
         state["word_last_seen"].pop(word, None)
+        (state.get("word_impact") or {}).pop(word, None)
     return faded
 
 
