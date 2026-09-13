@@ -45,6 +45,13 @@ WORD_CANDIDATE = re.compile(r"[ァ-ヴー]{2,6}|[一-龯]{2,4}|[ぁ-ん]{2,4}")
 # 絵に何が写っているかを答えてもらった言葉は、一文字でも本物。
 # 「車」「山」「手」「雲」は、そのまま名前として受け取る
 THING_IN_A_PICTURE = re.compile(r"[ァ-ヴー]{2,6}|[一-龯]{1,4}|[ぁ-ん]{2,4}")
+# 人が『』や「」で囲んだもの。たいていは作品の名前か、誰かの言葉。
+# 千遠生の言葉の拾い方は同じ種類の文字が続くかたまりなので、
+# 「の」や「は」をまたぐ長い名前は永久に拾えない。
+# けれど日本語には、名前をそれと分かる形で囲む習わしがある
+A_NAME_IN_BRACKETS = re.compile(r"[『「]([^』」『「\n]{2,14})[』」]")
+# 句点や疑問符が入っているものは、名前ではなく文
+A_SENTENCE = re.compile(r"[。！？!?…]")
 TAG = re.compile(r"<[^>]+>")
 SCRIPT_OR_STYLE = re.compile(r"<(script|style)[^>]*>.*?</\1>", re.DOTALL | re.IGNORECASE)
 TITLE_TAG = re.compile(r"<title[^>]*>(.*?)</title>", re.DOTALL | re.IGNORECASE)
@@ -887,12 +894,21 @@ def absorb(state, text, pattern=WORD_CANDIDATE, only_known=False):
 
     同じ言葉を一日に何度見かけても、一日ぶんにしか数えない。
     一度にたくさん読んでも、それで早く覚えられるわけではない。
-    日をまたいで何度も見かけた言葉が、だんだん身についていく。"""
+    日をまたいで何度も見かけた言葉が、だんだん身についていく。
+
+    『』や「」で囲まれたものは、丸ごと一つの名前として受け取る。
+    そうしないと『銀河鉄道の夜』は「銀河鉄道」で切れてしまい、
+    長い名前を持つものの名前を、永久に知ることができない。"""
     today = today_in_japan().strftime("%Y-%m-%d")
     for char in HIRAGANA.findall(text):
         if char not in state["seen_chars"]:
             state["seen_chars"].append(char)
-    for word in set(pattern.findall(text)):
+    named = {
+        one
+        for one in A_NAME_IN_BRACKETS.findall(text)
+        if not A_SENTENCE.search(one)
+    }
+    for word in set(pattern.findall(text)) | named:
         # 自分が書いたものを読み返す時は、新しい言葉は生まれない。
         # 誰にも教わっていない文字列を、自分だけで言葉にすることはできない
         if only_known and word not in state["word_days"]:
