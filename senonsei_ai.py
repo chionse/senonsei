@@ -1812,7 +1812,12 @@ def read_what_is_home(state):
             voices.append(item.get("message") or "")
 
     for comment in blog_manager.load_comments():
-        voices.append(comment.get("message") or "")
+        # 書いていった人の名前も読む。名前として差し出されたものは
+        # 一つの言葉として丸ごと受け取れるので、括弧に入れて渡す。
+        # 外から名前を呼ばれるのと同じことが、この子にも起きる
+        who = (comment.get("name") or "").strip()
+        said = comment.get("message") or ""
+        voices.append(f"「{who}」{said}" if who else said)
 
     heard = [
         one.strip()
