@@ -335,8 +335,8 @@ article p {
   position: fixed;
   inset: 0;
   margin: auto;
-  width: min(26rem, 88vw, 78vh);
-  height: min(26rem, 88vw, 78vh);
+  width: min(26rem, 76vw, 68vh);
+  height: min(26rem, 76vw, 68vh);
   overflow-y: auto;
   background-color: var(--bg-color);
   border: 1px solid var(--line-color);
