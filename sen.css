@@ -329,6 +329,12 @@ article p {
   text-decoration: underline;
 }
 
+/* メモを開いているあいだ、後ろの一覧は薄く退く */
+#memo-index.behind {
+  opacity: 0.25;
+  pointer-events: none;
+}
+
 /* 解禁されたメモを押すと出てくる、一枚の画面。
    後ろの一覧が見えたままになるよう、真ん中に浮かべる */
 .memo-page {
