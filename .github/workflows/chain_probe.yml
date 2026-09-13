@@ -1,0 +1,77 @@
+name: Chain probe (temporary)
+
+on:
+  push:
+    branches:
+      - claude/project-progress-update-t2tukz
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Can Senonsei write more than one sentence
+        run: |
+          python - <<'PY'
+          import collections, random
+          import senonsei_ai as s
+
+          random.seed(11)
+          PLACES = [
+            "https://www.aozora.gr.jp/cards/000148/files/789_14547.html",
+            "https://www.aozora.gr.jp/cards/000879/files/127_15260.html",
+            "https://anond.hatelabo.jp/",
+            "https://www3.nhk.or.jp/news/",
+            "https://kakuyomu.jp/",
+          ]
+          texts = []
+          for url in PLACES:
+              try:
+                  title, text, links, pictures = s.open_page(url)
+                  texts.append(text)
+              except Exception as e:
+                  print(f"  x {url[:50]}: {str(e)[:40]}")
+          whole = "\n".join(texts)
+          seen = collections.Counter()
+          for t in texts:
+              seen.update(s.WORD_CANDIDATE.findall(t))
+          ranked = [w for w, _ in seen.most_common()]
+          print(f"読んだ: {len(texts)}箇所 / 異なる言葉 {len(ranked)}\n")
+          KANA = list("あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん")
+
+          for vocabulary, how_long, stage in [
+                  (150, 15, "覚えた言葉が並び始める"),
+                  (400, 25, "文のようなものに踏み出す"),
+                  (1000, 40, "たどたどしい短い文"),
+                  (2600, 60, "少しずつ文になっていく"),
+                  (5000, 100, "簡単な文"),
+                  (9000, 200, "自分の言葉で書ける"),
+          ]:
+              if vocabulary > len(ranked):
+                  continue
+              st = {"seen_chars": list(KANA), "learned_words": ranked[:vocabulary],
+                    "word_days": {}, "word_last_seen": {}, "word_impact": {},
+                    "started_date": "2026-01-01"}
+              for t in texts:
+                  s.notice_what_follows(st, t)
+              made = [s.speak_from_what_it_knows(st, how_long) for _ in range(40)]
+              wrote = [m for m in made if m]
+              copied = [m for m in wrote if m.rstrip("。") in whole]
+              lengths = [len(m) for m in wrote] or [0]
+              sentences = [m.count("。") for m in wrote] or [0]
+              print(f"--- 語彙{vocabulary}語 (上限{how_long}字)  [{stage}]")
+              print(f"    書けた {len(wrote)}/40  平均{sum(lengths)//len(lengths)}字  "
+                    f"平均{sum(sentences)/max(1,len(sentences)):.1f}文  原文と一致 {len(copied)}件")
+              print(f"    文の始まり{len(st.get('opens_a_sentence',{}))}語 / "
+                    f"終わり{len(st.get('closes_a_sentence',{}))}語")
+              for m in wrote[:3]:
+                  print(f"      {m}")
+              print()
+          PY

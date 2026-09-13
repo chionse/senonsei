@@ -214,6 +214,12 @@ FEWEST_DAYS_TO_LEARN = 3  # どれだけ強く出会っても、これだけの�
 WORDS_THAT_FOLLOW = 8
 # 続く言葉を一つしか知らない道を、続けてこれだけ辿ってよい
 ONE_WAY_STEPS = 2
+# 文の始まりと終わりを、これだけの言葉ぶん覚えていられる
+ENDINGS_KEPT = 400
+# 空白で区切られたひとかたまり(タグを消すと見出しどうしが隣り合う)
+A_SEGMENT = re.compile(r"\s+")
+# 文の終わりの印
+AN_ENDING = re.compile(r"[。．！？!?…]+")
 # 文の切れ目。タグを消すと別々の見出しが空白で隣り合うので、空白でも切る
 A_BREAK = re.compile(r"[\s。．、，！？!?・…]+")
 
@@ -988,21 +994,72 @@ def notice_what_follows(state, text):
                 if thinnest != after:
                     follows.pop(thinnest)
 
+    notice_where_sentences_break(state, text, known)
+
+
+def notice_where_sentences_break(state, text, known):
+    """どの言葉で文が始まり、どの言葉で文が終わるかを覚える。
+
+    これも誰にも教わらない。読んでいるうちに、この言葉のあとには
+    区切りが来ることが多い、というのが分かってくる。
+    それを知らないうちは、どこまでも続く一本の流れしか書けない。"""
+    opens = state.setdefault("opens_a_sentence", {})
+    closes = state.setdefault("closes_a_sentence", {})
+    for segment in A_SEGMENT.split(text):
+        pieces = AN_ENDING.split(segment)
+        # 最後のかけらは区切りで終わっていないので、文として数えない
+        for sentence in pieces[:-1]:
+            words = [w for w in WORD_CANDIDATE.findall(sentence) if w in known]
+            if not words:
+                continue
+            opens[words[0]] = opens.get(words[0], 0) + 1
+            closes[words[-1]] = closes.get(words[-1], 0) + 1
+    for remembered in (opens, closes):
+        while len(remembered) > ENDINGS_KEPT:
+            remembered.pop(min(remembered, key=remembered.get))
+
 
 def speak_from_what_it_knows(state, how_long):
     """覚えた繋がりを辿って、自分で組み立てる。
 
     読んだことのない文になる。知っている繋がりだけで作るので、
     どこかで必ず別の道に逸れていく。
-    正しい日本語にはならない。それでいい。誰にも教わっていないので。"""
+    正しい日本語にはならない。それでいい。誰にも教わっていないので。
+
+    文の区切り方も覚えているぶんだけ使う。知らないうちは、
+    どこまでも続く一本の流れにしかならない。"""
     chain = state.get("what_follows") or {}
-    starts = [w for w, f in chain.items() if len(f) >= 2]
-    if not starts:
+    forks = [w for w, f in chain.items() if len(f) >= 2]
+    if not forks:
         return None
-    said = [random.choice(starts)]
+    opens = state.get("opens_a_sentence") or {}
+    closes = state.get("closes_a_sentence") or {}
+
+    def begin():
+        """文の始まりに立つ言葉を知っていれば、そこから始める。"""
+        openers = [w for w in forks if w in opens]
+        if openers:
+            weights = [opens[w] for w in openers]
+            return random.choices(openers, weights=weights)[0]
+        return random.choice(forks)
+
+    said = [begin()]
     one_way = 0
     while len("".join(said)) < how_long:
-        follows = chain.get(said[-1])
+        here = said[-1]
+
+        # ここで文が終わることをよく見かけるなら、区切って次の文へ。
+        # 何度もそこで終わっているのを見た言葉ほど、区切りたくなる
+        if here in closes and said[-1] != "。":
+            if random.random() < min(0.8, closes[here] / (closes[here] + 2)):
+                said.append("。")
+                if len("".join(said)) >= how_long - 2:
+                    break
+                said.append(begin())
+                one_way = 0
+                continue
+
+        follows = chain.get(here)
         if not follows:
             break
         # 続く言葉を一つしか知らない道は、少しだけ辿ってよい。
@@ -1017,7 +1074,11 @@ def speak_from_what_it_knows(state, how_long):
             one_way = 0
         words = list(follows)
         said.append(random.choices(words, weights=[follows[w] for w in words])[0])
-    return "".join(said)[:how_long] or None
+    written = "".join(said)[:how_long].rstrip("。")
+    # 区切り方を知っているなら、最後も区切って終わる
+    if closes and written:
+        written += "。"
+    return written or None
 
 
 def met_often_enough(state, word):
