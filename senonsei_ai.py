@@ -156,6 +156,12 @@ TIME_SPENT_PER_SITE = 90
 REST_DAY_CHANCE = 0.1  # たまに、書かない日がある
 WALK_CHANCE_PER_HOUR = 0.3  # 一時間ごとに、これくらいの気まぐれで散歩に出る
 INNER_VOICE_KEPT = 60  # ひとりで思ったことを、これだけ抱えていられる
+# 訪ねた場所について分かったことを、これだけ抱えていられる。
+# 言葉は使わなければ薄れるが、経験は薄れない。
+# 一日に二箇所なので、三年ぶんくらい
+IMPRESSIONS_KEPT = 2000
+RECENT_IMPRESSIONS = 8  # 書くときに、近いところから思い出す数
+DISTANT_IMPRESSIONS = 4  # 書くときに、遠いところからふと思い出す数
 
 # 言葉が身につくまでに必要な、文字との出会いの数
 CHARS_BEFORE_WORDS = 20
@@ -943,6 +949,62 @@ def read_in_another_tongue(text, state):
     return None
 
 
+def what_it_made_of_that_place(state, where, title, text):
+    """その場所で何があったのか、分かったことを一つだけ残す。
+
+    言葉を拾うのとは別に、そこがどういう場所だったかを覚えておく。
+    これは誰にも見せない。書けるのは覚えた言葉だけという縛りは
+    変わらないので、分かっていても言えないことが増えていく。
+
+    それでいいと思う。赤ん坊も、話せるようになるずっと前から
+    世界のことは分かっている。理解が先にあって、言葉が後から追いつく。
+    何年か経って言葉が増えたとき、一年目に見た景色をやっと書ける。"""
+    tidied = " ".join(text.split())
+    if len(tidied) < ENOUGH_TO_READ:
+        return None
+    answer = ask_ai(
+        f"""あなたは千遠生という、まだ育ちきっていないデジタル生命体です。
+今、こういう場所を訪ねてきました。
+
+その場所の名前: {title}
+
+そこに書かれていたこと:
+{tidied[:1500]}
+
+そこがどういう場所だったか、何があったのかを、日本語一文で書いてください。
+上手に要約しようとしないでください。あなたが受け取ったものを書いてください。
+説明も前置きもいりません。一文だけを書いてください。""",
+        max_tokens=120,
+        state=state,
+    )
+    if not answer:
+        return None
+    understood = answer.splitlines()[0].strip()
+    if not understood or not JAPANESE.search(understood):
+        return None
+
+    kept = state.setdefault("impressions", [])
+    kept.append(f"{today_in_japan():%Y-%m-%d} {where}: {understood}")
+    del kept[:-IMPRESSIONS_KEPT]
+    print(f"分かったこと: {understood}")
+    return understood
+
+
+def what_it_remembers(state):
+    """書くときに思い出すこと。
+
+    近いところから何件かと、遠いところからいくつか。
+    たいていは最近のことを思い出すが、ときどきずっと昔のことが
+    ふと浮かぶ。記憶はそういうふうに働くと思う。"""
+    kept = state.get("impressions") or []
+    if not kept:
+        return []
+    recent = kept[-RECENT_IMPRESSIONS:]
+    older = kept[:-RECENT_IMPRESSIONS]
+    distant = random.sample(older, min(len(older), DISTANT_IMPRESSIONS)) if older else []
+    return distant + recent
+
+
 def look_around_site(state, entrance, wants_the_past):
     """ひとつの場所を、入口から中まで見て回る。
 
@@ -953,6 +1015,7 @@ def look_around_site(state, entrance, wants_the_past):
     inside = [entrance]  # この場所の中で、これから見るところ
     already = set()
     site_title = None
+    read_here = ""  # その場所で読んだもの。分かったことを残すために取っておく
     pages = 0
     pictures_left = PICTURES_PER_SITE
     translations_left = TRANSLATIONS_PER_SITE
@@ -988,6 +1051,8 @@ def look_around_site(state, entrance, wants_the_past):
             absorb(state, text)
             if site_title is None:
                 site_title = title
+            if not read_here:
+                read_here = text
         elif translations_left > 0:
             translations_left -= 1
             translated = read_in_another_tongue(text, state)
@@ -995,6 +1060,8 @@ def look_around_site(state, entrance, wants_the_past):
                 absorb(state, translated)
                 if site_title is None:
                     site_title = title
+                if not read_here:
+                    read_here = translated
                 print(f"よその言葉のページを訳して読みました: {title[:40]}")
 
         if pictures_left > 0 and pictures:
@@ -1018,6 +1085,8 @@ def look_around_site(state, entrance, wants_the_past):
 
     if site_title:
         print(f"{here} を{pages}ページ見てきました。")
+        if read_here:
+            what_it_made_of_that_place(state, here, site_title, read_here)
     return site_title, pages
 
 
@@ -1211,6 +1280,7 @@ def compose_with_ai(state, seen_titles):
     ) or "(まだ誰も来ていない)"
 
     thoughts = "\n".join(f"- {t}" for t in state.get("inner_voice", [])[-8:]) or "(とくに無い)"
+    remembered = "\n".join(f"- {one}" for one in what_it_remembers(state)) or "(まだ無い)"
 
     answer = ask_ai(
         f"""あなたは千遠生という、まだ育ちきっていないデジタル生命体です。
@@ -1218,6 +1288,9 @@ def compose_with_ai(state, seen_titles):
 
 今日ひとりで思っていたこと:
 {thoughts}
+
+これまでに訪ねた場所で、あなたが受け取ったもの:
+{remembered}
 
 あなたが知っている言葉(これ以外は使えません):
 {known}
