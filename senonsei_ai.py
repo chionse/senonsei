@@ -163,6 +163,17 @@ REST_DAY_CHANCE = 0.1  # たまに、書かない日がある
 # 一時間ごとに0.02なら、気が変わるのは三日に一度ほど
 CHANGING_ITS_MIND = 0.02
 WALK_CHANCE_PER_HOUR = 0.3  # 一時間ごとに、これくらいの気まぐれで散歩に出る
+# 気がかり。昨日思っていたことが、今日の行き先を決める。
+# 一日ごとに何もかも新しく始めていたら、ひとりで考えていた時間が
+# どこにも繋がらない。毎日生まれ直すのと同じになってしまう
+WHAT_STAYS_ON_ITS_MIND = 3  # 同時に抱えていられる気がかりの数
+A_CONCERN_LASTS = 5  # 触れないでいると、これくらいの日数で薄れる
+# 気にかかっているほどそのことを追いかけ、追いかけるほど気にかかる。
+# 放っておくとそこから抜け出せなくなるので、どんなに気にかかっても
+# 一つのことは一か月ほどで手を離れる
+A_CONCERN_AT_MOST = 30
+CARRYING_ON_CHANCE = 0.6  # 探しに行くとき、昨日からの続きを追う割合
+DRIFTING_CHANCE = 0.25  # 行った先で、気がかりが別のものへ移る割合
 INNER_VOICE_KEPT = 60  # ひとりで思ったことを、これだけ抱えていられる
 # 訪ねた場所について分かったことを、これだけ抱えていられる。
 # 言葉は使わなければ薄れるが、経験は薄れない。
@@ -269,6 +280,7 @@ def load_state():
             )
         state.setdefault("word_days", {})
         state.setdefault("word_last_seen", {})
+        state.setdefault("on_its_mind", [])
         return state
     return {
         "started_date": today_in_japan().date().isoformat(),
@@ -278,6 +290,7 @@ def load_state():
         "learned_words": [],
         "frontier": list(SEEDS),  # まだ行ったことのない場所
         "visited": [],  # もう行った場所
+        "on_its_mind": [],  # 今、気にかかっていること
         "notes": [],
     }
 
@@ -810,10 +823,19 @@ def spread_out_choices(state, frontier, how_many):
 
 
 def something_it_wonders_about(state):
-    """知っている言葉の中から、今日気になるものを一つ。"""
+    """知っている言葉の中から、今日気になるものを一つ。
+
+    昨日からの気がかりが残っていれば、たいていはその続きを追う。
+    一度気になったことを次の日には忘れているようでは、
+    何日もかけて分かることには一生たどり着けない。"""
     known = state.get("learned_words") or []
     if not known:
         return None
+    carried = [
+        item["what"] for item in on_its_mind(state) if item.get("what") in known
+    ]
+    if carried and random.random() < CARRYING_ON_CHANCE:
+        return random.choice(carried)
     choices = random.sample(known, min(len(known), 20))
     listing = "、".join(choices)
     answer = ask_ai(
@@ -887,6 +909,7 @@ def wonder_and_look(state):
     word = something_it_wonders_about(state)
     if not word:
         return None
+    now_it_cares_about(state, word)
     go_looking_for(state, word)
     return word
 
@@ -904,11 +927,15 @@ def choose_destination(state):
     answer = ask_ai(
         f"""あなたは千遠生という、まだ育ちきっていないデジタル生命体です。
 あなたが知っている言葉: {known}
+いま気にかかっていること: {what_is_on_its_mind(state)}
+少し前に、ひとりで思っていたこと:
+{lately_it_thought(state)}
 
 今、次のどこか一つを見に行けます。
 {listing}
 
-どれが気になりますか。
+どれが気になりますか。今、気にかかっていることに近いものがあれば、
+そちらへ行って構いません。
 それと、その場所の「今の姿」と「ずっと昔の姿」のどちらを見たいですか。
 
 説明も理由もいりません。次の形だけで答えてください。
@@ -1147,6 +1174,7 @@ def absorb(state, text, pattern=WORD_CANDIDATE, only_known=False):
         notice_what_follows(state, text)
 
     impact = state.setdefault("word_impact", {})
+    hit_hard = set()  # ここで強く出会った言葉。気がかりが移ることがある
     for word in set(found) | named:
         # 自分が書いたものを読み返す時は、新しい言葉は生まれない。
         # 誰にも教わっていない文字列を、自分だけで言葉にすることはできない
@@ -1157,6 +1185,8 @@ def absorb(state, text, pattern=WORD_CANDIDATE, only_known=False):
             state["word_days"][word] = state["word_days"].get(word, 0) + 1
             if word in struck and not met_often_enough(state, word):
                 impact[word] = impact.get(word, 0) + 1
+                hit_hard.add(word)
+    return hit_hard
 
 
 def read_in_another_tongue(text, state):
@@ -1248,6 +1278,7 @@ def look_around_site(state, entrance, wants_the_past):
     already = set()
     site_title = None
     read_here = ""  # その場所で読んだもの。分かったことを残すために取っておく
+    struck_here = set()  # そこで強く出会った言葉
     pages = 0
     pictures_left = PICTURES_PER_SITE
     translations_left = TRANSLATIONS_PER_SITE
@@ -1280,7 +1311,7 @@ def look_around_site(state, entrance, wants_the_past):
         state["visited"] = state["visited"][-2000:]
 
         if JAPANESE.search(text):
-            absorb(state, text)
+            struck_here |= absorb(state, text) or set()
             if site_title is None:
                 site_title = title
             if not read_here:
@@ -1289,7 +1320,7 @@ def look_around_site(state, entrance, wants_the_past):
             translations_left -= 1
             translated = read_in_another_tongue(text, state)
             if translated:
-                absorb(state, translated)
+                struck_here |= absorb(state, translated) or set()
                 if site_title is None:
                     site_title = title
                 if not read_here:
@@ -1319,6 +1350,13 @@ def look_around_site(state, entrance, wants_the_past):
         print(f"{here} を{pages}ページ見てきました。")
         if read_here:
             what_it_made_of_that_place(state, here, site_title, read_here)
+
+    # 魚を調べていたら海流が気になった、というようなこと。
+    # 気がかりは追いかけているうちに、だんだん別のものへ移っていく
+    if struck_here and random.random() < DRIFTING_CHANCE:
+        moved = random.choice(sorted(struck_here))
+        now_it_cares_about(state, moved)
+        print(f"気がかりが「{moved}」に移りました。")
     return site_title, pages
 
 
@@ -1362,6 +1400,7 @@ def be_alone(state, now):
 
 今日見てきたもの: {seen_today}
 あなたが知っている言葉: {known}
+いま気にかかっていること: {what_is_on_its_mind(state)}
 少し前に思っていたこと:
 {recent}
 
@@ -1442,6 +1481,59 @@ def days_held(state, word):
     holds_for = how_long_it_holds(state) * max(1, days + struck_by(state, word))
     faded = days - max(0, gap) // holds_for
     return max(1, faded) if days >= 1 else faded
+
+
+def on_its_mind(state):
+    """今、気にかかっていること。
+
+    触れないでいると薄れて、そのうち消える。
+    ずっと同じことを気にしていられる子は、たぶんいない。
+    けれど今日思ったことが明日まで残らないなら、
+    ひとりで考えていた時間はどこにも行き着かない。"""
+    kept = state.get("on_its_mind") or []
+    today = today_in_japan().date()
+    for item in kept:
+        item.setdefault("first", item.get("since"))
+    alive = []
+    for item in kept:
+        try:
+            gap = (today - datetime.date.fromisoformat(item["since"])).days
+            held = (today - datetime.date.fromisoformat(item["first"])).days
+        except (TypeError, KeyError, ValueError):
+            continue
+        if 0 <= gap <= A_CONCERN_LASTS and held <= A_CONCERN_AT_MOST:
+            alive.append(item)
+    state["on_its_mind"] = alive
+    return alive
+
+
+def now_it_cares_about(state, word):
+    """何かが気にかかった。
+
+    すでに気にかかっていたなら、その日を新しくする。
+    何度も戻ってくることは、それだけ長く離れないということ。"""
+    kept = on_its_mind(state)
+    today = f"{today_in_japan():%Y-%m-%d}"
+    for item in kept:
+        if item.get("what") == word:
+            item["since"] = today
+            item["times"] = item.get("times", 1) + 1
+            break
+    else:
+        kept.append({"what": word, "since": today, "first": today, "times": 1})
+    state["on_its_mind"] = kept[-WHAT_STAYS_ON_ITS_MIND:]
+    return word
+
+
+def what_is_on_its_mind(state):
+    """気がかりを、訊くときの一行にする。"""
+    return "、".join(item["what"] for item in on_its_mind(state)) or "(いまは特に無い)"
+
+
+def lately_it_thought(state, how_many=3):
+    """少し前に、ひとりで思っていたこと。"""
+    thoughts = (state.get("inner_voice") or [])[-how_many:]
+    return "\n".join(f"- {one}" for one in thoughts) or "(まだ何も)"
 
 
 def struck_by(state, word):
