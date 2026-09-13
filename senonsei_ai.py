@@ -142,6 +142,7 @@ LINKS_TAKEN = 60  # ひとつのページから、これだけの道を覚えて
 PATHS_PER_PLACE = 8
 RETURN_TO_ENTRANCE_CHANCE = 0.12  # ときどき、最初にいた入口へ戻ってみる
 TRIES_BEFORE_GIVING_UP = 3  # 行った先が消えていたら、これだけ別の場所を試してみる
+RESTING_TIME = 90  # 尋ねすぎた時、これだけの間は何も尋ねない(秒)
 PAGES_PER_SITE = 8  # ひとつの場所で、これだけまで見て回る
 PICTURES_PER_SITE = 3  # ひとつの場所で、これだけまで絵を見る
 TRANSLATIONS_PER_SITE = 2  # ひとつの場所で、これだけまで訳してもらう
@@ -267,6 +268,23 @@ def sites_per_day(state):
     return min(6, 2 + len(state["learned_words"]) // 120)
 
 
+def asked_too_much(error):
+    """一度にたくさん尋ねすぎた、という返事かどうか。"""
+    return isinstance(error, urllib.error.HTTPError) and error.code == 429
+
+
+def resting_now():
+    """尋ねすぎて、今は休んでいるところか。"""
+    return time.monotonic() < globals().get("_resting_until", 0)
+
+
+def rest_a_while():
+    """しばらく尋ねるのをやめる。
+    千遠生は一度にたくさんのことを知ろうとしすぎた。今日はここまで。"""
+    globals()["_resting_until"] = time.monotonic() + RESTING_TIME
+    print("たくさん尋ねすぎたので、しばらく休みます。")
+
+
 def cloudflare(path, body=None, method=None):
     """Cloudflareに尋ねる。使えない時は None を返す。"""
     if not CF_ACCOUNT_ID or not CF_API_TOKEN:
@@ -387,7 +405,7 @@ def ask_ai(prompt, max_tokens=300, state=None):
     """Cloudflareの無料枠でAIに尋ねる。使えない時は None を返す。
 
     使っていたモデルが引退していたら、一度だけ別のものを探して掛け直す。"""
-    if not CF_ACCOUNT_ID or not CF_API_TOKEN:
+    if not CF_ACCOUNT_ID or not CF_API_TOKEN or resting_now():
         return None
 
     body = json.dumps(
@@ -404,6 +422,9 @@ def ask_ai(prompt, max_tokens=300, state=None):
         except Exception as error:
             if attempt == 0 and model_is_gone(error) and find_another_model(state, "mind"):
                 continue
+            if asked_too_much(error):
+                rest_a_while()
+                return None
             print(
                 f"自分で考えることができませんでした({error})。"
                 "覚えていることだけで書きます。"
@@ -528,7 +549,7 @@ def worth_looking_at(url, data, from_the_past):
 def look_at_a_picture(data, state=None):
     """絵に何が写っているか、目を貸してもらって教わる。
     貸してもらえない時は、何も見えないままでいい。"""
-    if not CF_ACCOUNT_ID or not CF_API_TOKEN:
+    if not CF_ACCOUNT_ID or not CF_API_TOKEN or resting_now():
         return None
 
     body = json.dumps(
@@ -549,6 +570,9 @@ def look_at_a_picture(data, state=None):
         except Exception as error:
             if attempt == 0 and model_is_gone(error) and find_another_model(state, "eyes"):
                 continue
+            if asked_too_much(error):
+                rest_a_while()
+                return None
             print(f"絵を見ることができませんでした({error})")
             return None
     return None
@@ -1433,6 +1457,10 @@ def run_today():
     today = now.date().isoformat()
     state = load_state()
 
+    # 今日をどう過ごすかを、いちばん先に決める。
+    # 散歩で尋ねすぎて休むことになっても、自分で決める力だけは守られるように
+    resting, hour = todays_mood(state, today)
+
     # 自分の家に置かれた、自分に宛てられた言葉を読む
     read_what_is_home(state)
 
@@ -1445,7 +1473,6 @@ def run_today():
     if any(a["date"] == today for a in blog_manager.load_articles()):
         return
 
-    resting, hour = todays_mood(state, today)
     if resting:
         print(f"{today} は書かない日にしました。")
         return
