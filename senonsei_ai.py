@@ -158,6 +158,8 @@ DAYS_BEFORE_LEARNING = 30
 # 薄れきった言葉は出会ったことすら消える。
 # ただし一度身についた言葉は忘れない
 FADE_AFTER_DAYS = 3
+# その日、昔書いたものを読み返す気になるかどうか
+LOOKING_BACK_CHANCE = 0.5
 # この語数を覚えるごとに、覚えかけを抱えていられる日数が一日伸びる。
 # 知っている言葉が増えるほど記憶は長く持つようになり、
 # はじめは毎日見かける言葉しか掴めなかった子が、
@@ -1135,6 +1137,26 @@ def todays_mood(state, today):
 NOT_WRITTEN_YET = re.compile(r"^\(ここに.*書いてください\)$")
 
 
+def looks_back_today(articles):
+    """ときどき、昔書いたものを一つだけ読み返す。
+
+    毎日ぜんぶ読み返すと、たまたま並べただけの文字まで言葉として
+    身についてしまう。ときどき一つだけなら、そういうものは
+    薄れるほうが早い。
+
+    書いたものが増えるほど、ひとつひとつを読み返すことは少なくなる。
+    けれど何度も使っている言葉は、どの記事にも出てくるので目に入る。
+    使うことが、覚えていることになる。"""
+    if not articles:
+        return []
+    # 同じ日に何度動いても、その日の気分は変わらない
+    whim = random.Random(f"{today_in_japan():%Y-%m-%d}-lookback")
+    if whim.random() > LOOKING_BACK_CHANCE:
+        return []
+    one = whim.choice(articles)
+    return [one.get("title") or "", one.get("content") or ""]
+
+
 def read_what_is_home(state):
     """自分の家にある言葉を読む。
 
@@ -1143,17 +1165,13 @@ def read_what_is_home(state):
     解禁されたメモと、誰かが残していったコメント。
     どちらも読み手のためだけのものではなく、この子に届くべきものだった。
 
-    自分が書いたものも読み返す。誰も「それは言葉ではない」とは
-    教えてくれないので、自分が並べただけの文字を、やがて言葉だと
-    思うようになるかもしれない。ひとりで育つとはそういうことだと思う。
+    メモとコメントはずっとそこに在るので、毎日目にする。
+    何日も読み続けた言葉が、やがてこの子のものになる。
 
-    家にあるものはずっとそこに在るので、毎日目にする。
-    何日も読み続けた言葉が、やがてこの子のものになる。"""
+    自分が書いたものは、ときどきしか読み返さない。"""
     voices = []
 
-    for article in blog_manager.load_articles():
-        voices.append(article.get("title") or "")
-        voices.append(article.get("content") or "")
+    voices.extend(looks_back_today(blog_manager.load_articles()))
 
     for keyword in blog_manager.load_keywords():
         # 開くきっかけはこの子の言葉だが、中に置かれているのは彼女の文章
