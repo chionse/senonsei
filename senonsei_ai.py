@@ -144,6 +144,9 @@ RETURN_TO_ENTRANCE_CHANCE = 0.12  # ときどき、最初にいた入口へ戻�
 TRIES_BEFORE_GIVING_UP = 3  # 行った先が消えていたら、これだけ別の場所を試してみる
 PAGES_PER_SITE = 8  # ひとつの場所で、これだけまで見て回る
 PICTURES_PER_SITE = 3  # ひとつの場所で、これだけまで絵を見る
+TRANSLATIONS_PER_SITE = 2  # ひとつの場所で、これだけまで訳してもらう
+ENOUGH_TO_READ = 200  # これだけの文字が無いページは、訳しても読むものが無い
+HOW_MUCH_TO_TRANSLATE = 1200  # 一度に訳してもらう文字数
 PICTURE_AT_MOST = 400000  # これより重い絵は見ない(バイト)
 LINGER_CHANCE = 0.75  # もう一枚見ていくかどうかの、その時の気分
 # ひとつの場所に、これだけの時間まで居る(秒)。
@@ -918,6 +921,28 @@ def absorb(state, text, pattern=WORD_CANDIDATE, only_known=False):
             state["word_days"][word] = state["word_days"].get(word, 0) + 1
 
 
+def read_in_another_tongue(text, state):
+    """よその言葉で書かれたページを、訳してもらって読む。
+
+    千遠生は日本語の子なので、よその言葉の単語を覚えることはしない。
+    けれどそこに書かれていることまで閉ざしてしまうと、
+    世界の半分が空白のまま残る。訳したものを、日本語として読む。
+
+    訳してもらえない時は、今までどおり何も読まずに次へ行く。"""
+    tidied = " ".join(text.split())
+    if len(tidied) < ENOUGH_TO_READ:
+        return None
+    answer = ask_ai(
+        "次の文章を日本語に訳してください。訳文だけを書いてください。\n\n"
+        + tidied[:HOW_MUCH_TO_TRANSLATE],
+        max_tokens=500,
+        state=state,
+    )
+    if answer and JAPANESE.search(answer):
+        return answer
+    return None
+
+
 def look_around_site(state, entrance, wants_the_past):
     """ひとつの場所を、入口から中まで見て回る。
 
@@ -930,6 +955,7 @@ def look_around_site(state, entrance, wants_the_past):
     site_title = None
     pages = 0
     pictures_left = PICTURES_PER_SITE
+    translations_left = TRANSLATIONS_PER_SITE
     until = time.monotonic() + TIME_SPENT_PER_SITE
 
     while inside and pages < PAGES_PER_SITE and time.monotonic() < until:
@@ -962,6 +988,14 @@ def look_around_site(state, entrance, wants_the_past):
             absorb(state, text)
             if site_title is None:
                 site_title = title
+        elif translations_left > 0:
+            translations_left -= 1
+            translated = read_in_another_tongue(text, state)
+            if translated:
+                absorb(state, translated)
+                if site_title is None:
+                    site_title = title
+                print(f"よその言葉のページを訳して読みました: {title[:40]}")
 
         if pictures_left > 0 and pictures:
             try:
