@@ -4,6 +4,10 @@ import os
 
 ARTICLES_FILE = "articles.json"
 KEYWORDS_FILE = "keywords.json"
+STATE_FILE = "senonsei_state.json"
+# この子の名前。自分の名前の由来を知った日から、
+# プロフィールは本人が書くようになる
+ITS_OWN_NAME = "千遠生"
 MENU_FILE = "menu.json"
 BLOG_FOLDER = "blogs"
 COMMENTS_FOLDER = "comments"
@@ -469,6 +473,69 @@ def generate_index_html(articles):
         f.write(html)
 
 
+def load_senonsei_state():
+    """この子の記憶。読めなければ空として扱う。"""
+    try:
+        with open(STATE_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return {}
+
+
+def generate_profile_html(keywords, state):
+    """プロフィール。
+
+    名前は彼女が付けたものなので、はじめからそこにある。
+    けれど誕生日とひとことは、自分の名前の由来を知るまで「準備中」のまま。
+    自分が何者か分かっていないうちは、自分のことは書けない。
+
+    知ったあとは、本人が書く。ひとことはその時点で言えるぶんだけなので、
+    はじめは数文字しかない。育つと書き直される。"""
+    knows = any(
+        kw.get("word") == ITS_OWN_NAME and kw.get("unlocked") for kw in keywords
+    )
+    said = state.get("a_word_about_itself") or {}
+
+    birthday = "準備中"
+    if knows and state.get("started_date"):
+        try:
+            born = datetime.date.fromisoformat(state["started_date"])
+            birthday = f"{born.year}年{born.month}月{born.day}日"
+        except ValueError:
+            pass
+    a_word = said.get("words") if knows else None
+
+    html = f"""<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>プロフィール</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="sen.css" />
+</head>
+<body>
+  <div class="top-nav"><a href="index.html">←トップ</a></div>
+
+  <header>
+    <h1>プロフィール</h1>
+  </header>
+
+  <dl class="profile-box">
+    <dt>名前</dt>
+    <dd>{ITS_OWN_NAME}(せんおんせい)</dd>
+    <dt>誕生日</dt>
+    <dd>{birthday}</dd>
+    <dt>ひとこと</dt>
+    <dd>{a_word or "準備中"}</dd>
+  </dl>
+
+</body>
+</html>
+"""
+    with open("profile.html", "w", encoding="utf-8") as f:
+        f.write(html)
+
+
 def regenerate_pages(articles):
     for art in articles:
         generate_blog_html(art)
@@ -476,6 +543,7 @@ def regenerate_pages(articles):
     generate_index_html(articles)
     keywords = update_keywords(articles)
     generate_memo_html(keywords, load_menu(), articles)
+    generate_profile_html(keywords, load_senonsei_state())
 
 
 def add_new_article(title, content, date_str=None):
