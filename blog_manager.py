@@ -11,6 +11,12 @@ COMMENT_WORKER_ENDPOINT = "https://senonsei-comments.chitomatsu.workers.dev/"
 RECENT_COUNT = 5  # トップページに表示する直近記事の件数(最新1件を除く)
 
 
+def today_in_japan():
+    """日本の今日。世界標準時で数えると、日本の夜は一日ずれてしまう。"""
+    jst = datetime.timezone(datetime.timedelta(hours=9))
+    return datetime.datetime.now(jst).date()
+
+
 def load_comments():
     """Cloudflare Workerがcomments/に自動コミットしたJSONファイルを全部読み込む。"""
     comments = []
@@ -107,7 +113,7 @@ def generate_memo_html(keywords, menu_items, articles):
     keyword_unlocked = sum(1 for kw in keywords if kw["unlocked"])
 
     start_date = blog_start_date(articles)
-    elapsed = max(0, (datetime.date.today() - start_date).days)
+    elapsed = max(0, (today_in_japan() - start_date).days)
     ordered_menu = sorted(menu_items, key=lambda m: m["unlock_day"])
     menu_entries = [
         (elapsed >= item["unlock_day"], "???", item["message"]) for item in ordered_menu
@@ -177,7 +183,7 @@ def load_menu():
 def blog_start_date(articles):
     """ブログが始まった日(=一番古い記事の日付)を返す。記事が無ければ今日にする。"""
     if not articles:
-        return datetime.date.today()
+        return today_in_japan()
     earliest = min(a["date"] for a in articles)
     return datetime.date.fromisoformat(earliest)
 
