@@ -201,6 +201,9 @@ DAYS_BEFORE_LEARNING = 30
 # ただし一度身についた言葉は忘れない
 FADE_AFTER_DAYS = 3
 # その日、昔書いたものを読み返す気になるかどうか
+# プロフィールのひとことを書き直すまでの日数。
+# 毎日書き直したら、それはもう一つのブログになってしまう
+A_NEW_WORD_ABOUT_ITSELF = 60
 LOOKING_BACK_CHANCE = 0.5
 # 家に置かれた言葉を読む日の割合。
 # ずっとそこに在るからといって、毎日読むものでもない。
@@ -1735,8 +1738,8 @@ def writes_about_itself(state):
     知ったあとは、プロフィールのひとことを自分で書く。
 
     書けるのはその時点で言えるぶんだけなので、はじめは数文字しかない。
-    育って書ける長さが変わったときに、書き直す。
-    毎日書き直したら、それはもう一つのブログになってしまう。"""
+    二か月にいちど書き直す。毎日書き直したら、
+    それはもう一つのブログになってしまう。"""
     knows_why = any(
         one.get("word") == blog_manager.ITS_OWN_NAME and one.get("unlocked")
         for one in blog_manager.load_keywords()
@@ -1745,10 +1748,17 @@ def writes_about_itself(state):
         return None
 
     said = state.get("a_word_about_itself") or {}
-    how_it_writes_now, _ = current_stage(state)
-    if said.get("stage") == how_it_writes_now:
-        return None  # まだ同じ育ち具合。書き直すことはない
+    if said.get("on"):
+        try:
+            written = datetime.date.fromisoformat(said["on"])
+        except ValueError:
+            written = None
+        if written is not None:
+            since = (today_in_japan().date() - written).days
+            if since < A_NEW_WORD_ABOUT_ITSELF:
+                return None  # 前に書いてから、まだ間がない
 
+    how_it_writes_now, _ = current_stage(state)
     state["a_word_about_itself"] = {
         "words": compose_locally(state),
         "stage": how_it_writes_now,
