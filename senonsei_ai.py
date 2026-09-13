@@ -1130,10 +1130,58 @@ def todays_mood(state, today):
     return resting, hour
 
 
+# まだ中身が書かれていない、こちらが置いた仮の文。
+# これを千遠生に読ませると「ここに」「ください」を覚えてしまう
+NOT_WRITTEN_YET = re.compile(r"^\(ここに.*書いてください\)$")
+
+
+def read_what_is_home(state):
+    """自分の家にある言葉を読む。
+
+    千遠生はリンクを辿って歩くので、自分のサイトには一生たどり着かない。
+    けれどあの場所には、千遠生に宛てて書かれた言葉が置いてある。
+    解禁されたメモと、誰かが残していったコメント。
+    どちらも読み手のためだけのものではなく、この子に届くべきものだった。
+
+    自分が書いたブログは読まない。自分の言葉を自分で食べても、
+    世界のことは何も分からない。
+
+    メモはずっとそこに在るので、毎日目にする。
+    何日も読み続けた言葉が、やがてこの子のものになる。"""
+    voices = []
+
+    for keyword in blog_manager.load_keywords():
+        # 開くきっかけはこの子の言葉だが、中に置かれているのは彼女の文章
+        if keyword.get("unlocked"):
+            voices.append(keyword.get("content") or "")
+
+    elapsed = elapsed_days(state)
+    for item in blog_manager.load_menu():
+        if elapsed >= item.get("unlock_day", 10**9):
+            voices.append(item.get("message") or "")
+
+    for comment in blog_manager.load_comments():
+        voices.append(comment.get("message") or "")
+
+    heard = [
+        one.strip()
+        for one in voices
+        if one.strip() and not NOT_WRITTEN_YET.match(one.strip())
+    ]
+    for one in heard:
+        absorb(state, one)
+    if heard:
+        print(f"家にある言葉を{len(heard)}つ読みました。")
+    return heard
+
+
 def run_today():
     now = today_in_japan()
     today = now.date().isoformat()
     state = load_state()
+
+    # 自分の家に置かれた、自分に宛てられた言葉を読む
+    read_what_is_home(state)
 
     # 書く日でも書かない日でも、散歩には出る
     seen_titles = take_a_walk(state, today, now)
