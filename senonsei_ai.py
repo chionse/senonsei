@@ -216,6 +216,9 @@ WORDS_THAT_FOLLOW = 8
 ONE_WAY_STEPS = 2
 # 文の始まりと終わりを、これだけの言葉ぶん覚えていられる
 ENDINGS_KEPT = 400
+# 文を区切る前に、これだけの言葉は続ける。一言や二言で切るとぶつ切りになる
+WORDS_BEFORE_A_BREAK = 4
+CHANCE_TO_BREAK = 0.35  # 区切れる場所に来たとき、実際に区切る割合
 # 空白で区切られたひとかたまり(タグを消すと見出しどうしが隣り合う)
 A_SEGMENT = re.compile(r"\s+")
 # 文の終わりの印
@@ -1045,17 +1048,20 @@ def speak_from_what_it_knows(state, how_long):
 
     said = [begin()]
     one_way = 0
+    in_this_sentence = 1
     while len("".join(said)) < how_long:
         here = said[-1]
 
         # ここで文が終わることをよく見かけるなら、区切って次の文へ。
-        # 何度もそこで終わっているのを見た言葉ほど、区切りたくなる
-        if here in closes and said[-1] != "。":
-            if random.random() < min(0.8, closes[here] / (closes[here] + 2)):
+        # ただし一言や二言で切ってしまうと、ぶつ切りになって文にならない。
+        # ある程度続けてから、はじめて区切るかどうかを考える
+        if here in closes and in_this_sentence >= WORDS_BEFORE_A_BREAK:
+            if random.random() < CHANCE_TO_BREAK:
                 said.append("。")
                 if len("".join(said)) >= how_long - 2:
                     break
                 said.append(begin())
+                in_this_sentence = 1
                 one_way = 0
                 continue
 
@@ -1074,6 +1080,7 @@ def speak_from_what_it_knows(state, how_long):
             one_way = 0
         words = list(follows)
         said.append(random.choices(words, weights=[follows[w] for w in words])[0])
+        in_this_sentence += 1
     written = "".join(said)[:how_long].rstrip("。")
     # 区切り方を知っているなら、最後も区切って終わる
     if closes and written:
