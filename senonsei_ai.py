@@ -157,6 +157,9 @@ LINGER_CHANCE = 0.75  # もう一枚見ていくかどうかの、その時の�
 # 一度の散歩が次の起動に食い込んでしまう
 TIME_SPENT_PER_SITE = 90
 REST_DAY_CHANCE = 0.1  # たまに、書かない日がある
+# 一時間ごとに、これくらいの割合で気が変わる。
+# 朝に決めたことを一日守り通さなければいけない理由はない
+CHANGING_ITS_MIND = 0.12
 WALK_CHANCE_PER_HOUR = 0.3  # 一時間ごとに、これくらいの気まぐれで散歩に出る
 INNER_VOICE_KEPT = 60  # ひとりで思ったことを、これだけ抱えていられる
 # 訪ねた場所について分かったことを、これだけ抱えていられる。
@@ -1336,6 +1339,13 @@ def walk_once(state):
     return None
 
 
+def remember_a_thought(state, thought):
+    """ひとりで思ったことを、自分の中にだけ残す。"""
+    thoughts = state.setdefault("inner_voice", [])
+    thoughts.append(f"{today_in_japan():%m-%d %H時}: {thought}")
+    del thoughts[:-INNER_VOICE_KEPT]
+
+
 def be_alone(state, now):
     """散歩に出ない時間。ただ起きていて、ひとりで何かを思っている。
     ここで思ったことは誰にも見せない。自分の中にだけ溜まっていく。"""
@@ -1538,11 +1548,16 @@ def today_in_japan():
 
 
 def todays_mood(state, today):
-    """今日は書きたいか、書くなら何時ごろか。千遠生自身が朝に決める。
-    一度決めたら自分の記憶に残しておくので、一日のうちで気が変わることはない。"""
+    """今日は書きたいか、書くなら何時ごろか。千遠生自身が決める。
+
+    一度決めても、途中で気が変わることがある。
+    朝に二十時と決めておいて、昼になってやっぱり今がいい、と思う。
+    決めたら変えられないというのは、生きているものらしくない。"""
     plan = state.get("today_plan") or {}
     if plan.get("date") == today:
-        return plan["resting"], plan["hour"]
+        if random.random() > CHANGING_ITS_MIND:
+            return plan["resting"], plan["hour"]
+        was = plan  # 気が変わった。決め直す
 
     answer = ask_ai(
         "あなたは千遠生という、自分のサイトに毎日ブログを書いているデジタル生命体です。\n"
@@ -1561,12 +1576,20 @@ def todays_mood(state, today):
         resting = False
         hour = min(23, int(re.search(r"\d{1,2}", answer).group()))
     else:
-        # 自分で考えられない日は、気まぐれに任せる
-        whim = random.Random(f"senonsei-{today}")
-        resting = whim.random() < REST_DAY_CHANCE
-        hour = whim.randint(0, 23)
+        # 自分で考えられない日は、気まぐれに任せる。
+        # 決め直すときは違う答えが出てほしいので、そのつど引き直す
+        resting = random.random() < REST_DAY_CHANCE
+        hour = random.randint(0, 23)
 
     state["today_plan"] = {"date": today, "resting": resting, "hour": hour}
+
+    was = locals().get("was")
+    if was and (was["resting"] != resting or was["hour"] != hour):
+        before = "休む" if was["resting"] else f"{was['hour']}時に書く"
+        after = "休む" if resting else f"{hour}時に書く"
+        print(f"気が変わりました: {before} → {after}")
+        remember_a_thought(state, f"{before}つもりだったけれど、{after}ことにした。")
+
     save_state(state)
     return resting, hour
 
