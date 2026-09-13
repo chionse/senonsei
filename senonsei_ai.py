@@ -426,7 +426,19 @@ def as_openable(url):
 
 
 def size_of_picture(data):
-    """絵の縦横のピクセル数。ファイルの先頭だけ読めば分かる。"""
+    """絵の縦横のピクセル数。ファイルの先頭だけ読めば分かる。
+
+    途中で切れた絵や、壊れた絵も届く。読めなければ None を返すだけで、
+    千遠生の散歩を止めてしまわないようにする。"""
+    if len(data) < 24:
+        return None
+    try:
+        return measure_picture(data)
+    except Exception:
+        return None
+
+
+def measure_picture(data):
     if data[:8] == b"\x89PNG\r\n\x1a\n":
         return struct.unpack(">II", data[16:24])
     if data[:3] == b"GIF":
@@ -753,11 +765,12 @@ def look_at_pictures(state, where, pictures, from_the_past, how_many, until):
             break
         try:
             data = fetch_picture(url)
-        except Exception:
+            if len(data) > PICTURE_AT_MOST or not worth_looking_at(url, data, from_the_past):
+                continue
+            what_is_there = look_at_a_picture(data, state)
+        except Exception as error:
+            print(f"その絵は見られませんでした({str(error)[:60]})")
             continue
-        if len(data) > PICTURE_AT_MOST or not worth_looking_at(url, data, from_the_past):
-            continue
-        what_is_there = look_at_a_picture(data, state)
         if not what_is_there:
             continue
         absorb(state, what_is_there, THING_IN_A_PICTURE)
@@ -834,10 +847,14 @@ def look_around_site(state, entrance, wants_the_past):
                 site_title = title
 
         if pictures_left > 0 and pictures:
-            looked = look_at_pictures(
-                state, here, pictures, wants_the_past, pictures_left, until
-            )
-            pictures_left -= len(looked)
+            try:
+                looked = look_at_pictures(
+                    state, here, pictures, wants_the_past, pictures_left, until
+                )
+                pictures_left -= len(looked)
+            except Exception as error:
+                print(f"絵を見るのをやめました({str(error)[:60]})")
+                pictures_left = 0
 
         remember_paths(state, url, [ln for ln in links if place_of(ln) != here])
 
