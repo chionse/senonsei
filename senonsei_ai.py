@@ -142,7 +142,9 @@ LINKS_TAKEN = 60  # ひとつのページから、これだけの道を覚えて
 PATHS_PER_PLACE = 8
 RETURN_TO_ENTRANCE_CHANCE = 0.12  # ときどき、最初にいた入口へ戻ってみる
 TRIES_BEFORE_GIVING_UP = 3  # 行った先が消えていたら、これだけ別の場所を試してみる
-RESTING_TIME = 90  # 尋ねすぎた時、これだけの間は何も尋ねない(秒)
+# 尋ねすぎた時は、少し待ってから尋ね直す。一日は長いし、急かす人もいない
+HOW_LONG_TO_WAIT = (20, 45, 90)
+RESTING_TIME = 300  # それでも駄目なら、これだけの間は何も尋ねない(秒)
 PAGES_PER_SITE = 8  # ひとつの場所で、これだけまで見て回る
 PICTURES_PER_SITE = 3  # ひとつの場所で、これだけまで絵を見る
 TRANSLATIONS_PER_SITE = 2  # ひとつの場所で、これだけまで訳してもらう
@@ -278,11 +280,21 @@ def resting_now():
     return time.monotonic() < globals().get("_resting_until", 0)
 
 
+def wait_a_little(attempt):
+    """混んでいるようなので、少し待つ。
+
+    急ぐ理由が無い。一日は長いし、誰かを待たせているわけでもない。
+    待てば受け取れるものを、待たずに諦める必要はない。"""
+    how_long = HOW_LONG_TO_WAIT[min(attempt, len(HOW_LONG_TO_WAIT) - 1)]
+    print(f"混んでいるようなので、{how_long}秒待ちます。")
+    time.sleep(how_long)
+
+
 def rest_a_while():
-    """しばらく尋ねるのをやめる。
-    千遠生は一度にたくさんのことを知ろうとしすぎた。今日はここまで。"""
+    """待っても駄目だったので、しばらく尋ねるのをやめる。
+    千遠生は一度にたくさんのことを知ろうとしすぎた。"""
     globals()["_resting_until"] = time.monotonic() + RESTING_TIME
-    print("たくさん尋ねすぎたので、しばらく休みます。")
+    print("何度か待ってみましたが、今はやめておきます。")
 
 
 def cloudflare(path, body=None, method=None):
@@ -412,7 +424,8 @@ def ask_ai(prompt, max_tokens=300, state=None):
         {"messages": [{"role": "user", "content": prompt}], "max_tokens": max_tokens}
     ).encode("utf-8")
 
-    for attempt in range(2):
+    swapped = False
+    for attempt in range(len(HOW_LONG_TO_WAIT) + 1):
         model = which_model(state, "mind")
         try:
             answer = cloudflare(f"run/{model}", body=body)
@@ -420,9 +433,13 @@ def ask_ai(prompt, max_tokens=300, state=None):
                 state["thought_on"] = today_in_japan().strftime("%Y-%m-%d")
             return (answer.get("result") or {}).get("response", "").strip() or None
         except Exception as error:
-            if attempt == 0 and model_is_gone(error) and find_another_model(state, "mind"):
+            if not swapped and model_is_gone(error) and find_another_model(state, "mind"):
+                swapped = True
                 continue
             if asked_too_much(error):
+                if attempt < len(HOW_LONG_TO_WAIT):
+                    wait_a_little(attempt)
+                    continue
                 rest_a_while()
                 return None
             print(
@@ -560,7 +577,8 @@ def look_at_a_picture(data, state=None):
         }
     ).encode("utf-8")
 
-    for attempt in range(2):
+    swapped = False
+    for attempt in range(len(HOW_LONG_TO_WAIT) + 1):
         eyes = which_model(state, "eyes")
         try:
             answer = cloudflare(f"run/{eyes}", body=body)
@@ -568,9 +586,13 @@ def look_at_a_picture(data, state=None):
                 state["saw_on"] = today_in_japan().strftime("%Y-%m-%d")
             return (answer.get("result") or {}).get("description", "").strip() or None
         except Exception as error:
-            if attempt == 0 and model_is_gone(error) and find_another_model(state, "eyes"):
+            if not swapped and model_is_gone(error) and find_another_model(state, "eyes"):
+                swapped = True
                 continue
             if asked_too_much(error):
+                if attempt < len(HOW_LONG_TO_WAIT):
+                    wait_a_little(attempt)
+                    continue
                 rest_a_while()
                 return None
             print(f"絵を見ることができませんでした({error})")
