@@ -339,10 +339,13 @@ article p {
    後ろの一覧が見えたままになるよう、真ん中に浮かべる */
 .memo-page {
   position: fixed;
-  inset: 0;
-  margin: auto;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: min(26rem, 76vw, 68vh);
-  height: min(26rem, 76vw, 68vh);
+  /* 真四角が基本の形。中身が入りきらないときだけ、縦に伸びる */
+  min-height: min(26rem, 76vw, 68vh);
+  max-height: 84vh;
   overflow-y: auto;
   background-color: var(--bg-color);
   border: 1px solid var(--line-color);
