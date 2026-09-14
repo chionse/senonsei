@@ -584,8 +584,9 @@ def generate_comments_html(comments):
         f.write(html)
 
 
-def generate_index_html(articles):
+def generate_index_html(articles, state=None):
     ordered = sorted_articles(articles)
+    plan = (state or load_senonsei_state()).get("today_plan") or {}
 
     if not ordered:
         latest_html = "<p>まだブログ記事がありません。</p>"
@@ -600,8 +601,12 @@ def generate_index_html(articles):
     <div class="date">{latest['date']} {latest.get('time', '')}<span class="article-title">{latest['title']}</span></div>
     <p>{latest['content']}</p>
   </article>"""
-        else:
+        elif plan.get("date") == today_in_japan().isoformat() and plan.get("resting"):
+            # 今日は書かないと、この子自身が決めた日
             latest_html = '<article>\n    <p>今日のブログはお休みです。</p>\n  </article>'
+        else:
+            # 書くつもりでまだ書いていないか、今日をどう過ごすかまだ決めていない
+            latest_html = '<article>\n    <p>今日のブログはまだです。</p>\n  </article>'
 
         # 今日書いていないなら、いちばん新しい記事は直近のほうに並ぶ
         start = 1 if wrote_today else 0
@@ -758,10 +763,11 @@ def regenerate_pages(articles):
     for art in articles:
         generate_blog_html(art)
     generate_kakodogu_html(articles)
-    generate_index_html(articles)
+    state = load_senonsei_state()
+    generate_index_html(articles, state)
     keywords = update_keywords(articles)
     generate_memo_html(keywords, load_menu(), articles)
-    generate_profile_html(keywords, load_senonsei_state())
+    generate_profile_html(keywords, state)
     generate_comments_html(load_comments())
 
 

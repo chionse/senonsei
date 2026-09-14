@@ -2072,6 +2072,11 @@ def run_today():
     # 書いた日だけ最後に save_state していたのが取りこぼしの元だった
     save_state(state)
 
+    # 表紙は毎時間組み直す。書いた日にしか組み直していなかったので、
+    # 休む日も、まだ書いていない時間も、昨日の記事が
+    # 「今日のブログ」として出たままになっていた
+    blog_manager.regenerate_pages(blog_manager.load_articles())
+
     if any(a["date"] == today for a in blog_manager.load_articles()):
         return
 
