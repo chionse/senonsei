@@ -1937,6 +1937,23 @@ def read_what_is_home(state):
     return heard
 
 
+def keep_a_note_of_today(state, seen_titles):
+    """その日どこを歩いたかを、一日一行だけ残す。
+
+    歩いたことは、書いたかどうかとは関わりがない。
+    書いた日にだけ残していたので、休む日の散歩がどこにも
+    残らなかった。その日のうちは、歩くたびに書き足していく。"""
+    notes = state.setdefault("notes", [])
+    day = f"{elapsed_days(state)}日目:"
+    line = f"{day} {'、'.join(seen_titles) or '何も見られなかった'}"
+    if notes and notes[-1].startswith(day):
+        notes[-1] = line
+    else:
+        notes.append(line)
+    state["notes"] = notes[-RECENT_NOTES_COUNT:]
+    return line
+
+
 def run_today():
     now = today_in_japan()
     today = now.date().isoformat()
@@ -1957,6 +1974,7 @@ def run_today():
 
     # 書く日でも書かない日でも、散歩には出る
     seen_titles = take_a_walk(state, today, now)
+    keep_a_note_of_today(state, seen_titles)
 
     if any(a["date"] == today for a in blog_manager.load_articles()):
         return
@@ -1974,10 +1992,6 @@ def run_today():
     body = compose_locally(state)
     title = compose_locally(state)[: max(1, max_length // 2)]
 
-    state["notes"].append(
-        f"{elapsed_days(state)}日目: {'、'.join(seen_titles) or '何も見られなかった'}"
-    )
-    state["notes"] = state["notes"][-RECENT_NOTES_COUNT:]
     save_state(state)
 
     blog_manager.add_new_article(title, body, date_str=today)
