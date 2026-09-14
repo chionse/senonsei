@@ -118,6 +118,7 @@ def render_unlockable_list(entries, prefix):
     <div class="memo-back"><a href="#">←戻る</a></div>
     <div class="memo-word">{heading}</div>
     <div class="memo-body">{content}</div>
+    <div class="corner-mark" aria-hidden="true">▼</div>
   </div>
 
 """
@@ -198,11 +199,22 @@ def generate_memo_html(keywords, menu_items, articles):
         pages[i].hidden = !here;
         if (here) {{ open = pages[i]; }}
       }}
+      // まだ下に続きがあるときだけ、隅に印を出す
+      function watchForMore(page) {{
+        var mark = function () {{
+          var more = page.scrollTop + page.clientHeight < page.scrollHeight - 4;
+          page.className = 'memo-page' + (more ? ' has-more' : '');
+        }};
+        page.onscroll = mark;
+        mark();
+      }}
+
       // 後ろの一覧は消さない。どこを開いているのかが見えたほうがいい。
       // ただし薄くして、それが後ろだと分かるようにする
       document.getElementById('memo-index').className = open ? 'behind' : '';
       if (open) {{
         showMemo(open.id.indexOf('mn') === 0 ? 2 : 1);
+        watchForMore(open);
       }}
     }}
     window.addEventListener('hashchange', showWhatTheAddressSays);
