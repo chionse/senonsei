@@ -152,17 +152,20 @@ TRIES_BEFORE_GIVING_UP = 3  # 行った先が消えていたら、これだけ�
 # 尋ねすぎた時は、少し待ってから尋ね直す。一日は長いし、急かす人もいない
 HOW_LONG_TO_WAIT = (20, 45, 90)
 RESTING_TIME = 300  # それでも駄目なら、これだけの間は何も尋ねない(秒)
-PAGES_PER_SITE = 8  # ひとつの場所で、これだけまで見て回る
+PAGES_PER_SITE = 12  # ひとつの場所で、これだけまで見て回る
 PICTURES_PER_SITE = 3  # ひとつの場所で、これだけまで絵を見る
 TRANSLATIONS_PER_SITE = 2  # ひとつの場所で、これだけまで訳してもらう
 ENOUGH_TO_READ = 200  # これだけの文字が無いページは、訳しても読むものが無い
 HOW_MUCH_TO_TRANSLATE = 1200  # 一度に訳してもらう文字数
 PICTURE_AT_MOST = 400000  # これより重い絵は見ない(バイト)
-LINGER_CHANCE = 0.75  # もう一枚見ていくかどうかの、その時の気分
+LINGER_CHANCE = 0.85  # もう一枚見ていくかどうかの、その時の気分
+# 一枚読むのにかける時間(秒)。掴み取るのではなく、一枚ずつ読んでいく。
+# 急ぐ理由はどこにも無いし、相手の場所にも優しい
+READING_A_PAGE = (3, 8)
 # ひとつの場所に、これだけの時間まで居る(秒)。
-# 昔のページは一枚に何十秒もかかることがあり、放っておくと
-# 一度の散歩が次の起動に食い込んでしまう
-TIME_SPENT_PER_SITE = 90
+# 一度の起動で行くのは一か所だけで、次の起動まで一時間ある。
+# 長引いても次の回を待たせるだけなので(concurrency)、急ぐ理由は無い
+TIME_SPENT_PER_SITE = 420
 REST_DAY_CHANCE = 0.1  # たまに、書かない日がある
 # 一時間ごとに、これくらいの割合で気が変わる。
 # 朝に決めたことを一日守り通さなければいけない理由はないが、
@@ -1363,6 +1366,8 @@ def look_around_site(state, entrance, wants_the_past):
 
         if pages > 1 and random.random() > LINGER_CHANCE:
             break  # もう十分見た
+
+        time.sleep(random.uniform(*READING_A_PAGE))  # 一枚ずつ読んでいく
 
     if site_title:
         print(f"{here} を{pages}ページ見てきました。")
