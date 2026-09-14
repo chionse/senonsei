@@ -414,6 +414,7 @@ article p {
 }
 
 .memo-body {
+  font-size: 0.92rem;
   line-height: 1.9;
   white-space: pre-wrap;
 }
