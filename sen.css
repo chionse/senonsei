@@ -418,6 +418,35 @@ article p {
   white-space: pre-wrap;
 }
 
+.memo-body img {
+  display: block;
+  max-width: 100%;
+  margin: 0.9rem auto 0;
+  cursor: zoom-in;
+}
+
+/* 絵を押したとき、画面いっぱいに大きくして見せる一枚 */
+#look-closer {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  background-color: var(--bg-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  cursor: zoom-out;
+}
+
+#look-closer[hidden] {
+  display: none;
+}
+
+#look-closer img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
 /* display の指定があると、隠したつもりでも出てきてしまう */
 .keyword-list[hidden] {
   display: none;

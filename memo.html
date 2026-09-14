@@ -50,7 +50,33 @@
     <div class="corner-mark" aria-hidden="true">▼</div>
   </div>
 
+  <div id="look-closer" hidden onclick="closeCloser()">
+    <img id="closer-image" src="" alt="" />
+  </div>
+
   <script>
+    // メモの中の絵を押すと、画面いっぱいに大きくして見せる
+    function openCloser(src, alt) {
+      var big = document.getElementById('closer-image');
+      big.src = src;
+      big.alt = alt || '';
+      document.getElementById('look-closer').hidden = false;
+    }
+    function closeCloser() {
+      document.getElementById('look-closer').hidden = true;
+      document.getElementById('closer-image').src = '';
+    }
+    document.addEventListener('click', function (event) {
+      var hit = event.target;
+      if (hit && hit.tagName === 'IMG' && hit.parentNode &&
+          hit.parentNode.className === 'memo-body') {
+        openCloser(hit.getAttribute('src'), hit.getAttribute('alt'));
+      }
+    });
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape') { closeCloser(); }
+    });
+
     // 一覧をめくる。並び順は変えないので、何ページ目に何があるかは
     // どの画面でも同じ
     function turnTo(prefix, which, howMany) {
@@ -95,7 +121,10 @@
         watchForMore(open);
       }
     }
-    window.addEventListener('hashchange', showWhatTheAddressSays);
+    window.addEventListener('hashchange', function () {
+      closeCloser();
+      showWhatTheAddressSays();
+    });
     showWhatTheAddressSays();
   </script>
 </body>
