@@ -377,9 +377,18 @@ article p {
   display: block;
 }
 
+/* 上の段。左に戻る、右の隅に日付 */
+.memo-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin-bottom: 1.5rem;
+}
+
 .memo-back {
   font-size: 0.9rem;
-  margin-bottom: 1.5rem;
+  white-space: nowrap;
 }
 
 .memo-back a {
@@ -389,7 +398,7 @@ article p {
 .memo-word {
   font-size: 1.3rem;
   text-align: center;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
 }
 
 /* いつ足して、いつ書き直したか。見出しの下に小さく */
@@ -398,7 +407,7 @@ article p {
   line-height: 1.5;
   color: var(--main-color);
   opacity: 0.45;
-  margin-bottom: 0.9rem;
+  text-align: right;
 }
 
 .memo-body {

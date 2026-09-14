@@ -160,7 +160,7 @@ def render_unlockable_list(entries, prefix, per_page=None):
         when = ""
         if entry.get("added"):
             when = (
-                f'    <div class="memo-when">追加日：{entry["added"]}'
+                f'      <div class="memo-when">追加日：{entry["added"]}'
                 f'　更新日：{entry.get("updated") or entry["added"]}</div>\n'
             )
         if not unlocked:
@@ -169,9 +169,11 @@ def render_unlockable_list(entries, prefix, per_page=None):
             page_id = f"{prefix}{number}"
             items_html += f'    <li><a href="#{page_id}">{label}</a></li>\n'
             pages_html += f"""  <div class="memo-page" id="{page_id}" hidden>
-    <div class="memo-back"><a href="#">←戻る</a></div>
+    <div class="memo-top">
+      <div class="memo-back"><a href="#">←戻る</a></div>
+{when}    </div>
     <div class="memo-word">{heading}</div>
-{when}    <div class="memo-body">{content}</div>
+    <div class="memo-body">{content}</div>
     <div class="corner-mark" aria-hidden="true">▼</div>
   </div>
 
