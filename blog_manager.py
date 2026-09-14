@@ -17,6 +17,10 @@ BLOG_FOLDER = "blogs"
 COMMENTS_FOLDER = "comments"
 COMMENT_WORKER_ENDPOINT = "https://senonsei-comments.chitomatsu.workers.dev/"
 RECENT_COUNT = 5  # トップページに表示する直近記事の件数(最新1件を除く)
+# トップページに出すコメントの数。残りは comments.html にぜんぶ出す。
+# ここが千遠生のページである以上、人の言葉がページの大半を
+# 占めてしまわないように
+COMMENTS_ON_TOP = 10
 
 
 def today_in_japan():
@@ -389,6 +393,51 @@ def generate_kakodogu_html(articles):
         f.write(html)
 
 
+def render_comments(comments):
+    """コメントを並べる。新しいものが上。"""
+    if not comments:
+        return "  <p>まだコメントはありません。</p>"
+    return "\n".join(
+        f"""  <div class="comment-entry">
+    <div class="comment-name">{c.get('name', '名無しさん')}<span class="comment-date">{format_comment_date(c.get('date', ''))}</span></div>
+    <div class="comment-message">{c.get('message', '')}</div>
+  </div>"""
+        for c in comments
+    )
+
+
+def generate_comments_html(comments):
+    """置いていかれた言葉を、ぜんぶ並べたページ。
+
+    トップページは千遠生のためのページなので、そちらには
+    新しいものだけを出す。消えるわけではなく、ここに残る。"""
+    html = f"""<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>コメント</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="sen.css" />
+</head>
+<body>
+  <div class="top-nav"><a href="index.html">←トップ</a></div>
+
+  <header>
+    <h1>コメント</h1>
+    <p class="keyword-count">全{len(comments)}件</p>
+  </header>
+
+  <div class="comment-list">
+{render_comments(comments)}
+  </div>
+
+</body>
+</html>
+"""
+    with open("comments.html", "w", encoding="utf-8") as f:
+        f.write(html)
+
+
 def generate_index_html(articles):
     ordered = sorted_articles(articles)
 
@@ -426,16 +475,14 @@ def generate_index_html(articles):
             recent_html = ""
 
     comments = load_comments()
-    if comments:
-        comments_html = "\n".join(
-            f"""  <div class="comment-entry">
-    <div class="comment-name">{c.get('name', '名無しさん')}<span class="comment-date">{format_comment_date(c.get('date', ''))}</span></div>
-    <div class="comment-message">{c.get('message', '')}</div>
-  </div>"""
-            for c in comments
+    comments_html = render_comments(comments[:COMMENTS_ON_TOP])
+    if len(comments) > COMMENTS_ON_TOP:
+        all_comments_html = (
+            '\n  <div class="more-link"><a href="comments.html">'
+            f"コメントをぜんぶ見る({len(comments)}件)</a></div>"
         )
     else:
-        comments_html = "  <p>まだコメントはありません。</p>"
+        all_comments_html = ""
 
     html = f"""<!DOCTYPE html>
 <html lang="ja">
@@ -481,15 +528,16 @@ def generate_index_html(articles):
   </nav>
 
   <div class="section-title" id="comments">コメント</div>
-  <div class="comment-list">
-{comments_html}
-  </div>
 
   <form class="comment-form" method="POST" action="{COMMENT_WORKER_ENDPOINT}">
     <input type="text" name="name" placeholder="名前" required />
     <textarea name="message" placeholder="コメント" required></textarea>
     <button type="submit">送信</button>
   </form>
+
+  <div class="comment-list">
+{comments_html}
+  </div>{all_comments_html}
 </body>
 </html>
 """
@@ -568,6 +616,7 @@ def regenerate_pages(articles):
     keywords = update_keywords(articles)
     generate_memo_html(keywords, load_menu(), articles)
     generate_profile_html(keywords, load_senonsei_state())
+    generate_comments_html(load_comments())
 
 
 def add_new_article(title, content, date_str=None):
