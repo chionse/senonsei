@@ -381,7 +381,7 @@ article p {
 .memo-top {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: flex-start;
   gap: 0.6rem;
   margin-bottom: 1.5rem;
 }
@@ -409,6 +409,8 @@ article p {
   color: var(--main-color);
   opacity: 0.45;
   text-align: right;
+  /* 枠の角ぎりぎりまで寄せる。触れない程度に少しだけ残す */
+  margin: -0.85rem -1rem 0 0;
 }
 
 .memo-body {
