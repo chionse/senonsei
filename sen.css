@@ -300,8 +300,10 @@ article p {
   list-style: none;
   padding-left: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-  gap: 0.6rem 1.5rem;
+  /* どの画面でも同じ五列。幅で列数が変わると、パソコンと
+     スマホで別のページのように見えてしまう */
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.7rem 0.8rem;
   align-items: start;
 }
 
@@ -420,4 +422,16 @@ article p {
 
 .profile-box dd {
   margin: 0.2rem 0 0;
+}
+
+/* 狭い画面では、五列のまま文字を少しだけ小さくする */
+@media (max-width: 560px) {
+  .keyword-list {
+    gap: 0.7rem 0.4rem;
+  }
+
+  .keyword-list a,
+  .keyword-list li.locked {
+    font-size: 0.95rem;
+  }
 }
