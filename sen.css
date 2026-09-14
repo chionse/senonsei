@@ -417,6 +417,8 @@ article p {
   font-size: 0.92rem;
   line-height: 1.9;
   white-space: pre-wrap;
+  /* 枠まで文字を詰めず、左右に少し余白を持たせる */
+  padding-inline: 0.5rem;
 }
 
 .memo-body img {
