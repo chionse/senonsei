@@ -403,8 +403,9 @@ article p {
 
 /* いつ足して、いつ書き直したか。見出しの下に小さく */
 .memo-when {
-  font-size: 0.68rem;
-  line-height: 1.5;
+  font-size: 0.62rem;
+  line-height: 1.4;
+  white-space: nowrap;
   color: var(--main-color);
   opacity: 0.45;
   text-align: right;
