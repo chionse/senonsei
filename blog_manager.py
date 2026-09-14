@@ -159,14 +159,23 @@ def render_unlockable_list(entries, prefix, per_page=None):
         heading = entry.get("heading") or label
         when = ""
         if entry.get("added"):
-            # 解禁された日も「更新した日」のうち。彼女が本文を
-            # 書き直した日と、解禁された日の、遅いほうを見せる
-            updated = entry.get("updated") or entry["added"]
-            if entry.get("unlocked_on"):
-                updated = max(updated, entry["unlocked_on"])
+            # 読む人から見れば、開いた日は「更新」ではなく「解禁」。
+            # そのまま解禁日と書く。解禁されたあとに本文を書き直した
+            # ときだけ、更新日がもう一行増える
+            added = entry["added"]
+            lines = [f"追加日：{added}"]
+            edited = entry.get("updated") or added
+            # 足す前に解禁の日が過ぎていたなら、人の目に触れたのは
+            # 足した日。足した日と同じなら、わざわざ書かない
+            opened = max(entry.get("unlocked_on") or added, added)
+            if opened > added:
+                lines.append(f"解禁日：{opened}")
+            if edited > opened:
+                lines.append(f"更新日：{edited}")
             when = (
-                f'      <div class="memo-when">追加日：{entry["added"]}<br />'
-                f'更新日：{updated}</div>\n'
+                '      <div class="memo-when">'
+                + "<br />".join(lines)
+                + "</div>\n"
             )
         if not unlocked:
             items_html += '    <li class="locked">???</li>\n'
