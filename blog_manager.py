@@ -20,7 +20,7 @@ RECENT_COUNT = 5  # トップページに表示する直近記事の件数(最�
 # トップページに出すコメントの数。残りは comments.html にぜんぶ出す。
 # ここが千遠生のページである以上、人の言葉がページの大半を
 # 占めてしまわないように
-COMMENTS_ON_TOP = 10
+COMMENTS_ON_TOP = 5
 
 
 def today_in_japan():
