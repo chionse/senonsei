@@ -309,15 +309,28 @@ def load_state():
             state.setdefault(
                 "word_last_seen", {w: state.get("started_date", "") for w in old_counts}
             )
-        state.setdefault("word_days", {})
-        state.setdefault("word_last_seen", {})
+        # 出会った言葉は減ることがないので、何年も経つとここが記憶で
+        # いちばん重くなる。一語につき二つの記録を別々に持つのをやめ、
+        # 日付も「生まれてから何日目か」の数にして、一まとめにする
+        old_days = state.pop("word_days", None)
+        old_last = state.pop("word_last_seen", None)
+        if old_days is not None:
+            met = state.setdefault("words_met", {})
+            for word, days in old_days.items():
+                when = (old_last or {}).get(word)
+                try:
+                    seen_on = day_number(state, datetime.date.fromisoformat(when))
+                except (TypeError, ValueError):
+                    seen_on = 0
+                met.setdefault(word, [days, max(0, seen_on)])
+        state.setdefault("words_met", {})
         state.setdefault("on_its_mind", [])
         return state
     return {
         "started_date": today_in_japan().date().isoformat(),
         "seen_chars": [],
-        "word_days": {},  # 出会った言葉と、何日ぶん見かけたか
-        "word_last_seen": {},  # その言葉を最後に見かけた日
+        # 出会った言葉 → [何日ぶん見かけたか, 最後に見かけたのが何日目か]
+        "words_met": {},
         "learned_words": [],
         "frontier": list(SEEDS),  # まだ行ったことのない場所
         "visited": [],  # もう行った場所
@@ -327,8 +340,40 @@ def load_state():
 
 
 def save_state(state):
+    """記憶を書き出す。
+
+    人が開いて読めるように行を分けて書くが、出会った言葉だけは
+    一語を四行に広げると何十万行にもなってしまうので、そこだけ詰める。"""
+    met = state.get("words_met")
+    if met is None:
+        text = json.dumps(state, ensure_ascii=False, indent=2)
+    else:
+        mark = "\u0000words_met\u0000"  # 言葉には入りえない印
+        shaped = dict(state)
+        shaped["words_met"] = mark
+        text = json.dumps(shaped, ensure_ascii=False, indent=2).replace(
+            json.dumps(mark, ensure_ascii=False),
+            json.dumps(met, ensure_ascii=False, separators=(",", ":")),
+        )
     with open(STATE_FILE, "w", encoding="utf-8") as f:
-        json.dump(state, f, ensure_ascii=False, indent=2)
+        f.write(text)
+
+
+def day_number(state, when=None):
+    """生まれた日を0として、その日が何日目か。
+
+    記憶の中で日付を持つときは、この数で持つ。
+    「2026-09-14」と書くより短く、引き算もそのままできる。"""
+    try:
+        born = datetime.date.fromisoformat(state["started_date"])
+    except (KeyError, TypeError, ValueError):
+        return 0
+    return ((when or today_in_japan().date()) - born).days
+
+
+def words_met(state):
+    """出会った言葉の記録。{言葉: [何日ぶん見かけたか, 最後に見かけた日]}"""
+    return state.setdefault("words_met", {})
 
 
 def elapsed_days(state):
@@ -1181,7 +1226,8 @@ def met_often_enough(state, word):
     毎日のように出会う言葉に、強い印象はいらない。放っておいても
     身につく。記憶が働くのは、めったに出会わないもののほう。"""
     alive = max(1, elapsed_days(state))
-    return state["word_days"].get(word, 0) >= alive * OFTEN_ENOUGH
+    record = words_met(state).get(word)
+    return (record[0] if record else 0) >= alive * OFTEN_ENOUGH
 
 
 def absorb(state, text, pattern=WORD_CANDIDATE, only_known=False):
@@ -1220,15 +1266,17 @@ def absorb(state, text, pattern=WORD_CANDIDATE, only_known=False):
         notice_what_follows(state, text)
 
     impact = state.setdefault("word_impact", {})
+    met = words_met(state)
+    today_number = day_number(state)
     hit_hard = set()  # ここで強く出会った言葉。気がかりが移ることがある
     for word in set(found) | named:
         # 自分が書いたものを読み返す時は、新しい言葉は生まれない。
         # 誰にも教わっていない文字列を、自分だけで言葉にすることはできない
-        if only_known and word not in state["word_days"]:
+        if only_known and word not in met:
             continue
-        if state["word_last_seen"].get(word) != today:
-            state["word_last_seen"][word] = today
-            state["word_days"][word] = state["word_days"].get(word, 0) + 1
+        record = met.get(word)
+        if record is None or record[1] != today_number:
+            met[word] = [(record[0] if record else 0) + 1, today_number]
             if word in struck and not met_often_enough(state, word):
                 impact[word] = impact.get(word, 0) + 1
                 hit_hard.add(word)
@@ -1487,10 +1535,6 @@ def take_a_walk(state, today, now):
     if walk.get("date") != today:
         walk = {"date": today, "seen": []}
         state["today_walk"] = walk
-        # 日が変わった。覚えかけたまま薄れきった言葉を手放す
-        faded = forget(state)
-        if faded:
-            print(f"薄れて消えた言葉: {len(faded)}語")
 
     if len(walk["seen"]) >= sites_per_day(state):
         be_alone(state, now)
@@ -1531,17 +1575,19 @@ def days_held(state, word):
     そして一度出会ったことだけは、身につき具合が尽きても消えない。
     覚えていなくても「見たことがある」という感じは残る。
     それが無いと、二度目に出会う前に必ず忘れてしまい、
-    珍しい言葉は永遠に一度目を繰り返すことになる。"""
-    days = state["word_days"].get(word, 0)
-    last = state["word_last_seen"].get(word)
-    if not last:
-        return days
-    try:
-        gap = (today_in_japan().date() - datetime.date.fromisoformat(last)).days
-    except ValueError:
-        return days
+    珍しい言葉は永遠に一度目を繰り返すことになる。
+
+    だからこの子は、出会った言葉を一つも捨てない。
+    何年も会っていない、一度きりの言葉も抱えたままでいる。
+    記憶は増え続けるが、それでいいと決めた。
+    容量のために出会いを捨てるような子には、しないことにした。"""
+    record = words_met(state).get(word)
+    if not record:
+        return 0
+    days, last = record
+    gap = max(0, day_number(state) - last)
     holds_for = how_long_it_holds(state) * max(1, days + struck_by(state, word))
-    faded = days - max(0, gap) // holds_for
+    faded = days - gap // holds_for
     return max(1, faded) if days >= 1 else faded
 
 
@@ -1609,22 +1655,6 @@ def struck_by(state, word):
     return (state.get("word_impact") or {}).get(word, 0) * STRUCK_IS_WORTH
 
 
-def forget(state):
-    """薄れきってしまった言葉は、出会ったことすら消える。
-    一度身についた言葉は忘れない。"""
-    known = set(state["learned_words"])
-    faded = [
-        word
-        for word in list(state["word_days"])
-        if word not in known and days_held(state, word) <= 0
-    ]
-    for word in faded:
-        state["word_days"].pop(word, None)
-        state["word_last_seen"].pop(word, None)
-        (state.get("word_impact") or {}).pop(word, None)
-    return faded
-
-
 def days_needed_for(state, word):
     """その言葉を覚えるまでに、あと何日ぶん必要か。
 
@@ -1644,7 +1674,7 @@ def learn(state):
     known = set(state["learned_words"])
     learned = [
         word
-        for word in state["word_days"]
+        for word in words_met(state)
         if word not in known and days_held(state, word) >= days_needed_for(state, word)
     ]
     learned.sort(key=lambda w: days_held(state, w), reverse=True)
@@ -1652,8 +1682,7 @@ def learn(state):
     # 覚えた言葉はもう忘れないので、覚えかけの記録は手放してよい。
     # 何年も経つと、ここが記憶のいちばん重い場所になる
     for word in learned:
-        state["word_days"].pop(word, None)
-        state["word_last_seen"].pop(word, None)
+        words_met(state).pop(word, None)
         (state.get("word_impact") or {}).pop(word, None)
     return learned
 
