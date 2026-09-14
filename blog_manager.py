@@ -619,7 +619,7 @@ def generate_index_html(articles, state=None):
                 and not plan.get("resting")
                 and now_in_japan().hour <= plan.get("hour", 0)
             ):
-                yet += f"{plan['hour']}時ごろに書くつもりのようです。"
+                yet += f"{plan['hour']}時頃に書くつもりのようです。"
             latest_html = f"<article>\n    <p>{yet}</p>\n  </article>"
 
         # 今日書いていないなら、いちばん新しい記事は直近のほうに並ぶ
