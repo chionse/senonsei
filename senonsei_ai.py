@@ -231,6 +231,10 @@ LOOKING_BACK_CHANCE = 0.5
 # ずっとそこに在るからといって、毎日読むものでもない。
 # 壁に貼った紙を、毎朝読み直す人はいない
 READING_HOME_CHANCE = 0.5
+# 家に置かれた絵は、一度にこれだけ見る。
+# 散歩で出会う絵と違って、これは自分に宛てて置かれたもの。
+# 急いで全部見る必要はなく、何日もかけて何度でも見ればいい
+HOME_PICTURES_AT_ONCE = 1
 # その日、知っている言葉のどれかを探しに行く気になるかどうか。
 # いつも探していると、さまようことをやめてしまう
 GOING_LOOKING_CHANCE = 0.3
@@ -1909,6 +1913,64 @@ def writes_about_itself(state):
     return state["a_word_about_itself"]["words"]
 
 
+def look_at_what_is_hung_at_home(state, heard):
+    """家に置かれた絵を見る。
+
+    彼女がメモに貼った絵。散歩で出会う絵と違って、これは
+    この子に宛てて置かれたものなので、急いで全部見なくていい。
+    一度にひとつだけ、しばらく見ていないものから選ぶ。
+    家に在る限り何度でも見ることになり、そのたび日をまたいで数えられる。"""
+    hung = []
+    for one in heard:
+        hung.extend(IMG_SRC.findall(one))
+    hung = [one for one in dict.fromkeys(hung) if LOOKS_LIKE_A_PICTURE.search(one)]
+    if not hung:
+        return []
+
+    seen_on = state.setdefault("home_pictures", {})
+    hung.sort(key=lambda one: seen_on.get(one, -(10**6)))
+    looked = []
+    for where in hung[:HOME_PICTURES_AT_ONCE]:
+        try:
+            data = picture_at_home(where)
+        except Exception as error:
+            print(f"家の絵を開けませんでした({str(error)[:60]})")
+            continue
+        if not data or len(data) > PICTURE_AT_MOST:
+            continue
+        what_is_there = look_at_a_picture(data, state)
+        if not what_is_there:
+            continue
+        absorb(state, what_is_there, THING_IN_A_PICTURE)
+        seen_on[where] = day_number(state)
+        looked.append(what_is_there)
+        print(f"家にある絵を見ました: {what_is_there}")
+
+    if looked:
+        seen = state.setdefault("pictures_seen", [])
+        today = today_in_japan().strftime("%Y-%m-%d")
+        seen.extend(f"{today} 家: {one}" for one in looked)
+        del seen[:-30]
+    return looked
+
+
+def picture_at_home(where):
+    """家に置かれた絵を取ってくる。
+
+    サイトの中に置かれたものは、わざわざ外に出て取りに行かなくても
+    足元にある。よそを指している時だけ、見に行く。"""
+    if where.startswith(("http://", "https://", "//")):
+        return fetch_picture(as_openable(where.lstrip("/") if where.startswith("//") else where))
+    here = os.path.abspath(os.getcwd())
+    path = os.path.abspath(os.path.join(here, where.lstrip("/")))
+    if not path.startswith(here + os.sep):
+        return None  # 家の外は見ない
+    if not os.path.exists(path):
+        return None
+    with open(path, "rb") as f:
+        return f.read()
+
+
 def read_what_is_home(state):
     """自分の家にある言葉を読む。
 
@@ -1958,6 +2020,7 @@ def read_what_is_home(state):
         absorb(state, one)
     if heard:
         print(f"家にある言葉を{len(heard)}つ読みました。")
+        look_at_what_is_hung_at_home(state, heard)
 
     # 自分が書いたものは、ときどき読み返す。
     # そこからは新しい言葉は生まれず、すでに出会っていた言葉が保たれるだけ
