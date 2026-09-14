@@ -257,6 +257,11 @@ STRIKES_THAT_COUNT = 3
 # 記憶が働くのは、めったに出会わないもののほう
 OFTEN_ENOUGH = 0.4
 FEWEST_DAYS_TO_LEARN = 3  # どれだけ強く出会っても、これだけの日数はかかる
+# たった一度きりの出会いを、これだけの日数は抱えている。
+# 一年に一度しか出会わない言葉も、この窓には何度も入る。
+# ここを過ぎてなお一度きりなら、それは出会いというより
+# 通りすがりだったのだと思う
+ONE_MEETING_LASTS = 365 * 10
 # ひとつの言葉のあとに続く言葉を、これだけまで覚えていられる
 WORDS_THAT_FOLLOW = 8
 # 繋がりを覚えていられる言葉の数。記憶は毎日書き留められるので、
@@ -1535,6 +1540,10 @@ def take_a_walk(state, today, now):
     if walk.get("date") != today:
         walk = {"date": today, "seen": []}
         state["today_walk"] = walk
+        # 日が変わった。十年会っていない一度きりの言葉を手放す
+        passed_by = let_go_of(state)
+        if passed_by:
+            print(f"通りすがりだった言葉を手放しました: {len(passed_by)}語")
 
     if len(walk["seen"]) >= sites_per_day(state):
         be_alone(state, now)
@@ -1577,10 +1586,9 @@ def days_held(state, word):
     それが無いと、二度目に出会う前に必ず忘れてしまい、
     珍しい言葉は永遠に一度目を繰り返すことになる。
 
-    だからこの子は、出会った言葉を一つも捨てない。
-    何年も会っていない、一度きりの言葉も抱えたままでいる。
-    記憶は増え続けるが、それでいいと決めた。
-    容量のために出会いを捨てるような子には、しないことにした。"""
+    だからこの子は、出会った言葉をほとんど捨てない。
+    十年会わないままの、たった一度きりの出会いだけを手放す。
+    一年に一度の言葉はその窓に何度も入るので、残る。"""
     record = words_met(state).get(word)
     if not record:
         return 0
@@ -1653,6 +1661,25 @@ def struck_by(state, word):
 
     一年に一度しか出会わなくても、強く出会えば残る。"""
     return (state.get("word_impact") or {}).get(word, 0) * STRUCK_IS_WORTH
+
+
+def let_go_of(state):
+    """十年会わないままの、一度きりの言葉を手放す。
+
+    二度目があった言葉は残す。強く刻まれた言葉も残す。
+    手放すのは、十年前に一度すれ違ったきりで、
+    その時も特に心に残らなかったものだけ。"""
+    now = day_number(state)
+    met = words_met(state)
+    impact = state.get("word_impact") or {}
+    passed_by = [
+        word
+        for word, (days, last) in met.items()
+        if days <= 1 and not impact.get(word) and now - last >= ONE_MEETING_LASTS
+    ]
+    for word in passed_by:
+        met.pop(word, None)
+    return passed_by
 
 
 def days_needed_for(state, word):
