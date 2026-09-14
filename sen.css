@@ -348,18 +348,31 @@ article p {
   background-color: var(--bg-color);
   border: 1px solid var(--line-color);
   padding: 1rem 1.2rem 1.5rem;
-  /* 下に続きがあることが分かるように、動かす棒をいつも見せておく */
-  scrollbar-width: thin;
-  scrollbar-color: var(--line-color) transparent;
+  /* 動かす棒は出さない。その幅のぶん本文が狭くなってしまうので。
+     続きがあることは、下の隅の印で示す */
+  scrollbar-width: none;
 }
 
 .memo-page::-webkit-scrollbar {
-  width: 8px;
+  width: 0;
 }
 
-.memo-page::-webkit-scrollbar-thumb {
-  background: var(--line-color);
-  border-radius: 4px;
+/* まだ下に続きがあるときだけ、右下の隅に出る印。
+   文字にも余白にも重ならず、読み終われば消える */
+.corner-mark {
+  display: none;
+  position: sticky;
+  bottom: -0.8rem;
+  margin-right: -0.3rem;
+  text-align: right;
+  font-size: 0.8rem;
+  color: var(--main-color);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.memo-page.has-more .corner-mark {
+  display: block;
 }
 
 .memo-back {
