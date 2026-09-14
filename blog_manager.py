@@ -162,14 +162,15 @@ def render_unlockable_list(entries, prefix, per_page=None):
             # 読む人から見れば、開いた日は「更新」ではなく「解禁」。
             # そのまま解禁日と書く。解禁されたあとに本文を書き直した
             # ときだけ、更新日がもう一行増える
-            lines = [f'追加日：{entry["added"]}']
-            edited = entry.get("updated") or entry["added"]
-            opened = entry.get("unlocked_on")
-            if opened:
+            added = entry["added"]
+            lines = [f"追加日：{added}"]
+            edited = entry.get("updated") or added
+            # 足す前に解禁の日が過ぎていたなら、人の目に触れたのは
+            # 足した日。足した日と同じなら、わざわざ書かない
+            opened = max(entry.get("unlocked_on") or added, added)
+            if opened > added:
                 lines.append(f"解禁日：{opened}")
-                if edited > opened:
-                    lines.append(f"更新日：{edited}")
-            else:
+            if edited > opened:
                 lines.append(f"更新日：{edited}")
             when = (
                 '      <div class="memo-when">'
