@@ -21,6 +21,9 @@ RECENT_COUNT = 5  # トップページに表示する直近記事の件数(最�
 # ここが千遠生のページである以上、人の言葉がページの大半を
 # 占めてしまわないように
 COMMENTS_ON_TOP = 5
+# メモ1の一枚に並べる数。五列十行で、どの画面でもちょうど一画面に
+# 収まる数。一画面が一枚なら、穴の開き方が一目で見える
+KEYWORDS_PER_PAGE = 50
 
 
 def today_in_japan():
@@ -102,7 +105,7 @@ def update_keywords(articles):
     return keywords
 
 
-def render_unlockable_list(entries, prefix):
+def render_unlockable_list(entries, prefix, per_page=None):
     """entries: [(unlocked: bool, label: str, content: str), ...] から
     ロック中は「???」、解除済みは押すと本文の画面に移るリストを作る。
 
@@ -110,6 +113,8 @@ def render_unlockable_list(entries, prefix):
     (リストのHTML, 本文の画面たちのHTML) を返す。"""
     items_html = ""
     pages_html = ""
+    per_page = per_page or len(entries) or 1
+    sheets = []
     for number, entry in enumerate(entries):
         unlocked, label, content = entry[:3]
         # 一覧では「???」のままにしておきたいものもあるので、
@@ -117,10 +122,10 @@ def render_unlockable_list(entries, prefix):
         heading = entry[3] if len(entry) > 3 else label
         if not unlocked:
             items_html += '    <li class="locked">???</li>\n'
-            continue
-        page_id = f"{prefix}{number}"
-        items_html += f'    <li><a href="#{page_id}">{label}</a></li>\n'
-        pages_html += f"""  <div class="memo-page" id="{page_id}" hidden>
+        else:
+            page_id = f"{prefix}{number}"
+            items_html += f'    <li><a href="#{page_id}">{label}</a></li>\n'
+            pages_html += f"""  <div class="memo-page" id="{page_id}" hidden>
     <div class="memo-back"><a href="#">←戻る</a></div>
     <div class="memo-word">{heading}</div>
     <div class="memo-body">{content}</div>
@@ -128,13 +133,36 @@ def render_unlockable_list(entries, prefix):
   </div>
 
 """
-    return items_html, pages_html
+        if (number + 1) % per_page == 0 or number == len(entries) - 1:
+            sheets.append(items_html)
+            items_html = ""
+
+    if len(sheets) <= 1:
+        return (sheets[0] if sheets else ""), pages_html, ""
+
+    # 何枚かに分かれた。並び順は書いたままで、開いたものが
+    # 飛び飛びに現れる。そこが面白いところなので触らない
+    listed = ""
+    for index, sheet in enumerate(sheets, start=1):
+        hidden = "" if index == 1 else " hidden"
+        listed += f"""      <ul class="keyword-list" id="{prefix}sheet{index}"{hidden}>
+{sheet}      </ul>
+"""
+    turning = "".join(
+        f'<span class="{"here" if i == 1 else ""}" id="{prefix}turn{i}"'
+        f" onclick=\"turnTo('{prefix}', {i}, {len(sheets)})\">{i}</span>"
+        for i in range(1, len(sheets) + 1)
+    )
+    listed += f'      <div class="page-turn">{turning}</div>\n'
+    return listed, pages_html, "sheets"
 
 
 def generate_memo_html(keywords, menu_items, articles):
     """メモ1とメモ2を1つのページに入れ、上のタブで切り替えられるようにする。"""
     keyword_entries = [(kw["unlocked"], kw["word"], kw.get("content", "")) for kw in keywords]
-    keyword_items, keyword_pages = render_unlockable_list(keyword_entries, "kw")
+    keyword_items, keyword_pages, keyword_split = render_unlockable_list(
+        keyword_entries, "kw", KEYWORDS_PER_PAGE
+    )
     keyword_unlocked = sum(1 for kw in keywords if kw["unlocked"])
 
     start_date = blog_start_date(articles)
@@ -149,8 +177,13 @@ def generate_memo_html(keywords, menu_items, articles):
         )
         for item in ordered_menu
     ]
-    menu_items_html, menu_pages = render_unlockable_list(menu_entries, "mn")
+    menu_items_html, menu_pages, _ = render_unlockable_list(menu_entries, "mn")
     menu_unlocked = sum(1 for m in ordered_menu if elapsed >= m["unlock_day"])
+
+    if keyword_split:
+        keyword_list_html = keyword_items
+    else:
+        keyword_list_html = f'      <ul class="keyword-list">\n{keyword_items}      </ul>\n'
 
     html = f"""<!DOCTYPE html>
 <html lang="ja">
@@ -176,9 +209,7 @@ def generate_memo_html(keywords, menu_items, articles):
 
     <div id="memo1">
       <p class="keyword-count">解除済み 全{keyword_unlocked} / {len(keywords)} 個</p>
-      <ul class="keyword-list">
-{keyword_items}      </ul>
-    </div>
+{keyword_list_html}    </div>
 
     <div id="memo2" hidden>
       <p class="keyword-count">解禁済み 全{menu_unlocked} / {len(ordered_menu)} 個</p>
@@ -188,6 +219,15 @@ def generate_memo_html(keywords, menu_items, articles):
   </div>
 
 {keyword_pages}{menu_pages}  <script>
+    // 一覧をめくる。並び順は変えないので、何ページ目に何があるかは
+    // どの画面でも同じ
+    function turnTo(prefix, which, howMany) {{
+      for (var i = 1; i <= howMany; i++) {{
+        document.getElementById(prefix + 'sheet' + i).hidden = (i !== which);
+        document.getElementById(prefix + 'turn' + i).className = (i === which) ? 'here' : '';
+      }}
+    }}
+
     function showMemo(which) {{
       document.getElementById('memo1').hidden = (which !== 1);
       document.getElementById('memo2').hidden = (which !== 2);

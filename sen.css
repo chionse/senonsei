@@ -397,6 +397,34 @@ article p {
   white-space: pre-wrap;
 }
 
+/* display の指定があると、隠したつもりでも出てきてしまう */
+.keyword-list[hidden] {
+  display: none;
+}
+
+/* 一覧をめくるところ。1 2 3 … と並ぶ */
+.page-turn {
+  text-align: center;
+  margin-top: 1.6rem;
+  font-size: 0.95rem;
+}
+
+.page-turn span {
+  margin: 0 0.5rem;
+  cursor: pointer;
+  color: var(--main-color);
+}
+
+.page-turn span:hover {
+  text-decoration: underline;
+}
+
+.page-turn .here {
+  font-weight: bold;
+  border-bottom: 2px solid var(--main-color);
+  cursor: default;
+}
+
 .keyword-count {
   font-size: 0.85rem;
   opacity: 0.8;

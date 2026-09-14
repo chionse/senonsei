@@ -47,6 +47,15 @@
   </div>
 
   <script>
+    // 一覧をめくる。並び順は変えないので、何ページ目に何があるかは
+    // どの画面でも同じ
+    function turnTo(prefix, which, howMany) {
+      for (var i = 1; i <= howMany; i++) {
+        document.getElementById(prefix + 'sheet' + i).hidden = (i !== which);
+        document.getElementById(prefix + 'turn' + i).className = (i === which) ? 'here' : '';
+      }
+    }
+
     function showMemo(which) {
       document.getElementById('memo1').hidden = (which !== 1);
       document.getElementById('memo2').hidden = (which !== 2);
