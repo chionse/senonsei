@@ -160,8 +160,8 @@ def render_unlockable_list(entries, prefix, per_page=None):
         when = ""
         if entry.get("added"):
             when = (
-                f'    <div class="memo-when">追加日：{entry["added"]}<br />'
-                f'更新日：{entry.get("updated") or entry["added"]}</div>\n'
+                f'    <div class="memo-when">追加日：{entry["added"]}'
+                f'　更新日：{entry.get("updated") or entry["added"]}</div>\n'
             )
         if not unlocked:
             items_html += '    <li class="locked">???</li>\n'
