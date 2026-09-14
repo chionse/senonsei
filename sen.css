@@ -389,16 +389,16 @@ article p {
 .memo-word {
   font-size: 1.3rem;
   text-align: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.5rem;
 }
 
 /* いつ足して、いつ書き直したか。見出しの下に小さく */
 .memo-when {
-  font-size: 0.72rem;
-  line-height: 1.7;
+  font-size: 0.68rem;
+  line-height: 1.5;
   color: var(--main-color);
-  opacity: 0.5;
-  margin-bottom: 1.2rem;
+  opacity: 0.45;
+  margin-bottom: 0.9rem;
 }
 
 .memo-body {
