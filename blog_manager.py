@@ -8,8 +8,10 @@ STATE_FILE = "senonsei_state.json"
 # この子の名前。自分の名前の由来を知った日から、
 # プロフィールは本人が書くようになる
 ITS_OWN_NAME = "千遠生"
-# 誕生日。ブログが動きはじめた日とは別に、彼女が決めた日
-ITS_BIRTHDAY = "2026-09-09"
+# 誕生日。彼女が決めた日。
+# 今はブログが動きはじめた日と同じだが、別のものとして持っておく。
+# started_date は「何日目か」を数えるための値で、誕生日ではない
+ITS_BIRTHDAY = "2026-09-11"
 MENU_FILE = "menu.json"
 BLOG_FOLDER = "blogs"
 COMMENTS_FOLDER = "comments"
