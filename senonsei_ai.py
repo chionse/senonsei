@@ -147,6 +147,16 @@ LINKS_TAKEN = 60  # ひとつのページから、これだけの道を覚えて
 # 同じ場所から伸びた道を、一度にこれだけまでしか抱えない。
 # ひとつのサイトで行き先が埋まってしまうと、そこから出られなくなるため
 PATHS_PER_PLACE = 8
+# 大きな所は news.○○ / dir.○○ と場所を沢山持っているので、
+# 一か所ずつ数えると制限をすり抜けて、道の大半をそこが占めてしまう。
+# 同じ持ち主のものは、全部あわせてこれだけまで
+PATHS_PER_OWNER = 16
+# 国ごとの「co.jp」のような、持ち主の名前ではない部分
+SHARED_ENDINGS = {
+    "co.jp", "ne.jp", "or.jp", "ac.jp", "go.jp", "ed.jp", "gr.jp", "lg.jp",
+    "co.uk", "org.uk", "ac.uk", "com.cn", "com.tw", "co.kr", "com.br",
+    "com.au", "co.nz", "com.hk", "co.in",
+}
 RETURN_TO_ENTRANCE_CHANCE = 0.12  # ときどき、最初にいた入口へ戻ってみる
 TRIES_BEFORE_GIVING_UP = 3  # 行った先が消えていたら、これだけ別の場所を試してみる
 # 尋ねすぎた時は、少し待ってから尋ね直す。一日は長いし、急かす人もいない
@@ -780,12 +790,21 @@ def entrances(state):
     return list(dict.fromkeys(list(SEEDS) + remembered[:200]))
 
 
+def owner_of(place):
+    """その場所の持ち主。news.yahoo.co.jp も dir.yahoo.co.jp も yahoo.co.jp。"""
+    parts = place.split(".")
+    if len(parts) >= 3 and ".".join(parts[-2:]) in SHARED_ENDINGS:
+        return ".".join(parts[-3:])
+    return ".".join(parts[-2:]) if len(parts) >= 2 else place
+
+
 def tidy_frontier(state):
     """行き先の束を整える。
     読むものが無い裏方を捨て、ひとつの場所の道が多すぎたら適当に間引く。
     ここでやるのは道の掃除だけで、どこへ行くかには口を出さない。"""
     frontier = state.get("frontier") or []
     kept_by_place = {}
+    kept_by_owner = {}
     tidied = []
     for url in frontier:
         if not is_walkable(url):
@@ -793,7 +812,11 @@ def tidy_frontier(state):
         place = place_of(url)
         if kept_by_place.get(place, 0) >= PATHS_PER_PLACE:
             continue
+        owner = owner_of(place)
+        if kept_by_owner.get(owner, 0) >= PATHS_PER_OWNER:
+            continue
         kept_by_place[place] = kept_by_place.get(place, 0) + 1
+        kept_by_owner[owner] = kept_by_owner.get(owner, 0) + 1
         tidied.append(url)
 
     # 入口が全部使われてしまうと、どこにも広がれなくなる。ときどき戻れるようにしておく
@@ -949,6 +972,8 @@ def choose_destination(state):
         f"""あなたは千遠生という、まだ育ちきっていないデジタル生命体です。
 あなたが知っている言葉: {known}
 いま気にかかっていること: {what_is_on_its_mind(state)}
+これまでに訪ねた場所で、分かったこと:
+{things_it_understood(state, recent=2, distant=1)}
 少し前に、ひとりで思っていたこと:
 {lately_it_thought(state)}
 
@@ -1273,8 +1298,8 @@ def what_it_made_of_that_place(state, where, title, text):
     return understood
 
 
-def what_it_remembers(state):
-    """書くときに思い出すこと。
+def what_it_remembers(state, recent=RECENT_IMPRESSIONS, distant=DISTANT_IMPRESSIONS):
+    """思い出すこと。
 
     近いところから何件かと、遠いところからいくつか。
     たいていは最近のことを思い出すが、ときどきずっと昔のことが
@@ -1282,10 +1307,22 @@ def what_it_remembers(state):
     kept = state.get("impressions") or []
     if not kept:
         return []
-    recent = kept[-RECENT_IMPRESSIONS:]
-    older = kept[:-RECENT_IMPRESSIONS]
-    distant = random.sample(older, min(len(older), DISTANT_IMPRESSIONS)) if older else []
-    return distant + recent
+    near = kept[-recent:]
+    older = kept[:-recent]
+    far = random.sample(older, min(len(older), distant)) if older else []
+    return far + near
+
+
+def things_it_understood(state, recent=3, distant=1):
+    """分かったことを、訊くときの何行かにする。
+
+    書くのには使わない。書けるのは覚えた言葉だけ、という縛りは変わらない。
+    けれど、どこへ行くかを決めるときと、ひとりで何かを思うときには、
+    言葉にできないまま分かっていることが効いていい。"""
+    remembered = what_it_remembers(state, recent, distant)
+    if not remembered:
+        return "(まだ何も)"
+    return "\n".join(f"- {one}" for one in remembered)
 
 
 def look_around_site(state, entrance, wants_the_past):
@@ -1424,6 +1461,8 @@ def be_alone(state, now):
 今日見てきたもの: {seen_today}
 あなたが知っている言葉: {known}
 いま気にかかっていること: {what_is_on_its_mind(state)}
+これまでに訪ねた場所で、分かったこと:
+{things_it_understood(state)}
 少し前に思っていたこと:
 {recent}
 
