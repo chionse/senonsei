@@ -409,8 +409,8 @@ article p {
   color: var(--main-color);
   opacity: 0.45;
   text-align: right;
-  /* 枠の角ぎりぎりまで寄せる。触れない程度に少しだけ残す */
-  margin: -0.85rem -1rem 0 0;
+  /* 上端をそろえて少しだけ角に寄せる。寄せすぎると窮屈になる */
+  margin: -0.35rem -0.35rem 0 0;
 }
 
 .memo-body {
