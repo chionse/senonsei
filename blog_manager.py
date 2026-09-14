@@ -27,10 +27,15 @@ COMMENTS_ON_TOP = 5
 KEYWORDS_PER_PAGE = 50
 
 
+def now_in_japan():
+    """日本の今。"""
+    jst = datetime.timezone(datetime.timedelta(hours=9))
+    return datetime.datetime.now(jst)
+
+
 def today_in_japan():
     """日本の今日。世界標準時で数えると、日本の夜は一日ずれてしまう。"""
-    jst = datetime.timezone(datetime.timedelta(hours=9))
-    return datetime.datetime.now(jst).date()
+    return now_in_japan().date()
 
 
 def load_comments():
@@ -605,8 +610,17 @@ def generate_index_html(articles, state=None):
             # 今日は書かないと、この子自身が決めた日
             latest_html = '<article>\n    <p>今日のブログはお休みです。</p>\n  </article>'
         else:
-            # 書くつもりでまだ書いていないか、今日をどう過ごすかまだ決めていない
-            latest_html = '<article>\n    <p>今日のブログはまだです。</p>\n  </article>'
+            # 書くつもりでまだ書いていないか、今日をどう過ごすかまだ決めていない。
+            # 何時ごろに書くつもりかを自分で決めているなら、それも添える。
+            # 気が変わることもあるので「ようです」と書いておく
+            yet = "今日のブログはまだです。"
+            if (
+                plan.get("date") == today_in_japan().isoformat()
+                and not plan.get("resting")
+                and now_in_japan().hour <= plan.get("hour", 0)
+            ):
+                yet += f"{plan['hour']}時ごろに書くつもりのようです。"
+            latest_html = f"<article>\n    <p>{yet}</p>\n  </article>"
 
         # 今日書いていないなら、いちばん新しい記事は直近のほうに並ぶ
         start = 1 if wrote_today else 0
