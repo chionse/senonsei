@@ -396,13 +396,21 @@ def generate_index_html(articles):
         latest_html = "<p>まだブログ記事がありません。</p>"
         recent_html = ""
     else:
-        latest = ordered[0]
-        latest_html = f"""<article>
+        # 書かない日もある。その日は昨日の記事を今日のものとして
+        # 並べるのではなく、休んでいると書く
+        wrote_today = ordered[0]["date"] == today_in_japan().isoformat()
+        if wrote_today:
+            latest = ordered[0]
+            latest_html = f"""<article>
     <div class="date">{latest['date']} {latest.get('time', '')}<span class="article-title">{latest['title']}</span></div>
     <p>{latest['content']}</p>
   </article>"""
+        else:
+            latest_html = '<article>\n    <p>今日のブログはお休みです。</p>\n  </article>'
 
-        recent = ordered[1:1 + RECENT_COUNT]
+        # 今日書いていないなら、いちばん新しい記事は直近のほうに並ぶ
+        start = 1 if wrote_today else 0
+        recent = ordered[start:start + RECENT_COUNT]
         if recent:
             items = "\n".join(
                 f'    <li><span class="date">{a["date"]}</span>'
