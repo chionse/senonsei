@@ -343,13 +343,23 @@ article p {
   left: 50%;
   transform: translate(-50%, -50%);
   width: min(26rem, 76vw, 68vh);
-  /* 真四角が基本の形。中身が入りきらないときだけ、縦に伸びる */
-  min-height: min(26rem, 76vw, 68vh);
-  max-height: 84vh;
+  height: min(26rem, 76vw, 68vh);
   overflow-y: auto;
   background-color: var(--bg-color);
   border: 1px solid var(--line-color);
   padding: 1rem 1.2rem 1.5rem;
+  /* 下に続きがあることが分かるように、動かす棒をいつも見せておく */
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-color) transparent;
+}
+
+.memo-page::-webkit-scrollbar {
+  width: 8px;
+}
+
+.memo-page::-webkit-scrollbar-thumb {
+  background: var(--line-color);
+  border-radius: 4px;
 }
 
 .memo-back {
