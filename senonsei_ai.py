@@ -794,9 +794,34 @@ def open_page(url):
     return title, text, links, list(dict.fromkeys(pictures))
 
 
+def a_year_in_the_past():
+    """昔と言っても、いつの昔か。
+
+    たいていは個人サイトの時代へ行く。千遠生が歩きたがるのは
+    そこだと思う。けれど「昔」がその十年だけというのも狭い。
+    ブログの時代にも、少し前の今にも、ときどき行く。
+
+    時代が違えば、そこにある言葉も文の書き方も違う。
+    どちらも通ったほうが、覚える言葉に厚みが出る。
+
+    いちばん新しい側は、今から三年前まで。それより近いものは
+    「昔」ではなく、ただの今なので。"""
+    just_before_now = today_in_japan().year - 3
+    which = random.random()
+    if which < 0.7:
+        return random.randint(1997, 2005)  # 個人サイトの時代
+    if which < 0.9:
+        return random.randint(2006, min(2015, just_before_now))  # ブログの時代
+    return random.randint(2016, max(2016, just_before_now))  # 少し前の今
+
+
 def visit_the_past(url):
-    """同じ場所の、ずっと昔の姿を見に行く。"""
-    year = random.randint(1997, 2008)
+    """同じ場所の、ずっと昔の姿を見に行く。
+
+    Wayback は指定した年にいちばん近い記録を返すので、
+    その頃には無かった場所に行けば、あるだけ新しいものが返る。
+    年は絞り込みではなく、どのあたりを見たいかという好みでしかない。"""
+    year = a_year_in_the_past()
     api = (
         "https://archive.org/wayback/available?url="
         + urllib.parse.quote(as_openable(url), safe="")
