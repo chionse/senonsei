@@ -159,9 +159,14 @@ def render_unlockable_list(entries, prefix, per_page=None):
         heading = entry.get("heading") or label
         when = ""
         if entry.get("added"):
+            # 解禁された日も「更新した日」のうち。彼女が本文を
+            # 書き直した日と、解禁された日の、遅いほうを見せる
+            updated = entry.get("updated") or entry["added"]
+            if entry.get("unlocked_on"):
+                updated = max(updated, entry["unlocked_on"])
             when = (
                 f'      <div class="memo-when">追加日：{entry["added"]}<br />'
-                f'更新日：{entry.get("updated") or entry["added"]}</div>\n'
+                f'更新日：{updated}</div>\n'
             )
         if not unlocked:
             items_html += '    <li class="locked">???</li>\n'
@@ -213,6 +218,7 @@ def generate_memo_html(keywords, menu_items, articles):
             "content": kw.get("content", ""),
             "added": kw.get("added"),
             "updated": kw.get("updated"),
+            "unlocked_on": kw.get("unlocked_date"),
         }
         for kw in keywords
     ]
@@ -232,6 +238,10 @@ def generate_memo_html(keywords, menu_items, articles):
             "heading": f"{item['unlock_day']}日目",  # 開けば、いつのものかは分かる
             "added": item.get("added"),
             "updated": item.get("updated"),
+            # メモ2は何日目に開くかが決まっているので、解禁日は数えられる
+            "unlocked_on": (
+                start_date + datetime.timedelta(days=item["unlock_day"])
+            ).isoformat(),
         }
         for item in ordered_menu
     ]
