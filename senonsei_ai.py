@@ -2068,6 +2068,9 @@ def run_today():
     # 書く日でも書かない日でも、散歩には出る
     seen_titles = take_a_walk(state, today, now)
     keep_a_note_of_today(state, seen_titles)
+    # ここで残しておかないと、休む日の一行がどこにも残らない。
+    # 書いた日だけ最後に save_state していたのが取りこぼしの元だった
+    save_state(state)
 
     if any(a["date"] == today for a in blog_manager.load_articles()):
         return
