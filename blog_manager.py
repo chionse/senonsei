@@ -1,6 +1,7 @@
 import datetime
 import json
 import os
+import zlib
 
 ARTICLES_FILE = "articles.json"
 KEYWORDS_FILE = "keywords.json"
@@ -84,6 +85,40 @@ def save_keywords(keywords):
         json.dump(keywords, f, ensure_ascii=False, indent=2)
 
 
+def stamp_when(entries, save):
+    """いつ足して、いつ書き直したかを、自分で記録する。
+
+    彼女が日付を手で書く必要はない。本文を書き換えれば、
+    次にページを作り直すときに更新日が変わる。
+
+    本文の指紋(mark)を一緒に持っておいて、それが変われば
+    書き直されたと分かる。指紋は読むためのものではないので、
+    中身が何であるかは気にしなくていい。"""
+    today = today_in_japan().isoformat()
+    changed = False
+    for one in entries:
+        mark = str(len(one.get("content") or "")) + ":" + str(
+            zlib.crc32((one.get("content") or "").encode("utf-8"))
+        )
+        if not one.get("added"):
+            one["added"] = today
+            one["updated"] = today
+            one["mark"] = mark
+            changed = True
+        elif one.get("mark") != mark:
+            one["updated"] = today
+            one["mark"] = mark
+            changed = True
+    if changed:
+        save(entries)
+    return entries
+
+
+def save_menu(menu_items):
+    with open(MENU_FILE, "w", encoding="utf-8") as f:
+        json.dump(menu_items, f, ensure_ascii=False, indent=2)
+
+
 def update_keywords(articles):
     """ブログ本文にキーワードが登場したらロックを解除する。"""
     keywords = load_keywords()
@@ -116,10 +151,18 @@ def render_unlockable_list(entries, prefix, per_page=None):
     per_page = per_page or len(entries) or 1
     sheets = []
     for number, entry in enumerate(entries):
-        unlocked, label, content = entry[:3]
+        unlocked = entry["unlocked"]
+        label = entry["label"]
+        content = entry.get("content") or ""
         # 一覧では「???」のままにしておきたいものもあるので、
         # 開いた画面の見出しは別に持てるようにしておく
-        heading = entry[3] if len(entry) > 3 else label
+        heading = entry.get("heading") or label
+        when = ""
+        if entry.get("added"):
+            when = (
+                f'    <div class="memo-when">追加日：{entry["added"]}<br />'
+                f'更新日：{entry.get("updated") or entry["added"]}</div>\n'
+            )
         if not unlocked:
             items_html += '    <li class="locked">???</li>\n'
         else:
@@ -128,7 +171,7 @@ def render_unlockable_list(entries, prefix, per_page=None):
             pages_html += f"""  <div class="memo-page" id="{page_id}" hidden>
     <div class="memo-back"><a href="#">←戻る</a></div>
     <div class="memo-word">{heading}</div>
-    <div class="memo-body">{content}</div>
+{when}    <div class="memo-body">{content}</div>
     <div class="corner-mark" aria-hidden="true">▼</div>
   </div>
 
@@ -159,7 +202,18 @@ def render_unlockable_list(entries, prefix, per_page=None):
 
 def generate_memo_html(keywords, menu_items, articles):
     """メモ1とメモ2を1つのページに入れ、上のタブで切り替えられるようにする。"""
-    keyword_entries = [(kw["unlocked"], kw["word"], kw.get("content", "")) for kw in keywords]
+    keywords = stamp_when(keywords, save_keywords)
+    menu_items = stamp_when(menu_items, save_menu)
+    keyword_entries = [
+        {
+            "unlocked": kw["unlocked"],
+            "label": kw["word"],
+            "content": kw.get("content", ""),
+            "added": kw.get("added"),
+            "updated": kw.get("updated"),
+        }
+        for kw in keywords
+    ]
     keyword_items, keyword_pages, keyword_split = render_unlockable_list(
         keyword_entries, "kw", KEYWORDS_PER_PAGE
     )
@@ -169,12 +223,14 @@ def generate_memo_html(keywords, menu_items, articles):
     elapsed = max(0, (today_in_japan() - start_date).days)
     ordered_menu = sorted(menu_items, key=lambda m: m["unlock_day"])
     menu_entries = [
-        (
-            elapsed >= item["unlock_day"],
-            "???",  # 一覧では何番目かも見せない
-            item["message"],
-            f"{item['unlock_day']}日目",  # 開けば、いつのものかは分かる
-        )
+        {
+            "unlocked": elapsed >= item["unlock_day"],
+            "label": "???",  # 一覧では何番目かも見せない
+            "content": item["message"],
+            "heading": f"{item['unlock_day']}日目",  # 開けば、いつのものかは分かる
+            "added": item.get("added"),
+            "updated": item.get("updated"),
+        }
         for item in ordered_menu
     ]
     menu_items_html, menu_pages, _ = render_unlockable_list(menu_entries, "mn")

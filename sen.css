@@ -392,6 +392,15 @@ article p {
   margin-bottom: 1.5rem;
 }
 
+/* いつ足して、いつ書き直したか。見出しの下に小さく */
+.memo-when {
+  font-size: 0.72rem;
+  line-height: 1.7;
+  color: var(--main-color);
+  opacity: 0.5;
+  margin-bottom: 1.2rem;
+}
+
 .memo-body {
   line-height: 1.9;
   white-space: pre-wrap;
