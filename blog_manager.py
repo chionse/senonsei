@@ -169,7 +169,7 @@ def save_menu(menu_items):
 
 
 def update_keywords(articles):
-    """ブログ本文にキーワードが登場したらロックを解除する。"""
+    """ブログ本文にキーワードが登場したら解禁する。"""
     keywords = load_keywords()
     ordered = sorted(articles, key=lambda a: (a["date"], a.get("time", "")))  # 古い順
     changed = False
@@ -197,7 +197,7 @@ def update_keywords(articles):
 
 def render_unlockable_list(entries, prefix, per_page=None):
     """entries: [(unlocked: bool, label: str, content: str), ...] から
-    ロック中は「???」、解除済みは押すと本文の画面に移るリストを作る。
+    ロック中は「???」、解禁済みは押すと本文の画面に移るリストを作る。
 
     本文はその場で開かず、一枚の画面として別に作っておく。
     (リストのHTML, 本文の画面たちのHTML) を返す。"""
@@ -340,7 +340,7 @@ def generate_memo_html(keywords, menu_items, articles):
     </header>
 
     <div id="memo1">
-      <p class="keyword-count">解除済み 全{keyword_unlocked} / {len(keywords)} 個</p>
+      <p class="keyword-count">解禁済み 全{keyword_unlocked} / {len(keywords)} 個</p>
 {keyword_list_html}    </div>
 
     <div id="memo2" hidden>
