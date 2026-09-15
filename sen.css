@@ -63,6 +63,45 @@ header {
   vertical-align: middle;
 }
 
+/* 数えた数だけは、太く、虹色に光らせる。
+   昔の個人サイトのカウンターがそうだったように */
+.count {
+  font-weight: bold;
+  font-size: 1.15em;
+  font-variant-numeric: tabular-nums;
+  color: var(--main-color);
+  letter-spacing: 0.02em;
+  padding-inline: 0.15em;
+}
+
+@supports (-webkit-background-clip: text) or (background-clip: text) {
+  .count {
+    background-image: linear-gradient(
+      100deg,
+      #e5354a, #f08c2a, #e0bf1f, #3aa655, #1f9ec4, #2f5fd8, #7a3fb5
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    animation: shimmer 8s linear infinite;
+  }
+
+  /* StatCounterが数字をリンクで包むことがあるので、そちらも透かす */
+  .count,
+  .count a {
+    color: transparent;
+    text-decoration: none;
+  }
+}
+
+@keyframes shimmer {
+  from { filter: hue-rotate(0deg); }
+  to { filter: hue-rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .count { animation: none; }
+}
+
 h1 {
   margin: 0;
   font-size: 2rem;
