@@ -32,4 +32,16 @@ jobs:
           git config user.email "actions@github.com"
           git add -A
           git commit -m "新しいコメントを反映してページを再生成 [skip ci]" || echo "No changes to commit"
-          git push
+          # 同じ時刻に千遠生が散歩から帰ってくることがある。
+          # 押し戻せなかったら取り込み直して、ページを作り直してから押す
+          for attempt in 1 2 3 4 5; do
+            if git push; then exit 0; fi
+            echo "その間に main が進んでいました。取り込み直します(${attempt}回目)"
+            git fetch origin main
+            git rebase -X theirs origin/main || { git rebase --abort || true; exit 1; }
+            python blog_manager.py
+            git add -A
+            git commit -m "新しい決まりでページを作り直しました [skip ci]" || true
+          done
+          echo "何度やっても押し戻せませんでした"
+          exit 1

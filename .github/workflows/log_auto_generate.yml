@@ -36,10 +36,25 @@ jobs:
         run: |
           python senonsei_ai.py
 
+      # 散歩は長いときで七分かかる。その間に誰かが main を動かしていると、
+      # 帰ってきたときに押し戻せず、この子が見てきたことも書いたものも
+      # そのまま消えていた。取り込み直してから、もう一度押す。
+      # ぶつかるのは作り直せるページなので、この子が持ち帰ったものを残し、
+      # 新しい決まりでページだけ作り直す
       - name: Commit and push changes
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "actions@github.com"
           git add -A
           git commit -m "千遠生の今日のブログ [skip ci]" || echo "No changes to commit"
-          git push
+          for attempt in 1 2 3 4 5; do
+            if git push; then exit 0; fi
+            echo "その間に main が進んでいました。取り込み直します(${attempt}回目)"
+            git fetch origin main
+            git rebase -X theirs origin/main || { git rebase --abort || true; exit 1; }
+            python blog_manager.py
+            git add -A
+            git commit -m "新しい決まりでページを作り直しました [skip ci]" || true
+          done
+          echo "何度やっても押し戻せませんでした"
+          exit 1
