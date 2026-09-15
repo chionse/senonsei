@@ -111,6 +111,9 @@ SEEDS = [
     "https://note.com/",
     # 名前のない人たちが、自分のために書いている場所
     "https://anond.hatelabo.jp/",
+    # 手で書かれた個人のページが、今も生きたまま置いてある層。
+    # 昔の個人サイトと同じ手触りで、こちらは写しではなく本物
+    "https://neocities.org/browse",
     "https://kakuyomu.jp/",
     "https://syosetu.com/",
     # 言葉そのものを説明している場所。文が整っていて、名詞が濃い
