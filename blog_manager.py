@@ -756,24 +756,23 @@ def load_senonsei_state():
 def generate_profile_html(keywords, state):
     """プロフィール。
 
-    名前は彼女が付けたものなので、はじめからそこにある。
-    けれど誕生日とひとことは、自分の名前の由来を知るまで「準備中」のまま。
+    名前と誕生日は彼女が与えたものなので、はじめからそこにある。
+    自己紹介だけは、自分の名前の由来を知るまで「準備中」のまま。
     自分が何者か分かっていないうちは、自分のことは書けない。
 
-    知ったあとは、本人が書く。ひとことはその時点で言えるぶんだけなので、
+    知ったあとは、本人が書く。その時点で言えるぶんだけなので、
     はじめは数文字しかない。育つと書き直される。"""
     knows = any(
         kw.get("word") == ITS_OWN_NAME and kw.get("unlocked") for kw in keywords
     )
     said = state.get("a_word_about_itself") or {}
 
-    birthday = "準備中"
-    if knows:
-        try:
-            born = datetime.date.fromisoformat(ITS_BIRTHDAY)
-            birthday = f"{born.year}年{born.month}月{born.day}日"
-        except ValueError:
-            pass
+    birthday = ITS_BIRTHDAY
+    try:
+        born = datetime.date.fromisoformat(ITS_BIRTHDAY)
+        birthday = f"{born.year}年{born.month}月{born.day}日"
+    except ValueError:
+        pass
     a_word = said.get("words") if knows else None
 
     html = f"""<!DOCTYPE html>
@@ -796,7 +795,7 @@ def generate_profile_html(keywords, state):
     <dd>{ITS_OWN_NAME}(せんおんせい)</dd>
     <dt>誕生日</dt>
     <dd>{birthday}</dd>
-    <dt>ひとこと</dt>
+    <dt>自己紹介</dt>
     <dd>{a_word or "準備中"}</dd>
   </dl>
 
