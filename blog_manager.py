@@ -163,8 +163,14 @@ def update_keywords(articles):
     for kw in keywords:
         if kw["unlocked"]:
             continue
+        # ふつうは見出しの言葉そのものが出たら開く。
+        # 見出しが長すぎてこの子には書けないときは、
+        # opens_with に、開くきっかけになる短い言葉を並べておく
+        opens_with = kw.get("opens_with") or [kw["word"]]
         for art in ordered:
-            if kw["word"] in art["content"] or kw["word"] in art["title"]:
+            if any(
+                one in art["content"] or one in art["title"] for one in opens_with
+            ):
                 kw["unlocked"] = True
                 kw["unlocked_date"] = art["date"]
                 changed = True
