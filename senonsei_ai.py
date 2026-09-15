@@ -1929,17 +1929,17 @@ def looks_back_today(articles):
 
 
 def writes_about_itself(state):
-    """「自己紹介」という言葉を覚えた子は、自分のことを書けるようになる。
+    """「自己紹介」と自分で書いた子は、自分のことを書けるようになる。
 
-    自分を紹介するということが何なのか分からないうちは、
-    自分を紹介できない。歩いているうちにその言葉に何日も出会って、
-    やっと身についた日から、プロフィールの自己紹介を自分で書く。
+    覚えているだけでは足りない。歩いているうちにその言葉に何日も出会い、
+    身につけ、繋がりを覚え、いつかブログの中でその四文字を並べる。
+    一度でも口に出した日から、プロフィールの自己紹介を自分で書く。
 
     書けるのはその時点で言えるぶんだけなので、はじめは数文字しかない。
     二か月は空けて、そのあとは気が向いたときに書き直す。
     書き直さなければならない理由はどこにもないので、
     何か月も同じことを言ったままの時期があっていい。"""
-    if blog_manager.TALKING_ABOUT_ONESELF not in (state.get("learned_words") or []):
+    if not blog_manager.it_has_written(blog_manager.TALKING_ABOUT_ONESELF):
         return None
 
     said = state.get("a_word_about_itself") or {}

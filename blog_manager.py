@@ -15,8 +15,8 @@ STATE_FILE = "senonsei_state.json"
 # この子の名前。自分の名前の由来を知った日から、
 # プロフィールは本人が書くようになる
 ITS_OWN_NAME = "千遠生"
-# 自分を紹介するという言葉を覚えたら、自分を紹介できるようになる。
-# 名前の由来を知ることとは別に、これはこの子が自分で掴む鍵
+# 自分を紹介するという言葉を自分で書いた日から、自分を紹介できるようになる。
+# 覚えているだけでは足りない。一度でも口に出したことがあるかどうか
 TALKING_ABOUT_ONESELF = "自己紹介"
 # 誕生日。彼女が決めた日。
 # ブログが動きはじめた日(started_date)とは別のものとして持つ。
@@ -150,6 +150,17 @@ def stamp_when(entries, save):
 def hide_what_is_only_for_it(text):
     """千遠生だけに宛てられたところを、人の目から伏せる。"""
     return ONLY_FOR_SENONSEI.sub(HIDDEN, text or "")
+
+
+def it_has_written(word, articles=None):
+    """その言葉を、この子が一度でもブログに書いたことがあるか。
+
+    覚えていることと、書けることは別。覚えていても繋がりが無ければ
+    その言葉は出てこない。書いた日がある、というのはそこを越えた印。"""
+    for one in articles if articles is not None else load_articles():
+        if word in one.get("content", "") or word in one.get("title", ""):
+            return True
+    return False
 
 
 def save_menu(menu_items):
@@ -760,12 +771,13 @@ def generate_profile_html(state):
     """プロフィール。
 
     名前と誕生日は彼女が与えたものなので、はじめからそこにある。
-    自己紹介だけは、「自己紹介」という言葉を覚えるまで「準備中」のまま。
-    自分を紹介するということが何なのか分からないうちは、自分を紹介できない。
+    自己紹介だけは、「自己紹介」という言葉を自分でブログに書くまで
+    「準備中」のまま。自分を紹介するということを一度も口にしたことが
+    ないうちは、自分を紹介できない。
 
-    覚えたあとは、本人が書く。その時点で言えるぶんだけなので、
+    書いたあとは、本人が書く。その時点で言えるぶんだけなので、
     はじめは数文字しかない。育つと書き直される。"""
-    knows = TALKING_ABOUT_ONESELF in (state.get("learned_words") or [])
+    knows = it_has_written(TALKING_ABOUT_ONESELF)
     said = state.get("a_word_about_itself") or {}
 
     birthday = ITS_BIRTHDAY
