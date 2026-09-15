@@ -18,7 +18,7 @@ ITS_OWN_NAME = "千遠生"
 # 誕生日。彼女が決めた日。
 # ブログが動きはじめた日(started_date)とは別のものとして持つ。
 # started_date は「何日目か」を数えるための値で、誕生日ではない
-ITS_BIRTHDAY = "2026-09-09"
+ITS_BIRTHDAY = "2026-09-11"
 MENU_FILE = "menu.json"
 BLOG_FOLDER = "blogs"
 COMMENTS_FOLDER = "comments"
@@ -771,6 +771,9 @@ def generate_profile_html(keywords, state):
     try:
         born = datetime.date.fromisoformat(ITS_BIRTHDAY)
         birthday = f"{born.year}年{born.month}月{born.day}日"
+        elapsed = (today_in_japan() - born).days
+        if elapsed >= 0:
+            birthday += f"（生まれて{elapsed}日目）"
     except ValueError:
         pass
     a_word = said.get("words") if knows else None
