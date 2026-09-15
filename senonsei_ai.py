@@ -113,6 +113,8 @@ SEEDS = [
     "https://anond.hatelabo.jp/",
     "https://kakuyomu.jp/",
     "https://syosetu.com/",
+    # 言葉そのものを説明している場所。文が整っていて、名詞が濃い
+    "https://kotobank.jp/",
     # 本になった言葉
     "https://www.aozora.gr.jp/",
     "https://ja.wikisource.org/wiki/特別:おまかせ表示",
@@ -143,7 +145,7 @@ NOT_A_PLACE = re.compile(
     r"/login|/signup|/signin|/sign_up|/logout|/cart|/checkout|"
     r"/privacy|/terms|/tos($|/)|/help($|/)|/support($|/)|/contact($|/)|"
     r"\bhelp[.-]|\bsupport[.-]|/hc/|"
-    r"savethearchive\.com|alexa\.com|"
+    r"savethearchive\.com|alexa\.com|archive-it\.org|"
     r"play\.google\.|apps\.apple\.com|maps\.google\.|translate\.google\.|"
     r"//api\.|\.x\.com|//t\.co/",
     re.IGNORECASE,
@@ -153,6 +155,9 @@ NOT_A_PLACE = re.compile(
 # 一枚のページから何本もこういう道が伸びている。
 # 行っても読むものは無く、その日の散歩を一回分使ってしまう
 AN_ADVERT = re.compile(
+    # rd.yahoo.co.jp は昔のYahooの転送口。ショッピングや宣伝へ送り出すためのもので、
+    # 1999年から2004年ごろのページには、この道が何本も生えている
+    r"rd\.yahoo\.|"
     r"/cgi-bin/click|click-ad|/adclick|adname=|/ad\?|/ads?/|/banner|"
     r"adserver|adsystem|googlesyndication|googleads|/sponsor|/affiliate|"
     r"a8\.net|valuecommerce|linksynergy|rakuten\.co\.jp/rd|"
