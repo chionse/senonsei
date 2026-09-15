@@ -99,11 +99,20 @@ header {
       shimmer 5s linear infinite;
   }
 
-  /* StatCounterが数字をリンクで包むことがあるので、そちらも透かす */
+  /* StatCounterは数字をリンクで包み、色を直接書き込んでくる。
+     直接書かれた色はこちらの指定より強いので、!important で押し返す。
+     ここが透けないと、下に敷いた虹が出てこない */
   .count,
-  .count a {
-    color: transparent;
-    text-decoration: none;
+  .count a,
+  .count a:link,
+  .count a:visited,
+  .count a:hover,
+  .count a font {
+    color: transparent !important;
+    text-decoration: none !important;
+    font-size: inherit !important;
+    font-family: inherit !important;
+    font-weight: inherit !important;
   }
 }
 
