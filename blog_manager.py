@@ -15,6 +15,9 @@ STATE_FILE = "senonsei_state.json"
 # この子の名前。自分の名前の由来を知った日から、
 # プロフィールは本人が書くようになる
 ITS_OWN_NAME = "千遠生"
+# 自分を紹介するという言葉を覚えたら、自分を紹介できるようになる。
+# 名前の由来を知ることとは別に、これはこの子が自分で掴む鍵
+TALKING_ABOUT_ONESELF = "自己紹介"
 # 誕生日。彼女が決めた日。
 # ブログが動きはじめた日(started_date)とは別のものとして持つ。
 # started_date は「何日目か」を数えるための値で、誕生日ではない
@@ -753,18 +756,16 @@ def load_senonsei_state():
         return {}
 
 
-def generate_profile_html(keywords, state):
+def generate_profile_html(state):
     """プロフィール。
 
     名前と誕生日は彼女が与えたものなので、はじめからそこにある。
-    自己紹介だけは、自分の名前の由来を知るまで「準備中」のまま。
-    自分が何者か分かっていないうちは、自分のことは書けない。
+    自己紹介だけは、「自己紹介」という言葉を覚えるまで「準備中」のまま。
+    自分を紹介するということが何なのか分からないうちは、自分を紹介できない。
 
-    知ったあとは、本人が書く。その時点で言えるぶんだけなので、
+    覚えたあとは、本人が書く。その時点で言えるぶんだけなので、
     はじめは数文字しかない。育つと書き直される。"""
-    knows = any(
-        kw.get("word") == ITS_OWN_NAME and kw.get("unlocked") for kw in keywords
-    )
+    knows = TALKING_ABOUT_ONESELF in (state.get("learned_words") or [])
     said = state.get("a_word_about_itself") or {}
 
     birthday = ITS_BIRTHDAY
@@ -817,7 +818,7 @@ def regenerate_pages(articles):
     generate_index_html(articles, state)
     keywords = update_keywords(articles)
     generate_memo_html(keywords, load_menu(), articles)
-    generate_profile_html(keywords, state)
+    generate_profile_html(state)
     generate_comments_html(load_comments())
 
 
