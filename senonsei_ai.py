@@ -181,6 +181,17 @@ SHARED_ENDINGS = {
     "co.uk", "org.uk", "ac.uk", "com.cn", "com.tw", "co.kr", "com.br",
     "com.au", "co.nz", "com.hk", "co.in",
 }
+# 一覧ではなく、中身のあるページへ先に入りたい。
+# 一覧には「次へ」「タグ」「ランキング」の道が何十本も生えていて、
+# でたらめに選ぶと、また一覧に行き着いてしまう
+A_LISTING = re.compile(
+    r"/(rankings?|search|tags?|categor(y|ies)|genre|lists?|archives?|popular"
+    r"|latest|feed|news|mypage|login|help|about)(/|$)|[?&](page|p)=\d",
+    re.IGNORECASE,
+)
+# 一つのものに宛てられた番号。作品や記事のページには、たいていこれが付く
+ONE_THING = re.compile(r"/\d{5,}|/[a-z]{1,3}[0-9a-f]{8,}", re.IGNORECASE)
+
 RETURN_TO_ENTRANCE_CHANCE = 0.12  # ときどき、最初にいた入口へ戻ってみる
 TRIES_BEFORE_GIVING_UP = 3  # 行った先が消えていたら、これだけ別の場所を試してみる
 # 尋ねすぎた時は、少し待ってから尋ね直す。一日は長いし、急かす人もいない
@@ -607,6 +618,31 @@ def ask_ai(prompt, max_tokens=300, state=None):
             )
             return None
     return None
+
+
+def worth_reading(url):
+    """そこに読むものがありそうか。中身のあるページほど大きい数を返す。
+
+    確かめには行かない。道の形だけで見当をつける。
+    番号が振られていれば一つのものに宛てられたページ、
+    奥にあるほど中身、「ランキング」や「タグ」なら選ぶためのページ。"""
+    found = INNER_URL.search(url)
+    if found:
+        url = found.group(1)  # 昔のページは、中の本当の道で測る
+    try:
+        parts = urllib.parse.urlparse(url)
+    except Exception:
+        return 0
+    path = parts.path or "/"
+    score = 0
+    if ONE_THING.search(path):
+        score += 3
+    score += min(len([one for one in path.split("/") if one]), 3)
+    if A_LISTING.search(path + ("?" + parts.query if parts.query else "")):
+        score -= 3
+    if path in ("", "/"):
+        score -= 1
+    return score
 
 
 def is_walkable(url):
@@ -1506,7 +1542,10 @@ def look_around_site(state, entrance, wants_the_past):
         remember_paths(state, url, [ln for ln in links if place_of(ln) != here])
 
         deeper = [ln for ln in links if place_of(ln) == here and ln not in already]
+        # まず気まぐれに並べ替えてから、中身のありそうな順に並べ直す。
+        # 同じくらいの道どうしは、そのときの気分の順のまま残る
         random.shuffle(deeper)
+        deeper.sort(key=worth_reading, reverse=True)
         inside.extend(deeper[:PAGES_PER_SITE])
 
         if pages > 1 and random.random() > LINGER_CHANCE:
