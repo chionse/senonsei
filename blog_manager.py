@@ -169,7 +169,7 @@ def save_menu(menu_items):
 
 
 def update_keywords(articles):
-    """ブログ本文にキーワードが登場したら解禁する。"""
+    """ブログ本文にキーワードが登場したら解除する。"""
     keywords = load_keywords()
     ordered = sorted(articles, key=lambda a: (a["date"], a.get("time", "")))  # 古い順
     changed = False
@@ -197,7 +197,7 @@ def update_keywords(articles):
 
 def render_unlockable_list(entries, prefix, per_page=None):
     """entries: [(unlocked: bool, label: str, content: str), ...] から
-    ロック中は「???」、解禁済みは押すと本文の画面に移るリストを作る。
+    ロック中は「???」、解除済みは押すと本文の画面に移るリストを作る。
 
     本文はその場で開かず、一枚の画面として別に作っておく。
     (リストのHTML, 本文の画面たちのHTML) を返す。"""
@@ -214,17 +214,17 @@ def render_unlockable_list(entries, prefix, per_page=None):
         heading = entry.get("heading") or label
         when = ""
         if entry.get("added"):
-            # 読む人から見れば、開いた日は「更新」ではなく「解禁」。
-            # そのまま解禁日と書く。解禁されたあとに本文を書き直した
+            # 読む人から見れば、開いた日は「更新」ではなく「解除」。
+            # そのまま解除日と書く。解除されたあとに本文を書き直した
             # ときだけ、更新日がもう一行増える
             added = entry["added"]
             lines = [f"追加日：{added}"]
             edited = entry.get("updated") or added
-            # 足す前に解禁の日が過ぎていたなら、人の目に触れたのは
+            # 足す前に解除の日が過ぎていたなら、人の目に触れたのは
             # 足した日。足した日と同じなら、わざわざ書かない
             opened = max(entry.get("unlocked_on") or added, added)
             if opened > added:
-                lines.append(f"解禁日：{opened}")
+                lines.append(f"解除日：{opened}")
             if edited > opened:
                 lines.append(f"更新日：{edited}")
             when = (
@@ -302,7 +302,7 @@ def generate_memo_html(keywords, menu_items, articles):
             "heading": f"{item['unlock_day']}日目",  # 開けば、いつのものかは分かる
             "added": item.get("added"),
             "updated": item.get("updated"),
-            # メモ2は何日目に開くかが決まっているので、解禁日は数えられる
+            # メモ2は何日目に開くかが決まっているので、解除日は数えられる
             "unlocked_on": (
                 start_date + datetime.timedelta(days=item["unlock_day"])
             ).isoformat(),
@@ -340,11 +340,11 @@ def generate_memo_html(keywords, menu_items, articles):
     </header>
 
     <div id="memo1">
-      <p class="keyword-count">解禁済み 全{keyword_unlocked} / {len(keywords)} 個</p>
+      <p class="keyword-count">解除済み 全{keyword_unlocked} / {len(keywords)} 個</p>
 {keyword_list_html}    </div>
 
     <div id="memo2" hidden>
-      <p class="keyword-count">解禁済み 全{menu_unlocked} / {len(ordered_menu)} 個</p>
+      <p class="keyword-count">解除済み 全{menu_unlocked} / {len(ordered_menu)} 個</p>
       <ul class="keyword-list">
 {menu_items_html}      </ul>
     </div>
