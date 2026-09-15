@@ -114,6 +114,11 @@ SEEDS = [
     # 手で書かれた個人のページが、今も生きたまま置いてある層。
     # 昔の個人サイトと同じ手触りで、こちらは写しではなく本物
     "https://neocities.org/browse",
+    # 誰にも注目されていないページが、そのまま流れてくる場所。
+    # 大きい場所は大きい場所にしかリンクしないので、
+    # リンクを辿るだけでは、埋もれているページには一生たどり着けない
+    "https://b.hatena.ne.jp/entrylist/all?sort=eid",
+    "https://blogmura.com/",
     "https://kakuyomu.jp/",
     "https://syosetu.com/",
     # 言葉そのものを説明している場所。文が整っていて、名詞が濃い
