@@ -661,8 +661,7 @@ def generate_index_html(articles, state=None):
   <header>
     <h1>千遠生のサイト</h1>
     <div class="visitor-counter">
-      あなたは
-      <!-- Default Statcounter code for senonsei
+      あなたは<span class="count"><!-- Default Statcounter code for senonsei
       https://chionse.github.io/senonsei/index.html -->
       <script type="text/javascript">
       var sc_project=13354593;
@@ -676,8 +675,7 @@ def generate_index_html(articles, state=None):
       href="https://statcounter.com/" target="_blank"><img class="statcounter"
       src="https://c.statcounter.com/13354593/0/4b65a54b/0/" alt="web stats"
       referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
-      <!-- End of Statcounter Code -->
-      人目の来訪者です
+      <!-- End of Statcounter Code --></span>人目の来訪者です
     </div>
   </header>
 
