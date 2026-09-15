@@ -63,26 +63,43 @@ header {
   vertical-align: middle;
 }
 
-/* 数えた数だけは、太く、虹色に光らせる。
-   昔の個人サイトのカウンターがそうだったように */
+/* 数えた数だけは、太く、虹色にぎらつかせる。
+   昔の個人サイトのカウンターがそうだったように。
+   明朝のままだと太らないので、ここだけゴシックにする */
 .count {
-  font-weight: bold;
-  font-size: 1.15em;
+  font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", YuGothic, Meiryo,
+    sans-serif;
+  font-weight: 900;
+  font-size: 1.5em;
   font-variant-numeric: tabular-nums;
   color: var(--main-color);
   letter-spacing: 0.02em;
-  padding-inline: 0.15em;
+  padding-inline: 0.2em;
 }
 
 @supports (-webkit-background-clip: text) or (background-clip: text) {
   .count {
-    background-image: linear-gradient(
-      100deg,
-      #e5354a, #f08c2a, #e0bf1f, #3aa655, #1f9ec4, #2f5fd8, #7a3fb5
-    );
+    /* 上に白い光の帯、下に虹。二枚重ねて、別々の速さで流す */
+    background-image:
+      linear-gradient(
+        100deg,
+        rgba(255, 255, 255, 0) 45%,
+        rgba(255, 255, 255, 0.8) 50%,
+        rgba(255, 255, 255, 0) 55%
+      ),
+      linear-gradient(
+        100deg,
+        #ff0040, #ff8a00, #ffe600, #00e05a, #00d0ff, #2b4bff, #c400ff, #ff0040
+      );
+    background-size: 220% 100%, 220% 100%;
     -webkit-background-clip: text;
     background-clip: text;
-    animation: shimmer 8s linear infinite;
+    text-shadow:
+      0 0 10px rgba(255, 0, 140, 0.35),
+      0 0 18px rgba(0, 180, 255, 0.25);
+    animation:
+      gleam 2.6s linear infinite,
+      shimmer 5s linear infinite;
   }
 
   /* StatCounterが数字をリンクで包むことがあるので、そちらも透かす */
@@ -93,13 +110,18 @@ header {
   }
 }
 
+@keyframes gleam {
+  from { background-position: 0% 0, 0% 0; }
+  to { background-position: 220% 0, 220% 0; }
+}
+
 @keyframes shimmer {
-  from { filter: hue-rotate(0deg); }
-  to { filter: hue-rotate(360deg); }
+  from { filter: hue-rotate(0deg) saturate(1.5); }
+  to { filter: hue-rotate(360deg) saturate(1.5); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .count { animation: none; }
+  .count { animation: none; filter: saturate(1.5); }
 }
 
 h1 {
