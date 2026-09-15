@@ -5,6 +5,7 @@ import zlib
 
 ARTICLES_FILE = "articles.json"
 KEYWORDS_FILE = "keywords.json"
+STYLE_FILE = "sen.css"
 STATE_FILE = "senonsei_state.json"
 # この子の名前。自分の名前の由来を知った日から、
 # プロフィールは本人が書くようになる
@@ -25,6 +26,25 @@ COMMENTS_ON_TOP = 5
 # メモ1の一枚に並べる数。五列十行で、どの画面でもちょうど一画面に
 # 収まる数。一画面が一枚なら、穴の開き方が一目で見える
 KEYWORDS_PER_PAGE = 50
+
+
+def style_mark():
+    """飾りの決まりを書いた紙(sen.css)の、今の中身を表す短い印。
+
+    閲覧機は一度読んだ紙をしばらく覚えていて、こちらが書き換えても
+    読み直してくれない。名前の後ろにこの印を付けておくと、
+    中身が変われば名前も変わるので、必ず読み直しに来る。"""
+    try:
+        with open(STYLE_FILE, "rb") as f:
+            return str(zlib.crc32(f.read()))
+    except Exception:
+        return ""
+
+
+def styled(prefix=""):
+    """飾りの紙への道。印を付けて返す。"""
+    mark = style_mark()
+    return f"{prefix}{STYLE_FILE}?v={mark}" if mark else f"{prefix}{STYLE_FILE}"
 
 
 def now_in_japan():
@@ -273,7 +293,7 @@ def generate_memo_html(keywords, menu_items, articles):
   <meta charset="UTF-8" />
   <title>メモ</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="sen.css" />
+  <link rel="stylesheet" href="{styled()}" />
 </head>
 <body>
   <div id="memo-index">
@@ -408,7 +428,7 @@ def generate_blog_html(article):
 <meta charset="UTF-8" />
 <title>千遠生ブログ {date_str}「{article['title']}」</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="stylesheet" href="../sen.css" />
+<link rel="stylesheet" href="{styled('../')}" />
 </head>
 <body>
 <div class="top-nav"><a href="../index.html">←トップ</a></div>
@@ -450,7 +470,7 @@ def generate_kakodogu_html(articles):
 <meta charset="UTF-8" />
 <title>過去のブログ</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="stylesheet" href="sen.css" />
+<link rel="stylesheet" href="{styled()}" />
 </head>
 <body>
   <div class="top-nav"><a href="index.html">←トップ</a></div>
@@ -568,7 +588,7 @@ def generate_comments_html(comments):
   <meta charset="UTF-8" />
   <title>コメント</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="sen.css" />
+  <link rel="stylesheet" href="{styled()}" />
 </head>
 <body>
   <div class="top-nav"><a href="index.html">←トップ</a></div>
@@ -655,7 +675,7 @@ def generate_index_html(articles, state=None):
   <meta charset="UTF-8" />
   <title>千遠生のサイト</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="sen.css" />
+  <link rel="stylesheet" href="{styled()}" />
 </head>
 <body>
   <header>
@@ -746,7 +766,7 @@ def generate_profile_html(keywords, state):
   <meta charset="UTF-8" />
   <title>プロフィール</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="sen.css" />
+  <link rel="stylesheet" href="{styled()}" />
 </head>
 <body>
   <div class="top-nav"><a href="index.html">←トップ</a></div>
