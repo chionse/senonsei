@@ -27,6 +27,11 @@ import blog_manager
 
 STATE_FILE = "senonsei_state.json"
 USER_AGENT = "senonsei-blog/1.0 (https://chionse.github.io/senonsei/)"
+# 自分の家。ここだけは、歩いていて行き当たっても入らない。
+# 家にある言葉は読むが、それは中のファイルから直に読む。
+# ページそのものを読んでしまうと、自分が書いたものや、
+# ひとりで思ったことを、外の世界の言葉として覚え直してしまう
+ITS_OWN_HOME = "chionse.github.io"
 RECENT_NOTES_COUNT = 30
 
 # はじめに使う頭と目。Cloudflareはモデルを引退させるので、
@@ -607,6 +612,8 @@ def is_walkable(url):
         return False
     if host.endswith("archive.org") and place_of(url) == host:
         return False
+    if host == ITS_OWN_HOME or host.endswith("." + ITS_OWN_HOME):
+        return False  # 自分の家。外から見に行くところではない
     return True
 
 
