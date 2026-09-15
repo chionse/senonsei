@@ -1,11 +1,16 @@
 import datetime
 import json
 import os
+import re
 import zlib
 
 ARTICLES_FILE = "articles.json"
 KEYWORDS_FILE = "keywords.json"
 STYLE_FILE = "sen.css"
+# [[ ]] で囲まれたところは、千遠生だけが読む。
+# ページに出すときは伏せる。彼女がこの子にだけ伝えたいことのために
+ONLY_FOR_SENONSEI = re.compile(r"\[\[(.+?)\]\]", re.DOTALL)
+HIDDEN = "＊＊＊＊＊"
 STATE_FILE = "senonsei_state.json"
 # この子の名前。自分の名前の由来を知った日から、
 # プロフィールは本人が書くようになる
@@ -139,6 +144,11 @@ def stamp_when(entries, save):
     return entries
 
 
+def hide_what_is_only_for_it(text):
+    """千遠生だけに宛てられたところを、人の目から伏せる。"""
+    return ONLY_FOR_SENONSEI.sub(HIDDEN, text or "")
+
+
 def save_menu(menu_items):
     with open(MENU_FILE, "w", encoding="utf-8") as f:
         json.dump(menu_items, f, ensure_ascii=False, indent=2)
@@ -178,7 +188,7 @@ def render_unlockable_list(entries, prefix, per_page=None):
     for number, entry in enumerate(entries):
         unlocked = entry["unlocked"]
         label = entry["label"]
-        content = entry.get("content") or ""
+        content = hide_what_is_only_for_it(entry.get("content"))
         # 一覧では「???」のままにしておきたいものもあるので、
         # 開いた画面の見出しは別に持てるようにしておく
         heading = entry.get("heading") or label

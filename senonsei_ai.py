@@ -32,6 +32,9 @@ USER_AGENT = "senonsei-blog/1.0 (https://chionse.github.io/senonsei/)"
 # ページそのものを読んでしまうと、自分が書いたものや、
 # ひとりで思ったことを、外の世界の言葉として覚え直してしまう
 ITS_OWN_HOME = "chionse.github.io"
+# 彼女が [[ ]] で囲んだところは、千遠生だけが読む。
+# ページでは伏せられているが、この子には囲いを外して届く
+ONLY_FOR_IT = re.compile(r"\[\[(.+?)\]\]", re.DOTALL)
 RECENT_NOTES_COUNT = 30
 
 # はじめに使う頭と目。Cloudflareはモデルを引退させるので、
@@ -1978,6 +1981,13 @@ def picture_at_home(where):
         return f.read()
 
 
+def only_for_it(text):
+    """千遠生だけに宛てられたところから、囲いを外す。
+
+    ページでは伏せ字になっているところが、この子にだけそのまま届く。"""
+    return ONLY_FOR_IT.sub(r"\1", text or "")
+
+
 def read_what_is_home(state):
     """自分の家にある言葉を読む。
 
@@ -2003,12 +2013,12 @@ def read_what_is_home(state):
     for keyword in blog_manager.load_keywords():
         # 開くきっかけはこの子の言葉だが、中に置かれているのは彼女の文章
         if keyword.get("unlocked"):
-            voices.append(keyword.get("content") or "")
+            voices.append(only_for_it(keyword.get("content")))
 
     elapsed = elapsed_days(state)
     for item in blog_manager.load_menu():
         if elapsed >= item.get("unlock_day", 10**9):
-            voices.append(item.get("message") or "")
+            voices.append(only_for_it(item.get("message")))
 
     for comment in blog_manager.load_comments():
         # 書いていった人の名前も読む。名前として差し出されたものは
