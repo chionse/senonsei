@@ -112,29 +112,13 @@ header {
   to { background-position: 220% 0, 220% 0; }
 }
 
-/* 白い縁。text-shadow は虹の上に乗ってしまうので使えない。
-   虹は「背景」の層に描かれ、text-shadow はその上に来るため。
-   drop-shadow なら、描き上がったものの後ろに回ってくれる */
 @keyframes shimmer {
-  from {
-    filter: hue-rotate(0deg) saturate(1.5)
-      drop-shadow(0.5px 0 0 #fff) drop-shadow(-0.5px 0 0 #fff)
-      drop-shadow(0 0.5px 0 #fff) drop-shadow(0 -0.5px 0 #fff);
-  }
-  to {
-    filter: hue-rotate(360deg) saturate(1.5)
-      drop-shadow(0.5px 0 0 #fff) drop-shadow(-0.5px 0 0 #fff)
-      drop-shadow(0 0.5px 0 #fff) drop-shadow(0 -0.5px 0 #fff);
-  }
+  from { filter: hue-rotate(0deg) saturate(1.5); }
+  to { filter: hue-rotate(360deg) saturate(1.5); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .count {
-    animation: none;
-    filter: saturate(1.5)
-      drop-shadow(0.5px 0 0 #fff) drop-shadow(-0.5px 0 0 #fff)
-      drop-shadow(0 0.5px 0 #fff) drop-shadow(0 -0.5px 0 #fff);
-  }
+  .count { animation: none; filter: saturate(1.5); }
 }
 
 h1 {
