@@ -118,13 +118,13 @@ header {
 @keyframes shimmer {
   from {
     filter: hue-rotate(0deg) saturate(1.5)
-      drop-shadow(1px 0 0 #fff) drop-shadow(-1px 0 0 #fff)
-      drop-shadow(0 1px 0 #fff) drop-shadow(0 -1px 0 #fff);
+      drop-shadow(0.5px 0 0 #fff) drop-shadow(-0.5px 0 0 #fff)
+      drop-shadow(0 0.5px 0 #fff) drop-shadow(0 -0.5px 0 #fff);
   }
   to {
     filter: hue-rotate(360deg) saturate(1.5)
-      drop-shadow(1px 0 0 #fff) drop-shadow(-1px 0 0 #fff)
-      drop-shadow(0 1px 0 #fff) drop-shadow(0 -1px 0 #fff);
+      drop-shadow(0.5px 0 0 #fff) drop-shadow(-0.5px 0 0 #fff)
+      drop-shadow(0 0.5px 0 #fff) drop-shadow(0 -0.5px 0 #fff);
   }
 }
 
@@ -132,8 +132,8 @@ header {
   .count {
     animation: none;
     filter: saturate(1.5)
-      drop-shadow(1px 0 0 #fff) drop-shadow(-1px 0 0 #fff)
-      drop-shadow(0 1px 0 #fff) drop-shadow(0 -1px 0 #fff);
+      drop-shadow(0.5px 0 0 #fff) drop-shadow(-0.5px 0 0 #fff)
+      drop-shadow(0 0.5px 0 #fff) drop-shadow(0 -0.5px 0 #fff);
   }
 }
 
