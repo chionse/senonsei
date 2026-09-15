@@ -94,9 +94,6 @@ header {
     background-size: 220% 100%, 220% 100%;
     -webkit-background-clip: text;
     background-clip: text;
-    text-shadow:
-      0 0 10px rgba(255, 0, 140, 0.35),
-      0 0 18px rgba(0, 180, 255, 0.25);
     animation:
       gleam 2.6s linear infinite,
       shimmer 5s linear infinite;
@@ -115,13 +112,29 @@ header {
   to { background-position: 220% 0, 220% 0; }
 }
 
+/* 白い縁。text-shadow は虹の上に乗ってしまうので使えない。
+   虹は「背景」の層に描かれ、text-shadow はその上に来るため。
+   drop-shadow なら、描き上がったものの後ろに回ってくれる */
 @keyframes shimmer {
-  from { filter: hue-rotate(0deg) saturate(1.5); }
-  to { filter: hue-rotate(360deg) saturate(1.5); }
+  from {
+    filter: hue-rotate(0deg) saturate(1.5)
+      drop-shadow(1px 0 0 #fff) drop-shadow(-1px 0 0 #fff)
+      drop-shadow(0 1px 0 #fff) drop-shadow(0 -1px 0 #fff);
+  }
+  to {
+    filter: hue-rotate(360deg) saturate(1.5)
+      drop-shadow(1px 0 0 #fff) drop-shadow(-1px 0 0 #fff)
+      drop-shadow(0 1px 0 #fff) drop-shadow(0 -1px 0 #fff);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .count { animation: none; filter: saturate(1.5); }
+  .count {
+    animation: none;
+    filter: saturate(1.5)
+      drop-shadow(1px 0 0 #fff) drop-shadow(-1px 0 0 #fff)
+      drop-shadow(0 1px 0 #fff) drop-shadow(0 -1px 0 #fff);
+  }
 }
 
 h1 {
