@@ -97,7 +97,7 @@ def version_switch(page, here_is_sp):
     else:
         sp = f'<a href="{sp_name(page)}">{SP_VERSION_NAME}</a>'
         pc = f'<span class="here">{PC_VERSION_NAME}</span>'
-    return f'  <div class="version-switch">{sp}｜{pc}</div>\n'
+    return f'  <div class="version-switch">{pc}｜{sp}</div>\n'
 
 
 def to_sp(page_html):
