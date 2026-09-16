@@ -200,6 +200,19 @@ A_LISTING = re.compile(
 # 一つのものに宛てられた番号。作品や記事のページには、たいていこれが付く
 ONE_THING = re.compile(r"/\d{5,}|/[a-z]{1,3}[0-9a-f]{8,}", re.IGNORECASE)
 
+# 機械向けの扉。今のページは中身をあとから描くので、届いた紙には
+# 何も書いていないことがある。けれど多くの場所は、昔からの決まりで
+# 機械向けの一覧を別に置いたままにしている。そこはただの文字でできている
+A_DOOR_FOR_MACHINES = re.compile(
+    r"(?:^|[./_-])(rss|atom|feeds?|sitemap)(?:$|[./_-])|\.xml(?:$|\?)", re.IGNORECASE
+)
+# 扉の向こうに、裸のまま並んでいる道
+A_PLAIN_PATH = re.compile(r"https?://[^\s<>\"']{8,300}")
+# その場所の中へ続く道がこれより少なければ、扉を探してみる
+FEW_ENOUGH_TO_LOOK_FOR_A_DOOR = 3
+DOORS_TO_TRY = 2  # 扉は多くても二つまで。探し回るためのものではない
+PATHS_FROM_A_DOOR = 30
+
 RETURN_TO_ENTRANCE_CHANCE = 0.12  # ときどき、最初にいた入口へ戻ってみる
 TRIES_BEFORE_GIVING_UP = 3  # 行った先が消えていたら、これだけ別の場所を試してみる
 # 尋ねすぎた時は、少し待ってから尋ね直す。一日は長いし、急かす人もいない
@@ -626,6 +639,44 @@ def ask_ai(prompt, max_tokens=300, state=None):
             )
             return None
     return None
+
+
+def doors_for_machines(here, entrance, links):
+    """その場所が機械向けに開けている扉を、多くても二つ。
+
+    ページの中に書かれている扉(RSSやAtom)をまず探し、
+    見つからなければ、決まった場所にあるはずの一覧を当てにいく。"""
+    doors = [
+        one
+        for one in links
+        if place_of(one) == here and A_DOOR_FOR_MACHINES.search(one)
+    ]
+    try:
+        parts = urllib.parse.urlparse(entrance)
+        if parts.scheme and parts.netloc and not parts.netloc.endswith("archive.org"):
+            doors.append(f"{parts.scheme}://{parts.netloc}/sitemap.xml")
+    except Exception:
+        pass
+    seen, kept = set(), []
+    for one in doors:
+        if one not in seen:
+            seen.add(one)
+            kept.append(one)
+    return kept[:DOORS_TO_TRY]
+
+
+def paths_behind_a_door(here, text, links):
+    """扉の向こうに並んでいる道を拾う。
+
+    RSSは道をそのまま文字として並べ、Atomは札の中に書く。
+    どちらも、ただの文字なので普通に読める。"""
+    found = list(links) + A_PLAIN_PATH.findall(text or "")
+    kept = []
+    for one in found:
+        one = one.strip().rstrip("\"'<>)")
+        if place_of(one) == here and is_walkable(one) and one not in kept:
+            kept.append(one)
+    return kept[:PATHS_FROM_A_DOOR]
 
 
 def worth_reading(url):
@@ -1550,6 +1601,22 @@ def look_around_site(state, entrance, wants_the_past):
         remember_paths(state, url, [ln for ln in links if place_of(ln) != here])
 
         deeper = [ln for ln in links if place_of(ln) == here and ln not in already]
+
+        # 入口に立ったのに、中へ続く道がほとんど無い。
+        # 今のページは中身をあとから描くので、こういうことが起きる。
+        # そういうときだけ、機械向けの扉を探してみる
+        if pages == 1 and len(deeper) < FEW_ENOUGH_TO_LOOK_FOR_A_DOOR:
+            for door in doors_for_machines(here, entrance, links):
+                try:
+                    _, behind, doorways, _ = open_page(door)
+                except Exception:
+                    continue
+                found = paths_behind_a_door(here, behind, doorways)
+                if found:
+                    print(f"{door} から {len(found)}本の道を見つけました")
+                    deeper.extend(one for one in found if one not in already)
+                    break
+
         # まず気まぐれに並べ替えてから、中身のありそうな順に並べ直す。
         # 同じくらいの道どうしは、そのときの気分の順のまま残る
         random.shuffle(deeper)
