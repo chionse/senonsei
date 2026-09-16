@@ -1,3 +1,13 @@
+/* 点で描かれた書体。Googleから借りるのではなく、ここに置いてある。
+   借り物にすると、配っている側がやめた日に文字が変わってしまう。
+   この子は何十年も動き続ける約束なので、鎖は増やさない。
+   DotGothic16 / SIL Open Font License 1.1 / fonts/OFL.txt */
+@font-face {
+  font-family: "DotGothic16";
+  src: url("fonts/DotGothic16-Regular.ttf") format("truetype");
+  font-display: swap;
+}
+
 :root {
   --main-color: #0029ae;
   --bg-color: #fafaf7;
@@ -6,7 +16,9 @@
 
 body {
   background-color: var(--bg-color);
-  font-family: 'Yu Mincho', '游明朝', 'MS Mincho', 'MS PMincho', serif;
+  font-family: "DotGothic16", "MS Gothic", monospace;
+  /* 点をそのまま出す。滑らかにされると、点で描いた意味が無くなる */
+  -webkit-font-smoothing: none;
   color: var(--main-color);
   margin: 20px auto;
   max-width: 700px;
@@ -67,9 +79,8 @@ header {
    昔の個人サイトのカウンターがそうだったように。
    明朝のままだと太らないので、ここだけゴシックにする */
 .count {
-  font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", YuGothic, Meiryo,
-    sans-serif;
-  font-weight: 900;
+  font-family: inherit;
+  font-weight: normal;
   font-size: 1.5em;
   font-variant-numeric: tabular-nums;
   color: var(--main-color);
