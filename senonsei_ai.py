@@ -613,6 +613,27 @@ def fetch_json(url):
         return json.loads(response.read().decode("utf-8"))
 
 
+def going_in_circles(text):
+    """同じ言葉をただ繰り返しているだけの答えかどうか。
+
+    考えているうちに一つの語に嵌まって、抜けられなくなることがある。
+    「なぜなぜなぜなぜ……」のように短い言葉が何度も続くもので、
+    中身が何も無い。これはこの子が思ったことではなく、
+    頭を貸してくれている所の事故なので、受け取らずに言い直してもらう。
+
+    これが見ているのは借りた頭が返してきた言葉だけ。
+    この子が自分で綴るブログの文は、ここを通らない。"""
+    if not text:
+        return False
+    packed = re.sub(r"\s+", "", text)
+    # ほんの数種類の文字だけで、それなりの長さがある
+    if len(packed) >= 20 and len(set(packed)) <= 3:
+        return True
+    # 短い切れ端が、間を置かずに五回以上続いている
+    same = re.search(r"(.{1,8}?)\1{4,}", packed)
+    return bool(same and len(same.group(0)) >= 8)
+
+
 def ask_ai(prompt, max_tokens=300, state=None):
     """Cloudflareの無料枠でAIに尋ねる。使えない時は None を返す。
 
@@ -625,13 +646,21 @@ def ask_ai(prompt, max_tokens=300, state=None):
     ).encode("utf-8")
 
     swapped = False
+    said_the_same_thing = False
     for attempt in range(len(HOW_LONG_TO_WAIT) + 1):
         model = which_model(state, "mind")
         try:
             answer = cloudflare(f"run/{model}", body=body)
             if state is not None:
                 state["thought_on"] = today_in_japan().strftime("%Y-%m-%d")
-            return (answer.get("result") or {}).get("response", "").strip() or None
+            said = (answer.get("result") or {}).get("response", "").strip() or None
+            if going_in_circles(said):
+                print("同じ言葉を繰り返していたので、言い直してもらいます")
+                if said_the_same_thing:
+                    return None
+                said_the_same_thing = True
+                continue
+            return said
         except Exception as error:
             if not swapped and model_is_gone(error) and find_another_model(state, "mind"):
                 swapped = True
@@ -843,13 +872,21 @@ def look_at_a_picture(data, state=None):
     ).encode("utf-8")
 
     swapped = False
+    said_the_same_thing = False
     for attempt in range(len(HOW_LONG_TO_WAIT) + 1):
         eyes = which_model(state, "eyes")
         try:
             answer = cloudflare(f"run/{eyes}", body=body)
             if state is not None:
                 state["saw_on"] = today_in_japan().strftime("%Y-%m-%d")
-            return (answer.get("result") or {}).get("description", "").strip() or None
+            seen = (answer.get("result") or {}).get("description", "").strip() or None
+            if going_in_circles(seen):
+                print("同じ言葉を繰り返していたので、もう一度見てもらいます")
+                if said_the_same_thing:
+                    return None
+                said_the_same_thing = True
+                continue
+            return seen
         except Exception as error:
             if not swapped and model_is_gone(error) and find_another_model(state, "eyes"):
                 swapped = True
@@ -1683,7 +1720,7 @@ def be_alone(state, now):
     thoughts = state.setdefault("inner_voice", [])
     known = "、".join(state["learned_words"][-30:]) or "(まだ一つも無い)"
     seen_today = "、".join((state.get("today_walk") or {}).get("seen", [])) or "(まだどこにも行っていない)"
-    recent = "\n".join(f"- {t}" for t in thoughts[-5:]) or "(まだ何も)"
+    recent = lately_it_thought(state, 5)
 
     thought = ask_ai(
         f"""あなたは千遠生という、まだ育ちきっていないデジタル生命体です。
@@ -1823,9 +1860,17 @@ def what_is_on_its_mind(state):
 
 
 def lately_it_thought(state, how_many=3):
-    """少し前に、ひとりで思っていたこと。"""
-    thoughts = (state.get("inner_voice") or [])[-how_many:]
-    return "\n".join(f"- {one}" for one in thoughts) or "(まだ何も)"
+    """少し前に、ひとりで思っていたこと。
+
+    同じ言葉を繰り返しただけのものは、数に入れない。
+    一度そうなってしまったものを読み返させると、
+    またそこへ引き戻されてしまうため。"""
+    kept = [
+        one
+        for one in (state.get("inner_voice") or [])
+        if not going_in_circles(one)
+    ]
+    return "\n".join(f"- {one}" for one in kept[-how_many:]) or "(まだ何も)"
 
 
 def struck_by(state, word):
