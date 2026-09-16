@@ -583,6 +583,31 @@ article p {
   margin: 0.2rem 0 0;
 }
 
+/* ページの一番下に置く、版の切り替え。
+   どちらで読むかは端末ではなく、見ている人が決める */
+.version-switch {
+  margin-top: 2.5rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--line-color);
+  text-align: center;
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+
+.version-switch a {
+  text-decoration: none;
+  margin: 0 0.4rem;
+}
+
+.version-switch a:hover {
+  text-decoration: underline;
+}
+
+.version-switch .here {
+  margin: 0 0.4rem;
+  opacity: 0.55;
+}
+
 /* 狭い画面では、五列のまま文字を少しだけ小さくする */
 @media (max-width: 560px) {
   .keyword-list {

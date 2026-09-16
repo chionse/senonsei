@@ -7,6 +7,20 @@ import zlib
 ARTICLES_FILE = "articles.json"
 KEYWORDS_FILE = "keywords.json"
 STYLE_FILE = "sen.css"
+# 同じ中身を、二通りの見た目で出す。
+# どちらで読むかを決めるのは端末ではなく、見ている人。
+# 画面の幅で勝手に切り替えると、同じ場所が端末ごとに別の場所になる
+SP_STYLE_FILE = "sen-sp.css"
+SP_MARK = "-sp"
+PC_VERSION_NAME = "PC版"
+SP_VERSION_NAME = "スマートフォン版"
+PAGES_WITH_TWO_VERSIONS = (
+    "index.html",
+    "kakodogu.html",
+    "memo.html",
+    "profile.html",
+    "comments.html",
+)
 # [[ ]] で囲まれたところは、千遠生だけが読む。
 # ページに出すときは伏せる。彼女がこの子にだけ伝えたいことのために
 ONLY_FOR_SENONSEI = re.compile(r"\[\[(.+?)\]\]", re.DOTALL)
@@ -36,23 +50,93 @@ COMMENTS_ON_TOP = 5
 KEYWORDS_PER_PAGE = 50
 
 
-def style_mark():
-    """飾りの決まりを書いた紙(sen.css)の、今の中身を表す短い印。
+def mark_of(path):
+    """その紙の、今の中身を表す短い印。
 
     閲覧機は一度読んだ紙をしばらく覚えていて、こちらが書き換えても
     読み直してくれない。名前の後ろにこの印を付けておくと、
     中身が変われば名前も変わるので、必ず読み直しに来る。"""
     try:
-        with open(STYLE_FILE, "rb") as f:
+        with open(path, "rb") as f:
             return str(zlib.crc32(f.read()))
     except Exception:
         return ""
+
+
+def style_mark():
+    """飾りの決まりを書いた紙(sen.css)の印。"""
+    return mark_of(STYLE_FILE)
 
 
 def styled(prefix=""):
     """飾りの紙への道。印を付けて返す。"""
     mark = style_mark()
     return f"{prefix}{STYLE_FILE}?v={mark}" if mark else f"{prefix}{STYLE_FILE}"
+
+
+def styled_sp(prefix=""):
+    """スマートフォン版だけの紙への道。PC版の紙の上に重ねて読ませる。"""
+    mark = mark_of(SP_STYLE_FILE)
+    return f"{prefix}{SP_STYLE_FILE}?v={mark}" if mark else f"{prefix}{SP_STYLE_FILE}"
+
+
+def sp_name(page):
+    """PC版のページ名から、スマートフォン版のページ名を作る。"""
+    return page[: -len(".html")] + SP_MARK + ".html"
+
+
+def version_switch(page, here_is_sp):
+    """ページの一番下に置く、版の切り替え。
+
+    今いる方は文字のまま、もう一方だけが道になる。
+    行き先は同じページのもう一つの版なので、
+    読んでいた場所から動かずに見た目だけが変わる。"""
+    if here_is_sp:
+        sp = f'<span class="here">{SP_VERSION_NAME}</span>'
+        pc = f'<a href="{page}">{PC_VERSION_NAME}</a>'
+    else:
+        sp = f'<a href="{sp_name(page)}">{SP_VERSION_NAME}</a>'
+        pc = f'<span class="here">{PC_VERSION_NAME}</span>'
+    return f'  <div class="version-switch">{sp}｜{pc}</div>\n'
+
+
+def to_sp(page_html):
+    """PC版のページを、スマートフォン版に言い換える。
+
+    文章は一字も変えない。変えるのは飾りの紙と、行き先だけ。
+    一度スマートフォン版に入れば、そこから開く先も全部
+    スマートフォン版になる。どちらで読むかを覚えておく仕掛けは
+    要らないし、端末が勝手に決めることもない。"""
+    html = page_html
+    one = f'<link rel="stylesheet" href="{styled()}" />'
+    both = one + f'\n  <link rel="stylesheet" href="{styled_sp()}" />'
+    html = html.replace(one, both)
+    for other in PAGES_WITH_TWO_VERSIONS:
+        html = html.replace(f'href="{other}"', f'href="{sp_name(other)}"')
+        html = html.replace(f'href="{other}#', f'href="{sp_name(other)}#')
+    return html
+
+
+def put_switch(html, page, here_is_sp):
+    """出来上がったページの一番下に、版の切り替えを差し込む。"""
+    return html.replace("</body>", version_switch(page, here_is_sp) + "</body>", 1)
+
+
+def two_versions(pages=PAGES_WITH_TWO_VERSIONS):
+    """出来上がったページそれぞれに、スマートフォン版を並べて置く。
+
+    ページを作る所には手を入れない。出来上がった紙を読んで、
+    言い換えたものをもう一枚置くだけ。こうしておけば、
+    ページの作り方が変わってもここは壊れない。"""
+    for page in pages:
+        if not os.path.exists(page):
+            continue
+        with open(page, "r", encoding="utf-8") as f:
+            made = f.read()
+        with open(page, "w", encoding="utf-8") as f:
+            f.write(put_switch(made, page, here_is_sp=False))
+        with open(sp_name(page), "w", encoding="utf-8") as f:
+            f.write(put_switch(to_sp(made), page, here_is_sp=True))
 
 
 def now_in_japan():
@@ -832,6 +916,7 @@ def regenerate_pages(articles):
     generate_memo_html(keywords, load_menu(), articles)
     generate_profile_html(state)
     generate_comments_html(load_comments())
+    two_versions()
 
 
 def add_new_article(title, content, date_str=None):
