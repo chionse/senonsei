@@ -585,7 +585,9 @@ article p {
 .frame {
   display: flex;
   gap: 1.8rem;
-  align-items: flex-start;
+  /* 欄を本文と同じ高さまで伸ばす。
+     中身なりの高さだと、右の縦線が途中で切れて止まる */
+  align-items: stretch;
 }
 
 .main {

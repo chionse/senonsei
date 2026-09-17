@@ -1039,7 +1039,6 @@ def generate_index_html(articles, state=None):
   {latest_html}
 
   {recent_html}{news_html}
-  <!-- ここまで本文の列 -->
 
   <div class="section-title" id="comments">コメント</div>
 
@@ -1052,6 +1051,7 @@ def generate_index_html(articles, state=None):
   <div class="comment-list">
 {comments_html}
   </div>{all_comments_html}
+  <!-- ここまで本文の列 -->
 </body>
 </html>
 """
