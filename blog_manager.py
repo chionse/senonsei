@@ -25,6 +25,14 @@ PAGES_WITH_TWO_VERSIONS = (
 # どのページの下にも出ていると、読んでいる邪魔になる。
 # 版を選ぶのは入り口に一度あれば足りる
 WHERE_THE_SWITCH_GOES = ("index.html",)
+# 右の欄。どのページにも同じものを置く。
+# (ページ名, 見出し) の形で、今いるページは道にしない
+WHERE_YOU_CAN_GO = (
+    ("kakodogu.html", "過去のブログ"),
+    ("memo.html", "メモ"),
+    ("profile.html", "プロフィール"),
+)
+WALKED_SHOWN = 3  # きょう歩いたところを、多くてもこれだけ出す
 # [[ ]] で囲まれたところは、千遠生だけが読む。
 # ページに出すときは伏せる。彼女がこの子にだけ伝えたいことのために
 ONLY_FOR_SENONSEI = re.compile(r"\[\[(.+?)\]\]", re.DOTALL)
@@ -143,6 +151,112 @@ def two_versions(pages=PAGES_WITH_TWO_VERSIONS):
         with open(sp_name(page), "w", encoding="utf-8") as f:
             sp = to_sp(made)
             f.write(put_switch(sp, page, here_is_sp=True) if shows_it else sp)
+
+
+def a_link_or_here(page, here, label):
+    """今いるページなら道にしない。押しても動かない道は置かない。"""
+    if page == here:
+        return f'        <span class="here">{label}</span>'
+    return f'        <a href="{page}">{label}</a>'
+
+
+def one_side_block(title, rows):
+    """右の欄の一区画。見出しと、その下に並ぶ行。"""
+    return (
+        '    <div class="side-block">\n'
+        f'      <div class="side-title">{title}</div>\n'
+        + "\n".join(rows)
+        + "\n    </div>"
+    )
+
+
+def side_panel(state, here):
+    """どのページの右にも置く欄。
+
+    この子の今の様子を、そのページを見ている間ずっと横に出しておく。
+    数字ではなく、今どう書けるか、どこを歩いたか、何が離れないか。
+
+    ページを組む側で段階の表は持たない。
+    散歩する側が state に残していった言葉をそのまま読む。"""
+    state = state or {}
+    blocks = []
+
+    where = "\n".join(
+        a_link_or_here(page, here, label) for page, label in WHERE_YOU_CAN_GO
+    )
+    blocks.append(
+        '    <div class="side-block side-where">\n'
+        '      <div class="side-title">めぐる</div>\n'
+        '      <nav class="side-nav">\n'
+        + where
+        + "\n      </nav>\n    </div>"
+    )
+
+    today = today_in_japan()
+    now = []
+    try:
+        born = datetime.date.fromisoformat(ITS_BIRTHDAY)
+        if today >= born:
+            now.append(f'      <p class="side-fact">{its_age(born, today)}</p>')
+    except ValueError:
+        pass
+    writes = state.get("how_it_writes_now")
+    if writes:
+        now.append(f'      <p class="side-fact side-quiet">{writes}</p>')
+    if now:
+        blocks.append(one_side_block("いま", now))
+
+    walk = state.get("today_walk") or {}
+    seen = walk.get("seen") or []
+    if walk.get("date") == today.isoformat() and seen:
+        blocks.append(one_side_block("きょう歩いたところ", [
+            f'      <p class="side-fact">{one}</p>' for one in seen[-WALKED_SHOWN:]
+        ]))
+
+    minded = [one.get("what") for one in (state.get("on_its_mind") or [])]
+    minded = [one for one in minded if one]
+    if minded:
+        blocks.append(one_side_block("気にかかっていること", [
+            f'      <p class="side-word">{one}</p>' for one in minded
+        ]))
+
+    return '  <aside class="side">\n' + "\n\n".join(blocks) + "\n  </aside>\n"
+
+
+MAIN_STARTS = "<!-- ここから本文の列 -->"
+MAIN_ENDS = "<!-- ここまで本文の列 -->"
+
+
+def put_side_panel(html, state, here):
+    """印で囲まれたところを本文の列にして、その隣に欄を置く。
+
+    ページを作る所では、本文の始まりと終わりに印だけ置いてある。
+    「見出しから下を全部」では駄目だった。メモのページは見出しごと
+    一つの箱に入っていて、その外にメモ一枚ずつの全画面が並んでいる。
+    見出しから本文の終わりまでを一括りにすると箱をまたいでしまう。"""
+    if MAIN_STARTS not in html or MAIN_ENDS not in html:
+        return html
+    if 'class="side"' in html:
+        return html  # 二度挟まない
+    return html.replace(
+        MAIN_STARTS, '<div class="frame">\n  <div class="main">', 1
+    ).replace(
+        MAIN_ENDS,
+        "</div>\n\n" + side_panel(state, here) + "  </div>",
+        1,
+    )
+
+
+def side_panels(pages=PAGES_WITH_TWO_VERSIONS):
+    """全部のページに右の欄を置く。"""
+    state = load_senonsei_state()
+    for page in pages:
+        if not os.path.exists(page):
+            continue
+        with open(page, "r", encoding="utf-8") as f:
+            made = f.read()
+        with open(page, "w", encoding="utf-8") as f:
+            f.write(put_side_panel(made, state, page))
 
 
 def now_in_japan():
@@ -429,6 +543,7 @@ def generate_memo_html(keywords, menu_items, articles):
       </div>
     </header>
 
+    <!-- ここから本文の列 -->
     <div id="memo1">
       <p class="keyword-count">解除済み 全{keyword_unlocked} / {len(keywords)} 個</p>
 {keyword_list_html}    </div>
@@ -438,6 +553,7 @@ def generate_memo_html(keywords, menu_items, articles):
       <ul class="keyword-list">
 {menu_items_html}      </ul>
     </div>
+    <!-- ここまで本文の列 -->
   </div>
 
 {keyword_pages}{menu_pages}  <div id="look-closer" hidden onclick="closeCloser()">
@@ -599,6 +715,7 @@ def generate_kakodogu_html(articles):
     <h1>過去のブログ</h1>
   </header>
 
+  <!-- ここから本文の列 -->
   <div class="log-layout">
     <div class="log-list">
       <div class="log-column" id="years"></div>
@@ -608,6 +725,7 @@ def generate_kakodogu_html(articles):
     <div class="log-view">
 {entries_html}    </div>
   </div>
+  <!-- ここまで本文の列 -->
 
   <script>
     var DATES = {json.dumps(dates, ensure_ascii=False)};
@@ -718,9 +836,11 @@ def generate_comments_html(comments):
     <p class="keyword-count">全{len(comments)}件</p>
   </header>
 
+  <!-- ここから本文の列 -->
   <div class="comment-list">
 {render_comments(comments)}
   </div>
+  <!-- ここまで本文の列 -->
 
 </body>
 </html>
@@ -819,16 +939,12 @@ def generate_index_html(articles, state=None):
     </div>
   </header>
 
+  <!-- ここから本文の列 -->
   <div class="section-title">☆今日のブログ☆</div>
   {latest_html}
 
   {recent_html}
 
-  <nav>
-    <a href="kakodogu.html">過去のブログ</a>
-    <a href="memo.html">メモ</a>
-    <a href="profile.html">プロフィール</a>
-  </nav>
 
   <div class="section-title" id="comments">コメント</div>
 
@@ -841,6 +957,7 @@ def generate_index_html(articles, state=None):
   <div class="comment-list">
 {comments_html}
   </div>{all_comments_html}
+  <!-- ここまで本文の列 -->
 </body>
 </html>
 """
@@ -930,6 +1047,7 @@ def generate_profile_html(state):
     <h1>プロフィール</h1>
   </header>
 
+  <!-- ここから本文の列 -->
   <dl class="profile-box">
     <dt>名前</dt>
     <dd>{ITS_OWN_NAME}(せんおんせい)</dd>
@@ -938,6 +1056,7 @@ def generate_profile_html(state):
     <dt>自己紹介</dt>
     <dd>{a_word or "準備中"}</dd>
   </dl>
+  <!-- ここまで本文の列 -->
 
 </body>
 </html>
@@ -956,6 +1075,7 @@ def regenerate_pages(articles):
     generate_memo_html(keywords, load_menu(), articles)
     generate_profile_html(state)
     generate_comments_html(load_comments())
+    side_panels()
     two_versions()
 
 

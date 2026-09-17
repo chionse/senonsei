@@ -2269,6 +2269,10 @@ def run_today():
     let_it_read_its_own_home(state)
     open_the_way_home(state)
 
+    # 今どれだけ書けるか。ページを組む側が段階の表を持たずに済むよう、
+    # 決めた言葉をそのまま残しておく
+    state["how_it_writes_now"] = current_stage(state)[0]
+
     # 自分の家に置かれた、自分に宛てられた言葉を読む
     read_what_is_home(state)
 

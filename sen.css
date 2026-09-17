@@ -21,7 +21,7 @@ body {
   -webkit-font-smoothing: none;
   color: var(--main-color);
   margin: 20px auto;
-  max-width: 700px;
+  max-width: 1000px;
   padding: 0 10px;
   line-height: 1.6;
 }
@@ -612,6 +612,97 @@ article p {
 .version-switch .here {
   margin: 0 0.4rem;
   opacity: 0.55;
+}
+
+/* 本文の列と、その右の欄。
+   縦にしか伸びないページは、横に何も無いので平たく見える */
+.frame {
+  display: flex;
+  gap: 1.8rem;
+  align-items: flex-start;
+}
+
+.main {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.side {
+  flex: 0 0 14rem;
+  border-left: 1px solid var(--line-color);
+  padding-left: 1.2rem;
+  text-align: left;
+}
+
+.side-block {
+  margin-bottom: 1.6rem;
+}
+
+.side-title {
+  font-size: 0.85rem;
+  border-bottom: 1px solid var(--line-color);
+  padding-bottom: 0.3rem;
+  margin-bottom: 0.6rem;
+}
+
+/* navは本文では中央寄せなので、欄の中だけ左に戻す */
+.side-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  text-align: left;
+  margin-top: 0;
+}
+
+.side-nav a,
+.side-nav .here {
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.side-nav .here {
+  opacity: 0.55;
+}
+
+.side-fact {
+  font-size: 0.8rem;
+  margin: 0.25rem 0;
+}
+
+.side-quiet {
+  opacity: 0.7;
+}
+
+.side-word {
+  font-size: 0.95rem;
+  margin: 0.2rem 0;
+}
+
+/* 狭い画面では、欄は本文の下に回る */
+@media (max-width: 700px) {
+  .frame {
+    flex-direction: column;
+  }
+
+  .side {
+    flex: none;
+    border-left: none;
+    padding-left: 0;
+    border-top: 1px solid var(--line-color);
+    padding-top: 1rem;
+  }
+}
+
+/* 押すと別の場所に行くものには、下に線を引く。
+   指で触る画面には「重ねた時だけ線が出る」が無いので、
+   線が無いとただの文字と見分けがつかない */
+.top-nav a,
+nav a,
+.side-nav a,
+.keyword-list a,
+.memo-back a,
+.version-switch a {
+  text-decoration: underline;
 }
 
 /* 狭い画面では、五列のまま文字を少しだけ小さくする */
