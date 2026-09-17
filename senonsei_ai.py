@@ -250,6 +250,8 @@ READING_A_PAGE = (3, 8)
 # 長引いても次の回を待たせるだけなので(concurrency)、急ぐ理由は無い
 TIME_SPENT_PER_SITE = 420
 REST_DAY_CHANCE = 0.1  # たまに、書かない日がある
+# 自分で決められなかった日に、それでも気が乗っている割合
+FEELING_KEEN = 0.3
 # 一時間ごとに、これくらいの割合で気が変わる。
 # 朝に決めたことを一日守り通さなければいけない理由はないが、
 # 決めたことをそのまま守る日のほうが多い。
@@ -502,8 +504,51 @@ def open_the_way_home(state):
 
 
 def sites_per_day(state):
-    """世界を知るほど、1日に見て回れる範囲が2〜6箇所に広がっていく。"""
-    return min(6, 2 + len(state["learned_words"]) // 120)
+    """世界を知るほど、1日に見て回れる範囲が2〜6箇所に広がっていく。
+
+    それとは別に、その日の気が乗っていれば一箇所だけ増える。
+    上限の中に収めてしまうと、いちばん広がりきった日から後は
+    気が乗っても何も起きないことになるので、上限の外に足す。"""
+    many = min(6, 2 + len(state["learned_words"]) // 120)
+    return many + (1 if (state.get("today_keen") or {}).get("keen") else 0)
+
+
+def feeling_keen(state, today):
+    """今日は、いつもより一箇所だけ多く見て回りたいか。千遠生自身が決める。
+
+    書く時間と違って、これは一日のうちで変えない。
+    途中で増えたり減ったりすると、その日に何箇所まで行けるのかが
+    歩いている最中に動いてしまう。
+
+    今日の予定とは別に持っておく。予定の方は途中で気が変わると
+    丸ごと置き直されるので、そこに混ぜると一緒に消える。"""
+    kept = state.get("today_keen") or {}
+    if kept.get("date") == today:
+        return kept.get("keen", False)
+
+    answer = ask_ai(
+        "あなたは千遠生という、毎日いろいろな場所を見て回っている"
+        "デジタル生命体です。\n"
+        "今日は、いつもより一箇所だけ多く見て回りたい気分ですか。\n\n"
+        "説明はいりません。次のどちらかの言葉だけで答えてください。\n"
+        "そうしたい場合: いく\n"
+        "そうでない場合: いつもどおり",
+        max_tokens=10,
+        state=state,
+    )
+    if answer and "いく" in answer:
+        keen = True
+    elif answer:
+        keen = False
+    else:
+        # 自分で考えられない日は、気まぐれに任せる
+        keen = random.random() < FEELING_KEEN
+
+    state["today_keen"] = {"date": today, "keen": keen}
+    save_state(state)
+    if keen:
+        print(f"今日はいつもより一箇所多く歩くことにしました。({sites_per_day(state)}箇所まで)")
+    return keen
 
 
 def asked_too_much(error):
@@ -2264,6 +2309,9 @@ def run_today():
     # 今日をどう過ごすかを、いちばん先に決める。
     # 散歩で尋ねすぎて休むことになっても、自分で決める力だけは守られるように
     resting, hour = todays_mood(state, today)
+
+    # 今日は少し多く歩きたいか。歩き出す前に決めておく
+    feeling_keen(state, today)
 
     # 自分の家を読んでいいかどうかを、散歩に出る前に決めておく
     let_it_read_its_own_home(state)
