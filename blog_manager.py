@@ -11,24 +11,14 @@ NEWS_FILE = "news.json"
 NEWS_PAGE = "shinchaku.html"
 NEWS_ON_TOP = 3  # トップに出す更新情報の数。残りは一覧に全部ある
 NEWS_TITLE_LENGTH = 24  # 一覧に出す見出しの長さ。題が無い時は本文の頭を借りる
-# 同じ中身を、二通りの見た目で出す。
-# どちらで読むかを決めるのは端末ではなく、見ている人。
-# 画面の幅で勝手に切り替えると、同じ場所が端末ごとに別の場所になる
-SP_STYLE_FILE = "sen-sp.css"
-SP_MARK = "-sp"
-PC_VERSION_NAME = "PC版"
-SP_VERSION_NAME = "スマートフォン版"
-PAGES_WITH_TWO_VERSIONS = (
+# このサイトのページ。どれにも同じ欄を置く
+EVERY_PAGE = (
     "index.html",
     "kakodogu.html",
     "memo.html",
     "profile.html",
     "comments.html",
 )
-# 切り替えを出すのはトップだけ。
-# どのページの下にも出ていると、読んでいる邪魔になる。
-# 版を選ぶのは入り口に一度あれば足りる
-WHERE_THE_SWITCH_GOES = ("index.html",)
 # 右の欄。どのページにも同じものを置く。
 # (ページ名, 見出し) の形で、今いるページは道にしない
 WHERE_YOU_CAN_GO = (
@@ -90,73 +80,6 @@ def styled(prefix=""):
     """飾りの紙への道。印を付けて返す。"""
     mark = style_mark()
     return f"{prefix}{STYLE_FILE}?v={mark}" if mark else f"{prefix}{STYLE_FILE}"
-
-
-def styled_sp(prefix=""):
-    """スマートフォン版だけの紙への道。PC版の紙の上に重ねて読ませる。"""
-    mark = mark_of(SP_STYLE_FILE)
-    return f"{prefix}{SP_STYLE_FILE}?v={mark}" if mark else f"{prefix}{SP_STYLE_FILE}"
-
-
-def sp_name(page):
-    """PC版のページ名から、スマートフォン版のページ名を作る。"""
-    return page[: -len(".html")] + SP_MARK + ".html"
-
-
-def version_switch(page, here_is_sp):
-    """ページの一番下に置く、版の切り替え。
-
-    今いる方は文字のまま、もう一方だけが道になる。
-    行き先は同じページのもう一つの版なので、
-    読んでいた場所から動かずに見た目だけが変わる。"""
-    if here_is_sp:
-        sp = f'<span class="here">{SP_VERSION_NAME}</span>'
-        pc = f'<a href="{page}">{PC_VERSION_NAME}</a>'
-    else:
-        sp = f'<a href="{sp_name(page)}">{SP_VERSION_NAME}</a>'
-        pc = f'<span class="here">{PC_VERSION_NAME}</span>'
-    return f'  <div class="version-switch">{pc}｜{sp}</div>\n'
-
-
-def to_sp(page_html, pages=PAGES_WITH_TWO_VERSIONS):
-    """PC版のページを、スマートフォン版に言い換える。
-
-    文章は一字も変えない。変えるのは飾りの紙と、行き先だけ。
-    一度スマートフォン版に入れば、そこから開く先も全部
-    スマートフォン版になる。どちらで読むかを覚えておく仕掛けは
-    要らないし、端末が勝手に決めることもない。"""
-    html = page_html
-    one = f'<link rel="stylesheet" href="{styled()}" />'
-    both = one + f'\n  <link rel="stylesheet" href="{styled_sp()}" />'
-    html = html.replace(one, both)
-    for other in pages:
-        html = html.replace(f'href="{other}"', f'href="{sp_name(other)}"')
-        html = html.replace(f'href="{other}#', f'href="{sp_name(other)}#')
-    return html
-
-
-def put_switch(html, page, here_is_sp):
-    """出来上がったページの一番下に、版の切り替えを差し込む。"""
-    return html.replace("</body>", version_switch(page, here_is_sp) + "</body>", 1)
-
-
-def two_versions(pages=PAGES_WITH_TWO_VERSIONS):
-    """出来上がったページそれぞれに、スマートフォン版を並べて置く。
-
-    ページを作る所には手を入れない。出来上がった紙を読んで、
-    言い換えたものをもう一枚置くだけ。こうしておけば、
-    ページの作り方が変わってもここは壊れない。"""
-    for page in pages:
-        if not os.path.exists(page):
-            continue
-        with open(page, "r", encoding="utf-8") as f:
-            made = f.read()
-        shows_it = page in WHERE_THE_SWITCH_GOES
-        with open(page, "w", encoding="utf-8") as f:
-            f.write(put_switch(made, page, here_is_sp=False) if shows_it else made)
-        with open(sp_name(page), "w", encoding="utf-8") as f:
-            sp = to_sp(made, pages)
-            f.write(put_switch(sp, page, here_is_sp=True) if shows_it else sp)
 
 
 def a_link_or_here(page, here, label):
@@ -269,7 +192,7 @@ def put_side_panel(html, state, here):
     )
 
 
-def side_panels(pages=PAGES_WITH_TWO_VERSIONS):
+def side_panels(pages=EVERY_PAGE):
     """全部のページに右の欄を置く。"""
     state = load_senonsei_state()
     for page in pages:
@@ -548,7 +471,7 @@ def generate_memo_html(keywords, menu_items, articles):
 <head>
   <meta charset="UTF-8" />
   <title>メモ</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=1000" />
   <link rel="stylesheet" href="{styled()}" />
 </head>
 <body>
@@ -710,7 +633,7 @@ def generate_news_list_html(news):
 <head>
 <meta charset="UTF-8" />
 <title>更新情報</title>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=1000" />
 <link rel="stylesheet" href="{styled()}" />
 </head>
 <body>
@@ -752,7 +675,7 @@ def generate_news_entry_html(news, index):
 <head>
 <meta charset="UTF-8" />
 <title>更新情報 {one['date']}</title>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=1000" />
 <link rel="stylesheet" href="{styled()}" />
 </head>
 <body>
@@ -781,8 +704,8 @@ def generate_news_entry_html(news, index):
 
 
 def clear_old_news_pages(keep):
-    """もう無い回のページを片付ける。両方の版とも。"""
-    alive = set(keep) | {sp_name(one) for one in keep}
+    """もう無い回のページを片付ける。"""
+    alive = set(keep)
     head = NEWS_PAGE[: -len(".html")] + "-"
     for name in os.listdir("."):
         if name.startswith(head) and name.endswith(".html") and name not in alive:
@@ -819,7 +742,7 @@ def generate_blog_html(article):
 <head>
 <meta charset="UTF-8" />
 <title>千遠生ブログ {date_str}「{article['title']}」</title>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=1000" />
 <link rel="stylesheet" href="{styled('../')}" />
 </head>
 <body>
@@ -861,7 +784,7 @@ def generate_kakodogu_html(articles):
 <head>
 <meta charset="UTF-8" />
 <title>過去のブログ</title>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=1000" />
 <link rel="stylesheet" href="{styled()}" />
 </head>
 <body>
@@ -981,7 +904,7 @@ def generate_comments_html(comments):
 <head>
   <meta charset="UTF-8" />
   <title>コメント</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=1000" />
   <link rel="stylesheet" href="{styled()}" />
 </head>
 <body>
@@ -1086,7 +1009,7 @@ def generate_index_html(articles, state=None):
 <head>
   <meta charset="UTF-8" />
   <title>千遠生のサイト</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=1000" />
   <link rel="stylesheet" href="{styled()}" />
 </head>
 <body>
@@ -1208,7 +1131,7 @@ def generate_profile_html(state):
 <head>
   <meta charset="UTF-8" />
   <title>プロフィール</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=1000" />
   <link rel="stylesheet" href="{styled()}" />
 </head>
 <body>
@@ -1255,14 +1178,9 @@ def regenerate_pages(articles):
         generate_news_list_html(news)
     elif os.path.exists(NEWS_PAGE):
         os.remove(NEWS_PAGE)
-    for gone in ([] if news else [sp_name(NEWS_PAGE)]):
-        if os.path.exists(gone):
-            os.remove(gone)
     clear_old_news_pages(all_news_pages(news))
 
-    everywhere = PAGES_WITH_TWO_VERSIONS + tuple(all_news_pages(news))
-    side_panels(everywhere)
-    two_versions(everywhere)
+    side_panels(EVERY_PAGE + tuple(all_news_pages(news)))
 
 
 def add_new_article(title, content, date_str=None):
