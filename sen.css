@@ -693,6 +693,30 @@ article p {
   }
 }
 
+/* 一件ぶんのページの下に置く、前と次。
+   端に寄せて、どちらへ動くのかが向きで分かるようにする */
+.step-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 2.5rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--line-color);
+  font-size: 0.85rem;
+}
+
+.step-next {
+  text-align: right;
+}
+
+.step-nav a {
+  text-decoration: underline;
+}
+
+.step-nav .here {
+  opacity: 0.4;
+}
+
 /* 押すと別の場所に行くものには、下に線を引く。
    指で触る画面には「重ねた時だけ線が出る」が無いので、
    線が無いとただの文字と見分けがつかない */
