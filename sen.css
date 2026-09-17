@@ -21,7 +21,7 @@ body {
   -webkit-font-smoothing: none;
   color: var(--main-color);
   margin: 20px auto;
-  max-width: 1000px;
+  max-width: 1200px;
   padding: 0 10px;
   line-height: 1.6;
 }
@@ -596,10 +596,18 @@ article p {
 }
 
 .side {
-  flex: 0 0 14rem;
+  flex: 0 0 13rem;
   border-left: 1px solid var(--line-color);
   padding-left: 1.2rem;
   text-align: left;
+}
+
+/* 左の欄。本文を二つの欄で挟む。線は内側に向ける */
+.side-left {
+  border-left: none;
+  border-right: 1px solid var(--line-color);
+  padding-left: 0;
+  padding-right: 1.2rem;
 }
 
 .side-block {
@@ -670,6 +678,80 @@ article p {
 
 .step-nav .here {
   opacity: 0.4;
+}
+
+
+/* 今月の暦。書いた日に丸、休んだ日に点。
+   生まれた日より前と、まだ来ていない日は薄いまま */
+.koma-head,
+.koma-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.15rem;
+}
+
+.koma-head {
+  font-size: 0.65rem;
+  opacity: 0.55;
+  text-align: center;
+  margin-bottom: 0.2rem;
+}
+
+.koma {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  font-size: 0.6rem;
+  line-height: 1.1;
+  padding: 0.2rem 0;
+  opacity: 0.45;
+}
+
+.koma i {
+  font-style: normal;
+  font-size: 0.7rem;
+  line-height: 1;
+  min-height: 0.7rem;
+}
+
+.koma.wrote {
+  opacity: 1;
+}
+
+.koma.rest {
+  opacity: 0.7;
+}
+
+.koma.today {
+  opacity: 1;
+  font-weight: bold;
+}
+
+.koma.yet {
+  opacity: 0.25;
+}
+
+.koma-note {
+  font-size: 0.7rem;
+  opacity: 0.6;
+  margin: 0.5rem 0 0;
+}
+
+/* この先の育ち。今いる段階だけがはっきり出る */
+.dan {
+  font-size: 0.75rem;
+  margin: 0.25rem 0;
+  opacity: 0.4;
+}
+
+.dan.here {
+  opacity: 1;
+  font-size: 0.85rem;
+}
+
+.dan.here::before {
+  content: "▶ ";
 }
 
 /* 押すと別の場所に行くものには、下に線を引く。

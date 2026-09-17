@@ -2320,6 +2320,9 @@ def run_today():
     # 今どれだけ書けるか。ページを組む側が段階の表を持たずに済むよう、
     # 決めた言葉をそのまま残しておく
     state["how_it_writes_now"] = current_stage(state)[0]
+    # 段階の並びも残しておく。ページを組む側で表を持つと、
+    # 片方だけ書き換えた日にずれる
+    state["how_it_grows"] = [name for _, name, _ in GROWTH_STAGES] + [FULL_STAGE[0]]
 
     # 自分の家に置かれた、自分に宛てられた言葉を読む
     read_what_is_home(state)
