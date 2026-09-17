@@ -365,20 +365,6 @@ article p {
   line-height: 1.6;
 }
 
-@media (max-width: 480px) {
-  .log-layout {
-    flex-direction: column;
-  }
-  .log-list {
-    flex: none;
-    width: 100%;
-    border-right: none;
-    border-bottom: 1px solid var(--line-color);
-    padding-right: 0;
-    padding-bottom: 0.8rem;
-  }
-}
-
 /* キーワードメモ(画面幅に応じて3〜5列くらいに自動で折り返す) */
 .keyword-list {
   list-style: none;
@@ -589,30 +575,10 @@ article p {
   margin: 0.2rem 0 0;
 }
 
-/* ページの一番下に置く、版の切り替え。
-   どちらで読むかは端末ではなく、見ている人が決める */
-.version-switch {
-  margin-top: 2.5rem;
-  padding-top: 0.8rem;
-  border-top: 1px solid var(--line-color);
-  text-align: center;
-  font-size: 0.85rem;
-  opacity: 0.85;
-}
-
-.version-switch a {
-  text-decoration: none;
-  margin: 0 0.4rem;
-}
-
-.version-switch a:hover {
-  text-decoration: underline;
-}
-
-.version-switch .here {
-  margin: 0 0.4rem;
-  opacity: 0.55;
-}
+/* 画面の幅で並びを組み替えることはしない。
+   狭い画面では、同じ並びのまま全体が小さく出る。指で広げて読む。
+   端末ごとに別の場所になるより、どこで開いても同じ場所であるほうがいい。
+   そのために、どのページも「幅1000で表示してほしい」と閲覧機に伝えてある */
 
 /* 本文の列と、その右の欄。
    縦にしか伸びないページは、横に何も無いので平たく見える */
@@ -679,22 +645,6 @@ article p {
 }
 
 /* 狭い画面では、欄は本文の下に回る */
-@media (max-width: 700px) {
-  .frame {
-    flex-direction: column;
-    /* 縦並びになった時、幅は中身なりではなく画面いっぱいに。
-       これが無いと、欄の見出しの線だけが短いまま残る */
-    align-items: stretch;
-  }
-
-  .side {
-    flex: none;
-    border-left: none;
-    padding-left: 0;
-    border-top: 1px solid var(--line-color);
-    padding-top: 1rem;
-  }
-}
 
 /* 一件ぶんのページの下に置く、前と次。
    端に寄せて、どちらへ動くのかが向きで分かるようにする */
@@ -727,19 +677,8 @@ article p {
 nav a,
 .side-nav a,
 .keyword-list a,
-.memo-back a,
-.version-switch a {
+.memo-back a {
   text-decoration: underline;
 }
 
 /* 狭い画面では、五列のまま文字を少しだけ小さくする */
-@media (max-width: 560px) {
-  .keyword-list {
-    gap: 0.7rem 0.4rem;
-  }
-
-  .keyword-list a,
-  .keyword-list li.locked {
-    font-size: 0.95rem;
-  }
-}
