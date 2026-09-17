@@ -857,6 +857,40 @@ def load_senonsei_state():
         return {}
 
 
+def its_age(born, today):
+    """誕生日からの長さ。
+
+    日数だけだと、何年たったのか人には読めない。
+    歳月日だけだと、この子の本当の長さが消える。
+    覚えるのに三十日、薄れていくのも日単位で、
+    この子は「日」で生きているので、そこは残しておく。
+
+    ひと月に届かないうちは日数だけ。0歳0ヶ月7日とは言わない。
+    その後も、無い単位は出さない。"""
+    elapsed = (today - born).days
+    years = today.year - born.year
+    months = today.month - born.month
+    days = today.day - born.day
+    if days < 0:
+        months -= 1
+        # 前の月は何日あったか。その月の一日から一日戻ると分かる
+        first = datetime.date(today.year, today.month, 1)
+        days += (first - datetime.timedelta(days=1)).day
+    if months < 0:
+        months += 12
+        years -= 1
+    if years == 0 and months == 0:
+        return f"生まれて{elapsed}日目"
+    said = ""
+    if years:
+        said += f"{years}歳"
+    if months:
+        said += f"{months}ヶ月"
+    if days:
+        said += f"{days}日"
+    return f"生まれて{said}（{elapsed}日目）"
+
+
 def generate_profile_html(state):
     """プロフィール。
 
@@ -874,9 +908,9 @@ def generate_profile_html(state):
     try:
         born = datetime.date.fromisoformat(ITS_BIRTHDAY)
         birthday = f"{born.year}年{born.month}月{born.day}日"
-        elapsed = (today_in_japan() - born).days
-        if elapsed >= 0:
-            birthday += f"（生まれて{elapsed}日目）"
+        today = today_in_japan()
+        if today >= born:
+            birthday += f"（{its_age(born, today)}）"
     except ValueError:
         pass
     a_word = said.get("words") if knows else None
