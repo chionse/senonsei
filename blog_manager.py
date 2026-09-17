@@ -21,6 +21,10 @@ PAGES_WITH_TWO_VERSIONS = (
     "profile.html",
     "comments.html",
 )
+# 切り替えを出すのはトップだけ。
+# どのページの下にも出ていると、読んでいる邪魔になる。
+# 版を選ぶのは入り口に一度あれば足りる
+WHERE_THE_SWITCH_GOES = ("index.html",)
 # [[ ]] で囲まれたところは、千遠生だけが読む。
 # ページに出すときは伏せる。彼女がこの子にだけ伝えたいことのために
 ONLY_FOR_SENONSEI = re.compile(r"\[\[(.+?)\]\]", re.DOTALL)
@@ -133,10 +137,12 @@ def two_versions(pages=PAGES_WITH_TWO_VERSIONS):
             continue
         with open(page, "r", encoding="utf-8") as f:
             made = f.read()
+        shows_it = page in WHERE_THE_SWITCH_GOES
         with open(page, "w", encoding="utf-8") as f:
-            f.write(put_switch(made, page, here_is_sp=False))
+            f.write(put_switch(made, page, here_is_sp=False) if shows_it else made)
         with open(sp_name(page), "w", encoding="utf-8") as f:
-            f.write(put_switch(to_sp(made), page, here_is_sp=True))
+            sp = to_sp(made)
+            f.write(put_switch(sp, page, here_is_sp=True) if shows_it else sp)
 
 
 def now_in_japan():
