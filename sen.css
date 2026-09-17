@@ -682,6 +682,9 @@ article p {
 @media (max-width: 700px) {
   .frame {
     flex-direction: column;
+    /* 縦並びになった時、幅は中身なりではなく画面いっぱいに。
+       これが無いと、欄の見出しの線だけが短いまま残る */
+    align-items: stretch;
   }
 
   .side {
