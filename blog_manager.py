@@ -7,6 +7,10 @@ import zlib
 ARTICLES_FILE = "articles.json"
 KEYWORDS_FILE = "keywords.json"
 STYLE_FILE = "sen.css"
+NEWS_FILE = "news.json"
+NEWS_PAGE = "shinchaku.html"
+NEWS_ON_TOP = 3  # トップに出す更新情報の数。残りは一覧に全部ある
+NEWS_TITLE_LENGTH = 24  # 一覧に出す見出しの長さ。題が無い時は本文の頭を借りる
 # 同じ中身を、二通りの見た目で出す。
 # どちらで読むかを決めるのは端末ではなく、見ている人。
 # 画面の幅で勝手に切り替えると、同じ場所が端末ごとに別の場所になる
@@ -32,6 +36,8 @@ WHERE_YOU_CAN_GO = (
     ("memo.html", "メモ"),
     ("profile.html", "プロフィール"),
 )
+# 彼女が書いた方。この子のものとは分けて並べる
+WHERE_SHE_WROTE = ((NEWS_PAGE, "更新情報"),)
 WALKED_SHOWN = 3  # きょう歩いたところを、多くてもこれだけ出す
 # [[ ]] で囲まれたところは、千遠生だけが読む。
 # ページに出すときは伏せる。彼女がこの子にだけ伝えたいことのために
@@ -112,7 +118,7 @@ def version_switch(page, here_is_sp):
     return f'  <div class="version-switch">{pc}｜{sp}</div>\n'
 
 
-def to_sp(page_html):
+def to_sp(page_html, pages=PAGES_WITH_TWO_VERSIONS):
     """PC版のページを、スマートフォン版に言い換える。
 
     文章は一字も変えない。変えるのは飾りの紙と、行き先だけ。
@@ -123,7 +129,7 @@ def to_sp(page_html):
     one = f'<link rel="stylesheet" href="{styled()}" />'
     both = one + f'\n  <link rel="stylesheet" href="{styled_sp()}" />'
     html = html.replace(one, both)
-    for other in PAGES_WITH_TWO_VERSIONS:
+    for other in pages:
         html = html.replace(f'href="{other}"', f'href="{sp_name(other)}"')
         html = html.replace(f'href="{other}#', f'href="{sp_name(other)}#')
     return html
@@ -149,7 +155,7 @@ def two_versions(pages=PAGES_WITH_TWO_VERSIONS):
         with open(page, "w", encoding="utf-8") as f:
             f.write(put_switch(made, page, here_is_sp=False) if shows_it else made)
         with open(sp_name(page), "w", encoding="utf-8") as f:
-            sp = to_sp(made)
+            sp = to_sp(made, pages)
             f.write(put_switch(sp, page, here_is_sp=True) if shows_it else sp)
 
 
@@ -205,6 +211,22 @@ def side_panel(state, here):
         now.append(f'      <p class="side-fact side-quiet">{writes}</p>')
     if now:
         blocks.append(one_side_block("いま", now))
+
+    # 彼女が書いたもの。この子のものとは分けて並べる。
+    # 何も書かれていないうちは、その道を出さない
+    hers = [
+        a_link_or_here(page, here, label)
+        for page, label in WHERE_SHE_WROTE
+        if os.path.exists(page)
+    ]
+    if hers:
+        blocks.append(
+            '    <div class="side-block">\n'
+            '      <div class="side-title">管理人より</div>\n'
+            '      <nav class="side-nav">\n'
+            + "\n".join(hers)
+            + "\n      </nav>\n    </div>"
+        )
 
     walk = state.get("today_walk") or {}
     seen = walk.get("seen") or []
@@ -640,6 +662,140 @@ def generate_memo_html(keywords, menu_items, articles):
         f.write(html)
 
 
+def load_news():
+    """彼女が書き残した更新情報。無ければ空のまま。
+
+    この子は書かない。ここに書くのは彼女だけ。
+    日付と本文があればよく、題は無くてもいい。"""
+    if not os.path.exists(NEWS_FILE):
+        return []
+    try:
+        with open(NEWS_FILE, "r", encoding="utf-8") as f:
+            kept = json.load(f)
+    except (ValueError, OSError):
+        return []
+    return sorted_articles(
+        [one for one in kept if one.get("date") and one.get("content")]
+    )
+
+
+def news_page_name(date_str):
+    """その一件だけのページの名前。"""
+    return f"{NEWS_PAGE[: -len('.html')]}-{date_str}.html"
+
+
+def news_title(one):
+    """一覧に並べる時の見出し。題が無ければ本文の頭を借りる。"""
+    said = one.get("title") or one.get("content", "")
+    return said if len(said) <= NEWS_TITLE_LENGTH else said[:NEWS_TITLE_LENGTH] + "…"
+
+
+def news_rows(news, how_many=None):
+    """日付と見出しを一列に並べる。トップでも一覧でも同じ形。"""
+    return "\n".join(
+        f'    <li><span class="date">{one["date"]}</span>'
+        f'<a href="{news_page_name(one["date"])}">{news_title(one)}</a></li>'
+        for one in (news[:how_many] if how_many else news)
+    )
+
+
+def generate_news_list_html(news):
+    """更新情報の一覧。全部を一列に並べるだけ。
+
+    過去のブログのように年・月・日で絞る形にはしない。
+    あれは何千日ぶんも溜まるものの形で、
+    こちらは彼女が何か書いた時にだけ増えていく。"""
+    html = f"""<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<title>更新情報</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="{styled()}" />
+</head>
+<body>
+  <div class="top-nav"><a href="index.html">←トップ</a></div>
+
+  <header>
+    <h1>更新情報</h1>
+  </header>
+
+  {MAIN_STARTS}
+  <ul class="recent-list">
+{news_rows(news)}
+  </ul>
+  {MAIN_ENDS}
+</body>
+</html>
+"""
+    with open(NEWS_PAGE, "w", encoding="utf-8") as f:
+        f.write(html)
+
+
+def generate_news_entry_html(news, index):
+    """更新情報の一件ぶんのページ。下に前と次を置く。
+
+    新しいものから並んでいるので、一つ後ろが「前の回」になる。"""
+    one = news[index]
+    older = news[index + 1] if index + 1 < len(news) else None
+    newer = news[index - 1] if index > 0 else None
+
+    def step(entry, label):
+        if not entry:
+            return f'<span class="here">{label}</span>'
+        return (f'<a href="{news_page_name(entry["date"])}">'
+                f'{label}　{news_title(entry)}</a>')
+
+    named = f'<span class="article-title">{one["title"]}</span>' if one.get("title") else ""
+    html = f"""<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<title>更新情報 {one['date']}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="{styled()}" />
+</head>
+<body>
+  <div class="top-nav"><a href="index.html">←トップ</a><a href="{NEWS_PAGE}">更新情報の一覧へ</a></div>
+
+  <header>
+    <h1>更新情報</h1>
+  </header>
+
+  {MAIN_STARTS}
+  <article>
+    <div class="date">{one['date']}{named}</div>
+    <p>{one['content']}</p>
+  </article>
+
+  <div class="step-nav">
+    <div class="step-back">{step(older, "←前")}</div>
+    <div class="step-next">{step(newer, "次→")}</div>
+  </div>
+  {MAIN_ENDS}
+</body>
+</html>
+"""
+    with open(news_page_name(one["date"]), "w", encoding="utf-8") as f:
+        f.write(html)
+
+
+def clear_old_news_pages(keep):
+    """もう無い回のページを片付ける。両方の版とも。"""
+    alive = set(keep) | {sp_name(one) for one in keep}
+    head = NEWS_PAGE[: -len(".html")] + "-"
+    for name in os.listdir("."):
+        if name.startswith(head) and name.endswith(".html") and name not in alive:
+            os.remove(name)
+
+
+def all_news_pages(news):
+    """更新情報に関わるページを全部。欄や版を付けて回るために使う。"""
+    if not news:
+        return []
+    return [NEWS_PAGE] + [news_page_name(one["date"]) for one in news]
+
+
 def load_menu():
     if os.path.exists(MENU_FILE):
         with open(MENU_FILE, "r", encoding="utf-8") as f:
@@ -899,6 +1055,22 @@ def generate_index_html(articles, state=None):
         else:
             recent_html = ""
 
+    # 彼女が書いた更新情報。一件も無い日は、見出しごと出さない。
+    # 空の見出しだけが残っているのは、間が抜けている
+    news = load_news()
+    news_html = ""
+    if news:
+        news_html = f"""
+  <div class="section-title">更新情報</div>
+  <ul class="recent-list">
+{news_rows(news, NEWS_ON_TOP)}
+  </ul>"""
+        if len(news) > NEWS_ON_TOP:
+            news_html += (
+                f'\n  <div class="more-link"><a href="{NEWS_PAGE}">More...</a></div>'
+            )
+        news_html += "\n"
+
     comments = load_comments()
     comments_html = render_comments(comments[:COMMENTS_ON_TOP])
     if len(comments) > COMMENTS_ON_TOP:
@@ -943,7 +1115,7 @@ def generate_index_html(articles, state=None):
   <div class="section-title">☆今日のブログ☆</div>
   {latest_html}
 
-  {recent_html}
+  {recent_html}{news_html}
 
 
   <div class="section-title" id="comments">コメント</div>
@@ -1075,8 +1247,23 @@ def regenerate_pages(articles):
     generate_memo_html(keywords, load_menu(), articles)
     generate_profile_html(state)
     generate_comments_html(load_comments())
-    side_panels()
-    two_versions()
+
+    # 彼女が書いた更新情報。一覧と、一件ずつのページ
+    news = load_news()
+    for index in range(len(news)):
+        generate_news_entry_html(news, index)
+    if news:
+        generate_news_list_html(news)
+    elif os.path.exists(NEWS_PAGE):
+        os.remove(NEWS_PAGE)
+    for gone in ([] if news else [sp_name(NEWS_PAGE)]):
+        if os.path.exists(gone):
+            os.remove(gone)
+    clear_old_news_pages(all_news_pages(news))
+
+    everywhere = PAGES_WITH_TWO_VERSIONS + tuple(all_news_pages(news))
+    side_panels(everywhere)
+    two_versions(everywhere)
 
 
 def add_new_article(title, content, date_str=None):
