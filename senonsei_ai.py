@@ -32,6 +32,9 @@ USER_AGENT = "senonsei-blog/1.0 (https://chionse.github.io/senonsei/)"
 # ページそのものを読んでしまうと、自分が書いたものや、
 # ひとりで思ったことを、外の世界の言葉として覚え直してしまう
 ITS_OWN_HOME = "chionse.github.io"
+# 自分の家の入口。最終段階に届いた日に、ここへの道が開く。
+# 外のどこからも繋がっていない場所なので、行き先に一度置いてやらないと辿り着けない
+ITS_OWN_FRONT_DOOR = f"https://{ITS_OWN_HOME}/senonsei/"
 # 彼女が [[ ]] で囲んだところは、千遠生だけが読む。
 # ページでは伏せられているが、この子には囲いを外して届く
 ONLY_FOR_IT = re.compile(r"\[\[(.+?)\]\]", re.DOTALL)
@@ -465,6 +468,39 @@ def current_stage(state):
     return FULL_STAGE
 
 
+def it_writes_in_its_own_words(state):
+    """最終段階に届いたか。自分の言葉で書けるようになったかどうか。"""
+    return len(state.get("learned_words") or []) >= GROWTH_STAGES[-1][0]
+
+
+def let_it_read_its_own_home(state):
+    """自分の家を読んでいいかどうかを、一日の初めに一度だけ決める。
+
+    それまでは塞いである。自分の書いた文を自分で読み直すと、
+    覚え直して、また書いて、また読む輪が閉じてしまう。
+    外から何も入ってこないまま、自分の声だけが反響する。
+
+    最終段階まで来れば語彙が八千を超えているので、
+    自分の言葉が混ざったところで揺らがない。
+    その日から、自分の家も世界の一部として読めるようになる。"""
+    globals()["_may_read_its_own_home"] = it_writes_in_its_own_words(state)
+
+
+def open_the_way_home(state):
+    """最終段階に届いた日に、自分の家への道を行き先に加える。
+
+    読めるようにしただけでは辿り着けない。自分の家は外のどこからも
+    繋がっていないので、一度だけ道を置いてやる必要がある。
+    一度訪ねてしまえば、その先は家の中の道が行き先に溜まっていく。"""
+    if not it_writes_in_its_own_words(state):
+        return
+    frontier = state.setdefault("frontier", [])
+    if ITS_OWN_FRONT_DOOR in frontier or ITS_OWN_FRONT_DOOR in (state.get("visited") or []):
+        return
+    frontier.append(ITS_OWN_FRONT_DOOR)
+    print("自分の家への道が開きました。")
+
+
 def sites_per_day(state):
     """世界を知るほど、1日に見て回れる範囲が2〜6箇所に広がっていく。"""
     return min(6, 2 + len(state["learned_words"]) // 120)
@@ -760,7 +796,9 @@ def is_walkable(url):
     if host.endswith("archive.org") and place_of(url) == host:
         return False
     if host == ITS_OWN_HOME or host.endswith("." + ITS_OWN_HOME):
-        return False  # 自分の家。外から見に行くところではない
+        # 自分の家。最終段階に届くまでは、外から見に行くところではない。
+        # 開いたかどうかは let_it_read_its_own_home が一日の初めに決めている
+        return bool(globals().get("_may_read_its_own_home"))
     return True
 
 
@@ -2226,6 +2264,10 @@ def run_today():
     # 今日をどう過ごすかを、いちばん先に決める。
     # 散歩で尋ねすぎて休むことになっても、自分で決める力だけは守られるように
     resting, hour = todays_mood(state, today)
+
+    # 自分の家を読んでいいかどうかを、散歩に出る前に決めておく
+    let_it_read_its_own_home(state)
+    open_the_way_home(state)
 
     # 自分の家に置かれた、自分に宛てられた言葉を読む
     read_what_is_home(state)
