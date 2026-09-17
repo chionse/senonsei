@@ -172,6 +172,112 @@ MAIN_STARTS = "<!-- ここから本文の列 -->"
 MAIN_ENDS = "<!-- ここまで本文の列 -->"
 
 
+A_PLACE_IN_A_PATH = re.compile(r"https?://([^/]+)")
+
+
+def days_it_wrote(articles):
+    """書いた日ぜんぶ。"""
+    return {one["date"] for one in articles}
+
+
+def this_months_days(articles):
+    """今月の暦。生まれた日から今日までが埋まっていく。
+
+    書いた日には丸を、書かないと決めた日には点を置く。
+    今日はまだ書いていないかもしれないので、何も置かない。"""
+    today = today_in_japan()
+    try:
+        born = datetime.date.fromisoformat(ITS_BIRTHDAY)
+    except ValueError:
+        return ""
+    wrote = days_it_wrote(articles)
+    first = datetime.date(today.year, today.month, 1)
+    if today.month == 12:
+        after = datetime.date(today.year + 1, 1, 1)
+    else:
+        after = datetime.date(today.year, today.month + 1, 1)
+    last = (after - datetime.timedelta(days=1)).day
+
+    # 日曜から始める。月曜が0の数え方なので、日曜を0に直す
+    komas = ['<span class="koma"></span>'] * ((first.weekday() + 1) % 7)
+    for number in range(1, last + 1):
+        day = datetime.date(today.year, today.month, number)
+        if day < born or day > today:
+            komas.append(f'<span class="koma yet">{number}<i></i></span>')
+        elif day.isoformat() in wrote:
+            komas.append(f'<span class="koma wrote">{number}<i>○</i></span>')
+        elif day == today:
+            komas.append(f'<span class="koma today">{number}<i></i></span>')
+        else:
+            komas.append(f'<span class="koma rest">{number}<i>·</i></span>')
+
+    head = "".join(f"<span>{one}</span>" for one in "日月火水木金土")
+    return (
+        '      <div class="koma-head">' + head + "</div>\n"
+        '      <div class="koma-grid">' + "".join(komas) + "</div>\n"
+        '      <p class="koma-note">○ 書いた日　· 休んだ日</p>'
+    )
+
+
+def where_it_will_go(state, how_many=6):
+    """これから行くつもりの場所。同じ持ち主は一度だけ。"""
+    places = []
+    for one in (state.get("frontier") or []):
+        found = A_PLACE_IN_A_PATH.match(one or "")
+        if found and found.group(1) not in places:
+            places.append(found.group(1))
+    rows = [f'      <p class="side-fact side-quiet">{one}</p>' for one in places[:how_many]]
+    left = len(state.get("frontier") or []) - how_many
+    if left > 0:
+        rows.append(f'      <p class="side-fact side-quiet">ほか {left} 箇所</p>')
+    return rows
+
+
+def how_it_grows(state):
+    """この先どう書けるようになっていくか。今いる段階に印を付ける。
+
+    段階の表は散歩する側が持っている。ここはそれを描くだけ。"""
+    ladder = state.get("how_it_grows") or []
+    now = state.get("how_it_writes_now")
+    if not ladder:
+        return []
+    return [
+        f'      <p class="dan{" here" if one == now else ""}">{one}</p>'
+        for one in ladder
+    ]
+
+
+def side_panel_left(state, articles):
+    """本文の左に置く欄。積み上がっていくものを出す。
+
+    右の欄が今日のことなら、こちらは育ちのほう。
+    「きょう歩いたところ」が過去で、「これから行くつもりの場所」が未来。"""
+    state = state or {}
+    blocks = []
+
+    koma = this_months_days(articles)
+    if koma:
+        blocks.append(
+            '    <div class="side-block">\n'
+            '      <div class="side-title">書いた日</div>\n'
+            + koma
+            + "\n    </div>"
+        )
+
+    going = where_it_will_go(state)
+    if going:
+        blocks.append(one_side_block("これから行くつもりの場所", going))
+
+    ladder = how_it_grows(state)
+    if ladder:
+        blocks.append(one_side_block("この先の育ち", ladder))
+
+    if not blocks:
+        return ""
+    return ('  <aside class="side side-left">\n'
+            + "\n\n".join(blocks) + "\n  </aside>\n\n")
+
+
 def put_side_panel(html, state, here):
     """印で囲まれたところを本文の列にして、その隣に欄を置く。
 
@@ -184,7 +290,11 @@ def put_side_panel(html, state, here):
     if 'class="side"' in html:
         return html  # 二度挟まない
     return html.replace(
-        MAIN_STARTS, '<div class="frame">\n  <div class="main">', 1
+        MAIN_STARTS,
+        '<div class="frame">\n'
+        + side_panel_left(state, load_articles())
+        + '  <div class="main">',
+        1,
     ).replace(
         MAIN_ENDS,
         "</div>\n\n" + side_panel(state, here) + "  </div>",
@@ -471,7 +581,7 @@ def generate_memo_html(keywords, menu_items, articles):
 <head>
   <meta charset="UTF-8" />
   <title>メモ</title>
-  <meta name="viewport" content="width=1000" />
+  <meta name="viewport" content="width=1200" />
   <link rel="stylesheet" href="{styled()}" />
 </head>
 <body>
@@ -633,7 +743,7 @@ def generate_news_list_html(news):
 <head>
 <meta charset="UTF-8" />
 <title>更新情報</title>
-<meta name="viewport" content="width=1000" />
+<meta name="viewport" content="width=1200" />
 <link rel="stylesheet" href="{styled()}" />
 </head>
 <body>
@@ -675,7 +785,7 @@ def generate_news_entry_html(news, index):
 <head>
 <meta charset="UTF-8" />
 <title>更新情報 {one['date']}</title>
-<meta name="viewport" content="width=1000" />
+<meta name="viewport" content="width=1200" />
 <link rel="stylesheet" href="{styled()}" />
 </head>
 <body>
@@ -742,7 +852,7 @@ def generate_blog_html(article):
 <head>
 <meta charset="UTF-8" />
 <title>千遠生ブログ {date_str}「{article['title']}」</title>
-<meta name="viewport" content="width=1000" />
+<meta name="viewport" content="width=1200" />
 <link rel="stylesheet" href="{styled('../')}" />
 </head>
 <body>
@@ -784,7 +894,7 @@ def generate_kakodogu_html(articles):
 <head>
 <meta charset="UTF-8" />
 <title>過去のブログ</title>
-<meta name="viewport" content="width=1000" />
+<meta name="viewport" content="width=1200" />
 <link rel="stylesheet" href="{styled()}" />
 </head>
 <body>
@@ -904,7 +1014,7 @@ def generate_comments_html(comments):
 <head>
   <meta charset="UTF-8" />
   <title>コメント</title>
-  <meta name="viewport" content="width=1000" />
+  <meta name="viewport" content="width=1200" />
   <link rel="stylesheet" href="{styled()}" />
 </head>
 <body>
@@ -1009,7 +1119,7 @@ def generate_index_html(articles, state=None):
 <head>
   <meta charset="UTF-8" />
   <title>千遠生のサイト</title>
-  <meta name="viewport" content="width=1000" />
+  <meta name="viewport" content="width=1200" />
   <link rel="stylesheet" href="{styled()}" />
 </head>
 <body>
@@ -1131,7 +1241,7 @@ def generate_profile_html(state):
 <head>
   <meta charset="UTF-8" />
   <title>プロフィール</title>
-  <meta name="viewport" content="width=1000" />
+  <meta name="viewport" content="width=1200" />
   <link rel="stylesheet" href="{styled()}" />
 </head>
 <body>
