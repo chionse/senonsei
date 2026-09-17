@@ -275,8 +275,14 @@ article p {
   padding: 0.5rem;
 }
 
+/* 書いた量に合わせて枠が伸びる。
+   効かない閲覧機では、ただ伸びないだけで何も壊れない。
+   上限を置かないと長い文で送信の釦が画面の遥か下へ行ってしまうので、
+   そこまで来たら中で送るようにする */
 .comment-form textarea {
+  field-sizing: content;
   min-height: 5rem;
+  max-height: 18rem;
   resize: vertical;
 }
 
