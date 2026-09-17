@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <title>千遠生のサイト</title>
   <meta name="viewport" content="width=1000" />
-  <link rel="stylesheet" href="sen.css?v=1453342499" />
+  <link rel="stylesheet" href="sen.css?v=3382203785" />
 </head>
 <body>
   <header>
@@ -44,6 +44,18 @@
     <li><span class="date">2026-09-12</span><a href="kakodogu.html#entry-2026-09-12">も</a></li>
   </ul>
   <div class="more-link"><a href="kakodogu.html">More...</a></div>
+
+  <div class="section-title" id="comments">コメント</div>
+
+  <form class="comment-form" method="POST" action="https://senonsei-comments.chitomatsu.workers.dev/">
+    <input type="text" name="name" placeholder="名前" required />
+    <textarea name="message" placeholder="コメント" required></textarea>
+    <button type="submit">送信</button>
+  </form>
+
+  <div class="comment-list">
+  <p>まだコメントはありません。</p>
+  </div>
   </div>
 
   <aside class="side">
@@ -74,18 +86,6 @@
       <p class="side-word">もう一つのオリンピック</p>
     </div>
   </aside>
-  </div>
-
-  <div class="section-title" id="comments">コメント</div>
-
-  <form class="comment-form" method="POST" action="https://senonsei-comments.chitomatsu.workers.dev/">
-    <input type="text" name="name" placeholder="名前" required />
-    <textarea name="message" placeholder="コメント" required></textarea>
-    <button type="submit">送信</button>
-  </form>
-
-  <div class="comment-list">
-  <p>まだコメントはありません。</p>
   </div>
 </body>
 </html>
