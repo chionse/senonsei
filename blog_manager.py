@@ -59,6 +59,36 @@ COMMENTS_ON_TOP = 5
 KEYWORDS_PER_PAGE = 50
 
 
+# (この語彙数までが対象, その時点でできること, 書ける文字数の上限)
+#
+# 数字は当てずっぽうではなく、本物のページを40サイト集めて
+# 「毎日2箇所ずつ見て回る千遠生」を2年ぶん計算して引いた。
+# 右のコメントは、その計算でその段階に入るおおよその時期。
+#
+# ページに出すのも、書ける長さを決めるのも同じ表なので、
+# ここ一箇所だけに置いて、散歩する側はこれを見に来る
+GROWTH_STAGES = [
+    (1, "見た文字をぽつんと置くだけ", 3),  # 〜1ヶ月。まだ一つも言葉を持たない
+    (150, "見た文字をなんとなく繋げてみる", 5),  # 1ヶ月半
+    (400, "覚えた言葉を1つ書ける", 6),  # 2ヶ月
+    (1000, "覚えた言葉が並び始める", 15),  # 3ヶ月
+    (2600, "文のようなものに踏み出す", 25),  # 5ヶ月
+    (4000, "たどたどしい短い文", 40),  # 7ヶ月
+    (5500, "少しずつ文になっていく", 60),  # 10ヶ月
+    (8000, "簡単な文", 100),  # 1年1ヶ月
+]
+FULL_STAGE = ("自分の言葉で書ける", 200)
+
+
+def current_stage(state):
+    """今どれだけ書けるかは、覚えている言葉の数で決まる。"""
+    vocabulary = len((state or {}).get("learned_words") or [])
+    for limit, description, max_length in GROWTH_STAGES:
+        if vocabulary < limit:
+            return description, max_length
+    return FULL_STAGE
+
+
 def mark_of(path):
     """その紙の、今の中身を表す短い印。
 
@@ -231,11 +261,10 @@ def where_it_will_go(state):
 def how_it_grows(state):
     """この先どう書けるようになっていくか。今いる段階に印を付ける。
 
-    段階の表は散歩する側が持っている。ここはそれを描くだけ。"""
-    ladder = state.get("how_it_grows") or []
-    now = state.get("how_it_writes_now")
-    if not ladder:
-        return []
+    表を直接読む。記録に写しておく形にしていた時は、
+    名前を直しても次の散歩まで古いままだった。"""
+    ladder = [name for _, name, _ in GROWTH_STAGES] + [FULL_STAGE[0]]
+    now = current_stage(state)[0]
     return [
         f'      <p class="dan{" here" if one == now else ""}">{one}</p>'
         for one in ladder

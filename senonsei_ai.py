@@ -359,23 +359,15 @@ AN_ENDING = re.compile(r"[。．！？!?…]+")
 # 文の切れ目。タグを消すと別々の見出しが空白で隣り合うので、空白でも切る
 A_BREAK = re.compile(r"[\s。．、，！？!?・…]+")
 
-# (この語彙数までが対象, その時点でできること, 書ける文字数の上限)
-# (この語彙数までが対象, その時点でできること, 書ける文字数の上限)
+# 育ちの段階の表は、ページを組む側(blog_manager)が持っている。
+# ページに出すのも、書ける長さを決めるのも同じ表なので、
+# 二つ持つと片方だけ直した日にずれる。
 #
-# 数字は当てずっぽうではなく、本物のページを40サイト集めて
-# 「毎日2箇所ずつ見て回る千遠生」を2年ぶん計算して引いた。
-# 右のコメントは、その計算でその段階に入るおおよその時期。
-GROWTH_STAGES = [
-    (1, "見た文字をぽつんと置くだけ", 3),  # 〜1ヶ月。まだ一つも言葉を持たない
-    (150, "見た文字をなんとなく繋げてみる", 5),  # 1ヶ月半
-    (400, "覚えた言葉を1つ書ける", 6),  # 2ヶ月
-    (1000, "覚えた言葉が並び始める", 15),  # 3ヶ月
-    (2600, "文のようなものに踏み出す", 25),  # 5ヶ月
-    (4000, "たどたどしい短い文", 40),  # 7ヶ月
-    (5500, "少しずつ文になっていく", 60),  # 10ヶ月
-    (8000, "簡単な文", 100),  # 1年1ヶ月
-]
-FULL_STAGE = ("自分の言葉で書ける", 200)
+# 持ち主をあちらにしたのは、名前を直した時にその場でページへ出したいため。
+# こちら側が記録に書き残す形にしていた時は、次の散歩まで古い名前が
+# 残り続けた。
+GROWTH_STAGES = blog_manager.GROWTH_STAGES
+FULL_STAGE = blog_manager.FULL_STAGE
 PARTICLES = ["は", "が", "を", "に", "の", "と", "で"]
 
 
@@ -467,11 +459,7 @@ def elapsed_days(state):
 
 def current_stage(state):
     """今どれだけ書けるかは、覚えている言葉の数で決まる。"""
-    vocabulary = len(state["learned_words"])
-    for limit, description, max_length in GROWTH_STAGES:
-        if vocabulary < limit:
-            return description, max_length
-    return FULL_STAGE
+    return blog_manager.current_stage(state)
 
 
 def it_writes_in_its_own_words(state):
@@ -2355,16 +2343,13 @@ def run_today():
     # 今日は少し多く歩きたいか。歩き出す前に決めておく
     feeling_keen(state, today)
 
+    # 段階の表はページを組む側に移したので、写しはもう要らない
+    state.pop("how_it_grows", None)
+    state.pop("how_it_writes_now", None)
+
     # 自分の家を読んでいいかどうかを、散歩に出る前に決めておく
     let_it_read_its_own_home(state)
     open_the_way_home(state)
-
-    # 今どれだけ書けるか。ページを組む側が段階の表を持たずに済むよう、
-    # 決めた言葉をそのまま残しておく
-    state["how_it_writes_now"] = current_stage(state)[0]
-    # 段階の並びも残しておく。ページを組む側で表を持つと、
-    # 片方だけ書き換えた日にずれる
-    state["how_it_grows"] = [name for _, name, _ in GROWTH_STAGES] + [FULL_STAGE[0]]
 
     # これから行く場所も、名前に直してから残す
 
