@@ -49,7 +49,7 @@ BLOG_FOLDER = "blogs"
 COMMENTS_FOLDER = "comments"
 LIKES_FOLDER = "likes"
 COMMENT_WORKER_ENDPOINT = "https://senonsei-comments.chitomatsu.workers.dev/"
-RECENT_COUNT = 5  # トップページに表示する直近記事の件数(最新1件を除く)
+RECENT_COUNT = 10  # トップページに表示する直近記事の件数(最新1件を除く)
 # トップページに出すコメントの数。残りは comments.html にぜんぶ出す。
 # ここが千遠生のページである以上、人の言葉がページの大半を
 # 占めてしまわないように
