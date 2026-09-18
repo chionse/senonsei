@@ -341,41 +341,37 @@ article p {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  position: relative;
 }
 
-/* 過去のブログでは、♡を枠の左下の角に置く。
-   縦の線と下の線の交わるところに寄せておくと、
-   数が増えても♡の位置は動かず、数だけが右へ伸びる */
-.log-view .iine {
-  position: absolute;
-  left: -1.5rem;
-  bottom: -0.7rem;
-  margin: 0;
-}
-
+/* 記事は上から左揃えで積む。中央揃えだと、長い文になった日に
+   行の頭が揃わなくなって読めない。幅の上限は、一行が長くなりすぎて
+   目が戻る場所を見失わないように */
 .log-view .entry {
-  padding: 1.5rem 2rem;
-  text-align: center;
-  min-width: 60%;
+  padding: 0.5rem 0 0;
+  text-align: left;
+  min-width: 0;
+  max-width: 26rem;
+  margin-right: auto;
 }
 
 .log-view .entry-title {
   font-size: 1.5rem;
   border-bottom: 1px solid var(--main-color);
   padding-bottom: 0.2rem;
-  margin: 0 auto;
+  margin: 0;
   width: fit-content;
 }
 
+/* いちばん長い文字列が日時だと、いちばんどうでもいいものが
+   いちばん目立つことになる。小さく、薄くしておく */
 .log-view .entry .date {
-  font-size: 0.8rem;
-  opacity: 0.8;
-  margin: 0.6rem 0 1.4rem;
+  font-size: 0.7rem;
+  opacity: 0.5;
+  margin: 0.5rem 0 1.6rem;
 }
 
 .log-view .entry p {
-  line-height: 1.6;
+  line-height: 1.9;
 }
 
 /* キーワードメモ(画面幅に応じて3〜5列くらいに自動で折り返す) */
@@ -768,25 +764,24 @@ article p {
 }
 
 /* 一つひとつのブログに付けられる、いいね。
-   記事の右下に小さく。主張しない。
+   日時の隣に、同じ小ささで並べる。押す釦というより、
+   その記事に付いている記録として置いておく。
    一人が一つの記事に一度だけで、押した後は塗りつぶしになる */
 .iine {
-  margin-top: 1.2rem;
-  text-align: left;
-  font-size: 0.75rem;
-  line-height: 1;
+  display: inline;
+  margin-left: 0.9rem;
 }
 
 .iine button {
   font-family: inherit;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   line-height: 1;
   color: var(--main-color);
   background: none;
   border: none;
   padding: 0;
   cursor: pointer;
-  opacity: 0.45;
+  opacity: 0.6;
 }
 
 .iine button:hover:not(:disabled) {
@@ -795,12 +790,15 @@ article p {
 
 .iine button:disabled {
   cursor: default;
-  opacity: 0.75;
+  opacity: 0.85;
 }
 
+/* 数の場所を先に取っておく。増えても♡が動かないように */
 .iine .kazu {
+  display: inline-block;
+  min-width: 2.5ch;
   margin-left: 0.3rem;
-  opacity: 0.5;
+  text-align: left;
   font-variant-numeric: tabular-nums;
 }
 

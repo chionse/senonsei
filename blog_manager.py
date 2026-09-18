@@ -940,9 +940,8 @@ def generate_blog_html(article):
   <h1>千遠生のブログ</h1>
 </header>
 <article>
-  <div class="date">{date_str} {article.get('time', '')}<span class="article-title">{article['title']}</span></div>
+  <div class="date">{date_str} {article.get('time', '')}<span class="article-title">{article['title']}</span>{iine_html(date_str)}</div>
   <p>{article['content']}</p>
-  {iine_html(date_str)}
 </article>
 </body>
 </html>
@@ -963,9 +962,8 @@ def generate_kakodogu_html(articles):
         hidden = "" if index == 0 else " hidden"
         entries_html += f"""    <div class="entry" id="entry-{art['date']}"{hidden}>
       <div class="entry-title">{art['title']}</div>
-      <div class="date">{art['date']} {art.get('time', '')}</div>
+      <div class="date">{art['date']} {art.get('time', '')}{iine_html(art['date'], likes)}</div>
       <p>{art['content']}</p>
-      {iine_html(art['date'], likes)}
     </div>
 """
     if not ordered:
@@ -1134,9 +1132,8 @@ def generate_index_html(articles, state=None):
         if wrote_today:
             latest = ordered[0]
             latest_html = f"""<article>
-    <div class="date">{latest['date']} {latest.get('time', '')}<span class="article-title">{latest['title']}</span></div>
+    <div class="date">{latest['date']} {latest.get('time', '')}<span class="article-title">{latest['title']}</span>{iine_html(latest['date'])}</div>
     <p>{latest['content']}</p>
-    {iine_html(latest['date'])}
   </article>"""
         elif plan.get("date") == today_in_japan().isoformat() and plan.get("resting"):
             # 今日は書かないと、この子自身が決めた日
