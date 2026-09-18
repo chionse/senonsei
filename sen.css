@@ -774,7 +774,9 @@ article p {
 
 .iine button {
   font-family: inherit;
-  font-size: 0.85rem;
+  /* 隣の数と同じ大きさにする。♡だけ大きいと、
+     下げても上げても目線が揃わない */
+  font-size: inherit;
   line-height: 1;
   color: var(--main-color);
   background: none;
@@ -782,10 +784,6 @@ article p {
   padding: 0;
   cursor: pointer;
   opacity: 0.6;
-  /* ♡は字面が上に寄っているので、少しだけ下げて日時と目線を揃える。
-     数は動かさない */
-  position: relative;
-  top: 1mm;
 }
 
 .iine button:hover:not(:disabled) {
