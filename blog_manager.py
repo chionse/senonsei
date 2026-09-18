@@ -242,13 +242,22 @@ def how_it_grows(state):
     ]
 
 
-def side_panel_left(state, articles):
+A_WAY_BACK = re.compile(r'[ \t]*<div class="top-nav">.*?</div>\s*\n', re.DOTALL)
+
+
+def side_panel_left(state, articles, way_back=""):
     """本文の左に置く欄。積み上がっていくものを出す。
 
     右の欄が今日のことなら、こちらは育ちのほう。
-    「きょう歩いたところ」が過去で、「これから行くつもりの場所」が未来。"""
+    「きょう歩いたところ」が過去で、「これから行くつもりの場所」が未来。
+
+    帰り道(←トップ)もここの一番上に置く。ページの隅に一つだけ
+    浮いているより、他の道と同じ列に並んでいるほうが探しやすい。"""
     state = state or {}
     blocks = []
+
+    if way_back:
+        blocks.append('    <div class="side-block side-back">\n' + way_back.rstrip() + "\n    </div>")
 
     koma = this_months_days(articles)
     if koma:
@@ -284,10 +293,17 @@ def put_side_panel(html, state, here):
         return html
     if 'class="side"' in html:
         return html  # 二度挟まない
+    # 帰り道を元の場所から抜いて、左の欄の一番上へ移す
+    found = A_WAY_BACK.search(html)
+    way_back = ""
+    if found:
+        way_back = found.group(0).strip()
+        html = html[: found.start()] + html[found.end():]
+
     return html.replace(
         MAIN_STARTS,
         '<div class="frame">\n'
-        + side_panel_left(state, load_articles())
+        + side_panel_left(state, load_articles(), way_back)
         + '  <div class="main">',
         1,
     ).replace(

@@ -611,6 +611,21 @@ article p {
   text-align: left;
 }
 
+/* 左の欄の一番上に置く帰り道。
+   上の帯の中ではなくなったので、線も左右の突き放しも要らない */
+.side-back .top-nav {
+  display: block;
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 0;
+  font-size: 0.85rem;
+}
+
+.side-back .top-nav a {
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
 /* 左の欄。本文を二つの欄で挟む。線は内側に向ける */
 .side-left {
   border-left: none;
