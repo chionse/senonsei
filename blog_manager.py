@@ -172,9 +172,6 @@ MAIN_STARTS = "<!-- ここから本文の列 -->"
 MAIN_ENDS = "<!-- ここまで本文の列 -->"
 
 
-A_PLACE_IN_A_PATH = re.compile(r"https?://([^/]+)")
-
-
 def days_it_wrote(articles):
     """書いた日ぜんぶ。"""
     return {one["date"] for one in articles}
@@ -219,16 +216,16 @@ def this_months_days(articles):
     )
 
 
-def where_it_will_go(state, how_many=6):
-    """これから行くつもりの場所。同じ持ち主は一度だけ。"""
-    places = []
-    for one in (state.get("frontier") or []):
-        found = A_PLACE_IN_A_PATH.match(one or "")
-        if found and found.group(1) not in places:
-            places.append(found.group(1))
-    rows = [f'      <p class="side-fact side-quiet">{one}</p>' for one in places[:how_many]]
-    left = len(state.get("frontier") or []) - how_many
-    if left > 0:
+def where_it_will_go(state):
+    """これから行くつもりの場所。
+
+    名前に直すのは歩く側の仕事。ここは並べるだけ。
+    どの住所がどこの場所なのかを知っているのは歩く側なので、
+    その見分け方をここにも置くと、片方だけ直した日にずれる。"""
+    shown = state.get("where_it_will_go") or []
+    rows = [f'      <p class="side-fact side-quiet">{one}</p>' for one in shown]
+    left = (state.get("how_many_places_left") or 0) - len(shown)
+    if rows and left > 0:
         rows.append(f'      <p class="side-fact side-quiet">ほか {left} 箇所</p>')
     return rows
 

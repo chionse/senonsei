@@ -250,6 +250,10 @@ READING_A_PAGE = (3, 8)
 # 長引いても次の回を待たせるだけなので(concurrency)、急ぐ理由は無い
 TIME_SPENT_PER_SITE = 420
 REST_DAY_CHANCE = 0.1  # たまに、書かない日がある
+# 場所の名前を、これだけの長さまで覚えておく
+PLACE_NAME_LENGTH = 40
+# これから行くつもりの場所を、これだけ見せる
+PLACES_SHOWN = 6
 # 自分で決められなかった日に、それでも気が乗っている割合
 FEELING_KEEN = 0.3
 # 一時間ごとに、これくらいの割合で気が変わる。
@@ -1699,6 +1703,7 @@ def look_around_site(state, entrance, wants_the_past):
             state["frontier"].remove(url)
         state["visited"].append(url)
         state["visited"] = state["visited"][-2000:]
+        remember_the_name(state, url, title)
 
         if JAPANESE.search(text):
             struck_here |= absorb(state, text) or set()
@@ -1828,6 +1833,43 @@ def be_alone(state, now):
         thoughts.append(f"{now.strftime('%m-%d %H時')}: {thought.splitlines()[0].strip()}")
         state["inner_voice"] = thoughts[-INNER_VOICE_KEPT:]
         save_state(state)
+
+
+def where_it_will_go(state, how_many=PLACES_SHOWN):
+    """これから行くつもりの場所を、人に見える形にする。
+
+    一度行った場所は名前で、まだ行っていない場所は住所のまま。
+    行ったことのない場所の名前は、この子には分かりようがない。
+
+    どの場所がどこなのかを知っているのは歩く側なので、
+    ここで形にしてから残す。ページを組む側は並べるだけにする。"""
+    named = state.get("places_known") or {}
+    shown, already = [], set()
+    for one in (state.get("frontier") or []):
+        place = place_of(one)
+        if not place or place in already:
+            continue
+        already.add(place)
+        shown.append(named.get(place, place))
+        if len(shown) >= how_many:
+            break
+    return shown
+
+
+def remember_the_name(state, url, title):
+    """行った場所の名前を覚えておく。
+
+    行き先には住所しか書かれていない。一度行った場所なら、
+    そこが何という名前だったかを知っている。次に行き先として
+    並んだ時、住所ではなく名前で思い出せる。
+
+    行ったことのない場所の名前は、この子には分かりようがない。
+    そこは住所のまま並ぶ。"""
+    place = place_of(url)
+    if not place or not title:
+        return
+    named = state.setdefault("places_known", {})
+    named[place] = title.strip()[:PLACE_NAME_LENGTH]
 
 
 def take_a_walk(state, today, now):
@@ -2324,6 +2366,8 @@ def run_today():
     # 片方だけ書き換えた日にずれる
     state["how_it_grows"] = [name for _, name, _ in GROWTH_STAGES] + [FULL_STAGE[0]]
 
+    # これから行く場所も、名前に直してから残す
+
     # 自分の家に置かれた、自分に宛てられた言葉を読む
     read_what_is_home(state)
 
@@ -2336,6 +2380,9 @@ def run_today():
     # 書く日でも書かない日でも、散歩には出る
     seen_titles = take_a_walk(state, today, now)
     keep_a_note_of_today(state, seen_titles)
+    # 歩けば行き先が変わる。歩いたあとに作り直す
+    state["where_it_will_go"] = where_it_will_go(state)
+    state["how_many_places_left"] = len(state.get("frontier") or [])
     # ここで残しておかないと、休む日の一行がどこにも残らない。
     # 書いた日だけ最後に save_state していたのが取りこぼしの元だった
     save_state(state)
