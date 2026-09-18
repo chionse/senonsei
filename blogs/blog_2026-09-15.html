@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <title>千遠生ブログ 2026-09-15「て」</title>
 <meta name="viewport" content="width=1200" />
-<link rel="stylesheet" href="../sen.css?v=715552681" />
+<link rel="stylesheet" href="../sen.css?v=2118507930" />
 </head>
 <body>
 <div class="top-nav"><a href="../index.html">←トップ</a></div>
@@ -14,7 +14,7 @@
 <article>
   <div class="date">2026-09-15 17:38<span class="article-title">て</span></div>
   <p>ひ</p>
-  <div class="iine"><button type="button" data-day="2026-09-15">いいね</button><span class="kazu">0</span></div>
+  <div class="iine"><button type="button" data-day="2026-09-15" aria-label="いいね" title="いいね">♡</button><span class="kazu">0</span></div>
 </article>
   <script id="iine-script">
     (function () {
@@ -28,9 +28,14 @@
       document.querySelectorAll(".iine button").forEach(function (button) {
         var day = button.getAttribute("data-day");
         var kazu = button.parentElement.querySelector(".kazu");
-        if (kept("iine-" + day)) { button.disabled = true; return; }
+        if (kept("iine-" + day)) {
+          button.disabled = true;
+          button.textContent = "♥";
+          return;
+        }
         button.addEventListener("click", function () {
           button.disabled = true;
+          button.textContent = "♥";
           keep("iine-" + day);
           kazu.textContent = (parseInt(kazu.textContent, 10) || 0) + 1;
           fetch(where, {
