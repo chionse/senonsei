@@ -341,6 +341,17 @@ article p {
   display: flex;
   justify-content: center;
   align-items: flex-start;
+  position: relative;
+}
+
+/* 過去のブログでは、♡を枠の左下の角に置く。
+   縦の線と下の線の交わるところに寄せておくと、
+   数が増えても♡の位置は動かず、数だけが右へ伸びる */
+.log-view .iine {
+  position: absolute;
+  left: -1.5rem;
+  bottom: -0.7rem;
+  margin: 0;
 }
 
 .log-view .entry {
@@ -761,7 +772,7 @@ article p {
    一人が一つの記事に一度だけで、押した後は塗りつぶしになる */
 .iine {
   margin-top: 1.2rem;
-  text-align: right;
+  text-align: left;
   font-size: 0.75rem;
   line-height: 1;
 }
