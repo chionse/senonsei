@@ -149,6 +149,17 @@ h1 {
   color: var(--main-color);
 }
 
+/* サイトの名前を押すとトップへ戻る。
+   見出しなので、線は重ねた時だけ出す */
+h1 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+h1 a:hover {
+  text-decoration: underline;
+}
+
 h2 {
   color: var(--main-color);
 }

@@ -1215,7 +1215,7 @@ def generate_index_html(articles, state=None):
 </head>
 <body>
   <header>
-    <h1>千遠生のサイト</h1>
+    <h1><a href="index.html">千遠生のサイト</a></h1>
     <div class="visitor-counter">
       あなたは<span class="count"><!-- Default Statcounter code for senonsei
       https://chionse.github.io/senonsei/index.html -->
