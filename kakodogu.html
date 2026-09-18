@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <title>過去のブログ</title>
 <meta name="viewport" content="width=1200" />
-<link rel="stylesheet" href="sen.css?v=715552681" />
+<link rel="stylesheet" href="sen.css?v=2118507930" />
 </head>
 <body>
   <div class="top-nav"><a href="index.html">←トップ</a></div>
@@ -48,43 +48,43 @@
       <div class="entry-title">ゆ</div>
       <div class="date">2026-09-18 14:19</div>
       <p>がお</p>
-      <div class="iine"><button type="button" data-day="2026-09-18">いいね</button><span class="kazu">0</span></div>
+      <div class="iine"><button type="button" data-day="2026-09-18" aria-label="いいね" title="いいね">♡</button><span class="kazu">0</span></div>
     </div>
     <div class="entry" id="entry-2026-09-17" hidden>
       <div class="entry-title">お</div>
       <div class="date">2026-09-17 18:21</div>
       <p>けの</p>
-      <div class="iine"><button type="button" data-day="2026-09-17">いいね</button><span class="kazu">0</span></div>
+      <div class="iine"><button type="button" data-day="2026-09-17" aria-label="いいね" title="いいね">♡</button><span class="kazu">0</span></div>
     </div>
     <div class="entry" id="entry-2026-09-16" hidden>
       <div class="entry-title">ぽ</div>
       <div class="date">2026-09-16 14:20</div>
       <p>て</p>
-      <div class="iine"><button type="button" data-day="2026-09-16">いいね</button><span class="kazu">0</span></div>
+      <div class="iine"><button type="button" data-day="2026-09-16" aria-label="いいね" title="いいね">♡</button><span class="kazu">0</span></div>
     </div>
     <div class="entry" id="entry-2026-09-15" hidden>
       <div class="entry-title">て</div>
       <div class="date">2026-09-15 17:38</div>
       <p>ひ</p>
-      <div class="iine"><button type="button" data-day="2026-09-15">いいね</button><span class="kazu">0</span></div>
+      <div class="iine"><button type="button" data-day="2026-09-15" aria-label="いいね" title="いいね">♡</button><span class="kazu">0</span></div>
     </div>
     <div class="entry" id="entry-2026-09-13" hidden>
       <div class="entry-title">っ</div>
       <div class="date">2026-09-13 20:19</div>
       <p>べ</p>
-      <div class="iine"><button type="button" data-day="2026-09-13">いいね</button><span class="kazu">0</span></div>
+      <div class="iine"><button type="button" data-day="2026-09-13" aria-label="いいね" title="いいね">♡</button><span class="kazu">0</span></div>
     </div>
     <div class="entry" id="entry-2026-09-12" hidden>
       <div class="entry-title">も</div>
       <div class="date">2026-09-12 20:18</div>
       <p>がは</p>
-      <div class="iine"><button type="button" data-day="2026-09-12">いいね</button><span class="kazu">0</span></div>
+      <div class="iine"><button type="button" data-day="2026-09-12" aria-label="いいね" title="いいね">♡</button><span class="kazu">0</span></div>
     </div>
     <div class="entry" id="entry-2026-09-11" hidden>
       <div class="entry-title">ご</div>
       <div class="date">2026-09-11 01:44</div>
       <p>け</p>
-      <div class="iine"><button type="button" data-day="2026-09-11">いいね</button><span class="kazu">0</span></div>
+      <div class="iine"><button type="button" data-day="2026-09-11" aria-label="いいね" title="いいね">♡</button><span class="kazu">0</span></div>
     </div>
     </div>
   </div>
@@ -199,9 +199,14 @@
       document.querySelectorAll(".iine button").forEach(function (button) {
         var day = button.getAttribute("data-day");
         var kazu = button.parentElement.querySelector(".kazu");
-        if (kept("iine-" + day)) { button.disabled = true; return; }
+        if (kept("iine-" + day)) {
+          button.disabled = true;
+          button.textContent = "♥";
+          return;
+        }
         button.addEventListener("click", function () {
           button.disabled = true;
+          button.textContent = "♥";
           keep("iine-" + day);
           kazu.textContent = (parseInt(kazu.textContent, 10) || 0) + 1;
           fetch(where, {

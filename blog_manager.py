@@ -848,7 +848,8 @@ def iine_html(date_str, likes=None):
         likes = load_likes()
     return (
         f'<div class="iine">'
-        f'<button type="button" data-day="{date_str}">いいね</button>'
+        f'<button type="button" data-day="{date_str}" '
+        f'aria-label="いいね" title="いいね">♡</button>'
         f'<span class="kazu">{likes.get(date_str, 0)}</span>'
         f"</div>"
     )
@@ -874,9 +875,14 @@ def put_iine_script(html):
       document.querySelectorAll(".iine button").forEach(function (button) {{
         var day = button.getAttribute("data-day");
         var kazu = button.parentElement.querySelector(".kazu");
-        if (kept("iine-" + day)) {{ button.disabled = true; return; }}
+        if (kept("iine-" + day)) {{
+          button.disabled = true;
+          button.textContent = "\u2665";
+          return;
+        }}
         button.addEventListener("click", function () {{
           button.disabled = true;
+          button.textContent = "\u2665";
           keep("iine-" + day);
           kazu.textContent = (parseInt(kazu.textContent, 10) || 0) + 1;
           fetch(where, {{

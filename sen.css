@@ -754,33 +754,39 @@ article p {
 }
 
 /* 一つひとつのブログに付けられる、いいね。
-   一人が一つの記事に一度だけ。押した後は薄くなって押せなくなる */
+   記事の右下に小さく。主張しない。
+   一人が一つの記事に一度だけで、押した後は塗りつぶしになる */
 .iine {
-  margin-top: 1rem;
-  font-size: 0.9rem;
+  margin-top: 1.2rem;
+  text-align: right;
+  font-size: 0.75rem;
+  line-height: 1;
 }
 
 .iine button {
   font-family: inherit;
   font-size: 0.9rem;
+  line-height: 1;
   color: var(--main-color);
-  background: var(--bg-color);
-  border: 1px solid var(--line-color);
-  padding: 0.25rem 0.9rem;
+  background: none;
+  border: none;
+  padding: 0;
   cursor: pointer;
+  opacity: 0.45;
 }
 
 .iine button:hover:not(:disabled) {
-  border-color: var(--main-color);
+  opacity: 1;
 }
 
 .iine button:disabled {
   cursor: default;
-  opacity: 0.55;
+  opacity: 0.75;
 }
 
 .iine .kazu {
-  margin-left: 0.6rem;
+  margin-left: 0.3rem;
+  opacity: 0.5;
   font-variant-numeric: tabular-nums;
 }
 
