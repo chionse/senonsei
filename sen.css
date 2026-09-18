@@ -12,6 +12,8 @@
   --main-color: #0029ae;
   --bg-color: #fafaf7;
   --line-color: #ccd3e8;
+  /* 手前に開いている紙の縁だけ、他の線より少し濃い */
+  --paper-line: #a3b1dc;
 }
 
 body {
@@ -427,8 +429,10 @@ article p {
   height: min(26rem, 76vw, 68vh);
   overflow-y: auto;
   background-color: var(--bg-color);
-  /* 一枚だけ手前に開いている紙なので、後ろの線より少し太くする */
-  border: 2px solid var(--line-color);
+  /* 一枚だけ手前に開いている紙なので、後ろの線より少し濃くする。
+     太さは1pxのまま。閲覧機は縁の太さを整数に丸めるので、
+     1.5pxと書いても1pxになる */
+  border: 1px solid var(--paper-line);
   padding: 1rem 1.2rem 1.5rem;
   /* 動かす棒は出さない。その幅のぶん本文が狭くなってしまうので。
      続きがあることは、下の隅の印で示す */
