@@ -782,6 +782,10 @@ article p {
   padding: 0;
   cursor: pointer;
   opacity: 0.6;
+  /* ♡は字面が上に寄っているので、少しだけ下げて日時と目線を揃える。
+     数は動かさない */
+  position: relative;
+  top: 1mm;
 }
 
 .iine button:hover:not(:disabled) {
@@ -793,10 +797,11 @@ article p {
   opacity: 0.85;
 }
 
-/* 数の場所を先に取っておく。増えても♡が動かないように */
+/* 数の場所を先に取っておく。十万まで行っても並びが崩れないように */
 .iine .kazu {
   display: inline-block;
-  min-width: 2.5ch;
+  min-width: 6ch;
+  white-space: nowrap;
   margin-left: 0.3rem;
   text-align: left;
   font-variant-numeric: tabular-nums;
