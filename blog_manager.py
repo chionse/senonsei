@@ -47,6 +47,7 @@ ITS_BIRTHDAY = "2026-09-11"
 MENU_FILE = "menu.json"
 BLOG_FOLDER = "blogs"
 COMMENTS_FOLDER = "comments"
+LIKES_FOLDER = "likes"
 COMMENT_WORKER_ENDPOINT = "https://senonsei-comments.chitomatsu.workers.dev/"
 RECENT_COUNT = 5  # トップページに表示する直近記事の件数(最新1件を除く)
 # トップページに出すコメントの数。残りは comments.html にぜんぶ出す。
@@ -129,9 +130,6 @@ def side_panel(state, here):
             now.append(f'      <p class="side-fact">{its_age(born, today)}</p>')
     except ValueError:
         pass
-    writes = state.get("how_it_writes_now")
-    if writes:
-        now.append(f'      <p class="side-fact side-quiet">{writes}</p>')
     if now:
         blocks.append(one_side_block("いま", now))
 
@@ -826,6 +824,84 @@ def all_news_pages(news):
     return [NEWS_PAGE] + [news_page_name(one["date"]) for one in news]
 
 
+def load_likes():
+    """いいねを数える。一人が一つの記事に一度だけなので、
+    その記事のぶんの紙の枚数がそのまま数になる。
+
+    紙の名前は 2026-09-11__<誰かを表す印>.json という形。
+    誰が押したかは残していない。同じ人が二度押しても
+    同じ名前の紙になるので、増えないというだけ。"""
+    counted = {}
+    if not os.path.isdir(LIKES_FOLDER):
+        return counted
+    for name in os.listdir(LIKES_FOLDER):
+        if not name.endswith(".json") or "__" not in name:
+            continue
+        day = name.split("__", 1)[0]
+        counted[day] = counted.get(day, 0) + 1
+    return counted
+
+
+def iine_html(date_str, likes=None):
+    """その日のブログに付ける、いいね。"""
+    if likes is None:
+        likes = load_likes()
+    return (
+        f'<div class="iine">'
+        f'<button type="button" data-day="{date_str}">いいね</button>'
+        f'<span class="kazu">{likes.get(date_str, 0)}</span>'
+        f"</div>"
+    )
+
+
+def put_iine_script(html):
+    """いいねの釦が載っているページにだけ、その動きを添える。
+
+    一度押した記事は、この閲覧機では押せなくなる。
+    本当に一人一度に留めているのは受け取る側で、
+    ここでやっているのは同じ人が何度も押さずに済むようにする気配り。"""
+    if 'class="iine"' not in html or "iine-script" in html:
+        return html
+    script = f"""  <script id="iine-script">
+    (function () {{
+      var where = "{COMMENT_WORKER_ENDPOINT}like";
+      var kept = function (key) {{
+        try {{ return localStorage.getItem(key); }} catch (e) {{ return null; }}
+      }};
+      var keep = function (key) {{
+        try {{ localStorage.setItem(key, "1"); }} catch (e) {{}}
+      }};
+      document.querySelectorAll(".iine button").forEach(function (button) {{
+        var day = button.getAttribute("data-day");
+        var kazu = button.parentElement.querySelector(".kazu");
+        if (kept("iine-" + day)) {{ button.disabled = true; return; }}
+        button.addEventListener("click", function () {{
+          button.disabled = true;
+          keep("iine-" + day);
+          kazu.textContent = (parseInt(kazu.textContent, 10) || 0) + 1;
+          fetch(where, {{
+            method: "POST",
+            body: new URLSearchParams({{ day: day }})
+          }}).catch(function () {{}});
+        }});
+      }});
+    }})();
+  </script>
+"""
+    return html.replace("</body>", script + "</body>", 1)
+
+
+def iine_on_pages(pages):
+    """出来上がったページに、いいねの動きを添えて回る。"""
+    for page in pages:
+        if not os.path.exists(page):
+            continue
+        with open(page, "r", encoding="utf-8") as f:
+            made = f.read()
+        with open(page, "w", encoding="utf-8") as f:
+            f.write(put_iine_script(made))
+
+
 def load_menu():
     if os.path.exists(MENU_FILE):
         with open(MENU_FILE, "r", encoding="utf-8") as f:
@@ -860,6 +936,7 @@ def generate_blog_html(article):
 <article>
   <div class="date">{date_str} {article.get('time', '')}<span class="article-title">{article['title']}</span></div>
   <p>{article['content']}</p>
+  {iine_html(date_str)}
 </article>
 </body>
 </html>
@@ -873,6 +950,7 @@ def generate_kakodogu_html(articles):
     """左に年・月・日の3列。それぞれの中で下に積み重なり、選ぶと隣の列が変わる。"""
     ordered = sorted_articles(articles)
     dates = [art["date"] for art in ordered]
+    likes = load_likes()
 
     entries_html = ""
     for index, art in enumerate(ordered):
@@ -881,6 +959,7 @@ def generate_kakodogu_html(articles):
       <div class="entry-title">{art['title']}</div>
       <div class="date">{art['date']} {art.get('time', '')}</div>
       <p>{art['content']}</p>
+      {iine_html(art['date'], likes)}
     </div>
 """
     if not ordered:
@@ -1051,6 +1130,7 @@ def generate_index_html(articles, state=None):
             latest_html = f"""<article>
     <div class="date">{latest['date']} {latest.get('time', '')}<span class="article-title">{latest['title']}</span></div>
     <p>{latest['content']}</p>
+    {iine_html(latest['date'])}
   </article>"""
         elif plan.get("date") == today_in_japan().isoformat() and plan.get("resting"):
             # 今日は書かないと、この子自身が決めた日
@@ -1288,6 +1368,9 @@ def regenerate_pages(articles):
     clear_old_news_pages(all_news_pages(news))
 
     side_panels(EVERY_PAGE + tuple(all_news_pages(news)))
+    iine_on_pages(EVERY_PAGE + tuple(
+        os.path.join(BLOG_FOLDER, f"blog_{one['date']}.html") for one in articles
+    ))
 
 
 def add_new_article(title, content, date_str=None):

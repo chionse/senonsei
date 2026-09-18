@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <title>千遠生ブログ 2026-09-17「お」</title>
 <meta name="viewport" content="width=1200" />
-<link rel="stylesheet" href="../sen.css?v=4254343078" />
+<link rel="stylesheet" href="../sen.css?v=715552681" />
 </head>
 <body>
 <div class="top-nav"><a href="../index.html">←トップ</a></div>
@@ -14,6 +14,32 @@
 <article>
   <div class="date">2026-09-17 18:21<span class="article-title">お</span></div>
   <p>けの</p>
+  <div class="iine"><button type="button" data-day="2026-09-17">いいね</button><span class="kazu">0</span></div>
 </article>
+  <script id="iine-script">
+    (function () {
+      var where = "https://senonsei-comments.chitomatsu.workers.dev/like";
+      var kept = function (key) {
+        try { return localStorage.getItem(key); } catch (e) { return null; }
+      };
+      var keep = function (key) {
+        try { localStorage.setItem(key, "1"); } catch (e) {}
+      };
+      document.querySelectorAll(".iine button").forEach(function (button) {
+        var day = button.getAttribute("data-day");
+        var kazu = button.parentElement.querySelector(".kazu");
+        if (kept("iine-" + day)) { button.disabled = true; return; }
+        button.addEventListener("click", function () {
+          button.disabled = true;
+          keep("iine-" + day);
+          kazu.textContent = (parseInt(kazu.textContent, 10) || 0) + 1;
+          fetch(where, {
+            method: "POST",
+            body: new URLSearchParams({ day: day })
+          }).catch(function () {});
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
