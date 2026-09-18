@@ -341,7 +341,6 @@ article p {
 }
 
 .log-view .entry {
-  border: 1px solid var(--line-color);
   padding: 1.5rem 2rem;
   text-align: center;
   min-width: 60%;
@@ -752,6 +751,37 @@ article p {
 
 .dan.here::before {
   content: "▶ ";
+}
+
+/* 一つひとつのブログに付けられる、いいね。
+   一人が一つの記事に一度だけ。押した後は薄くなって押せなくなる */
+.iine {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+.iine button {
+  font-family: inherit;
+  font-size: 0.9rem;
+  color: var(--main-color);
+  background: var(--bg-color);
+  border: 1px solid var(--line-color);
+  padding: 0.25rem 0.9rem;
+  cursor: pointer;
+}
+
+.iine button:hover:not(:disabled) {
+  border-color: var(--main-color);
+}
+
+.iine button:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.iine .kazu {
+  margin-left: 0.6rem;
+  font-variant-numeric: tabular-nums;
 }
 
 /* 押すと別の場所に行くものには、下に線を引く。

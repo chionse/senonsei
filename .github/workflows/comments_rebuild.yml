@@ -1,9 +1,10 @@
-name: Rebuild Site On New Comment
+name: Rebuild Site On New Comment Or Like
 
 on:
   push:
     paths:
       - 'comments/**'
+      - 'likes/**'
   workflow_dispatch:
 
 permissions:
@@ -31,7 +32,7 @@ jobs:
           git config user.name "GitHub Actions Bot"
           git config user.email "actions@github.com"
           git add -A
-          git commit -m "新しいコメントを反映してページを再生成 [skip ci]" || echo "No changes to commit"
+          git commit -m "新しいコメントやいいねを反映してページを再生成 [skip ci]" || echo "No changes to commit"
           # 同じ時刻に千遠生が散歩から帰ってくることがある。
           # 押し戻せなかったら取り込み直して、ページを作り直してから押す
           for attempt in 1 2 3 4 5; do
