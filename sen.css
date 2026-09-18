@@ -427,7 +427,8 @@ article p {
   height: min(26rem, 76vw, 68vh);
   overflow-y: auto;
   background-color: var(--bg-color);
-  border: 1px solid var(--line-color);
+  /* 一枚だけ手前に開いている紙なので、後ろの線より少し太くする */
+  border: 2px solid var(--line-color);
   padding: 1rem 1.2rem 1.5rem;
   /* 動かす棒は出さない。その幅のぶん本文が狭くなってしまうので。
      続きがあることは、下の隅の印で示す */
