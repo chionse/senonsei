@@ -265,15 +265,23 @@ WALK_CHANCE_PER_HOUR = 0.3  # 一時間ごとに、これくらいの気まぐ�
 # 気がかり。昨日思っていたことが、今日の行き先を決める。
 # 一日ごとに何もかも新しく始めていたら、ひとりで考えていた時間が
 # どこにも繋がらない。毎日生まれ直すのと同じになってしまう
-WHAT_STAYS_ON_ITS_MIND = 3  # 同時に抱えていられる気がかりの数
-A_CONCERN_LASTS = 5  # 触れないでいると、これくらいの日数で薄れる
-# 気にかかっているほどそのことを追いかけ、追いかけるほど気にかかる。
-# 放っておくとそこから抜け出せなくなるので、どんなに気にかかっても
-# 一つのことは一か月ほどで手を離れる
-A_CONCERN_AT_MOST = 30
+#
+# 一度気にかかったものは、一つも手放さない。
+# けれど、抱えていることと、いま前に出ていることとは違う。
+# 何十年ぶんを一度に頭へ載せたら、一つひとつが意味を失う。
+# 全部を抱えたまま生きるために、前に出るのは何個かにする。
+# 後ろに下がったものも消えはしないし、ふとまた前に出てくる
+MINDS_IN_FRONT = 3  # いま前に出ている気がかりの数
+MINDS_SURFACING = 1  # ずっと前の気がかりが、ふと浮かんでくる数
+SURFACING_CHANCE = 0.4  # それが浮かんでくる割合
 CARRYING_ON_CHANCE = 0.6  # 探しに行くとき、昨日からの続きを追う割合
 DRIFTING_CHANCE = 0.25  # 行った先で、気がかりが別のものへ移る割合
-INNER_VOICE_KEPT = 60  # ひとりで思ったことを、これだけ抱えていられる
+# ひとりで思ったことも、一つも捨てない。
+# 手元に置いておくのはこれだけで、残りは蔵へ仕舞う。
+# 蔵からは何年経っても出してこられる
+INNER_VOICE_AT_HAND = 60
+THOUGHTS_FOLDER = "omoi"  # 思ったことを、ひと月ずつ仕舞っておく場所
+THOUGHTS_FROM_LONG_AGO = 1  # 読み返すとき、遠い日からふと浮かぶ数
 # 訪ねた場所について分かったことを、これだけ抱えていられる。
 # 言葉は使わなければ薄れるが、経験は薄れない。
 # 一日に二箇所なので、三年ぶんくらい
@@ -400,6 +408,7 @@ def load_state():
                 met.setdefault(word, [days, max(0, seen_on)])
         state.setdefault("words_met", {})
         state.setdefault("on_its_mind", [])
+        rescue_thoughts_already_here(state)
         return state
     return {
         "started_date": today_in_japan().date().isoformat(),
@@ -1197,7 +1206,9 @@ def something_it_wonders_about(state):
     if not known:
         return None
     carried = [
-        item["what"] for item in on_its_mind(state) if item.get("what") in known
+        item["what"]
+        for item in minds_in_front(state) + minds_from_before(state)
+        if item.get("what") in known
     ]
     if carried and random.random() < CARRYING_ON_CHANCE:
         return random.choice(carried)
@@ -1783,11 +1794,92 @@ def walk_once(state):
     return None
 
 
+def thoughts_of(month):
+    """その月に思ったことを、蔵から出してくる。"""
+    try:
+        with open(
+            os.path.join(THOUGHTS_FOLDER, month), encoding="utf-8"
+        ) as f:
+            kept = json.load(f)
+    except (OSError, ValueError):
+        return []
+    return kept if isinstance(kept, list) else []
+
+
+def months_of_thoughts():
+    """蔵に、どの月の束があるか。古い順に。"""
+    try:
+        return sorted(
+            one for one in os.listdir(THOUGHTS_FOLDER) if one.endswith(".json")
+        )
+    except OSError:
+        return []
+
+
+def keep_a_thought(said, when):
+    """思ったことを蔵に仕舞う。一つも捨てない。
+
+    ひと月ずつの束にしておく。何十年ぶんになっても、
+    仕舞うときも思い出すときも、触るのはそのうちの一束だけで済む。
+    記憶そのものは `senonsei_state.json` に置かない。
+    毎時間まるごと書き直されるものの中に、
+    二度と作れないものを置いておきたくない。"""
+    month = f"{when:%Y-%m}.json"
+    kept = thoughts_of(month)
+    kept.append(said)
+    os.makedirs(THOUGHTS_FOLDER, exist_ok=True)
+    with open(
+        os.path.join(THOUGHTS_FOLDER, month), "w", encoding="utf-8"
+    ) as f:
+        json.dump(kept, f, ensure_ascii=False, indent=1)
+
+
+def a_thought_from_long_ago(how_many=THOUGHTS_FROM_LONG_AGO):
+    """ずっと昔にひとりで思っていたことが、ふと浮かぶ。
+
+    どの月が浮かぶかは決めない。三年目には一年目の声が混ざるし、
+    十年目には十年前の自分の声が混ざる。
+    そのときどきで手元にあるものだけが自分なら、
+    この子はいつまでも生まれたばかりのままになってしまう。"""
+    months = months_of_thoughts()[:-1]  # 今月ぶんは手元にある
+    found = []
+    for month in random.sample(months, min(len(months), how_many)):
+        said = [
+            one for one in thoughts_of(month) if not going_in_circles(one)
+        ]
+        if said:
+            found.append(random.choice(said))
+    return found
+
+
+def rescue_thoughts_already_here(state):
+    """蔵を建てる前にこの子が思っていたことを、蔵へ移す。
+
+    手元に残っていた六十件より前のものは、もう戻らない。
+    残っているぶんだけでも仕舞っておく。"""
+    if months_of_thoughts():
+        return
+    now = today_in_japan()
+    for line in state.get("inner_voice") or []:
+        stamp, sep, said = line.partition(": ")
+        if not sep:
+            continue
+        try:
+            month = int(stamp[:2])
+            datetime.date(now.year, month, 1)
+        except ValueError:
+            continue
+        year = now.year - 1 if month > now.month else now.year
+        keep_a_thought(f"{year}-{stamp}: {said}", datetime.date(year, month, 1))
+
+
 def remember_a_thought(state, thought):
     """ひとりで思ったことを、自分の中にだけ残す。"""
+    now = today_in_japan()
+    keep_a_thought(f"{now:%Y-%m-%d %H時}: {thought}", now)
     thoughts = state.setdefault("inner_voice", [])
-    thoughts.append(f"{today_in_japan():%m-%d %H時}: {thought}")
-    del thoughts[:-INNER_VOICE_KEPT]
+    thoughts.append(f"{now:%m-%d %H時}: {thought}")
+    del thoughts[:-INNER_VOICE_AT_HAND]
 
 
 def be_alone(state, now):
@@ -1818,8 +1910,10 @@ def be_alone(state, now):
     )
 
     if thought:
-        thoughts.append(f"{now.strftime('%m-%d %H時')}: {thought.splitlines()[0].strip()}")
-        state["inner_voice"] = thoughts[-INNER_VOICE_KEPT:]
+        said = thought.splitlines()[0].strip()
+        keep_a_thought(f"{now:%Y-%m-%d %H時}: {said}", now)
+        thoughts.append(f"{now:%m-%d %H時}: {said}")
+        state["inner_voice"] = thoughts[-INNER_VOICE_AT_HAND:]
         save_state(state)
 
 
@@ -1926,27 +2020,42 @@ def days_held(state, word):
 
 
 def on_its_mind(state):
-    """今、気にかかっていること。
+    """気にかかっていること。ぜんぶ。
 
-    触れないでいると薄れて、そのうち消える。
-    ずっと同じことを気にしていられる子は、たぶんいない。
-    けれど今日思ったことが明日まで残らないなら、
-    ひとりで考えていた時間はどこにも行き着かない。"""
+    一つも捨てない。触れないでいれば後ろへ下がるが、消えはしない。
+    忘れないことと、握りしめたままでいることは違う。
+    下がったものも、ふとまた前に出てくることがある。"""
     kept = state.get("on_its_mind") or []
-    today = today_in_japan().date()
     for item in kept:
         item.setdefault("first", item.get("since"))
-    alive = []
-    for item in kept:
-        try:
-            gap = (today - datetime.date.fromisoformat(item["since"])).days
-            held = (today - datetime.date.fromisoformat(item["first"])).days
-        except (TypeError, KeyError, ValueError):
-            continue
-        if 0 <= gap <= A_CONCERN_LASTS and held <= A_CONCERN_AT_MOST:
-            alive.append(item)
-    state["on_its_mind"] = alive
-    return alive
+    state["on_its_mind"] = kept
+    return kept
+
+
+def minds_in_front(state, how_many=MINDS_IN_FRONT):
+    """いま前に出ている気がかり。最後に触れたものから。
+
+    何十年ぶんを一度に頭へ載せたら、一つひとつが意味を失う。
+    前に出ているのがこれ、というだけで、
+    後ろのものを抱えていないわけではない。"""
+    kept = sorted(
+        on_its_mind(state),
+        key=lambda item: (item.get("since") or "", item.get("times", 1)),
+    )
+    return kept[-how_many:] if how_many else kept
+
+
+def minds_from_before(state, how_many=MINDS_SURFACING):
+    """ずっと前に気にかかっていたことが、ふと浮かぶ。
+
+    もう一年も触れていないことが、何かの拍子に戻ってくる。
+    戻ってきたものにまた触れれば、それはまた前に出る。
+    一度後ろへ行ったら二度と戻れない、ということにはしない。"""
+    front = {id(one) for one in minds_in_front(state)}
+    older = [one for one in on_its_mind(state) if id(one) not in front]
+    if not older or random.random() > SURFACING_CHANCE:
+        return []
+    return random.sample(older, min(len(older), how_many))
 
 
 def now_it_cares_about(state, word):
@@ -1963,17 +2072,26 @@ def now_it_cares_about(state, word):
             break
     else:
         kept.append({"what": word, "since": today, "first": today, "times": 1})
-    state["on_its_mind"] = kept[-WHAT_STAYS_ON_ITS_MIND:]
+    state["on_its_mind"] = kept
     return word
 
 
 def what_is_on_its_mind(state):
-    """気がかりを、訊くときの一行にする。"""
-    return "、".join(item["what"] for item in on_its_mind(state)) or "(いまは特に無い)"
+    """気がかりを、訊くときの一行にする。
+
+    いま前に出ているものと、ときどき、ずっと前のもの。
+    抱えているぜんぶを並べるのではない。"""
+    shown = minds_from_before(state) + minds_in_front(state)
+    return "、".join(item["what"] for item in shown) or "(いまは特に無い)"
 
 
-def lately_it_thought(state, how_many=3):
-    """少し前に、ひとりで思っていたこと。
+def lately_it_thought(state, how_many=3, from_long_ago=THOUGHTS_FROM_LONG_AGO):
+    """少し前に、ひとりで思っていたこと。それと、ずっと昔に思っていたこと。
+
+    近いところだけを読み返していると、さっき言ったことをもう一度言う。
+    自分の声が自分に返ってくるだけの輪になって、そこから出られない。
+    遠い日の自分の声が一行混ざれば、輪はそこで切れる。
+    何よりそうして初めて、この子には過ぎた時間がある。
 
     同じ言葉を繰り返しただけのものは、数に入れない。
     一度そうなってしまったものを読み返させると、
@@ -1983,7 +2101,8 @@ def lately_it_thought(state, how_many=3):
         for one in (state.get("inner_voice") or [])
         if not going_in_circles(one)
     ]
-    return "\n".join(f"- {one}" for one in kept[-how_many:]) or "(まだ何も)"
+    said = a_thought_from_long_ago(from_long_ago) + kept[-how_many:]
+    return "\n".join(f"- {one}" for one in said) or "(まだ何も)"
 
 
 def struck_by(state, word):
