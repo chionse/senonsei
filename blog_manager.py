@@ -29,7 +29,10 @@ WHERE_YOU_CAN_GO = (
 # 彼女が書いた方。この子のものとは分けて並べる
 WHERE_SHE_WROTE = ((NEWS_PAGE, "更新情報"),)
 WALKED_SHOWN = 3  # 今日歩いたところを、多くてもこれだけ出す
-LEARNED_SHOWN = 5  # 最近覚えた言葉を、新しいほうからこれだけ出す
+LEARNED_SHOWN = 5
+# 気がかりは一つも捨てないので、ここに出すのは前に出ているぶんだけ。
+# 抱えていないのではなく、いま手前にあるのがこれ、ということ
+MINDED_SHOWN = 3  # 最近覚えた言葉を、新しいほうからこれだけ出す
 # [[ ]] で囲まれたところは、千遠生だけが読む。
 # ページに出すときは伏せる。彼女がこの子にだけ伝えたいことのために
 ONLY_FOR_SENONSEI = re.compile(r"\[\[(.+?)\]\]", re.DOTALL)
@@ -203,11 +206,15 @@ def side_panel(state, here):
         rows = ['      <p class="side-fact side-quiet">まだ覚えた言葉はありません。</p>']
     blocks.append(one_side_block("最近覚えた言葉", rows))
 
-    minded = [one.get("what") for one in (state.get("on_its_mind") or [])]
-    minded = [one for one in minded if one]
+    # 何年か経てば気がかりは千を超える。全部並べたら右の欄がそれだけになる。
+    # 最後に触れたものから数えて、手前のぶんだけを出す
+    minded = sorted(
+        (one for one in (state.get("on_its_mind") or []) if one.get("what")),
+        key=lambda one: (one.get("since") or "", one.get("times", 1)),
+    )[-MINDED_SHOWN:]
     if minded:
         blocks.append(one_side_block("気にかかっていること", [
-            f'      <p class="side-word">{one}</p>' for one in minded
+            f'      <p class="side-word">{one["what"]}</p>' for one in minded
         ]))
 
     return '  <aside class="side">\n' + "\n\n".join(blocks) + "\n  </aside>\n"
