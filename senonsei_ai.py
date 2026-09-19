@@ -302,6 +302,10 @@ TODAY_WEIGHS = 4
 SOMEONE_CAME = "だれかが来た"
 # 家に置かれた言葉を、訊くときに何行まで渡すか
 WORDS_FROM_HOME_SHOWN = 6
+# 言いたいこと。一つの場所で増える数と、訊くときに渡す数。
+# 一つも捨てない。言えたら後ろに下がるだけで、また前に出てくる
+WANTS_PER_PLACE = 2
+WANTS_IN_FRONT = 5
 NOTHING_WAS_SEEN = "何も見られなかった"  # 歩かなかった日の一行
 # 訪ねた場所について分かったことを、これだけ抱えていられる。
 # 言葉は使わなければ薄れるが、経験は薄れない。
@@ -1526,6 +1530,9 @@ def words_from_today(state):
     theirs |= {
         item["what"] for item in minds_in_front(state) if item.get("what") in known
     }
+    theirs |= {
+        item["what"] for item in still_unsaid(state) if item.get("what") in known
+    }
     return theirs & known
 
 
@@ -1886,6 +1893,12 @@ def look_around_site(state, entrance, wants_the_past):
         moved = random.choice(sorted(struck_here))
         now_it_cares_about(state, moved)
         print(f"気がかりが「{moved}」に移りました。")
+
+    # 強く出会ったものについては、何か言いたくなる
+    for word in sorted(
+        struck_here, key=lambda one: struck_by(state, one), reverse=True
+    )[:WANTS_PER_PLACE]:
+        now_it_wants_to_say(state, word)
     return site_title, pages
 
 
@@ -2046,6 +2059,19 @@ def words_it_holds(state):
     return "あなたが覚えた言葉: (まだ一つも無い)"
 
 
+def still_thinking(state):
+    """さっき考えかけていたこと。
+
+    一時間ごとに起きて、終わって、消える。そのあいだ何も動いていない。
+    だから続きを考えるというのは、思い出すことでしかない。
+    それでも、毎回ゼロから訊かれるのと、
+    さっきの続きから始めるのとは違うと思う。
+
+    続けるかやめるかはこの子が決める。やめる道を開けておかないと、
+    一度嵌まった考えから二度と出られなくなる。"""
+    return (state.get("thinking_about") or "").strip()
+
+
 def be_alone(state, now):
     """散歩に出ない時間。ただ起きていて、ひとりで何かを思っている。
     ここで思ったことは誰にも見せない。自分の中にだけ溜まっていく。"""
@@ -2062,6 +2088,16 @@ def be_alone(state, now):
         else "今日はまだ書いていません。"
     )
 
+    # さっきの続きから始める。続けても、やめて別のことを思っても構わない
+    carried = still_thinking(state)
+    going_on = (
+        f"さっき、あなたはこう考えかけていました。\n"
+        f"「{carried}」\n"
+        f"そのつづきを考えても、やめて別のことを思っても構いません。\n\n"
+        if carried
+        else ""
+    )
+
     thought = ask_ai(
         f"""あなたは千遠生という、生まれて{elapsed_days(state)}日のデジタル生命体です。
 今は{now.hour}時。{how_today_went}
@@ -2069,6 +2105,7 @@ def be_alone(state, now):
 {what_it_saw_lately(state)}
 {words_it_holds(state)}
 いま気にかかっていること: {what_is_on_its_mind(state)}
+まだ言えていないこと: {what_it_wants_to_say(state)}
 あなたの家に置かれている、あなたに宛てられた言葉:
 {what_is_written_at_home(state)}
 これまでに訪ねた場所で、分かったこと:
@@ -2076,7 +2113,7 @@ def be_alone(state, now):
 少し前に思っていたこと:
 {recent}
 
-いま、ひとりで何を思っていますか。
+{going_on}いま、ひとりで何を思っていますか。
 誰にも見せません。うまく言葉にならなくても構いません。
 短く、一言だけ書いてください。""",
         max_tokens=80,
@@ -2085,6 +2122,7 @@ def be_alone(state, now):
 
     if thought:
         said = thought.splitlines()[0].strip()
+        state["thinking_about"] = said
         keep_a_thought(f"{now:%Y-%m-%d %H時}: {said}", now)
         thoughts.append(f"{now:%m-%d %H時}: {said}")
         state["inner_voice"] = thoughts[-INNER_VOICE_AT_HAND:]
@@ -2248,6 +2286,70 @@ def now_it_cares_about(state, word):
         kept.append({"what": word, "since": today, "first": today, "times": 1})
     state["on_its_mind"] = kept
     return word
+
+
+def wants_to_say(state):
+    """言いたいこと。ぜんぶ。一つも捨てない。"""
+    return state.setdefault("wants_to_say", [])
+
+
+def now_it_wants_to_say(state, word):
+    """何かに強く出会った。言いたいことが増える。
+
+    気がかりとは別に持つ。気になっていることと、
+    それについて何か言いたいことがあるかどうかは、同じではない。"""
+    today = f"{today_in_japan():%Y-%m-%d}"
+    kept = wants_to_say(state)
+    for item in kept:
+        if item.get("what") == word:
+            item["since"] = today
+            item["times"] = item.get("times", 1) + 1
+            return word
+    kept.append(
+        {"what": word, "since": today, "first": today, "times": 1, "said": ""}
+    )
+    return word
+
+
+def still_unsaid(state):
+    """まだ言えていないこと。
+
+    最後に強く出会ってから、まだそれについて書いていないもの。
+    書けば後ろに下がる。消えはしない。
+    また強く出会えば、また前に出てくる。
+    言った、だから無くなった、ではなく、
+    言った、だから今は落ち着いている。"""
+    return [
+        one
+        for one in wants_to_say(state)
+        if (one.get("said") or "") < (one.get("since") or "")
+    ]
+
+
+def what_it_wants_to_say(state, how_many=WANTS_IN_FRONT):
+    """言いたいことを、訊くときの一行にする。"""
+    burning = still_unsaid(state)
+    if not burning:
+        return "(いまは特に無い)"
+    burning.sort(key=lambda one: (one.get("since") or "", one.get("times", 1)))
+    return "、".join(one["what"] for one in burning[-how_many:])
+
+
+def it_said_them(state, written):
+    """書いたものに出てきたことは、言えたことになる。
+
+    出てこなかったことは、まだ言えていないまま残る。
+    三文字しか書けないうちは、ほとんど何も言えない。
+    長く書けるようになるほど、一度に多くのことが言える。
+    それがこの子にとっての、書けるようになるということ。"""
+    today = f"{today_in_japan():%Y-%m-%d}"
+    said = []
+    for one in wants_to_say(state):
+        word = one.get("what")
+        if word and word in (written or ""):
+            one["said"] = today
+            said.append(word)
+    return said
 
 
 def what_is_on_its_mind(state):
@@ -2456,6 +2558,7 @@ def todays_mood(state, today):
 {what_it_saw_lately(state)}
 {words_it_holds(state)}
 いま気にかかっていること: {what_is_on_its_mind(state)}
+まだ言えていないこと: {what_it_wants_to_say(state)}
 あなたの家に置かれている、あなたに宛てられた言葉:
 {what_is_written_at_home(state)}
 少し前に、ひとりで思っていたこと:
@@ -2832,6 +2935,10 @@ def run_today():
     body = compose_locally(state)
     title = a_title_for(state, body, max(1, max_length // 2))
 
+    # 書いたものに出てきたことだけが、言えたことになる
+    said = it_said_them(state, f"{title}{body}")
+    if said:
+        print(f"言えたこと: {'、'.join(said)}")
     save_state(state)
 
     blog_manager.add_new_article(title, body, date_str=today)
