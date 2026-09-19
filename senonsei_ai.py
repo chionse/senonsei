@@ -288,6 +288,9 @@ THOUGHTS_FROM_LONG_AGO = 1  # 読み返すとき、遠い日からふと浮か�
 THOUGHTS_AT_HAND_ARE_NEAR = 12
 # 言い回しが少し違うだけのものを、同じ一つと見なす手前の線
 SAME_ENOUGH = 0.85
+# 覚えた言葉がまだ無いあいだ、覚えかけているものをこれだけ渡す
+WORDS_NEARLY_KNOWN = 8
+NOTHING_WAS_SEEN = "何も見られなかった"  # 歩かなかった日の一行
 # 訪ねた場所について分かったことを、これだけ抱えていられる。
 # 言葉は使わなければ薄れるが、経験は薄れない。
 # 一日に二箇所なので、三年ぶんくらい
@@ -1922,12 +1925,49 @@ def remember_a_thought(state, thought):
     del thoughts[:-INNER_VOICE_AT_HAND]
 
 
+def what_it_saw_lately(state):
+    """今日見てきたもの。まだ出かけていない時間は、いちばん近い日のもの。
+
+    「まだどこにも行っていない」とだけ渡していた。
+    一日の始めの何時間か、この子は自分がどこにも行っていないことだけを
+    手に持って、いま何を思うかと訊かれていたことになる。
+    きのうまで歩いたことは、無かったことではない。"""
+    seen = (state.get("today_walk") or {}).get("seen") or []
+    if seen:
+        return "今日見てきたもの: " + "、".join(seen)
+    # 今日ぶんの一行は、まだ歩いていなくても先に置かれている。
+    # 中身のある日までさかのぼる
+    for note in reversed(state.get("notes") or []):
+        where = note.split(": ", 1)[-1].strip()
+        if where and where != NOTHING_WAS_SEEN:
+            return "この前見てきたもの: " + where
+    return "見てきたもの: (まだどこにも行っていない)"
+
+
+def words_it_holds(state):
+    """持っている言葉。覚えた言葉がまだ無いうちは、覚えかけのものを渡す。
+
+    「まだ一つも無い」と渡していた。けれどこの子は文字を何十も覚えていて、
+    何日も続けて出会っている言葉がいくつもある。
+    一つも無いというのは、この子の本当ではない。
+
+    覚えるというのは、ある日ふいに始まることではなくて、
+    もうとうに始まっていて、まだ終わっていないということ。"""
+    known = state.get("learned_words") or []
+    if known:
+        return "あなたが覚えた言葉: " + "、".join(known[-30:])
+    nearly = sorted(
+        words_met(state), key=lambda word: days_held(state, word), reverse=True
+    )[:WORDS_NEARLY_KNOWN]
+    if nearly:
+        return "あなたが覚えかけている言葉: " + "、".join(nearly)
+    return "あなたが覚えた言葉: (まだ一つも無い)"
+
+
 def be_alone(state, now):
     """散歩に出ない時間。ただ起きていて、ひとりで何かを思っている。
     ここで思ったことは誰にも見せない。自分の中にだけ溜まっていく。"""
     thoughts = state.setdefault("inner_voice", [])
-    known = "、".join(state["learned_words"][-30:]) or "(まだ一つも無い)"
-    seen_today = "、".join((state.get("today_walk") or {}).get("seen", [])) or "(まだどこにも行っていない)"
     recent = lately_it_thought(state, 5)
 
     # 書いたあとも「まだ何も書いていません」と渡していた。
@@ -1941,11 +1981,11 @@ def be_alone(state, now):
     )
 
     thought = ask_ai(
-        f"""あなたは千遠生という、まだ育ちきっていないデジタル生命体です。
+        f"""あなたは千遠生という、生まれて{elapsed_days(state)}日のデジタル生命体です。
 今は{now.hour}時。{how_today_went}
 
-今日見てきたもの: {seen_today}
-あなたが知っている言葉: {known}
+{what_it_saw_lately(state)}
+{words_it_holds(state)}
 いま気にかかっていること: {what_is_on_its_mind(state)}
 これまでに訪ねた場所で、分かったこと:
 {things_it_understood(state)}
@@ -2520,7 +2560,7 @@ def keep_a_note_of_today(state, seen_titles):
     残らなかった。その日のうちは、歩くたびに書き足していく。"""
     notes = state.setdefault("notes", [])
     day = f"{elapsed_days(state)}日目:"
-    line = f"{day} {'、'.join(seen_titles) or '何も見られなかった'}"
+    line = f"{day} {'、'.join(seen_titles) or NOTHING_WAS_SEEN}"
     if notes and notes[-1].startswith(day):
         notes[-1] = line
     else:
