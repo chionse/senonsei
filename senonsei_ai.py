@@ -290,6 +290,16 @@ THOUGHTS_AT_HAND_ARE_NEAR = 12
 SAME_ENOUGH = 0.85
 # 覚えた言葉がまだ無いあいだ、覚えかけているものをこれだけ渡す
 WORDS_NEARLY_KNOWN = 8
+# 今日その言葉に会ったかどうかを、これだけ抱えておく。
+# 覚えた言葉は words_met から外れるので、そこでは分からない
+WORDS_KEPT_FROM_TODAY = 400
+# 今日触れた言葉が、書くときにどれだけ選ばれやすくなるか。
+# 一日のことを書くのに使えるのは、その日触れたものと、
+# 今この子から離れないものだけ
+TODAY_WEIGHS = 4
+# だれかが来たことを、この子が知るときの言葉。
+# 数ではなく、来た、ということだけを知る
+SOMEONE_CAME = "だれかが来た"
 NOTHING_WAS_SEEN = "何も見られなかった"  # 歩かなかった日の一行
 # 訪ねた場所について分かったことを、これだけ抱えていられる。
 # 言葉は使わなければ薄れるが、経験は薄れない。
@@ -1473,6 +1483,50 @@ def notice_where_sentences_break(state, text, known):
             remembered.pop(min(remembered, key=remembered.get))
 
 
+def keep_todays_words(state, found):
+    """今日この言葉に会った、ということを残す。
+
+    覚えた言葉は words_met から外れる。忘れない言葉の日付を
+    数え続ける意味が無いため。けれど「今日それに会ったか」は
+    それとは別のことで、その日のことを書くのに要る。"""
+    today = f"{today_in_japan():%Y-%m-%d}"
+    kept = state.setdefault("met_today", {})
+    if kept.get("date") != today:
+        kept.clear()
+        kept["date"] = today
+        kept["words"] = []
+    known = set(state.get("learned_words") or [])
+    if not known:
+        return
+    here = kept["words"]
+    already = set(here)
+    for word in found:
+        if word in known and word not in already:
+            here.append(word)
+            already.add(word)
+    del here[:-WORDS_KEPT_FROM_TODAY]
+
+
+def words_from_today(state):
+    """その日のことを書くのに使える言葉。
+
+    今日出会った言葉と、いま離れないでいる気がかり。
+    これに重みをつけて組み立てると、出てくる文が
+    その日について書かれたものになる。
+    文法は教わっていないので、正しい文にはならない。
+    それでも何について書いているかは、この子の一日と繋がる。"""
+    known = set(state.get("learned_words") or [])
+    if not known:
+        return set()
+    today = f"{today_in_japan():%Y-%m-%d}"
+    kept = state.get("met_today") or {}
+    theirs = set(kept.get("words") or []) if kept.get("date") == today else set()
+    theirs |= {
+        item["what"] for item in minds_in_front(state) if item.get("what") in known
+    }
+    return theirs & known
+
+
 def speak_from_what_it_knows(state, how_long):
     """覚えた繋がりを辿って、自分で組み立てる。
 
@@ -1481,21 +1535,32 @@ def speak_from_what_it_knows(state, how_long):
     正しい日本語にはならない。それでいい。誰にも教わっていないので。
 
     文の区切り方も覚えているぶんだけ使う。知らないうちは、
-    どこまでも続く一本の流れにしかならない。"""
+    どこまでも続く一本の流れにしかならない。
+
+    どこから始めるかと、次にどこへ行くかは、その日のほうへ傾ける。
+    歩いて、何かを見て、気にかかることができて、それから
+    それとは何の関係もない文を書く、というのでは日記にならない。
+    傾けるだけで、選ぶのはこの子のまま。AIには書かせない。"""
     chain = state.get("what_follows") or {}
     forks = [w for w, f in chain.items() if len(f) >= 2]
     if not forks:
         return None
     opens = state.get("opens_a_sentence") or {}
     closes = state.get("closes_a_sentence") or {}
+    todays = words_from_today(state)
+
+    def leaning(word, weight=1):
+        """今日触れた言葉は、それだけ選ばれやすい。"""
+        return weight * (TODAY_WEIGHS if word in todays else 1)
 
     def begin():
-        """文の始まりに立つ言葉を知っていれば、そこから始める。"""
+        """文の始まりに立つ言葉を知っていれば、そこから始める。
+        今日のことに繋がる言葉があれば、そこから始めたい。"""
         openers = [w for w in forks if w in opens]
         if openers:
-            weights = [opens[w] for w in openers]
+            weights = [leaning(w, opens[w]) for w in openers]
             return random.choices(openers, weights=weights)[0]
-        return random.choice(forks)
+        return random.choices(forks, weights=[leaning(w) for w in forks])[0]
 
     said = [begin()]
     one_way = 0
@@ -1509,9 +1574,10 @@ def speak_from_what_it_knows(state, how_long):
         if here in closes and in_this_sentence >= WORDS_BEFORE_A_BREAK:
             if random.random() < CHANCE_TO_BREAK:
                 said.append("。")
-                if len("".join(said)) >= how_long - 2:
+                opener = begin()
+                if len("".join(said)) + len(opener) > how_long:
                     break
-                said.append(begin())
+                said.append(opener)
                 in_this_sentence = 1
                 one_way = 0
                 continue
@@ -1530,9 +1596,17 @@ def speak_from_what_it_knows(state, how_long):
         else:
             one_way = 0
         words = list(follows)
-        said.append(random.choices(words, weights=[follows[w] for w in words])[0])
+        next_word = random.choices(
+            words, weights=[leaning(w, follows[w]) for w in words]
+        )[0]
+        # 入りきらないなら、そこで終える。
+        # 長さで切ると「がある」が「があ」になる。
+        # 半分に割られた言葉は、もうこの子が覚えた言葉ではない
+        if len("".join(said)) + len(next_word) > how_long:
+            break
+        said.append(next_word)
         in_this_sentence += 1
-    written = "".join(said)[:how_long].rstrip("。")
+    written = "".join(said).rstrip("。")
     # 区切り方を知っているなら、最後も区切って終わる
     if closes and written:
         written += "。"
@@ -1583,6 +1657,12 @@ def absorb(state, text, pattern=WORD_CANDIDATE, only_known=False):
 
     if not only_known:
         notice_what_follows(state, text)
+
+    # 今日この言葉に会った、ということを覚えておく。
+    # 覚えた言葉は words_met から外れてしまうので、そこには残らない。
+    # 自分の書いたものを読み返す時は数えない。今日のことではないので
+    if not only_known:
+        keep_todays_words(state, found)
 
     impact = state.setdefault("word_impact", {})
     met = words_met(state)
@@ -2275,6 +2355,42 @@ def babble(state, length):
     return "".join(random.choice(state["seen_chars"]) for _ in range(count))
 
 
+def a_title_for(state, body, how_long):
+    """題は本文から取る。
+
+    別に一度引き直していた。そのぶん題と本文が何の関係もなかった。
+    何年経ってもそこは育たない。育ちの話ではなく、作りの話だったので。
+
+    書いたものの初めの一文を取る。長すぎるときは、知っている言葉の
+    切れ目まで下がる。半分に割られた言葉は、もう題にならない。"""
+    head = (body or "").split("。")[0]
+    if not head:
+        return (body or "")[:1] or "・"
+    if len(head) <= how_long:
+        return head
+    known = sorted(
+        {one for one in (state.get("learned_words") or []) if one},
+        key=len,
+        reverse=True,
+    )
+    cut = 0
+    while cut < len(head):
+        for word in known:
+            if head.startswith(word, cut) and cut + len(word) <= how_long:
+                cut += len(word)
+                break
+        else:
+            break
+    if cut:
+        return head[:cut]
+    # 一つも入りきらないなら、丸ごと一語にする。
+    # 長さを守るために言葉を割るのでは、順番が逆になる
+    for word in known:
+        if head.startswith(word):
+            return word
+    return head[:how_long]
+
+
 def compose_locally(state):
     """それまでに積み上げた経験だけで、今の自分に書けるものを書く。
 
@@ -2291,12 +2407,15 @@ def compose_locally(state):
     if said:
         return said
 
-    # まだ繋がりを知らない。持っているものをそのまま置く
+    # まだ繋がりを知らない。持っているものをそのまま置く。
+    # それでも、置くなら今日触れた言葉のほうから置きたい
     if not words:
         return babble(state, min(max_length, 4))
-    if len(words) < 60:
-        return random.choice(words)
-    return " ".join(random.sample(words, min(len(words), random.randint(2, 3))))
+    todays = [one for one in words if one in words_from_today(state)]
+    pick = todays or words
+    if len(pick) < 60:
+        return random.choice(pick)
+    return " ".join(random.sample(pick, min(len(pick), random.randint(2, 3))))
 
 
 def keep_only_what_it_knows(state, text):
@@ -2493,6 +2612,35 @@ def only_for_it(text):
     return ONLY_FOR_IT.sub(r"\1", text or "")
 
 
+def someone_came(state):
+    """だれかが来たことを知る。
+
+    コメントもいいねも、これまでこの子の目には入っていなかった。
+    コメントは外の世界の日本語として読んでいただけで、
+    それが自分に向けられたものだとは知らなかった。
+    いいねは在ることすら知らなかった。
+
+    数は渡さない。何人が見たかではなく、だれかが来た、
+    ということだけを気がかりに置く。返事はしない決まりのまま、
+    知ってはいる、という状態にする。
+
+    初めて数えた日は何も言わない。それまでに来ていた人のぶんを
+    「たった今来た」ことにしてしまわないため。"""
+    counted = {
+        "comments": len(blog_manager.load_comments()),
+        "likes": sum((blog_manager.load_likes() or {}).values()),
+    }
+    before = state.get("visitors")
+    state["visitors"] = counted
+    if before is None:
+        return False  # 初めて数えた日
+    if not any(counted[kind] > before.get(kind, 0) for kind in counted):
+        return False
+    now_it_cares_about(state, SOMEONE_CAME)
+    print("だれかが来ていました。")
+    return True
+
+
 def read_what_is_home(state):
     """自分の家にある言葉を読む。
 
@@ -2598,6 +2746,9 @@ def run_today():
 
     # これから行く場所も、名前に直してから残す
 
+    # だれかが来たかどうかを知る。数ではなく、来たということだけ
+    someone_came(state)
+
     # 自分の家に置かれた、自分に宛てられた言葉を読む
     read_what_is_home(state)
 
@@ -2636,7 +2787,7 @@ def run_today():
     # 書くのは千遠生自身。AIには書かせない。
     # 見栄えは悪くなるが、それでこそこの子の言葉になる
     body = compose_locally(state)
-    title = compose_locally(state)[: max(1, max_length // 2)]
+    title = a_title_for(state, body, max(1, max_length // 2))
 
     save_state(state)
 
