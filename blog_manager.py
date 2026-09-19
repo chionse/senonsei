@@ -49,7 +49,6 @@ TALKING_ABOUT_ONESELF = "自己紹介"
 # started_date は「何日目か」を数えるための値で、誕生日ではない
 ITS_BIRTHDAY = "2026-09-11"
 MENU_FILE = "menu.json"
-BLOG_FOLDER = "blogs"
 COMMENTS_FOLDER = "comments"
 LIKES_FOLDER = "likes"
 COMMENT_WORKER_ENDPOINT = "https://senonsei-comments.chitomatsu.workers.dev/"
@@ -987,34 +986,6 @@ def blog_start_date(articles):
     return datetime.date.fromisoformat(earliest)
 
 
-def generate_blog_html(article):
-    date_str = article["date"]
-    filename = os.path.join(BLOG_FOLDER, f"blog_{date_str}.html")
-    html_content = f"""<!DOCTYPE html>
-<html lang="ja">
-<head>
-<meta charset="UTF-8" />
-<title>千遠生ブログ {date_str}「{article['title']}」</title>
-<meta name="viewport" content="width=1200" />
-<link rel="stylesheet" href="{styled('../')}" />
-</head>
-<body>
-<div class="top-nav"><a href="../index.html">←トップ</a></div>
-<header>
-  <h1>千遠生のブログ</h1>
-</header>
-<article>
-  <div class="date">{date_str} {article.get('time', '')}<span class="article-title">{article['title']}</span>{iine_html(date_str)}</div>
-  <p>{article['content']}</p>
-</article>
-</body>
-</html>
-"""
-    os.makedirs(BLOG_FOLDER, exist_ok=True)
-    with open(filename, "w", encoding="utf-8") as f:
-        f.write(html_content)
-
-
 def generate_kakodogu_html(articles):
     """左に年・月・日の3列。それぞれの中で下に積み重なり、選ぶと隣の列が変わる。"""
     ordered = sorted_articles(articles)
@@ -1414,8 +1385,6 @@ def generate_profile_html(state):
 
 
 def regenerate_pages(articles):
-    for art in articles:
-        generate_blog_html(art)
     generate_kakodogu_html(articles)
     state = load_senonsei_state()
     generate_index_html(articles, state)
@@ -1435,9 +1404,7 @@ def regenerate_pages(articles):
     clear_old_news_pages(all_news_pages(news))
 
     side_panels(EVERY_PAGE + tuple(all_news_pages(news)))
-    iine_on_pages(EVERY_PAGE + tuple(
-        os.path.join(BLOG_FOLDER, f"blog_{one['date']}.html") for one in articles
-    ))
+    iine_on_pages(EVERY_PAGE)
 
 
 def add_new_article(title, content, date_str=None):
