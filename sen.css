@@ -686,6 +686,16 @@ article p {
   opacity: 0.7;
 }
 
+/* 長い名前が折り返す並びは、一つずつ間を空ける。
+   詰めて並べると、どこで切れているのか分からない */
+.side-apart {
+  margin: 0 0 0.7rem;
+}
+
+.side-apart:last-child {
+  margin-bottom: 0;
+}
+
 .side-word {
   font-size: 0.95rem;
   margin: 0.2rem 0;

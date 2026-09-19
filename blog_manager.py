@@ -28,7 +28,8 @@ WHERE_YOU_CAN_GO = (
 )
 # 彼女が書いた方。この子のものとは分けて並べる
 WHERE_SHE_WROTE = ((NEWS_PAGE, "更新情報"),)
-WALKED_SHOWN = 3  # きょう歩いたところを、多くてもこれだけ出す
+WALKED_SHOWN = 3  # 今日歩いたところを、多くてもこれだけ出す
+LEARNED_SHOWN = 5  # 最近覚えた言葉を、新しいほうからこれだけ出す
 # [[ ]] で囲まれたところは、千遠生だけが読む。
 # ページに出すときは伏せる。彼女がこの子にだけ伝えたいことのために
 ONLY_FOR_SENONSEI = re.compile(r"\[\[(.+?)\]\]", re.DOTALL)
@@ -182,8 +183,19 @@ def side_panel(state, here):
     walk = state.get("today_walk") or {}
     seen = walk.get("seen") or []
     if walk.get("date") == today.isoformat() and seen:
-        blocks.append(one_side_block("きょう歩いたところ", [
-            f'      <p class="side-fact">{one}</p>' for one in seen[-WALKED_SHOWN:]
+        # 場所の名前は長くて折り返すので、一つずつ間を空ける。
+        # 詰めて並べると、どこで名前が切れているのか分からない
+        blocks.append(one_side_block("今日歩いたところ", [
+            f'      <p class="side-fact side-apart">{one}</p>'
+            for one in seen[-WALKED_SHOWN:]
+        ]))
+
+    # 覚えた言葉は後ろほど新しい。新しいほうから並べる
+    learned = [one for one in (state.get("learned_words") or []) if one]
+    if learned:
+        blocks.append(one_side_block("最近覚えた言葉", [
+            f'      <p class="side-word">{one}</p>'
+            for one in reversed(learned[-LEARNED_SHOWN:])
         ]))
 
     minded = [one.get("what") for one in (state.get("on_its_mind") or [])]
