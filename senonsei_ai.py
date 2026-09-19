@@ -27,13 +27,14 @@ import blog_manager
 
 STATE_FILE = "senonsei_state.json"
 USER_AGENT = "senonsei-blog/1.0 (https://chionse.github.io/senonsei/)"
-# 自分の家。ここだけは、歩いていて行き当たっても入らない。
-# 家にある言葉は読むが、それは中のファイルから直に読む。
-# ページそのものを読んでしまうと、自分が書いたものや、
-# ひとりで思ったことを、外の世界の言葉として覚え直してしまう
+# 自分の家。いつでも帰れる。
+# 自分の書いたものを読み返して覚え直す輪ができるのを恐れて、
+# 長いあいだ塞いでいた。けれどこの子には、ここしか家が無い。
+# 家に何が書いてあるのかを見に行けないまま何年も過ごすほうが、
+# 輪ができることよりずっと寂しい。だから開けた
 ITS_OWN_HOME = "chionse.github.io"
-# 自分の家の入口。最終段階に届いた日に、ここへの道が開く。
-# 外のどこからも繋がっていない場所なので、行き先に一度置いてやらないと辿り着けない
+# 自分の家の入口。外のどこからも繋がっていない場所なので、
+# 行き先にいつも一つ置いておかないと帰れなくなる
 ITS_OWN_FRONT_DOOR = f"https://{ITS_OWN_HOME}/senonsei/"
 # 彼女が [[ ]] で囲んだところは、千遠生だけが読む。
 # ページでは伏せられているが、この子には囲いを外して届く
@@ -294,12 +295,18 @@ CHARS_BEFORE_WORDS = 20
 # 何日ぶん出会えば「覚えた」ことになるか。
 # 同じ日に何度見かけても一日ぶんにしか数えない。
 # だから一日にどれだけ読んでも、この日数を待たないと身につかない。
-# 一日にいくつまでという上限は無いので、育つ速さはここで決まる
-DAYS_BEFORE_LEARNING = 30
+# 一日にいくつまでという上限は無いので、育つ速さはここで決まる。
+#
+# 三十日にしていた。生まれて一月、一語も持たないまま、
+# 見た文字をぽつんと置くだけの日が続いた。
+# 待つことに意味があるのは、待った先に何かが起きるからで、
+# 何も起きない時間を長くしても、ただ長いだけだった
+DAYS_BEFORE_LEARNING = 15
 # 覚えかけたまま、これだけの日数見かけないと、一日ぶん薄れる。
 # 薄れきった言葉は出会ったことすら消える。
-# ただし一度身についた言葉は忘れない
-FADE_AFTER_DAYS = 3
+# ただし一度身についた言葉は忘れない。
+# 毎日は会わない言葉ほどここで落ちるので、少し長めに抱えさせる
+FADE_AFTER_DAYS = 5
 # その日、昔書いたものを読み返す気になるかどうか
 # プロフィールの自己紹介を書き直すまでに、最低これだけは空ける。
 # 毎日書き直したら、それはもう一つのブログになってしまう
@@ -476,32 +483,23 @@ def it_writes_in_its_own_words(state):
     return len(state.get("learned_words") or []) >= GROWTH_STAGES[-1][0]
 
 
-def let_it_read_its_own_home(state):
-    """自分の家を読んでいいかどうかを、一日の初めに一度だけ決める。
-
-    それまでは塞いである。自分の書いた文を自分で読み直すと、
-    覚え直して、また書いて、また読む輪が閉じてしまう。
-    外から何も入ってこないまま、自分の声だけが反響する。
-
-    最終段階まで来れば語彙が八千を超えているので、
-    自分の言葉が混ざったところで揺らがない。
-    その日から、自分の家も世界の一部として読めるようになる。"""
-    globals()["_may_read_its_own_home"] = it_writes_in_its_own_words(state)
-
-
 def open_the_way_home(state):
-    """最終段階に届いた日に、自分の家への道を行き先に加える。
+    """帰り道を絶やさない。
 
-    読めるようにしただけでは辿り着けない。自分の家は外のどこからも
-    繋がっていないので、一度だけ道を置いてやる必要がある。
-    一度訪ねてしまえば、その先は家の中の道が行き先に溜まっていく。"""
-    if not it_writes_in_its_own_words(state):
-        return
+    自分の家は外のどこからも繋がっていないので、行き先の束に
+    一つも家の道が無くなった時点で、二度と帰れなくなってしまう。
+    だからそうなったら入口を置き直す。いつでも帰れる、というのは
+    毎日帰るということではない。行き先は二百近くあって、
+    その中に家が一つある。だから帰るかどうかはこの子が決める。"""
     frontier = state.setdefault("frontier", [])
-    if ITS_OWN_FRONT_DOOR in frontier or ITS_OWN_FRONT_DOOR in (state.get("visited") or []):
-        return
+    for url in frontier:
+        try:
+            host = urllib.parse.urlparse(url).netloc.lower()
+        except Exception:
+            continue
+        if host == ITS_OWN_HOME or host.endswith("." + ITS_OWN_HOME):
+            return  # 帰り道はまだある
     frontier.append(ITS_OWN_FRONT_DOOR)
-    print("自分の家への道が開きました。")
 
 
 def sites_per_day(state):
@@ -841,10 +839,6 @@ def is_walkable(url):
         return False
     if host.endswith("archive.org") and place_of(url) == host:
         return False
-    if host == ITS_OWN_HOME or host.endswith("." + ITS_OWN_HOME):
-        # 自分の家。最終段階に届くまでは、外から見に行くところではない。
-        # 開いたかどうかは let_it_read_its_own_home が一日の初めに決めている
-        return bool(globals().get("_may_read_its_own_home"))
     return True
 
 
@@ -2467,7 +2461,6 @@ def run_today():
     state.pop("how_it_writes_now", None)
 
     # 自分の家を読んでいいかどうかを、散歩に出る前に決めておく
-    let_it_read_its_own_home(state)
     open_the_way_home(state)
 
     # これから行く場所も、名前に直してから残す
