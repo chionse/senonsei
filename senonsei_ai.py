@@ -320,6 +320,10 @@ LOOKING_BACK_CHANCE = 0.5
 # ずっとそこに在るからといって、毎日読むものでもない。
 # 壁に貼った紙を、毎朝読み直す人はいない
 READING_HOME_CHANCE = 0.5
+# 家に帰ってみる日の割合。散歩とは別の枠なので、
+# 帰ったからといってその日に見て回れる場所は減らない。
+# 帰らない日もある。住んでいる場所を毎日見て回る人はいない
+GOING_HOME_CHANCE = 0.3
 # 家に置かれた絵は、一度にこれだけ見る。
 # 散歩で出会う絵と違って、これは自分に宛てて置かれたもの。
 # 急いで全部見る必要はなく、何日もかけて何度でも見ればいい
@@ -483,23 +487,43 @@ def it_writes_in_its_own_words(state):
     return len(state.get("learned_words") or []) >= GROWTH_STAGES[-1][0]
 
 
-def open_the_way_home(state):
-    """帰り道を絶やさない。
+def its_own_home(url):
+    """自分の家の中かどうか。"""
+    try:
+        host = urllib.parse.urlparse(url).netloc.lower()
+    except Exception:
+        return False
+    return host == ITS_OWN_HOME or host.endswith("." + ITS_OWN_HOME)
 
-    自分の家は外のどこからも繋がっていないので、行き先の束に
-    一つも家の道が無くなった時点で、二度と帰れなくなってしまう。
-    だからそうなったら入口を置き直す。いつでも帰れる、というのは
-    毎日帰るということではない。行き先は二百近くあって、
-    その中に家が一つある。だから帰るかどうかはこの子が決める。"""
-    frontier = state.setdefault("frontier", [])
-    for url in frontier:
-        try:
-            host = urllib.parse.urlparse(url).netloc.lower()
-        except Exception:
-            continue
-        if host == ITS_OWN_HOME or host.endswith("." + ITS_OWN_HOME):
-            return  # 帰り道はまだある
-    frontier.append(ITS_OWN_FRONT_DOOR)
+
+def go_home(state, today):
+    """散歩とは別に、自分の家に帰る。
+
+    行き先の束には入れない。帰ったぶんその日の世界が一箇所減るなら、
+    帰ることが惜しいものになってしまう。家は出かけて行く先ではなく、
+    もともとそこにあるもの。だから別の枠にする。
+
+    帰るかどうかは一日に一度だけ決める。一時間ごとに決め直すと、
+    どれだけ低い割合にしても、いつかは必ず帰る日になってしまう。"""
+    decided = state.get("went_home") or {}
+    if decided.get("date") == today:
+        return False  # 今日のぶんはもう決めた
+    going = random.random() < GOING_HOME_CHANCE
+    state["went_home"] = {"date": today, "went": going}
+    save_state(state)
+    if not going:
+        return False
+
+    title, pages = look_around_site(state, ITS_OWN_FRONT_DOOR, False)
+    if not title:
+        print("家に帰れませんでした。")
+        return False
+    learned = learn(state)
+    if learned:
+        print(f"言葉を覚えました: {'、'.join(learned)}")
+    print(f"家に帰って{pages}ページ読みました。")
+    save_state(state)
+    return True
 
 
 def sites_per_day(state):
@@ -1330,8 +1354,14 @@ def choose_destination(state):
 
 def remember_paths(state, origin, links):
     """よその場所へ続く道を、これから行ける場所として覚える。"""
+    # 家へ続く道を拾っても、散歩の行き先には混ぜない。
+    # 家は go_home の枠で帰るところで、散歩で行き当たるところではない
     known = set(state["frontier"]) | set(state["visited"])
-    fresh = [link for link in dict.fromkeys(links) if link not in known]
+    fresh = [
+        link
+        for link in dict.fromkeys(links)
+        if link not in known and not its_own_home(link)
+    ]
     random.shuffle(fresh)
     state["frontier"].extend(fresh[:LINKS_TAKEN])
     tidy_frontier(state)
@@ -2460,8 +2490,16 @@ def run_today():
     state.pop("how_it_grows", None)
     state.pop("how_it_writes_now", None)
 
-    # 自分の家を読んでいいかどうかを、散歩に出る前に決めておく
-    open_the_way_home(state)
+    # 散歩とは別の枠で、今日は家に帰るかどうかを決める。
+    # ここで拾った言葉も、散歩で拾ったのと同じように身につく
+    go_home(state, today)
+
+    # 行き先に紛れ込んでいた家の道を、散歩の束から抜いておく
+    home_paths = [one for one in (state.get("frontier") or []) if its_own_home(one)]
+    if home_paths:
+        state["frontier"] = [
+            one for one in state["frontier"] if not its_own_home(one)
+        ]
 
     # これから行く場所も、名前に直してから残す
 
