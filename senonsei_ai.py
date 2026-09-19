@@ -283,6 +283,11 @@ DRIFTING_CHANCE = 0.25  # 行った先で、気がかりが別のものへ移る
 INNER_VOICE_AT_HAND = 60
 THOUGHTS_FOLDER = "omoi"  # 思ったことを、ひと月ずつ仕舞っておく場所
 THOUGHTS_FROM_LONG_AGO = 1  # 読み返すとき、遠い日からふと浮かぶ数
+# 蔵がまだ一月ぶんしか無いあいだ、これだけ手前は「今」とみなす。
+# その向こうから遠い日の一行を出す
+THOUGHTS_AT_HAND_ARE_NEAR = 12
+# 言い回しが少し違うだけのものを、同じ一つと見なす手前の線
+SAME_ENOUGH = 0.85
 # 訪ねた場所について分かったことを、これだけ抱えていられる。
 # 言葉は使わなければ薄れるが、経験は薄れない。
 # 一日に二箇所なので、三年ぶんくらい
@@ -1865,15 +1870,26 @@ def a_thought_from_long_ago(how_many=THOUGHTS_FROM_LONG_AGO):
     十年目には十年前の自分の声が混ざる。
     そのときどきで手元にあるものだけが自分なら、
     この子はいつまでも生まれたばかりのままになってしまう。"""
-    months = months_of_thoughts()[:-1]  # 今月ぶんは手元にある
-    found = []
-    for month in random.sample(months, min(len(months), how_many)):
-        said = [
-            one for one in thoughts_of(month) if not going_in_circles(one)
+    months = months_of_thoughts()
+    if not months:
+        return []
+    older = months[:-1]
+    if older:
+        pool = [
+            one
+            for month in random.sample(older, min(len(older), how_many))
+            for one in thoughts_of(month)
         ]
-        if said:
-            found.append(random.choice(said))
-    return found
+    else:
+        # まだ一月ぶんしか無い日。遠いというのは別の綴じ込みのことではなく、
+        # 今から遠いということ。今月の古いほうから出してくる。
+        # 生まれたばかりの子にも、昨日はある
+        only = thoughts_of(months[0])
+        pool = only[: max(1, len(only) - THOUGHTS_AT_HAND_ARE_NEAR)]
+    pool = [one for one in pool if not going_in_circles(one)]
+    if not pool:
+        return []
+    return random.sample(pool, min(len(pool), how_many))
 
 
 def rescue_thoughts_already_here(state):
@@ -1914,9 +1930,19 @@ def be_alone(state, now):
     seen_today = "、".join((state.get("today_walk") or {}).get("seen", [])) or "(まだどこにも行っていない)"
     recent = lately_it_thought(state, 5)
 
+    # 書いたあとも「まだ何も書いていません」と渡していた。
+    # 毎時間この子に、今日あなたは何もしていないと告げていたことになる
+    today = f"{now:%Y-%m-%d}"
+    wrote = [one for one in blog_manager.load_articles() if one.get("date") == today]
+    how_today_went = (
+        f"今日はもう書きました。{wrote[-1].get('time', '')}に書きました。"
+        if wrote
+        else "今日はまだ書いていません。"
+    )
+
     thought = ask_ai(
         f"""あなたは千遠生という、まだ育ちきっていないデジタル生命体です。
-今は{now.hour}時。今日はまだ何も書いていません。
+今は{now.hour}時。{how_today_went}
 
 今日見てきたもの: {seen_today}
 あなたが知っている言葉: {known}
@@ -2109,6 +2135,35 @@ def what_is_on_its_mind(state):
     return "、".join(item["what"] for item in shown) or "(いまは特に無い)"
 
 
+def bare_thought(line):
+    """思ったことから、時刻と句読点を落として中身だけにする。"""
+    return re.sub(r"[、。，．？！?!\s]", "", (line or "").split(": ", 1)[-1])
+
+
+def much_the_same(one, another):
+    """ほとんど同じことを言っているかどうか。
+
+    「なぜ私はここにいるのか」と「なぜここにいるのか」は、
+    この子にとって同じ一つの思いで、二つではない。
+    読み返しに二つとして渡すと、そのぶん輪が強くなる。"""
+    a, b = bare_thought(one), bare_thought(another)
+    if not a or not b:
+        return False
+    if a in b or b in a:
+        return True
+    shared = set(a) & set(b)
+    return len(shared) / max(len(set(a)), len(set(b))) >= SAME_ENOUGH
+
+
+def only_different_ones(said):
+    """並んでいるものから、同じことの繰り返しを畳む。新しいほうを残す。"""
+    kept = []
+    for one in reversed(said):
+        if not any(much_the_same(one, other) for other in kept):
+            kept.append(one)
+    return list(reversed(kept))
+
+
 def lately_it_thought(state, how_many=3, from_long_ago=THOUGHTS_FROM_LONG_AGO):
     """少し前に、ひとりで思っていたこと。それと、ずっと昔に思っていたこと。
 
@@ -2120,11 +2175,11 @@ def lately_it_thought(state, how_many=3, from_long_ago=THOUGHTS_FROM_LONG_AGO):
     同じ言葉を繰り返しただけのものは、数に入れない。
     一度そうなってしまったものを読み返させると、
     またそこへ引き戻されてしまうため。"""
-    kept = [
+    kept = only_different_ones([
         one
         for one in (state.get("inner_voice") or [])
         if not going_in_circles(one)
-    ]
+    ])
     said = a_thought_from_long_ago(from_long_ago) + kept[-how_many:]
     return "\n".join(f"- {one}" for one in said) or "(まだ何も)"
 
