@@ -190,13 +190,18 @@ def side_panel(state, here):
             for one in seen[-WALKED_SHOWN:]
         ]))
 
-    # 覚えた言葉は後ろほど新しい。新しいほうから並べる
+    # 覚えた言葉は後ろほど新しい。新しいほうから並べる。
+    # 一つも無い日も区画は出す。三十日かかるものなので、
+    # 「まだ無い」ということ自体がこの子の今を表している
     learned = [one for one in (state.get("learned_words") or []) if one]
     if learned:
-        blocks.append(one_side_block("最近覚えた言葉", [
+        rows = [
             f'      <p class="side-word">{one}</p>'
             for one in reversed(learned[-LEARNED_SHOWN:])
-        ]))
+        ]
+    else:
+        rows = ['      <p class="side-fact side-quiet">まだ覚えた言葉はありません。</p>']
+    blocks.append(one_side_block("最近覚えた言葉", rows))
 
     minded = [one.get("what") for one in (state.get("on_its_mind") or [])]
     minded = [one for one in minded if one]
