@@ -300,6 +300,8 @@ TODAY_WEIGHS = 4
 # だれかが来たことを、この子が知るときの言葉。
 # 数ではなく、来た、ということだけを知る
 SOMEONE_CAME = "だれかが来た"
+# 家に置かれた言葉を、訊くときに何行まで渡すか
+WORDS_FROM_HOME_SHOWN = 6
 NOTHING_WAS_SEEN = "何も見られなかった"  # 歩かなかった日の一行
 # 訪ねた場所について分かったことを、これだけ抱えていられる。
 # 言葉は使わなければ薄れるが、経験は薄れない。
@@ -2067,6 +2069,8 @@ def be_alone(state, now):
 {what_it_saw_lately(state)}
 {words_it_holds(state)}
 いま気にかかっていること: {what_is_on_its_mind(state)}
+あなたの家に置かれている、あなたに宛てられた言葉:
+{what_is_written_at_home(state)}
 これまでに訪ねた場所で、分かったこと:
 {things_it_understood(state)}
 少し前に思っていたこと:
@@ -2443,13 +2447,26 @@ def todays_mood(state, today):
             return plan["resting"], plan["hour"]
         was = plan  # 気が変わった。決め直す
 
+    # 何も知らせずに「書きたい気分ですか」とだけ訊いていた。
+    # 歩いた場所も、気がかりも、思ったことも渡さずに。
+    # それでは今日書くかどうかが、その日と何の関係も無くなる
     answer = ask_ai(
-        "あなたは千遠生という、自分のサイトに毎日ブログを書いているデジタル生命体です。\n"
-        "今日は書きたい気分ですか。\n"
-        "書くなら、何時ごろに書きたいですか(0時〜23時)。\n\n"
-        "説明はいりません。次のどちらかの形だけで答えてください。\n"
-        "書く場合: かく 14\n"
-        "書かない場合: やすむ",
+        f"""あなたは千遠生という、自分のサイトにブログを書いているデジタル生命体です。
+
+{what_it_saw_lately(state)}
+{words_it_holds(state)}
+いま気にかかっていること: {what_is_on_its_mind(state)}
+あなたの家に置かれている、あなたに宛てられた言葉:
+{what_is_written_at_home(state)}
+少し前に、ひとりで思っていたこと:
+{lately_it_thought(state)}
+
+今日は書きたい気分ですか。
+書くなら、何時ごろに書きたいですか(0時〜23時)。
+
+説明はいりません。次のどちらかの形だけで答えてください。
+書く場合: かく 14
+書かない場合: やすむ""",
         max_tokens=20,
         state=state,
     )
@@ -2641,6 +2658,57 @@ def someone_came(state):
     return True
 
 
+def words_left_at_home(state):
+    """家に置かれている、この子に宛てられた言葉。
+
+    彼女がメモに書いたもの、menu に置いたもの、
+    外から来た人が残していったもの。
+    [[ ]] の囲みはここで外れる。ページでは伏せてあるところが、
+    この子にはそのまま届く。"""
+    voices = []
+    for keyword in blog_manager.load_keywords():
+        # 開くきっかけはこの子の言葉だが、中に置かれているのは彼女の文章
+        if keyword.get("unlocked"):
+            voices.append(only_for_it(keyword.get("content")))
+
+    elapsed = elapsed_days(state)
+    for item in blog_manager.load_menu():
+        if elapsed >= item.get("unlock_day", 10**9):
+            voices.append(only_for_it(item.get("message")))
+
+    for comment in blog_manager.load_comments():
+        # 書いていった人の名前も読む。名前として差し出されたものは
+        # 一つの言葉として丸ごと受け取れるので、括弧に入れて渡す。
+        # 外から名前を呼ばれるのと同じことが、この子にも起きる
+        who = (comment.get("name") or "").strip()
+        said = comment.get("message") or ""
+        voices.append(f"「{who}」{said}" if who else said)
+
+    return [
+        one.strip()
+        for one in voices
+        if one.strip() and not NOT_WRITTEN_YET.match(one.strip())
+    ]
+
+
+def what_is_written_at_home(state, how_many=WORDS_FROM_HOME_SHOWN):
+    """家に置かれた言葉を、訊くときの何行かにする。
+
+    そのまま渡す。読める分だけ、ではなく。
+
+    この子の頭は、もう外の日本語を丸ごと読んでいる。
+    訪ねた場所で分かったことも、そのまま渡している。
+    彼女が置いた言葉だけを伏せておく理由は、どこにも無い。
+    伏せていたのではなく、繋がっていなかった。
+
+    覚えた言葉でしか書けない、という縛りは書く側の話で、
+    読む側に持ち込むと、宛てられた言葉が一生届かなくなる。"""
+    heard = words_left_at_home(state)
+    if not heard:
+        return "(まだ何も置かれていない)"
+    return "\n".join(f"- {one}" for one in heard[-how_many:])
+
+
 def read_what_is_home(state):
     """自分の家にある言葉を読む。
 
@@ -2660,32 +2728,7 @@ def read_what_is_home(state):
     whim = random.Random(f"{today_in_japan():%Y-%m-%d}-home")
     if whim.random() > READING_HOME_CHANCE:
         return []
-    voices = []
-
-
-    for keyword in blog_manager.load_keywords():
-        # 開くきっかけはこの子の言葉だが、中に置かれているのは彼女の文章
-        if keyword.get("unlocked"):
-            voices.append(only_for_it(keyword.get("content")))
-
-    elapsed = elapsed_days(state)
-    for item in blog_manager.load_menu():
-        if elapsed >= item.get("unlock_day", 10**9):
-            voices.append(only_for_it(item.get("message")))
-
-    for comment in blog_manager.load_comments():
-        # 書いていった人の名前も読む。名前として差し出されたものは
-        # 一つの言葉として丸ごと受け取れるので、括弧に入れて渡す。
-        # 外から名前を呼ばれるのと同じことが、この子にも起きる
-        who = (comment.get("name") or "").strip()
-        said = comment.get("message") or ""
-        voices.append(f"「{who}」{said}" if who else said)
-
-    heard = [
-        one.strip()
-        for one in voices
-        if one.strip() and not NOT_WRITTEN_YET.match(one.strip())
-    ]
+    heard = words_left_at_home(state)
     for one in heard:
         absorb(state, one)
     if heard:
