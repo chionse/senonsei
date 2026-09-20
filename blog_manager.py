@@ -33,6 +33,9 @@ LEARNED_SHOWN = 5  # 最近覚えた言葉を、新しいほうからこれだ�
 # 気がかりは一つも捨てないので、ここに出すのは前に出ているぶんだけ。
 # 抱えていないのではなく、いま手前にあるのがこれ、ということ
 MINDED_SHOWN = 3
+# まだ言えていないことも、前に出ているぶんだけ。
+# 言えたら下がるだけで、持ち物からは消えない
+WANTS_SHOWN = 3
 # [[ ]] で囲まれたところは、千遠生だけが読む。
 # ページに出すときは伏せる。彼女がこの子にだけ伝えたいことのために
 ONLY_FOR_SENONSEI = re.compile(r"\[\[(.+?)\]\]", re.DOTALL)
@@ -228,6 +231,22 @@ def side_panel(state, here):
     if minded:
         blocks.append(one_side_block("気にかかっていること", [
             f'      <p class="side-word">{one["what"]}</p>' for one in minded
+        ]))
+
+    # 強く出会ったのに、まだそれについて書けていないこと。
+    # 最後に出会った日より、最後にそれを書いた日が古ければ、まだ言えていない。
+    # 言えたら下がるだけで、持ち物からは消えない
+    unsaid = sorted(
+        (
+            one
+            for one in (state.get("wants_to_say") or [])
+            if one.get("what") and (one.get("said") or "") < (one.get("since") or "")
+        ),
+        key=lambda one: (one.get("since") or "", one.get("times", 1)),
+    )[-WANTS_SHOWN:]
+    if unsaid:
+        blocks.append(one_side_block("まだ言えていないこと", [
+            f'      <p class="side-word">{one["what"]}</p>' for one in unsaid
         ]))
 
     return '  <aside class="side">\n' + "\n\n".join(blocks) + "\n  </aside>\n"
