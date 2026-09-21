@@ -178,7 +178,7 @@ def side_panel(state, here):
     except ValueError:
         pass
     if now:
-        blocks.append(one_side_block("いま", now))
+        blocks.append(one_side_block("成長記録", now))
 
     # 彼女が書いたもの。この子のものとは分けて並べる。
     # 何も書かれていないうちは、その道を出さない
