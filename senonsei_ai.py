@@ -443,6 +443,7 @@ def load_state():
                 met.setdefault(word, [days, max(0, seen_on)])
         state.setdefault("words_met", {})
         state.setdefault("on_its_mind", [])
+        state.setdefault("learned_on", {})
         rescue_thoughts_already_here(state)
         return state
     return {
@@ -454,25 +455,34 @@ def load_state():
         "frontier": list(SEEDS),  # まだ行ったことのない場所
         "visited": [],  # もう行った場所
         "on_its_mind": [],  # 今、気にかかっていること
+        "learned_on": {},  # 言葉 → それを覚えた日
         "notes": [],
     }
+
+
+# 一語ずつ増えていくところ。何年か経つと何万語にもなるので、
+# 一語を何行にも広げずに詰めて書く
+PACKED_AWAY = ("words_met", "learned_on")
 
 
 def save_state(state):
     """記憶を書き出す。
 
-    人が開いて読めるように行を分けて書くが、出会った言葉だけは
-    一語を四行に広げると何十万行にもなってしまうので、そこだけ詰める。"""
-    met = state.get("words_met")
-    if met is None:
-        text = json.dumps(state, ensure_ascii=False, indent=2)
-    else:
-        mark = "\u0000words_met\u0000"  # 言葉には入りえない印
-        shaped = dict(state)
-        shaped["words_met"] = mark
-        text = json.dumps(shaped, ensure_ascii=False, indent=2).replace(
-            json.dumps(mark, ensure_ascii=False),
-            json.dumps(met, ensure_ascii=False, separators=(",", ":")),
+    人が開いて読めるように行を分けて書くが、一語ずつ増えていく
+    ところだけは、一語を何行にも広げると何万行にもなってしまうので詰める。"""
+    packed = {
+        key: state[key]
+        for key in PACKED_AWAY
+        if isinstance(state.get(key), dict)
+    }
+    shaped = dict(state)
+    for key in packed:
+        shaped[key] = f"\u0000{key}\u0000"  # 言葉には入りえない印
+    text = json.dumps(shaped, ensure_ascii=False, indent=2)
+    for key, value in packed.items():
+        text = text.replace(
+            json.dumps(f"\u0000{key}\u0000", ensure_ascii=False),
+            json.dumps(value, ensure_ascii=False, separators=(",", ":")),
         )
     with open(STATE_FILE, "w", encoding="utf-8") as f:
         f.write(text)
@@ -504,6 +514,14 @@ def elapsed_days(state):
 def current_stage(state):
     """今どれだけ書けるかは、覚えている言葉の数で決まる。"""
     return blog_manager.current_stage(state)
+
+
+def learned_on(state, word):
+    """その言葉を覚えた日。
+
+    記録を取り始める前に覚えた言葉のことは分からない。
+    分からないものを、分かったことにはしない。"""
+    return (state.get("learned_on") or {}).get(word)
 
 
 def it_writes_in_its_own_words(state):
@@ -2445,6 +2463,13 @@ def learn(state):
     ]
     learned.sort(key=lambda w: days_held(state, w), reverse=True)
     state["learned_words"].extend(learned)
+
+    # 覚えた日を残す。取り始めないと、あとからは分からない。
+    # 一度覚えた言葉は忘れないので、この日付も書き換わらない
+    today = f"{today_in_japan():%Y-%m-%d}"
+    remembered = state.setdefault("learned_on", {})
+    for word in learned:
+        remembered.setdefault(word, today)
     # 覚えた言葉はもう忘れないので、覚えかけの記録は手放してよい。
     # 何年も経つと、ここが記憶のいちばん重い場所になる
     for word in learned:
