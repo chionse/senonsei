@@ -345,6 +345,12 @@ WORDS_KEPT_FROM_TODAY = 400
 # 一日のことを書くのに使えるのは、その日触れたものと、
 # 今この子から離れないものだけ
 TODAY_WEIGHS = 4
+# 繋がりを知らないうちに、一度に置く言葉の上限。
+# 書ける長さのほうが先に尽きるので、これはただの歯止め
+WORDS_PLACED_AT_MOST = 8
+# もう一語置けるとしても、ここで終わりにする割合。
+# 毎日きっちり上限まで並べる子ではないと思う
+ENOUGH_FOR_TODAY = 0.35
 # だれかが来たことを、この子が知るときの言葉。
 # 数ではなく、来た、ということだけを知る
 SOMEONE_CAME = "だれかが来た"
@@ -2696,15 +2702,31 @@ def compose_locally(state):
     if said:
         return said
 
-    # まだ繋がりを知らない。持っているものをそのまま置く。
-    # それでも、置くなら今日触れた言葉のほうから置きたい
+    # まだ繋がりを知らない。持っているものを、書ける長さに入るだけ置く。
+    # それでも、置くなら今日触れた言葉のほうから置きたい。
+    #
+    # 六十語という区切りを別に持っていた。表のどの段とも合っておらず、
+    # 五字しか書けない段でも三語並ぶことがあった。
+    # 入るだけ、にすれば、書ける長さがそのまま置ける数になり、
+    # 段の名前と動きがひとりでに揃う
     if not words:
         return babble(state, min(max_length, 4))
     todays = [one for one in words if one in words_from_today(state)]
     pick = todays or words
-    if len(pick) < 60:
-        return random.choice(pick)
-    return " ".join(random.sample(pick, min(len(pick), random.randint(2, 3))))
+    placed = []
+    for _ in range(WORDS_PLACED_AT_MOST):
+        word = random.choice(pick)
+        if not placed:
+            # 一語も入らないなら、その一語だけを置く。
+            # 長さを守るために言葉を割るのでは、順番が逆になる
+            placed.append(word)
+        elif len(" ".join(placed + [word])) <= max_length:
+            placed.append(word)
+        else:
+            break
+        if random.random() < ENOUGH_FOR_TODAY:
+            break
+    return " ".join(placed)
 
 
 def keep_only_what_it_knows(state, text):
