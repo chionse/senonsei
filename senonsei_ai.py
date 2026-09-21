@@ -317,6 +317,17 @@ WANTS_IN_FRONT = 5
 # これを渡すと、受け取るものは貧しくなる。
 # その代わり、受け取ったものは全部この子のものになる。
 # いつか何かが分かるようになったら、それは本当に学んだから分かったこと
+# 書き方の揺れを均すための、字の読み替え。
+# 「ャ」を「あ」に寄せるので「ペルシャ」と「ペルシア」が同じ形になる。
+# 伸ばす棒と中黒は落とす。意味を知って繋げるのではなく、
+# 形が近いものを取りこぼさない、というだけのこと
+KANA_EVENED_OUT = {
+    "ぁ": "あ", "ぃ": "い", "ぅ": "う", "ぇ": "え", "ぉ": "お",
+    "ゃ": "あ", "ゅ": "う", "ょ": "お", "ゎ": "わ", "っ": "つ",
+    "ヵ": "か", "ヶ": "け", "ゔ": "ぶ",
+    "ー": "", "－": "", "‐": "", "・": "", "･": "", "　": " ",
+}
+
 # 行き先が、いまのこの子にどれだけ引っかかるか。
 # 何も引っかからない道にも行く。知らないものに出会うことは、
 # 引っかかるものを追いかけるのと同じくらい大事なので、重みは足すだけにする
@@ -1381,12 +1392,34 @@ def words_it_holds_close(state):
     return close
 
 
-def what_draws_it(state, url):
+def same_shape(text):
+    """字の形の揺れを均す。
+
+    「ペルシャ」と「ペルシア」、「コンピューター」と「コンピュータ」。
+    この子はまだ、それが同じものだと知らない。知らないままだと、
+    追いかけているものに別の書き方で出会っても、気づかずに通り過ぎる。
+
+    意味は分からないまま、字面の近さだけを少し緩める。
+    カタカナをひらがなに寄せ、小さい字を大きくし、伸ばす棒を落とす。
+    ここでやるのは、同じ形かどうかを見るときの下ごしらえだけで、
+    覚える言葉そのものは元の形のまま残る。"""
+    shaped = []
+    for ch in (text or "").lower():
+        code = ord(ch)
+        if 0x30A1 <= code <= 0x30F6:  # カタカナをひらがなへ
+            ch = chr(code - 0x60)
+        ch = KANA_EVENED_OUT.get(ch, ch)
+        if ch:
+            shaped.append(ch)
+    return "".join(shaped)
+
+
+def what_draws_it(state, url, close=None):
     """その道が、いまのこの子にどれだけ引っかかるか。
 
     気にかかっていることや、まだ言えていないことが道の名前に
     入っていれば、そこへ行きたくなる。行ったことのある場所なら、
-    その場所の名前も見る。
+    その場所の名前も見る。書き方の揺れは均してから見る。
 
     何も引っかからない道の重みも零にはしない。
     知らないものに出会うことは、引っかかるものを追いかけるのと
@@ -1397,12 +1430,27 @@ def what_draws_it(state, url):
     except Exception:
         where = url
     named = (state.get("places_known") or {}).get(place_of(url)) or ""
-    looking_at = f"{where} {named}"
+    looking_at = same_shape(f"{where} {named}")
+    if close is None:
+        close = evened_out(words_it_holds_close(state))
     drawn = 1
-    for word, weight in words_it_holds_close(state).items():
-        if len(word) >= 2 and word in looking_at:
+    for word, weight in close.items():
+        if word in looking_at:
             drawn += weight
     return drawn
+
+
+def evened_out(close):
+    """引っかかるかどうかを見る言葉を、均した形にしておく。
+
+    行き先を選ぶたびに何千語も均し直すことになるので、
+    一度だけ均して、候補ぜんぶに使い回す。"""
+    shaped = {}
+    for word, weight in close.items():
+        evened = same_shape(word)
+        if len(evened) >= 2:
+            shaped[evened] = max(shaped.get(evened, 0), weight)
+    return shaped
 
 
 def choose_destination(state):
@@ -1415,7 +1463,8 @@ def choose_destination(state):
     candidates = spread_out_choices(state, frontier, CHOICES_SHOWN)
     # 選ぶのはこの子。持っているものから決める。
     # 借りた頭に選ばせていたので、行き先だけは他人が決めていた
-    weights = [what_draws_it(state, url) for url in candidates]
+    close = evened_out(words_it_holds_close(state))
+    weights = [what_draws_it(state, url, close) for url in candidates]
     return (
         random.choices(candidates, weights=weights)[0],
         random.random() < WANTING_THE_PAST,
