@@ -1649,107 +1649,37 @@
   },
   "wants_to_say": [
     {
-      "what": "x0",
-      "since": "2026-09-21",
-      "first": "x",
+      "what": "盻冲",
+      "since": "2026-09-20",
+      "first": "2026-09-20",
       "times": 1,
       "said": ""
     },
     {
-      "what": "x1",
-      "since": "2026-09-21",
-      "first": "x",
+      "what": "爬歩",
+      "since": "2026-09-20",
+      "first": "2026-09-20",
       "times": 1,
       "said": ""
     },
     {
-      "what": "x2",
+      "what": "ウィキペディア:について",
       "since": "2026-09-21",
-      "first": "x",
+      "first": "2026-09-21",
       "times": 1,
       "said": ""
     },
     {
-      "what": "x3",
+      "what": "ツアー",
       "since": "2026-09-21",
-      "first": "x",
+      "first": "2026-09-21",
       "times": 1,
       "said": ""
     },
     {
-      "what": "x4",
+      "what": "ファイナンスバー",
       "since": "2026-09-21",
-      "first": "x",
-      "times": 1,
-      "said": ""
-    },
-    {
-      "what": "x5",
-      "since": "2026-09-21",
-      "first": "x",
-      "times": 1,
-      "said": ""
-    },
-    {
-      "what": "x6",
-      "since": "2026-09-21",
-      "first": "x",
-      "times": 1,
-      "said": ""
-    },
-    {
-      "what": "x7",
-      "since": "2026-09-21",
-      "first": "x",
-      "times": 1,
-      "said": ""
-    },
-    {
-      "what": "x8",
-      "since": "2026-09-21",
-      "first": "x",
-      "times": 1,
-      "said": ""
-    },
-    {
-      "what": "x9",
-      "since": "2026-09-21",
-      "first": "x",
-      "times": 1,
-      "said": ""
-    },
-    {
-      "what": "x10",
-      "since": "2026-09-21",
-      "first": "x",
-      "times": 1,
-      "said": ""
-    },
-    {
-      "what": "x11",
-      "since": "2026-09-21",
-      "first": "x",
-      "times": 1,
-      "said": ""
-    },
-    {
-      "what": "x12",
-      "since": "2026-09-21",
-      "first": "x",
-      "times": 1,
-      "said": ""
-    },
-    {
-      "what": "x13",
-      "since": "2026-09-21",
-      "first": "x",
-      "times": 1,
-      "said": ""
-    },
-    {
-      "what": "x14",
-      "since": "2026-09-21",
-      "first": "x",
+      "first": "2026-09-21",
       "times": 1,
       "said": ""
     }
@@ -1757,7 +1687,12 @@
   "thinking_about": "なぜ、私は自由を求めているのか、自分でもわからない。",
   "learned_on": {"など":"2026-09-20","本当":"2026-09-20","がある":"2026-09-20","だった":"2026-09-20","しかし":"2026-09-20","ある":"2026-09-20","こんにち":"2026-09-20","では":"2026-09-21"},
   "today_keen": {
-    "date": "2026-09-22",
-    "keen": false
+    "date": "2026-09-21",
+    "keen": true
+  },
+  "today_plan": {
+    "date": "2026-09-21",
+    "resting": false,
+    "hour": 20
   }
 }
