@@ -11,6 +11,13 @@ NEWS_FILE = "news.json"
 NEWS_PAGE = "shinchaku.html"
 NEWS_ON_TOP = 3  # トップに出す更新情報の数。残りは一覧に全部ある
 NEWS_TITLE_LENGTH = 24  # 一覧に出す見出しの長さ。題が無い時は本文の頭を借りる
+# ひみつの部屋。彼女が作りの裏側を話すところ。
+# 更新情報は日付で並ぶが、こちらは中身ごとに分かれるので、
+# 書いた順の通し番号でページを分ける。
+# 並べ替えても消しても、一度付いた番号は動かさない。
+# 外から貼られた道が切れないように
+HIMITSU_FILE = "himitsu.json"
+HIMITSU_PAGE = "himitsu.html"
 # 言い切りの印。ここで一文が終わる
 SENTENCE_ENDINGS = ("。", "！", "？", "!", "?")
 A_SENTENCE_ENDS = re.compile("[" + "".join(SENTENCE_ENDINGS) + "]")
@@ -30,7 +37,7 @@ WHERE_YOU_CAN_GO = (
     ("profile.html", "プロフィール"),
 )
 # 彼女が書いた方。この子のものとは分けて並べる
-WHERE_SHE_WROTE = ((NEWS_PAGE, "更新情報"),)
+WHERE_SHE_WROTE = ((NEWS_PAGE, "更新情報"), (HIMITSU_PAGE, "ひみつの部屋"))
 WALKED_SHOWN = 3  # 今日歩いたところを、多くてもこれだけ出す
 LEARNED_SHOWN = 5  # 最近覚えた言葉を、新しいほうからこれだけ出す
 # 気がかりは一つも捨てないので、ここに出すのは前に出ているぶんだけ。
@@ -787,6 +794,142 @@ def load_news():
     )
 
 
+def load_himitsu():
+    """彼女が書き残した、作りの裏側の話。無ければ空のまま。
+
+    この子は書かない。ここに書くのは彼女だけ。
+    更新情報と違って日付では分けない。一つの話で一つのページ。
+
+    番号は置いた時に振る。あとから並べ替えても消しても、
+    一度付いた番号は動かさない。外から貼られた道が切れないように。"""
+    if not os.path.exists(HIMITSU_FILE):
+        return []
+    try:
+        with open(HIMITSU_FILE, "r", encoding="utf-8") as f:
+            kept = json.load(f)
+    except (ValueError, OSError):
+        return []
+    return [
+        one
+        for one in kept
+        if one.get("content") and isinstance(one.get("number"), int)
+    ]
+
+
+def himitsu_page_name(number):
+    """その一話だけのページの名前。"""
+    return f"{HIMITSU_PAGE[: -len('.html')]}-{number}.html"
+
+
+def himitsu_title(one):
+    """一覧に並べる時の見出し。題が無ければ本文の頭を借りる。"""
+    return news_title(one)
+
+
+def all_himitsu_pages(himitsu):
+    """ひみつの部屋に関わるページを全部。"""
+    if not himitsu:
+        return []
+    return [HIMITSU_PAGE] + [himitsu_page_name(one["number"]) for one in himitsu]
+
+
+def clear_old_himitsu_pages(keep):
+    """もう無い話のページを片付ける。"""
+    alive = set(keep)
+    head = HIMITSU_PAGE[: -len(".html")] + "-"
+    for name in os.listdir("."):
+        if name.startswith(head) and name.endswith(".html") and name not in alive:
+            os.remove(name)
+
+
+def generate_himitsu_list_html(himitsu):
+    """ひみつの部屋の一覧。話の題を並べるだけ。
+
+    日付は出さない。いつ書いたかを追うところではなく、
+    どの話があるかを選ぶところなので。"""
+    rows = "\n".join(
+        f'    <li><a href="{himitsu_page_name(one["number"])}">'
+        f'{himitsu_title(one)}</a></li>'
+        for one in himitsu
+    )
+    html = f"""<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<title>ひみつの部屋</title>
+<meta name="viewport" content="width=1200" />
+<link rel="stylesheet" href="{styled()}" />
+</head>
+<body>
+  <div class="top-nav"><a href="index.html">←トップ</a></div>
+
+  <header>
+    <h1>ひみつの部屋</h1>
+  </header>
+
+  {MAIN_STARTS}
+  <ul class="recent-list">
+{rows}
+  </ul>
+  {MAIN_ENDS}
+</body>
+</html>
+"""
+    with open(HIMITSU_PAGE, "w", encoding="utf-8") as f:
+        f.write(html)
+
+
+def generate_himitsu_entry_html(himitsu, index):
+    """ひみつの部屋の一話ぶんのページ。下に前と次を置く。"""
+    one = himitsu[index]
+    before = himitsu[index - 1] if index > 0 else None
+    after = himitsu[index + 1] if index + 1 < len(himitsu) else None
+
+    def step(entry, label):
+        if not entry:
+            return f'<span class="here">{label}</span>'
+        return (f'<a href="{himitsu_page_name(entry["number"])}">'
+                f'{label}　{himitsu_title(entry)}</a>')
+
+    named = (
+        f'<span class="article-title">{one["title"]}</span>'
+        if one.get("title")
+        else ""
+    )
+    when = one.get("date", "")
+    html = f"""<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<title>ひみつの部屋 {one.get('title') or ''}</title>
+<meta name="viewport" content="width=1200" />
+<link rel="stylesheet" href="{styled()}" />
+</head>
+<body>
+  <div class="top-nav"><a href="index.html">←トップ</a><a href="{HIMITSU_PAGE}">ひみつの部屋の一覧へ</a></div>
+
+  <header>
+    <h1>ひみつの部屋</h1>
+  </header>
+
+  {MAIN_STARTS}
+  <article>
+    <div class="date">{when}{named}</div>
+    <p>{one['content']}</p>
+  </article>
+
+  <div class="step-nav">
+    <div class="step-back">{step(before, "←前")}</div>
+    <div class="step-next">{step(after, "次→")}</div>
+  </div>
+  {MAIN_ENDS}
+</body>
+</html>
+"""
+    with open(himitsu_page_name(one["number"]), "w", encoding="utf-8") as f:
+        f.write(html)
+
+
 def news_page_name(date_str):
     """その一件だけのページの名前。"""
     return f"{NEWS_PAGE[: -len('.html')]}-{date_str}.html"
@@ -1432,7 +1575,19 @@ def regenerate_pages(articles):
         os.remove(NEWS_PAGE)
     clear_old_news_pages(all_news_pages(news))
 
-    side_panels(EVERY_PAGE + tuple(all_news_pages(news)))
+    # 彼女が話す、作りの裏側。中身が無いあいだはページごと出さない
+    himitsu = load_himitsu()
+    for index in range(len(himitsu)):
+        generate_himitsu_entry_html(himitsu, index)
+    if himitsu:
+        generate_himitsu_list_html(himitsu)
+    elif os.path.exists(HIMITSU_PAGE):
+        os.remove(HIMITSU_PAGE)
+    clear_old_himitsu_pages(all_himitsu_pages(himitsu))
+
+    side_panels(
+        EVERY_PAGE + tuple(all_news_pages(news)) + tuple(all_himitsu_pages(himitsu))
+    )
     iine_on_pages(EVERY_PAGE)
 
 
