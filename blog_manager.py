@@ -67,7 +67,7 @@ COMMENTS_FOLDER = "comments"
 #
 # 紙は comments/ に残る。読むときに素通しするだけなので、
 # 間違って弾いたと分かればここから外せば戻る
-NAMES_NOT_TAKEN = ("ちおんせ", "かちとせ", "千音瀬")
+NAMES_NOT_TAKEN = ("ちおんせ", "ちとせ", "千音瀬")
 LIKES_FOLDER = "likes"
 COMMENT_WORKER_ENDPOINT = "https://senonsei-comments.chitomatsu.workers.dev/"
 RECENT_COUNT = 10  # トップページに表示する直近記事の件数(最新1件を除く)
