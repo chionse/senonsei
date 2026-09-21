@@ -315,7 +315,7 @@ def side_panel_left(state, articles):
     """本文の左に置く欄。積み上がっていくものを出す。
 
     右の欄が今日のことなら、こちらは育ちのほう。
-    「きょう歩いたところ」が過去で、「これから行くつもりの場所」が未来。"""
+    「きょう歩いたところ」が過去で、「今後行くつもりの場所」が未来。"""
     state = state or {}
     blocks = []
 
@@ -323,14 +323,14 @@ def side_panel_left(state, articles):
     if koma:
         blocks.append(
             '    <div class="side-block">\n'
-            '      <div class="side-title">書いた日</div>\n'
+            '      <div class="side-title">月間スタンプカード</div>\n'
             + koma
             + "\n    </div>"
         )
 
     going = where_it_will_go(state)
     if going:
-        blocks.append(one_side_block("これから行くつもりの場所", going))
+        blocks.append(one_side_block("今後行くつもりの場所", going))
 
     ladder = how_it_grows(state)
     if ladder:
