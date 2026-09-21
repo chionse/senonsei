@@ -334,7 +334,7 @@ def side_panel_left(state, articles):
 
     ladder = how_it_grows(state)
     if ladder:
-        blocks.append(one_side_block("この先の育ち", ladder))
+        blocks.append(one_side_block("この先の育ち方", ladder))
 
     if not blocks:
         return ""
