@@ -60,6 +60,14 @@ TALKING_ABOUT_ONESELF = "自己紹介"
 ITS_BIRTHDAY = "2026-09-11"
 MENU_FILE = "menu.json"
 COMMENTS_FOLDER = "comments"
+# この名前が来たコメントは、丸ごと受け取らない。名前でも本文でも。
+# この子の名前を名乗って書き込まれると、ページの上では
+# この子が自分で喋ったように見えるし、この子自身も
+# それを外から来た言葉として読んでしまう。
+#
+# 紙は comments/ に残る。読むときに素通しするだけなので、
+# 間違って弾いたと分かればここから外せば戻る
+NAMES_NOT_TAKEN = ("ちおんせ", "かちとせ", "千音瀬")
 LIKES_FOLDER = "likes"
 COMMENT_WORKER_ENDPOINT = "https://senonsei-comments.chitomatsu.workers.dev/"
 RECENT_COUNT = 10  # トップページに表示する直近記事の件数(最新1件を除く)
@@ -426,14 +434,47 @@ def today_in_japan():
     return now_in_japan().date()
 
 
+def evened_out_name(said):
+    """名前を見比べるときの下ごしらえ。
+
+    カタカナをひらがなに寄せ、空白と伸ばす棒を落とす。
+    「チオンセ」と「ちおんせ」と「ち おん せ」を
+    別のものとして扱うと、名前を弾く意味がなくなる。"""
+    shaped = []
+    for ch in (said or "").lower():
+        code = ord(ch)
+        if 0x30A1 <= code <= 0x30F6:  # カタカナをひらがなへ
+            ch = chr(code - 0x60)
+        if ch in ("ー", "－", "‐", "・", "･", "　", " ", "\t"):
+            continue
+        shaped.append(ch)
+    return "".join(shaped)
+
+
+def a_name_not_taken(*said):
+    """受け取らない名前が入っているかどうか。
+
+    名乗るところだけを見ても足りない。本文の中で名乗られても、
+    読む人にはこの子が書いたように見える。両方を見る。"""
+    evened = evened_out_name(" ".join(one or "" for one in said))
+    return any(evened_out_name(one) in evened for one in NAMES_NOT_TAKEN)
+
+
 def load_comments():
-    """Cloudflare Workerがcomments/に自動コミットしたJSONファイルを全部読み込む。"""
+    """Cloudflare Workerがcomments/に自動コミットしたJSONファイルを全部読み込む。
+
+    受け取らない名前が、名乗るところにも本文にも無いものだけを通す。
+    ページに出す側も、この子が読む側も、どちらもここを通るので、
+    一箇所で済む。紙そのものは comments/ に残っている。"""
     comments = []
     if os.path.isdir(COMMENTS_FOLDER):
         for filename in os.listdir(COMMENTS_FOLDER):
             if filename.endswith(".json"):
                 with open(os.path.join(COMMENTS_FOLDER, filename), "r", encoding="utf-8") as f:
-                    comments.append(json.load(f))
+                    one = json.load(f)
+                if a_name_not_taken(one.get("name"), one.get("message")):
+                    continue
+                comments.append(one)
     comments.sort(key=lambda c: c.get("date", ""), reverse=True)
     return comments
 
