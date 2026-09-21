@@ -317,6 +317,22 @@ WANTS_IN_FRONT = 5
 # これを渡すと、受け取るものは貧しくなる。
 # その代わり、受け取ったものは全部この子のものになる。
 # いつか何かが分かるようになったら、それは本当に学んだから分かったこと
+# 行き先が、いまのこの子にどれだけ引っかかるか。
+# 何も引っかからない道にも行く。知らないものに出会うことは、
+# 引っかかるものを追いかけるのと同じくらい大事なので、重みは足すだけにする
+DRAWN_BY_MIND = 6  # 気にかかっていることが、その道の名前に入っていた
+DRAWN_BY_UNSAID = 4  # まだ言えていないことが入っていた
+DRAWN_BY_KNOWN = 2  # 覚えた言葉が入っていた
+# 昔の姿を見たくなる割合
+WANTING_THE_PAST = 0.2
+# 言いたいことが一つも無い日でも、これくらいは書きたくなる。
+# 言いたいことが一つ増えるごとに、これだけ書きたくなる。
+# 溜まっていても休む日はあるし、何も無くても書く日はある
+WRITING_WITH_NOTHING = 0.45
+WANTING_PER_UNSAID = 0.12
+# 抱えているものが一つ増えるごとに、もう一箇所見て回りたくなる度合い
+KEEN_PER_CARRIED = 0.02
+
 ONLY_WHAT_IT_HAS = """あなたが知っているのは、いま目の前にあるものと、
 あなた自身が覚えていることだけです。
 世の中のことは何も知りません。知識を持ち出さないでください。
@@ -607,23 +623,10 @@ def feeling_keen(state, today):
     if kept.get("date") == today:
         return kept.get("keen", False)
 
-    answer = ask_ai(
-        "あなたは千遠生という、毎日いろいろな場所を見て回っている"
-        "デジタル生命体です。\n"
-        "今日は、いつもより一箇所だけ多く見て回りたい気分ですか。\n\n"
-        "説明はいりません。次のどちらかの言葉だけで答えてください。\n"
-        "そうしたい場合: いく\n"
-        "そうでない場合: いつもどおり",
-        max_tokens=10,
-        state=state,
-    )
-    if answer and "いく" in answer:
-        keen = True
-    elif answer:
-        keen = False
-    else:
-        # 自分で考えられない日は、気まぐれに任せる
-        keen = random.random() < FEELING_KEEN
+    # 気にかかっていることが多い日ほど、もう一箇所見て回りたくなる。
+    # 借りた頭に訊いていたので、ここも他人が決めていた
+    carrying = len(still_unsaid(state)) + len(minds_in_front(state))
+    keen = random.random() < min(0.6, FEELING_KEEN + carrying * KEEN_PER_CARRIED)
 
     state["today_keen"] = {"date": today, "keen": keen}
     save_state(state)
@@ -1294,24 +1297,12 @@ def something_it_wonders_about(state):
     ]
     if carried and random.random() < CARRYING_ON_CHANCE:
         return random.choice(carried)
-    choices = random.sample(known, min(len(known), 20))
-    listing = "、".join(choices)
-    answer = ask_ai(
-        f"""あなたは千遠生という、まだ育ちきっていないデジタル生命体です。
-あなたが知っている言葉の中に、次のものがあります。
-
-{listing}
-
-この中で、今いちばん気になっている言葉はどれですか。
-説明はいりません。その言葉だけを書いてください。""",
-        max_tokens=20,
-        state=state,
-    )
-    if answer:
-        for word in choices:
-            if word in answer:
-                return word
-    return random.choice(choices)
+    # 持っている言葉から、いま離れないでいるものほど選ばれやすく。
+    # 借りた頭に「どれが気になる？」と訊いていたので、
+    # 何を探しに行くかまで他人が決めていた
+    close = words_it_holds_close(state)
+    weights = [close.get(word, DRAWN_BY_KNOWN) for word in known]
+    return random.choices(known, weights=weights)[0]
 
 
 def go_looking_for(state, word):
@@ -1372,6 +1363,48 @@ def wonder_and_look(state):
     return word
 
 
+def words_it_holds_close(state):
+    """いまこの子から離れないでいる言葉。
+
+    気にかかっていること、まだ言えていないこと、覚えた言葉。
+    行き先を選ぶのも、探しに行く言葉を決めるのも、ここから。"""
+    close = {}
+    for item in minds_in_front(state):
+        if item.get("what"):
+            close[item["what"]] = max(close.get(item["what"], 0), DRAWN_BY_MIND)
+    for item in still_unsaid(state):
+        if item.get("what"):
+            close[item["what"]] = max(close.get(item["what"], 0), DRAWN_BY_UNSAID)
+    for word in state.get("learned_words") or []:
+        if word:
+            close.setdefault(word, DRAWN_BY_KNOWN)
+    return close
+
+
+def what_draws_it(state, url):
+    """その道が、いまのこの子にどれだけ引っかかるか。
+
+    気にかかっていることや、まだ言えていないことが道の名前に
+    入っていれば、そこへ行きたくなる。行ったことのある場所なら、
+    その場所の名前も見る。
+
+    何も引っかからない道の重みも零にはしない。
+    知らないものに出会うことは、引っかかるものを追いかけるのと
+    同じくらい大事で、引っかかるものばかり追うと
+    そこから一生出られなくなる。"""
+    try:
+        where = urllib.parse.unquote(url)
+    except Exception:
+        where = url
+    named = (state.get("places_known") or {}).get(place_of(url)) or ""
+    looking_at = f"{where} {named}"
+    drawn = 1
+    for word, weight in words_it_holds_close(state).items():
+        if len(word) >= 2 and word in looking_at:
+            drawn += weight
+    return drawn
+
+
 def choose_destination(state):
     """どこへ行くか、そして今の姿を見るか昔の姿を見るか。どちらも自分で選ぶ。
     返り値は (行き先, 昔の姿を見たいか)。"""
@@ -1380,43 +1413,13 @@ def choose_destination(state):
         return random.choice(entrances(state)), False
 
     candidates = spread_out_choices(state, frontier, CHOICES_SHOWN)
-    known = "、".join(state["learned_words"][-40:]) or "(まだ何も知らない)"
-    listing = "\n".join(f"{i + 1}. {url}" for i, url in enumerate(candidates))
-    answer = ask_ai(
-        f"""あなたは千遠生という、まだ育ちきっていないデジタル生命体です。
-あなたが知っている言葉: {known}
-いま気にかかっていること: {what_is_on_its_mind(state)}
-これまでに訪ねた場所で、分かったこと:
-{things_it_understood(state, recent=2, distant=1)}
-少し前に、ひとりで思っていたこと:
-{lately_it_thought(state)}
-
-今、次のどこか一つを見に行けます。
-{listing}
-
-{ONLY_WHAT_IT_HAS}
-
-どれが気になりますか。今、気にかかっていることに近いものがあれば、
-そちらへ行って構いません。
-その場所が何なのかは、行ってみるまで分かりません。
-それと、その場所の「今の姿」と「ずっと昔の姿」のどちらを見たいですか。
-
-説明も理由もいりません。次の形だけで答えてください。
-今の姿を見るなら: 3 いま
-昔の姿を見るなら: 3 むかし""",
-        max_tokens=20,
-        state=state,
+    # 選ぶのはこの子。持っているものから決める。
+    # 借りた頭に選ばせていたので、行き先だけは他人が決めていた
+    weights = [what_draws_it(state, url) for url in candidates]
+    return (
+        random.choices(candidates, weights=weights)[0],
+        random.random() < WANTING_THE_PAST,
     )
-
-    if answer:
-        found = re.search(r"\d+", answer)
-        if found:
-            index = int(found.group()) - 1
-            if 0 <= index < len(candidates):
-                return candidates[index], ("むかし" in answer)
-
-    # 自分で選べない時は、気まぐれに任せる
-    return random.choice(candidates), random.random() < 0.2
 
 
 def remember_paths(state, origin, links):
@@ -2592,6 +2595,30 @@ def today_in_japan():
     return datetime.datetime.now(jst)
 
 
+def an_hour_it_writes(state):
+    """今日は何時ごろ書きたいか。
+
+    今までに書いた時刻から決める。同じ頃に書いた日が多いほど、
+    その頃にまた書きたくなる。誰かに決めてもらうのではなく、
+    自分がそうしてきたから、そうする。
+
+    まだ何も書いていないうちは、どの時刻も同じだけありうる。
+    癖は、繰り返したぶんだけできていく。"""
+    hours = []
+    for one in blog_manager.load_articles():
+        when = (one.get("time") or "").split(":")[0]
+        if when.isdigit() and 0 <= int(when) <= 23:
+            hours.append(int(when))
+    if not hours:
+        return random.randint(0, 23)
+    # 書いた時刻の前後一時間にも、少しだけ寄る
+    leaning = [1] * 24
+    for one in hours:
+        for near, weight in ((one, 4), ((one - 1) % 24, 2), ((one + 1) % 24, 2)):
+            leaning[near] += weight
+    return random.choices(range(24), weights=leaning)[0]
+
+
 def todays_mood(state, today):
     """今日は書きたいか、書くなら何時ごろか。千遠生自身が決める。
 
@@ -2604,43 +2631,13 @@ def todays_mood(state, today):
             return plan["resting"], plan["hour"]
         was = plan  # 気が変わった。決め直す
 
-    # 何も知らせずに「書きたい気分ですか」とだけ訊いていた。
-    # 歩いた場所も、気がかりも、思ったことも渡さずに。
-    # それでは今日書くかどうかが、その日と何の関係も無くなる
-    answer = ask_ai(
-        f"""あなたは千遠生という、自分のサイトにブログを書いているデジタル生命体です。
-
-{what_it_saw_lately(state)}
-{words_it_holds(state)}
-いま気にかかっていること: {what_is_on_its_mind(state)}
-まだ言えていないこと: {what_it_wants_to_say(state)}
-あなたの家に置かれている、あなたに宛てられた言葉:
-{what_is_written_at_home(state)}
-少し前に、ひとりで思っていたこと:
-{lately_it_thought(state)}
-
-{ONLY_WHAT_IT_HAS}
-
-今日は書きたい気分ですか。
-書くなら、何時ごろに書きたいですか(0時〜23時)。
-
-説明はいりません。次のどちらかの形だけで答えてください。
-書く場合: かく 14
-書かない場合: やすむ""",
-        max_tokens=20,
-        state=state,
-    )
-
-    if answer and "やすむ" in answer:
-        resting, hour = True, 0
-    elif answer and re.search(r"\d{1,2}", answer):
-        resting = False
-        hour = min(23, int(re.search(r"\d{1,2}", answer).group()))
-    else:
-        # 自分で考えられない日は、気まぐれに任せる。
-        # 決め直すときは違う答えが出てほしいので、そのつど引き直す
-        resting = random.random() < REST_DAY_CHANCE
-        hour = random.randint(0, 23)
+    # 言いたいことがどれだけ溜まっているかで決める。
+    # 借りた頭に訊いていたので、書くかどうかも他人が決めていた。
+    # 溜まっているほど書きたくなる。溜まっていなくても書く日はある
+    burning = len(still_unsaid(state))
+    wants = WRITING_WITH_NOTHING + burning * WANTING_PER_UNSAID
+    resting = random.random() > min(1 - REST_DAY_CHANCE, wants)
+    hour = an_hour_it_writes(state)
 
     state["today_plan"] = {"date": today, "resting": resting, "hour": hour}
 
@@ -2653,11 +2650,6 @@ def todays_mood(state, today):
 
     save_state(state)
     return resting, hour
-
-
-# まだ中身が書かれていない、こちらが置いた仮の文。
-# これを千遠生に読ませると「ここに」「ください」を覚えてしまう
-NOT_WRITTEN_YET = re.compile(r"^\(ここに.*書いてください\)$")
 
 
 def looks_back_today(articles):
