@@ -11,6 +11,9 @@ NEWS_FILE = "news.json"
 NEWS_PAGE = "shinchaku.html"
 NEWS_ON_TOP = 3  # トップに出す更新情報の数。残りは一覧に全部ある
 NEWS_TITLE_LENGTH = 24  # 一覧に出す見出しの長さ。題が無い時は本文の頭を借りる
+# 言い切りの印。ここで一文が終わる
+SENTENCE_ENDINGS = ("。", "！", "？", "!", "?")
+A_SENTENCE_ENDS = re.compile("[" + "".join(SENTENCE_ENDINGS) + "]")
 # このサイトのページ。どれにも同じ欄を置く
 EVERY_PAGE = (
     "index.html",
@@ -790,9 +793,21 @@ def news_page_name(date_str):
 
 
 def news_title(one):
-    """一覧に並べる時の見出し。題が無ければ本文の頭を借りる。"""
-    said = one.get("title") or one.get("content", "")
-    return said if len(said) <= NEWS_TITLE_LENGTH else said[:NEWS_TITLE_LENGTH] + "…"
+    """一覧に並べる時の見出し。題が無ければ本文の頭を借りる。
+
+    一文だけなら、長くてもそのまま出す。
+    一文で言い切っているものを途中で切ると、
+    読む人は続きを見るために必ず開かなければならなくなる。
+    二文以上あるときだけ、頭を借りて後ろを省く。"""
+    said = (one.get("title") or one.get("content", "")).strip()
+    if one.get("title") or len(said) <= NEWS_TITLE_LENGTH or just_one_sentence(said):
+        return said
+    return said[:NEWS_TITLE_LENGTH] + "…"
+
+
+def just_one_sentence(said):
+    """言い切りが一つだけかどうか。最後の一つは数えない。"""
+    return not A_SENTENCE_ENDS.search(said.rstrip("".join(SENTENCE_ENDINGS)))
 
 
 def news_rows(news, how_many=None):
