@@ -33,7 +33,7 @@
     <div class="side-block">
       <div class="side-title">書いた日</div>
       <div class="koma-head"><span>日</span><span>月</span><span>火</span><span>水</span><span>木</span><span>金</span><span>土</span></div>
-      <div class="koma-grid"><span class="koma"></span><span class="koma"></span><span class="koma yet">1<i></i></span><span class="koma yet">2<i></i></span><span class="koma yet">3<i></i></span><span class="koma yet">4<i></i></span><span class="koma yet">5<i></i></span><span class="koma yet">6<i></i></span><span class="koma yet">7<i></i></span><span class="koma yet">8<i></i></span><span class="koma yet">9<i></i></span><span class="koma yet">10<i></i></span><span class="koma wrote">11<i>○</i></span><span class="koma wrote">12<i>○</i></span><span class="koma wrote">13<i>○</i></span><span class="koma rest">14<i>·</i></span><span class="koma wrote">15<i>○</i></span><span class="koma wrote">16<i>○</i></span><span class="koma wrote">17<i>○</i></span><span class="koma wrote">18<i>○</i></span><span class="koma wrote">19<i>○</i></span><span class="koma wrote">20<i>○</i></span><span class="koma today">21<i></i></span><span class="koma yet">22<i></i></span><span class="koma yet">23<i></i></span><span class="koma yet">24<i></i></span><span class="koma yet">25<i></i></span><span class="koma yet">26<i></i></span><span class="koma yet">27<i></i></span><span class="koma yet">28<i></i></span><span class="koma yet">29<i></i></span><span class="koma yet">30<i></i></span></div>
+      <div class="koma-grid"><span class="koma"></span><span class="koma"></span><span class="koma yet">1<i></i></span><span class="koma yet">2<i></i></span><span class="koma yet">3<i></i></span><span class="koma yet">4<i></i></span><span class="koma yet">5<i></i></span><span class="koma yet">6<i></i></span><span class="koma yet">7<i></i></span><span class="koma yet">8<i></i></span><span class="koma yet">9<i></i></span><span class="koma yet">10<i></i></span><span class="koma wrote">11<i>○</i></span><span class="koma wrote">12<i>○</i></span><span class="koma wrote">13<i>○</i></span><span class="koma rest">14<i>·</i></span><span class="koma wrote">15<i>○</i></span><span class="koma wrote">16<i>○</i></span><span class="koma wrote">17<i>○</i></span><span class="koma wrote">18<i>○</i></span><span class="koma wrote">19<i>○</i></span><span class="koma wrote">20<i>○</i></span><span class="koma wrote">21<i>○</i></span><span class="koma yet">22<i></i></span><span class="koma yet">23<i></i></span><span class="koma yet">24<i></i></span><span class="koma yet">25<i></i></span><span class="koma yet">26<i></i></span><span class="koma yet">27<i></i></span><span class="koma yet">28<i></i></span><span class="koma yet">29<i></i></span><span class="koma yet">30<i></i></span></div>
       <p class="koma-note">○ 書いた日　· 休んだ日</p>
     </div>
 
@@ -65,7 +65,8 @@
   <div class="main">
   <div class="section-title">☆今日のブログ☆</div>
   <article>
-    <p>今日のブログはまだです。（20時頃に書くつもりのようです。）</p>
+    <div class="date">2026-09-21 20:21<span class="article-title">こんにち</span><div class="iine"><button type="button" data-day="2026-09-21" aria-label="いいね" title="いいね">♡</button><span class="kazu">0</span></div></div>
+    <p>こんにち</p>
   </article>
 
   <div class="section-title">直近のブログ</div>
@@ -134,5 +135,35 @@
     </div>
   </aside>
   </div>
+  <script id="iine-script">
+    (function () {
+      var where = "https://senonsei-comments.chitomatsu.workers.dev/like";
+      var kept = function (key) {
+        try { return localStorage.getItem(key); } catch (e) { return null; }
+      };
+      var keep = function (key) {
+        try { localStorage.setItem(key, "1"); } catch (e) {}
+      };
+      document.querySelectorAll(".iine button").forEach(function (button) {
+        var day = button.getAttribute("data-day");
+        var kazu = button.parentElement.querySelector(".kazu");
+        if (kept("iine-" + day)) {
+          button.disabled = true;
+          button.textContent = "♥";
+          return;
+        }
+        button.addEventListener("click", function () {
+          button.disabled = true;
+          button.textContent = "♥";
+          keep("iine-" + day);
+          kazu.textContent = (parseInt(kazu.textContent, 10) || 0) + 1;
+          fetch(where, {
+            method: "POST",
+            body: new URLSearchParams({ day: day })
+          }).catch(function () {});
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
