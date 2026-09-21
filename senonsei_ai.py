@@ -152,6 +152,16 @@ A_DECORATION = re.compile(
     re.IGNORECASE,
 )
 META_CHARSET = re.compile(r'charset=["\']?([\w-]+)', re.IGNORECASE)
+# 最後まで詰まらずに読めたことを、日本語らしさ何文字ぶんと見るか。
+# 日本語の無いページでは、化けたほうが日本語らしく見えてしまうので、
+# ここが効く。日本語のページでは何十文字も差がつくので、
+# 正しい読み方がこれで負けることはない
+READ_WITHOUT_STUMBLING = 10
+# UTF-8 として最後まで読めたことは、それだけで強い証拠になる。
+# UTF-8 は並び方の決まりが厳しく、そうでないものはたいてい途中で詰まる。
+# Shift_JIS は受け入れる並びが広いので、UTF-8 の文章もそのまま読めてしまう。
+# 「きれいに読めた」を同じ重さで見ると、そこで取り違える
+UTF8_READS_STRICTLY = 30
 # 昔のページのURLに埋め込まれている、元のページのURL
 INNER_URL = re.compile(r"/(https?://\S+)$", re.IGNORECASE)
 JAPANESE = re.compile(r"[ぁ-んァ-ヶ一-龯]")
@@ -1140,11 +1150,32 @@ def read_as_japanese(raw, content_type):
     best_score = None
     for name in list(dict.fromkeys(declared)) + list(WAYS_OF_WRITING):
         try:
-            text = raw.decode(name, errors="replace")
-        except (LookupError, UnicodeError, ValueError):
+            text = raw.decode(name)
+        except (LookupError, ValueError):
             continue
-        # 日本語として読めた文字が多いほど良い。読めなかった箇所は重く引く
+        except UnicodeError:
+            # 読めない所があった。無理に読んでみて、そのぶん点を引く
+            try:
+                text = raw.decode(name, errors="replace")
+            except (LookupError, UnicodeError, ValueError):
+                continue
+            clean = False
+        else:
+            clean = True
+        # 日本語として読めた文字が多いほど良い。読めなかった箇所は重く引く。
+        #
+        # それだけだと、日本語の無いページで化けたほうが勝つ。
+        # UTF-8 の「•」を Shift_JIS で読むと「窶｢」になり、
+        # これは漢字とカタカナなので日本語らしさとして加点されてしまう。
+        # 正しく読めば零点、化ければ一点で、化けたほうが選ばれていた。
+        #
+        # 最後まで詰まらずに読めたかどうかを、日本語らしさより重く見る。
+        # 化けている時は、たいていどこかで読めない並びにぶつかる
         score = len(JAPANESE.findall(text)) - text.count("\ufffd") * 5
+        if clean:
+            score += READ_WITHOUT_STUMBLING
+            if name.lower().replace("-", "_") in ("utf_8", "utf8"):
+                score += UTF8_READS_STRICTLY
         if best_score is None or score > best_score:
             best_text, best_score = text, score
     return best_text or raw.decode("utf-8", errors="ignore")
@@ -1163,7 +1194,9 @@ def open_page(url):
     html = read_as_japanese(raw, content_type)
 
     found = TITLE_TAG.search(html)
-    title = TAG.sub("", found.group(1)).strip() if found else final_url
+    # 題にも &amp; や &#064; が入っている。ほどかないと、
+    # この子はその形のまま場所の名前として覚える
+    title = unescape(TAG.sub("", found.group(1))).strip() if found else final_url
 
     body = SCRIPT_OR_STYLE.sub(" ", html)
     text = TAG.sub(" ", body)
