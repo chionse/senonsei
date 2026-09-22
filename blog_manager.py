@@ -251,17 +251,16 @@ def side_panel(state, here):
     blocks.append(one_side_block("今日歩いたところ", rows))
 
     # 覚えた言葉は後ろほど新しい。新しいほうから並べる。
-    # 一つも無い日も区画は出す。一語に何日もかかるものなので、
-    # 「まだ無い」ということ自体がこの子の今を表している
+    # 一つも無いうちは区画ごと出さない。見出しが「最近」なので、
+    # 最近のものが無いなら、そこには何も書くことがない。
+    # 「今日歩いたところ」とは違う。あちらは毎日必ず来るもので、
+    # 朝はまだ、夕方にはある。こちらは一度覚えたら無くならない
     learned = [one for one in (state.get("learned_words") or []) if one]
     if learned:
-        rows = [
+        blocks.append(one_side_block("最近覚えた言葉", [
             f'      <p class="side-word">{one}</p>'
             for one in reversed(learned[-LEARNED_SHOWN:])
-        ]
-    else:
-        rows = ['      <p class="side-fact side-quiet">まだ覚えた言葉はありません。</p>']
-    blocks.append(one_side_block("最近覚えた言葉", rows))
+        ]))
 
     # 何年か経てば気がかりは千を超える。全部並べたら右の欄がそれだけになる。
     # 最後に触れたものから数えて、手前のぶんだけを出す
