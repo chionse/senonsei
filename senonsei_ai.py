@@ -2657,14 +2657,42 @@ def babble(state, length):
     return "".join(random.choice(state["seen_chars"]) for _ in range(count))
 
 
-def a_title_for(state, body, how_long):
-    """題は本文から取る。
+def a_title_for(state, body, how_long, today=None):
+    """題は、その日覚えた言葉から取る。
 
-    別に一度引き直していた。そのぶん題と本文が何の関係もなかった。
-    何年経ってもそこは育たない。育ちの話ではなく、作りの話だったので。
+    前は本文の頭を取っていた。書かれたものとの繋がりはできたが、
+    いまのこの子は本文が一語しかないので、題と本文が同じ言葉になる。
+    次の段まで数ヶ月あるので、その間ずっと同じものが二度出ることになる。
+    本文が伸びたあとも、題の文字は必ず本文の一行目にもう一度出てくる。
 
-    書いたものの初めの一文を取る。長すぎるときは、知っている言葉の
-    切れ目まで下がる。半分に割られた言葉は、もう題にならない。"""
+    その日覚えた言葉なら、その日のことでありながら、本文とは別のものになる。
+    覚えたばかりの言葉なので、この子に書けないものが題に出ることもない。
+    何も覚えなかった日は、いちばん新しく覚えた言葉まで下がる。
+    一語も知らないうちだけ、これまで通り本文の頭を取る。"""
+    learned = [one for one in (state.get("learned_words") or []) if one]
+    marks = (state.get("learned_on") or {})
+    todays = [one for one in learned if marks.get(one) == today] if today else []
+    for pool in (todays, learned):
+        # 新しいほうから見る。本文がその言葉だけでできている時は、
+        # 題にしても同じものが二度出るだけなので飛ばす
+        picks = [
+            one for one in reversed(pool)
+            if (body or "").replace(one, "").strip()
+        ]
+        if not picks:
+            continue
+        # 入る長さのものを先に。どれも入らないなら、
+        # 長さを守るために言葉を割るのでは順番が逆になるので、丸ごと置く
+        fits = [one for one in picks if len(one) <= how_long]
+        return (fits or picks)[0]
+    return the_head_of(state, body, how_long)
+
+
+def the_head_of(state, body, how_long):
+    """書いたものの初めの一文を取る。長すぎるときは、知っている言葉の
+    切れ目まで下がる。半分に割られた言葉は、もう題にならない。
+
+    一語も覚えていないうちは、ここしか題になるものがない。"""
     head = (body or "").split("。")[0]
     if not head:
         return (body or "")[:1] or "・"
@@ -3146,7 +3174,7 @@ def run_today():
     # 書くのは千遠生自身。AIには書かせない。
     # 見栄えは悪くなるが、それでこそこの子の言葉になる
     body = compose_locally(state)
-    title = a_title_for(state, body, max(1, max_length // 2))
+    title = a_title_for(state, body, max(1, max_length // 2), today)
 
     # 書いたものに出てきたことだけが、言えたことになる
     said = it_said_them(state, f"{title}{body}")
