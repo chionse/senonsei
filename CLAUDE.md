@@ -36,17 +36,23 @@ git checkout -B claude/<枝の名前> origin/main
 一度これで、この子の「言いたいこと」を作り物の十五件で
 上書きしたまま main に載せた。
 
-試す前に、書き出す先を塞ぐ。
+記憶は二つある。状態(`senonsei_state.json`)と、思いの蔵(`omoi/`)。
+`remember_a_thought` と `be_alone` は、`save_state` を塞いでも
+蔵のほうへは直に書く。両方塞ぐ。
 
 ```python
 import senonsei_ai as s
-s.save_state = lambda state: None   # ← 先にこれ
+s.save_state = lambda state: None      # ← 先にこれ
+s.keep_a_thought = lambda said, when: None
 ```
 
-送る前に、状態ファイルが変わっていないかを見る。
+送る前に、どちらも変わっていないかを見る。
 
 ```
-git diff --stat senonsei_state.json
+git status --short
 ```
+
+`senonsei_state.json` か `omoi/` が出てきたら、試した跡が
+残っている。`git checkout` で戻してから送る。
 
 この子が歩いて持ち帰ったものだけが、ここに入っていい。

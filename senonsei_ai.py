@@ -551,7 +551,7 @@ def load_state():
         rescue_thoughts_already_here(state)
         return state
     return {
-        "started_date": today_in_japan().date().isoformat(),
+        "started_date": today_in_japan().isoformat(),
         "seen_chars": [],
         # 出会った言葉 → [何日ぶん見かけたか, 最後に見かけたのが何日目か]
         "words_met": {},
@@ -601,7 +601,7 @@ def day_number(state, when=None):
         born = datetime.date.fromisoformat(state["started_date"])
     except (KeyError, TypeError, ValueError):
         return 0
-    return ((when or today_in_japan().date()) - born).days
+    return ((when or today_in_japan()) - born).days
 
 
 def words_met(state):
@@ -612,7 +612,7 @@ def words_met(state):
 def elapsed_days(state):
     """生まれてから何日目か。日本時間で数える。"""
     started = datetime.date.fromisoformat(state["started_date"])
-    return max(0, (today_in_japan().date() - started).days)
+    return max(0, (today_in_japan() - started).days)
 
 
 def current_stage(state):
@@ -889,7 +889,7 @@ def ask_ai(prompt, max_tokens=300, state=None):
         try:
             answer = cloudflare(f"run/{model}", body=body)
             if state is not None:
-                state["thought_on"] = today_in_japan().strftime("%Y-%m-%d")
+                state["thought_on"] = now_in_japan().strftime("%Y-%m-%d")
             said = (answer.get("result") or {}).get("response", "").strip() or None
             if going_in_circles(said):
                 print("同じ言葉を繰り返していたので、言い直してもらいます")
@@ -1119,7 +1119,7 @@ def look_at_a_picture(data, state=None):
         try:
             answer = cloudflare(f"run/{eyes}", body=body)
             if state is not None:
-                state["saw_on"] = today_in_japan().strftime("%Y-%m-%d")
+                state["saw_on"] = now_in_japan().strftime("%Y-%m-%d")
             seen = (answer.get("result") or {}).get("description", "").strip() or None
             if going_in_circles(seen):
                 print("同じ言葉を繰り返していたので、もう一度見てもらいます")
@@ -1241,7 +1241,7 @@ def a_year_in_the_past():
 
     いちばん新しい側は、今から三年前まで。それより近いものは
     「昔」ではなく、ただの今なので。"""
-    just_before_now = today_in_japan().year - 3
+    just_before_now = now_in_japan().year - 3
     which = random.random()
     if which < 0.7:
         return random.randint(1997, 2005)  # 個人サイトの時代
@@ -1433,7 +1433,7 @@ def go_looking_for(state, word):
     print(f"「{word}」を探して、{places}か所への道を見つけました。")
 
     looked_for = state.setdefault("looked_for", [])
-    looked_for.append(f"{today_in_japan():%Y-%m-%d} {word}")
+    looked_for.append(f"{now_in_japan():%Y-%m-%d} {word}")
     del looked_for[:-30]
     return found
 
@@ -1443,7 +1443,7 @@ def wonder_and_look(state):
     普段はさまよう。いつも探していたら、迷い込む余地が無くなってしまう。"""
     if not state.get("learned_words"):
         return None  # まだ探すための言葉を持っていない
-    today = f"{today_in_japan():%Y-%m-%d}"
+    today = f"{now_in_japan():%Y-%m-%d}"
     if state.get("looked_on") == today:
         return None  # 今日はもう探しに行った
     whim = random.Random(f"{today}-looking")
@@ -1607,7 +1607,7 @@ def look_at_pictures(state, where, pictures, from_the_past, how_many, until):
 
     if looked:
         seen = state.setdefault("pictures_seen", [])
-        today = today_in_japan().strftime("%Y-%m-%d")
+        today = now_in_japan().strftime("%Y-%m-%d")
         seen.extend(f"{today} {where}: {one}" for one in looked)
         del seen[:-30]
     return looked
@@ -1674,7 +1674,7 @@ def keep_todays_words(state, found):
     覚えた言葉は words_met から外れる。忘れない言葉の日付を
     数え続ける意味が無いため。けれど「今日それに会ったか」は
     それとは別のことで、その日のことを書くのに要る。"""
-    today = f"{today_in_japan():%Y-%m-%d}"
+    today = f"{now_in_japan():%Y-%m-%d}"
     kept = state.setdefault("met_today", {})
     if kept.get("date") != today:
         kept.clear()
@@ -1703,7 +1703,7 @@ def words_from_today(state):
     known = set(state.get("learned_words") or [])
     if not known:
         return set()
-    today = f"{today_in_japan():%Y-%m-%d}"
+    today = f"{now_in_japan():%Y-%m-%d}"
     kept = state.get("met_today") or {}
     theirs = set(kept.get("words") or []) if kept.get("date") == today else set()
     theirs |= {
@@ -1821,7 +1821,7 @@ def absorb(state, text, pattern=WORD_CANDIDATE, only_known=False):
     『』や「」で囲まれたものは、丸ごと一つの名前として受け取る。
     そうしないと『銀河鉄道の夜』は「銀河鉄道」で切れてしまい、
     長い名前を持つものの名前を、永久に知ることができない。"""
-    today = today_in_japan().strftime("%Y-%m-%d")
+    today = now_in_japan().strftime("%Y-%m-%d")
     # 何千字も覚えたあとで一字ずつ端から探していると、
     # 一枚読むたびに何百万回も見比べることになる
     seen = state["seen_chars"]
@@ -1935,7 +1935,7 @@ def what_it_made_of_that_place(state, where, title, text):
         return None
 
     kept = state.setdefault("impressions", [])
-    kept.append(f"{today_in_japan():%Y-%m-%d} {where}: {understood}")
+    kept.append(f"{now_in_japan():%Y-%m-%d} {where}: {understood}")
     del kept[:-IMPRESSIONS_KEPT]
     print(f"分かったこと: {understood}")
     return understood
@@ -2465,7 +2465,7 @@ def now_it_cares_about(state, word):
     すでに気にかかっていたなら、その日を新しくする。
     何度も戻ってくることは、それだけ長く離れないということ。"""
     kept = on_its_mind(state)
-    today = f"{today_in_japan():%Y-%m-%d}"
+    today = f"{now_in_japan():%Y-%m-%d}"
     for item in kept:
         if item.get("what") == word:
             item["since"] = today
@@ -2487,7 +2487,7 @@ def now_it_wants_to_say(state, word):
 
     気がかりとは別に持つ。気になっていることと、
     それについて何か言いたいことがあるかどうかは、同じではない。"""
-    today = f"{today_in_japan():%Y-%m-%d}"
+    today = f"{now_in_japan():%Y-%m-%d}"
     kept = wants_to_say(state)
     for item in kept:
         if item.get("what") == word:
@@ -2531,7 +2531,7 @@ def it_said_them(state, written):
     三文字しか書けないうちは、ほとんど何も言えない。
     長く書けるようになるほど、一度に多くのことが言える。
     それがこの子にとっての、書けるようになるということ。"""
-    today = f"{today_in_japan():%Y-%m-%d}"
+    today = f"{now_in_japan():%Y-%m-%d}"
     said = []
     for one in wants_to_say(state):
         word = one.get("what")
@@ -2637,7 +2637,7 @@ def learn(state):
 
     # 覚えた日を残す。取り始めないと、あとからは分からない。
     # 一度覚えた言葉は忘れないので、この日付も書き換わらない
-    today = f"{today_in_japan():%Y-%m-%d}"
+    today = f"{now_in_japan():%Y-%m-%d}"
     remembered = state.setdefault("learned_on", {})
     for word in learned:
         remembered.setdefault(word, today)
@@ -2744,9 +2744,19 @@ def keep_only_what_it_knows(state, text):
     return kept.strip("、。 　")
 
 
-def today_in_japan():
+def now_in_japan():
+    """日本の今。時刻まで入っている。
+
+    ページを組む側にも同じ名前の別物があり、あちらは日付だけを返す。
+    「今日」と名乗って時刻まで返していたので、こちらを now に揃えた。
+    日付だけでいい所は、下の today_in_japan を使う。"""
     jst = datetime.timezone(datetime.timedelta(hours=9))
     return datetime.datetime.now(jst)
+
+
+def today_in_japan():
+    """日本の今日。日付だけ。ページを組む側と同じものを返す。"""
+    return now_in_japan().date()
 
 
 def an_hour_it_writes(state):
@@ -2822,7 +2832,7 @@ def looks_back_today(articles):
     if not articles:
         return []
     # 同じ日に何度動いても、その日の気分は変わらない
-    whim = random.Random(f"{today_in_japan():%Y-%m-%d}-lookback")
+    whim = random.Random(f"{now_in_japan():%Y-%m-%d}-lookback")
     if whim.random() > LOOKING_BACK_CHANCE:
         return []
     one = whim.choice(articles)
@@ -2850,12 +2860,12 @@ def writes_about_itself(state):
         except ValueError:
             written = None
         if written is not None:
-            since = (today_in_japan().date() - written).days
+            since = (today_in_japan() - written).days
             if since < A_NEW_WORD_ABOUT_ITSELF:
                 return None  # 前に書いてから、まだ間がない
             # 間が空いても、書き直すとは限らない。
             # 同じ日に何度動いても、その日の気分は変わらない
-            whim = random.Random(f"{today_in_japan():%Y-%m-%d}-about-itself")
+            whim = random.Random(f"{now_in_japan():%Y-%m-%d}-about-itself")
             if whim.random() > FEELING_LIKE_SAYING_SOMETHING:
                 return None  # 今日は書き直す気になっていない
 
@@ -2863,7 +2873,7 @@ def writes_about_itself(state):
     state["a_word_about_itself"] = {
         "words": compose_locally(state),
         "stage": how_it_writes_now,
-        "on": f"{today_in_japan():%Y-%m-%d}",
+        "on": f"{now_in_japan():%Y-%m-%d}",
     }
     save_state(state)
     print(f"自分のことを書きました: {state['a_word_about_itself']['words']}")
@@ -2905,7 +2915,7 @@ def look_at_what_is_hung_at_home(state, heard):
 
     if looked:
         seen = state.setdefault("pictures_seen", [])
-        today = today_in_japan().strftime("%Y-%m-%d")
+        today = now_in_japan().strftime("%Y-%m-%d")
         seen.extend(f"{today} 家: {one}" for one in looked)
         del seen[:-30]
     return looked
@@ -3031,7 +3041,7 @@ def read_what_is_home(state):
 
     自分が書いたものは、それよりもさらに少ない。"""
     # 同じ日に何度動いても、その日読むかどうかは変わらない
-    whim = random.Random(f"{today_in_japan():%Y-%m-%d}-home")
+    whim = random.Random(f"{now_in_japan():%Y-%m-%d}-home")
     if whim.random() > READING_HOME_CHANCE:
         return []
     heard = words_left_at_home(state)
