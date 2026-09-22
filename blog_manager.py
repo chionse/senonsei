@@ -233,15 +233,22 @@ def side_panel(state, here):
             + "\n      </nav>\n    </div>"
         )
 
+    # まだどこにも行っていない日も、区画ごと出す。
+    # 一日は歩いていない時間のほうが長い。
+    # 空だから隠す、では朝からずっと区画が消えていることになる。
+    # 今日のブログと同じで、「まだ」と書いてあるほうが今が伝わる
     walk = state.get("today_walk") or {}
     seen = walk.get("seen") or []
     if walk.get("date") == today.isoformat() and seen:
         # 場所の名前は長くて折り返すので、一つずつ間を空ける。
         # 詰めて並べると、どこで名前が切れているのか分からない
-        blocks.append(one_side_block("今日歩いたところ", [
+        rows = [
             f'      <p class="side-fact side-apart">{one}</p>'
             for one in seen[-WALKED_SHOWN:]
-        ]))
+        ]
+    else:
+        rows = ['      <p class="side-fact side-quiet">今日はまだ散歩に行っていません。</p>']
+    blocks.append(one_side_block("今日歩いたところ", rows))
 
     # 覚えた言葉は後ろほど新しい。新しいほうから並べる。
     # 一つも無い日も区画は出す。一語に何日もかかるものなので、
