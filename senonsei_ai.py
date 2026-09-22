@@ -2200,7 +2200,7 @@ def rescue_thoughts_already_here(state):
 
 def remember_a_thought(state, thought):
     """ひとりで思ったことを、自分の中にだけ残す。"""
-    now = today_in_japan()
+    now = now_in_japan()
     keep_a_thought(f"{now:%Y-%m-%d %H時}: {thought}", now)
     thoughts = state.setdefault("inner_voice", [])
     thoughts.append(f"{now:%m-%d %H時}: {thought}")
@@ -3077,7 +3077,7 @@ def keep_a_note_of_today(state, seen_titles):
 
 
 def run_today():
-    now = today_in_japan()
+    now = now_in_japan()
     today = now.date().isoformat()
     state = load_state()
 
