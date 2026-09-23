@@ -1582,7 +1582,7 @@ def generate_index_html(articles, state=None):
   <meta name="viewport" content="width=1200" />
   <link rel="stylesheet" href="{styled()}" />
 </head>
-<body>
+<body class="top-page">
   <header>
     <h1><a href="index.html">千遠生のサイト</a></h1>
     <div class="visitor-counter">

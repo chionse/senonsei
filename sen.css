@@ -57,6 +57,31 @@ body {
   line-height: 1.6;
 }
 
+/* トップページだけは紙を二枚にする。
+   上の一枚に題と来訪者の数、下の一枚に三列。
+   二枚の間から景色が見える */
+body.top-page {
+  background-color: transparent;
+  border: none;
+  padding: 0;
+}
+
+body.top-page > header,
+body.top-page > .frame {
+  background-color: var(--bg-color);
+  border: 1px solid var(--paper-line);
+  box-sizing: border-box;
+}
+
+body.top-page > header {
+  padding: 14px 24px 16px;
+  margin-bottom: 24px;
+}
+
+body.top-page > .frame {
+  padding: 24px 24px 32px;
+}
+
 /* 各ページの上に置く、トップへ戻る道とメモの切り替え */
 .top-nav {
   display: flex;
