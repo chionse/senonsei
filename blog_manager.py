@@ -1298,8 +1298,27 @@ def keshiki_on_pages(pages):
             f.write(put_keshiki(made, pictures))
 
 
-SITE_HEADER = """<header>
+# 来訪者の数(StatCounter)。どのページの上の紙にも置く
+VISITOR_COUNTER = """    <div class="visitor-counter">
+      あなたは<span class="count"><!-- Default Statcounter code for senonsei
+      https://chionse.github.io/senonsei/index.html -->
+      <script type="text/javascript">
+      var sc_project=13354593;
+      var sc_invisible=0;
+      var sc_security="4b65a54b";
+      var scJsHost = "https://";
+      document.write("<sc"+"ript type='text/javascript' src='" + scJsHost+
+      "statcounter.com/counter/counter.js'></"+"script>");
+      </script>
+      <noscript><div class="statcounter"><a title="web stats"
+      href="https://statcounter.com/" target="_blank"><img class="statcounter"
+      src="https://c.statcounter.com/13354593/0/4b65a54b/0/" alt="web stats"
+      referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
+      <!-- End of Statcounter Code --></span>人目の来訪者です
+    </div>"""
+SITE_HEADER = f"""<header>
     <h1><a href="index.html">千遠生のサイト</a></h1>
+{VISITOR_COUNTER}
   </header>"""
 FIRST_HEADER = re.compile(r"<header>(.*?)</header>", re.DOTALL)
 FIRST_H1 = re.compile(r"<h1>(.*?)</h1>", re.DOTALL)
@@ -1622,23 +1641,7 @@ def generate_index_html(articles, state=None):
 <body>
   <header>
     <h1><a href="index.html">千遠生のサイト</a></h1>
-    <div class="visitor-counter">
-      あなたは<span class="count"><!-- Default Statcounter code for senonsei
-      https://chionse.github.io/senonsei/index.html -->
-      <script type="text/javascript">
-      var sc_project=13354593;
-      var sc_invisible=0;
-      var sc_security="4b65a54b";
-      var scJsHost = "https://";
-      document.write("<sc"+"ript type='text/javascript' src='" + scJsHost+
-      "statcounter.com/counter/counter.js'></"+"script>");
-      </script>
-      <noscript><div class="statcounter"><a title="web stats"
-      href="https://statcounter.com/" target="_blank"><img class="statcounter"
-      src="https://c.statcounter.com/13354593/0/4b65a54b/0/" alt="web stats"
-      referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
-      <!-- End of Statcounter Code --></span>人目の来訪者です
-    </div>
+{VISITOR_COUNTER}
   </header>
 
   <!-- ここから本文の列 -->
