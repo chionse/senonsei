@@ -1298,6 +1298,62 @@ def keshiki_on_pages(pages):
             f.write(put_keshiki(made, pictures))
 
 
+# 来訪者の数(StatCounter)。どのページの上の紙にも置く
+VISITOR_COUNTER = """    <div class="visitor-counter">
+      あなたは<span class="count"><!-- Default Statcounter code for senonsei
+      https://chionse.github.io/senonsei/index.html -->
+      <script type="text/javascript">
+      var sc_project=13354593;
+      var sc_invisible=0;
+      var sc_security="4b65a54b";
+      var scJsHost = "https://";
+      document.write("<sc"+"ript type='text/javascript' src='" + scJsHost+
+      "statcounter.com/counter/counter.js'></"+"script>");
+      </script>
+      <noscript><div class="statcounter"><a title="web stats"
+      href="https://statcounter.com/" target="_blank"><img class="statcounter"
+      src="https://c.statcounter.com/13354593/0/4b65a54b/0/" alt="web stats"
+      referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
+      <!-- End of Statcounter Code --></span>人目の来訪者です
+    </div>"""
+SITE_HEADER = f"""<header>
+    <h1><a href="index.html">千遠生のサイト</a></h1>
+{VISITOR_COUNTER}
+  </header>"""
+FIRST_HEADER = re.compile(r"<header>(.*?)</header>", re.DOTALL)
+FIRST_H1 = re.compile(r"<h1>(.*?)</h1>", re.DOTALL)
+MAIN_OPENS = re.compile(r'<div class="main">\s*(<div class="top-nav">.*?</div>)?', re.DOTALL)
+
+
+def put_page_head(html):
+    """上の紙にはサイトの名前を置き、ページの名前は下の紙の真ん中の列へ移す。
+
+    どのページも、上の紙を見ればどこのサイトか分かり、
+    下の紙を見ればどのページか分かる。トップページだけは、
+    上の紙がそのままページの名前なので動かさない。"""
+    if 'class="page-head"' in html:
+        return html
+    header = FIRST_HEADER.search(html)
+    opens = MAIN_OPENS.search(html)
+    if not header or not opens:
+        return html
+    inside = FIRST_H1.sub(r'<h2 class="page-name">\1</h2>', header.group(1), count=1)
+    head = f'\n  <div class="page-head">{inside.rstrip()}\n  </div>\n'
+    html = html[:opens.end()] + head + html[opens.end():]
+    return html[:header.start()] + SITE_HEADER + html[header.end():]
+
+
+def page_heads_on_pages(pages):
+    """トップ以外のページで、上の紙をサイトの名前にする。"""
+    for page in pages:
+        if page == "index.html" or not os.path.exists(page):
+            continue
+        with open(page, "r", encoding="utf-8") as f:
+            made = f.read()
+        with open(page, "w", encoding="utf-8") as f:
+            f.write(put_page_head(made))
+
+
 def iine_on_pages(pages):
     """出来上がったページに、いいねの動きを添えて回る。"""
     for page in pages:
@@ -1582,26 +1638,10 @@ def generate_index_html(articles, state=None):
   <meta name="viewport" content="width=1200" />
   <link rel="stylesheet" href="{styled()}" />
 </head>
-<body class="top-page">
+<body>
   <header>
     <h1><a href="index.html">千遠生のサイト</a></h1>
-    <div class="visitor-counter">
-      あなたは<span class="count"><!-- Default Statcounter code for senonsei
-      https://chionse.github.io/senonsei/index.html -->
-      <script type="text/javascript">
-      var sc_project=13354593;
-      var sc_invisible=0;
-      var sc_security="4b65a54b";
-      var scJsHost = "https://";
-      document.write("<sc"+"ript type='text/javascript' src='" + scJsHost+
-      "statcounter.com/counter/counter.js'></"+"script>");
-      </script>
-      <noscript><div class="statcounter"><a title="web stats"
-      href="https://statcounter.com/" target="_blank"><img class="statcounter"
-      src="https://c.statcounter.com/13354593/0/4b65a54b/0/" alt="web stats"
-      referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
-      <!-- End of Statcounter Code --></span>人目の来訪者です
-    </div>
+{VISITOR_COUNTER}
   </header>
 
   <!-- ここから本文の列 -->
@@ -1765,6 +1805,7 @@ def regenerate_pages(articles):
         EVERY_PAGE + tuple(all_news_pages(news)) + tuple(all_himitsu_pages(himitsu))
     )
     side_panels(every_page)
+    page_heads_on_pages(every_page)
     iine_on_pages(EVERY_PAGE + tuple(all_himitsu_pages(himitsu)))
     keshiki_on_pages(every_page)
 

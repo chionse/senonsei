@@ -39,12 +39,10 @@ html::before {
     linear-gradient(var(--sky-top), var(--sky-bottom));
 }
 
-/* 本文は一枚の紙として、景色の上に浮かべる。
+/* 紙(下の header と .frame)を景色の上に浮かべる。
    四方に余白を取って、上には空、下には草が見えるようにする。
    左右はどんなに狭い画面でも 40px ずつは空ける */
 body {
-  background-color: var(--bg-color);
-  border: 1px solid var(--paper-line);
   box-sizing: border-box;
   font-family: "DotGothic16", "MS Gothic", monospace;
   /* 点をそのまま出す。滑らかにされると、点で描いた意味が無くなる */
@@ -53,33 +51,43 @@ body {
   width: calc(100% - 80px);
   max-width: 1200px;
   margin: 56px auto 200px;
-  padding: 12px 24px 32px;
+  padding: 0;
   line-height: 1.6;
 }
 
-/* トップページだけは紙を二枚にする。
-   上の一枚に題と来訪者の数、下の一枚に三列。
-   二枚の間から景色が見える */
-body.top-page {
-  background-color: transparent;
-  border: none;
-  padding: 0;
-}
-
-body.top-page > header,
-body.top-page > .frame {
+/* 紙は二枚。上の一枚にサイトの名前(トップでは来訪者の数も)、
+   下の一枚に、そのページの名前と三列。二枚の間から景色が見える。
+   メモのページだけは一覧が一枚内側(#memo-index)に入っている */
+body > header,
+body > .frame,
+#memo-index > header,
+#memo-index > .frame {
   background-color: var(--bg-color);
   border: 1px solid var(--paper-line);
   box-sizing: border-box;
 }
 
-body.top-page > header {
+body > header,
+#memo-index > header {
   padding: 14px 24px 16px;
   margin-bottom: 24px;
 }
 
-body.top-page > .frame {
+body > .frame,
+#memo-index > .frame {
   padding: 24px 24px 32px;
+}
+
+/* 下の紙の、真ん中の列の頭に置くページの名前 */
+.page-head {
+  text-align: center;
+  margin: 0 0 1.4rem;
+}
+
+.page-name {
+  margin: 0;
+  font-size: 2.4rem;
+  font-weight: normal;
 }
 
 /* 各ページの上に置く、トップへ戻る道とメモの切り替え */
