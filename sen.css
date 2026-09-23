@@ -14,8 +14,10 @@
   --line-color: #ccd3e8;
   /* 手前に開いている紙の縁だけ、他の線より少し濃い */
   --paper-line: #a3b1dc;
-  /* 空。空の絵が届くまでの仮の色 */
-  --sky: #d6e6f5;
+  /* 空。空の絵が届くまでの仮の色。
+     上ほど濃く、地平線に近いほど白っぽい */
+  --sky-top: #4f9fe0;
+  --sky-bottom: #b9dcf5;
 }
 
 /* 景色。草の絵は地平線から上が透けているので、そこに空の色が見える。
@@ -24,7 +26,7 @@
    選べない閲覧機では一枚目が出る。
    (仮の姿。空の絵が届いたら、ここを描き直す) */
 html {
-  background: var(--sky);
+  background: var(--sky-bottom);
 }
 
 html::before {
@@ -32,7 +34,9 @@ html::before {
   position: fixed;
   inset: 0;
   z-index: -1;
-  background: var(--kusa, url("kusa/kusa-1.png")) center bottom / cover no-repeat;
+  background:
+    var(--kusa, url("kusa/kusa-1.png")) center bottom / cover no-repeat,
+    linear-gradient(var(--sky-top), var(--sky-bottom));
 }
 
 /* 本文は一枚の紙として、景色の上に浮かべる。
