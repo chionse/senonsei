@@ -18,6 +18,10 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # 封をしたメモと手紙を開ける鍵。この子が手紙を読む時と、
+    # ページを作り直す時(押し戻しのやり直しも含む)に要る
+    env:
+      MEMO_KEY: ${{ secrets.MEMO_KEY }}
 
     steps:
       - name: Checkout repository

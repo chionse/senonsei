@@ -2947,6 +2947,9 @@ def words_left_at_home(state):
 
     elapsed = elapsed_days(state)
     for item in blog_manager.load_menu():
+        # 鍵が無くて封の開かない手紙は、届いていないのと同じ
+        if item.get("_shut"):
+            continue
         if elapsed >= item.get("unlock_day", 10**9):
             voices.append(only_for_it(item.get("message")))
 
