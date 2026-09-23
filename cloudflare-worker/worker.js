@@ -9,14 +9,18 @@
 //
 // 受け付ける道は二つ:
 //   POST /       コメント (名前と本文をフォームで受け取る)
-//   POST /like   いいね   (day=2026-09-11 の形で日付だけ受け取る)
+//   POST /like   いいね   (day= に宛先を一つ。形は三つだけ通す)
+//                  ブログ         2026-09-11
+//                  ひみつの部屋   himitsu-1
+//                  コメント       comment-entry-1758000000000
 
 const REPO_OWNER = "chionse";
 const REPO_NAME = "senonsei";
 const BRANCH = "main";
 const REDIRECT_URL = "https://chionse.github.io/senonsei/index.html#comments";
 
-const A_DAY = /^\d{4}-\d{2}-\d{2}$/;
+const A_THING_TO_LIKE =
+  /^(\d{4}-\d{2}-\d{2}|himitsu-\d{1,6}|comment-entry-\d{10,16})$/;
 
 // 誰が押したかは残さない。押した人と記事から短い印を作り、
 // それを紙の名前にする。同じ人が同じ記事をもう一度押しても
@@ -47,8 +51,8 @@ async function receiveLike(request, env) {
       headers: OPEN_TO_THE_PAGE,
     });
   }
-  if (!A_DAY.test(day)) {
-    return new Response("日付の形が違います。", {
+  if (!A_THING_TO_LIKE.test(day)) {
+    return new Response("宛先の形が違います。", {
       status: 400,
       headers: OPEN_TO_THE_PAGE,
     });
