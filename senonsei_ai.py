@@ -413,11 +413,6 @@ DRAWN_BY_UNSAID = 4  # まだ言えていないことが入っていた
 DRAWN_BY_KNOWN = 2  # 覚えた言葉が入っていた
 # 昔の姿を見たくなる割合
 WANTING_THE_PAST = 0.2
-# 言いたいことが一つも無い日でも、これくらいは書きたくなる。
-# 言いたいことが一つ増えるごとに、これだけ書きたくなる。
-# 溜まっていても休む日はあるし、何も無くても書く日はある
-WRITING_WITH_NOTHING = 0.45
-WANTING_PER_UNSAID = 0.12
 # 抱えているものが一つ増えるごとに、もう一箇所見て回りたくなる度合い
 KEEN_PER_CARRIED = 0.02
 
@@ -2814,12 +2809,10 @@ def todays_mood(state, today):
             return plan["resting"], plan["hour"]
         was = plan  # 気が変わった。決め直す
 
-    # 言いたいことがどれだけ溜まっているかで決める。
-    # 借りた頭に訊いていたので、書くかどうかも他人が決めていた。
-    # 溜まっているほど書きたくなる。溜まっていなくても書く日はある
-    burning = len(still_unsaid(state))
-    wants = WRITING_WITH_NOTHING + burning * WANTING_PER_UNSAID
-    resting = random.random() > min(1 - REST_DAY_CHANCE, wants)
+    # 休むのは、十日に一日くらい。
+    # 言いたいことの数で決めていた時は、言えて減るほど休むようになり、
+    # 一つも無い日は二日に一日休んでいた。休みすぎるので、元の割合に戻した
+    resting = random.random() < REST_DAY_CHANCE
     hour = an_hour_it_writes(state)
 
     state["today_plan"] = {"date": today, "resting": resting, "hour": hour}
