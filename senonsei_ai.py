@@ -2325,10 +2325,22 @@ def where_it_will_go(state, how_many=PLACES_SHOWN):
     行ったことのない場所の名前は、この子には分かりようがない。
 
     どの場所がどこなのかを知っているのは歩く側なので、
-    ここで形にしてから残す。ページを組む側は並べるだけにする。"""
+    ここで形にしてから残す。ページを組む側は並べるだけにする。
+
+    束の頭から六つ取っていた。頭がめったに動かないので、
+    何日見に来ても同じ六つが並んでいた。三百も先があるのに、
+    そこだけしか無いように見える。
+
+    そもそも頭が次に行く所ではない。行き先は choose_destination が
+    束全体から散らして選び、その中から今いちばん惹かれる所を引く。
+    頭から六つというのは、並べる順が偶然そうだったというだけ。
+
+    束から散らして取る。覗くたびに違う六つが出る。"""
     named = state.get("places_known") or {}
     shown, already = [], set()
-    for one in (state.get("frontier") or []):
+    bundle = list(state.get("frontier") or [])
+    random.shuffle(bundle)
+    for one in bundle:
         place = place_of(one)
         if not place or place in already:
             continue
