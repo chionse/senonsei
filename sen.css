@@ -264,6 +264,13 @@ article p {
   margin-left: 0.6rem;
 }
 
+/* コメントのいいねは、隣の日時と同じ小ささ・太さにそろえる。
+   名前の太字をそのまま受け継ぐと、日時より目立ってしまう */
+.comment-entry .iine {
+  font-weight: normal;
+  font-size: 0.75rem;
+}
+
 .comment-entry .comment-message {
   margin-top: 0.2rem;
   line-height: 1.5;

@@ -482,6 +482,8 @@ def load_comments():
                     one = json.load(f)
                 if a_name_not_taken(one.get("name"), one.get("message")):
                     continue
+                # 紙の名前がそのコメントの名札になる。いいねはここへ付ける
+                one["id"] = filename[: -len(".json")]
                 comments.append(one)
     comments.sort(key=lambda c: c.get("date", ""), reverse=True)
     return comments
@@ -890,8 +892,8 @@ def himitsu_page_name(number):
 
 
 def himitsu_title(one):
-    """一覧に並べる時の見出し。題が無ければ本文の頭を借りる。"""
-    return news_title(one)
+    """一覧に並べる時の見出し。番号を頭に付ける。題が無ければ本文の頭を借りる。"""
+    return f'{one["number"]}　{news_title(one)}'
 
 
 def all_himitsu_pages(himitsu):
@@ -959,17 +961,18 @@ def generate_himitsu_entry_html(himitsu, index):
         return (f'<a href="{himitsu_page_name(entry["number"])}">'
                 f'{label}　{himitsu_title(entry)}</a>')
 
+    # 番号は題が無くても出す。何話目かは、題とは別に要る
     named = (
-        f'<span class="article-title">{one["title"]}</span>'
-        if one.get("title")
-        else ""
+        f'<span class="article-title">{one["number"]}'
+        + (f'　{one["title"]}' if one.get("title") else "")
+        + "</span>"
     )
     when = one.get("date", "")
     html = f"""<!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8" />
-<title>ひみつの部屋 {one.get('title') or ''}</title>
+<title>ひみつの部屋 {one["number"]} {one.get('title') or ''}</title>
 <meta name="viewport" content="width=1200" />
 <link rel="stylesheet" href="{styled()}" />
 </head>
@@ -982,7 +985,7 @@ def generate_himitsu_entry_html(himitsu, index):
 
   {MAIN_STARTS}
   <article>
-    <div class="date">{when}{named}</div>
+    <div class="date">{when}{named}{iine_html(himitsu_liked_as(one["number"]))}</div>
     <p>{one['content']}</p>
   </article>
 
@@ -1132,6 +1135,7 @@ def load_likes():
     その記事のぶんの紙の枚数がそのまま数になる。
 
     紙の名前は 2026-09-11__<誰かを表す印>.json という形。
+    ひみつの部屋なら himitsu-1__…、コメントなら comment-entry-…__… になる。
     誰が押したかは残していない。同じ人が二度押しても
     同じ名前の紙になるので、増えないというだけ。"""
     counted = {}
@@ -1145,8 +1149,23 @@ def load_likes():
     return counted
 
 
+# いいねの宛先。ブログは日付、ひみつの部屋は話の番号、コメントは紙の名前。
+# 受け取る側(cloudflare-worker/worker.js)も、この三つの形だけを通す
+def himitsu_liked_as(number):
+    return f"himitsu-{number}"
+
+
+def comment_liked_as(one):
+    """受け取り口が作った紙(entry-<数字>)にだけ付ける。
+    それ以外の名前には、押しても数えられない釦になるので付けない。"""
+    name = one.get("id") or ""
+    if re.fullmatch(r"entry-\d{10,16}", name):
+        return f"comment-{name}"
+    return None
+
+
 def iine_html(date_str, likes=None):
-    """その日のブログに付ける、いいね。"""
+    """いいね。ブログの日付のほか、ひみつの部屋やコメントの宛先も受け取る。"""
     if likes is None:
         likes = load_likes()
     return (
@@ -1350,9 +1369,15 @@ def render_comments(comments):
     """コメントを並べる。新しいものが上。"""
     if not comments:
         return "  <p>まだコメントはありません。</p>"
+    likes = load_likes()
+
+    def liked(c):
+        key = comment_liked_as(c)
+        return iine_html(key, likes) if key else ""
+
     return "\n".join(
         f"""  <div class="comment-entry">
-    <div class="comment-name">{c.get('name', '名無しさん')}<span class="comment-date">{format_comment_date(c.get('date', ''))}</span></div>
+    <div class="comment-name">{c.get('name', '名無しさん')}<span class="comment-date">{format_comment_date(c.get('date', ''))}</span>{liked(c)}</div>
     <div class="comment-message">{c.get('message', '')}</div>
   </div>"""
         for c in comments
@@ -1656,7 +1681,7 @@ def regenerate_pages(articles):
     side_panels(
         EVERY_PAGE + tuple(all_news_pages(news)) + tuple(all_himitsu_pages(himitsu))
     )
-    iine_on_pages(EVERY_PAGE)
+    iine_on_pages(EVERY_PAGE + tuple(all_himitsu_pages(himitsu)))
 
 
 def add_new_article(title, content, date_str=None):
