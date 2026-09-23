@@ -4,7 +4,16 @@
 <meta charset="UTF-8" />
 <title>ひみつの部屋</title>
 <meta name="viewport" content="width=1200" />
-<link rel="stylesheet" href="sen.css?v=4039791092" />
+<link rel="stylesheet" href="sen.css?v=946576420" />
+  <script id="keshiki-script">
+    (function () {
+      var kusa = ["kusa/kusa-1.png", "kusa/kusa-2.png", "kusa/kusa-3.png", "kusa/kusa-4.png", "kusa/kusa-5.png", "kusa/kusa-6.png", "kusa/kusa-7.png", "kusa/kusa-8.png"];
+      var one = kusa[Math.floor(Math.random() * kusa.length)];
+      document.documentElement.style.setProperty(
+        "--kusa", 'url("' + new URL(one, document.baseURI).href + '")'
+      );
+    })();
+  </script>
 </head>
 <body>
   <header>
@@ -22,12 +31,12 @@
 
     <div class="side-block">
       <div class="side-title">今後行くつもりの場所</div>
-      <p class="side-fact side-quiet">tools.ietf.org</p>
-      <p class="side-fact side-quiet">archiveprogram.github.com</p>
-      <p class="side-fact side-quiet">github.com</p>
+      <p class="side-fact side-quiet">www.tiktok.com</p>
       <p class="side-fact side-quiet">2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |</p>
-      <p class="side-fact side-quiet">depot.zdnet.co.jp</p>
-      <p class="side-fact side-quiet">news.tv-asahi.co.jp</p>
+      <p class="side-fact side-quiet">zh.wikisource.org</p>
+      <p class="side-fact side-quiet">www.chapitre.com</p>
+      <p class="side-fact side-quiet">note.com</p>
+      <p class="side-fact side-quiet">drive.google.com</p>
       <p class="side-fact side-quiet">ほか 362 箇所</p>
     </div>
 
@@ -49,7 +58,7 @@
   <div class="main">
   <div class="top-nav"><a href="index.html">←トップ</a></div>
   <ul class="recent-list">
-    <li><a href="himitsu-1.html">挨拶</a></li>
+    <li><a href="himitsu-1.html">1　挨拶</a></li>
   </ul>
   </div>
 
@@ -66,14 +75,6 @@
     <div class="side-block">
       <div class="side-title">成長記録</div>
       <p class="side-fact">生まれて12日目</p>
-    </div>
-
-    <div class="side-block">
-      <div class="side-title">管理人より</div>
-      <nav class="side-nav">
-        <a href="shinchaku.html">更新情報</a>
-        <span class="here">ひみつの部屋</span>
-      </nav>
     </div>
 
     <div class="side-block">
@@ -96,6 +97,14 @@
       <p class="side-word">ペルシャ</p>
       <p class="side-word">もう一つのオリンピック</p>
       <p class="side-word">README.jp</p>
+    </div>
+
+    <div class="side-block">
+      <div class="side-title">管理人より</div>
+      <nav class="side-nav">
+        <a href="shinchaku.html">更新情報</a>
+        <span class="here">ひみつの部屋</span>
+      </nav>
     </div>
   </aside>
   </div>
