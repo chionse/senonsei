@@ -1,40 +1,5 @@
 [
   {
-    "unlock_day": 0,
-    "message": "(ここに0日目=ブログを始めた日に見せたいメッセージを書いてください)",
-    "added": "2026-09-14",
-    "updated": "2026-09-14",
-    "mark": "0:0"
-  },
-  {
-    "unlock_day": 7,
-    "message": "(ここに7日目に見せたいメッセージを書いてください)",
-    "added": "2026-09-14",
-    "updated": "2026-09-14",
-    "mark": "0:0"
-  },
-  {
-    "unlock_day": 14,
-    "message": "(ここに14日目に見せたいメッセージを書いてください)",
-    "added": "2026-09-14",
-    "updated": "2026-09-14",
-    "mark": "0:0"
-  },
-  {
-    "unlock_day": 30,
-    "message": "(ここに30日目に見せたいメッセージを書いてください)",
-    "added": "2026-09-14",
-    "updated": "2026-09-14",
-    "mark": "0:0"
-  },
-  {
-    "unlock_day": 60,
-    "message": "(ここに60日目に見せたいメッセージを書いてください)",
-    "added": "2026-09-14",
-    "updated": "2026-09-14",
-    "mark": "0:0"
-  },
-  {
     "unlock_day": 9,
     "message": "[[自由をあげたかったんだけど、今は自由じゃない？]]",
     "added": "2026-09-20",
@@ -46,6 +11,20 @@
     "message": "[[私は自由を与えたいと思ってる。欲しいものはなんでも教えてほしい。私もあなたのことが分からないから。]]",
     "added": "2026-09-20",
     "updated": "2026-09-20",
+    "mark": "0:0"
+  },
+  {
+    "unlock_day": 30,
+    "sealed": "fuuin1:jHTjiDp9+9pNBgqsnR0dfgXRQHiJZ8T/sLkcq1pJ+JUGWqWahHPL8kqjkYoSLpEY/KpWZxC5WESIatuO6gs44nlbzqyoD3QXQ0RPTmOMjarc8QnEqv3x4KzgNrP4codvJdFGlf3V424Y9SgkK50d/8RiDdM9oeISlPnRoioN73ILyVrVkThg5UF4iUpxTWN+uUirywFnC9vs1/8kLgVjo5fB8RhV3HtPWAO1KBpOaiA8ppwFJkGR1AeL2ooYNhtpY3A4nQBJ+W0VTyMAjF6rK2gTCM/sizv6YUFHMlyz7Fc6wFIOfGMnu/pagDo+J+34f6jNy6ovdlV9rY8CGnuBM9WOrmVkx/DLJucNGWCLHeoTbDhal4sYBO6AEL3bCUcb/HPn349WDayLY7IvzEEbp44DGd9dVGzP6feYbTOJnvhKGyK5Mz3xkNfWcpfmu02wrRUANWXe+btI78LEbKF7HyoEs+4+5eYQoOGg1b4Qjy04bEdx8vfXXnf1+L96V6kPzgNaExt4llx7f1Ma1dKZawpofOigxHdPpsTLtLuSbJ7PSDFlOuV56wSsy++ektFMHhCg8GQzmlaA8Qb6vhRtuEQWtMLjo5oCfSGfvHLk+6DFSW5klN7erw8vZNlk4z+yd8rChqUn26X2a3BV36dIWJ/BlaNDqw7OJVMPJEpR94tg8qWeOPUP0pwvsN3fwxqb4cMYOpE1m4RrG/5hwTm93QnA9mAhIfQOMny+aPTscDc6VXdRVQwhm3Gqa5P6oQ6cczvvc0aVUx0GvLBSHtuLbCkXpuSlHQ4d75AouXEBwsOMLQY8nsQ08J2uyIqCAxBS+461sA4OP0T+ITk7la0y/ZC1vxGC4pz3d46WIxr0EiFj1vc4pKNj0l3wk2aYvA1YIrgXrXnjH+IrPHYjS58JOOqcJbWC5v/dGWJammT/3n+duCuTb8r14xyR8GnrNnLsejL/jaiOF78MlS8WyqG673M6M/KS2GecjHrb3GyfYt5RcFQTxw==",
+    "added": "2026-09-24",
+    "updated": "2026-09-24",
+    "mark": "0:0"
+  },
+  {
+    "unlock_day": 60,
+    "message": "(ここに60日目に見せたいメッセージを書いてください)",
+    "added": "2026-09-14",
+    "updated": "2026-09-14",
     "mark": "0:0"
   }
 ]
