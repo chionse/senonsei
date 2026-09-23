@@ -217,22 +217,6 @@ def side_panel(state, here):
     if now:
         blocks.append(one_side_block("成長記録", now))
 
-    # 彼女が書いたもの。この子のものとは分けて並べる。
-    # 何も書かれていないうちは、その道を出さない
-    hers = [
-        a_link_or_here(page, here, label)
-        for page, label in WHERE_SHE_WROTE
-        if os.path.exists(page)
-    ]
-    if hers:
-        blocks.append(
-            '    <div class="side-block">\n'
-            '      <div class="side-title">管理人より</div>\n'
-            '      <nav class="side-nav">\n'
-            + "\n".join(hers)
-            + "\n      </nav>\n    </div>"
-        )
-
     # まだどこにも行っていない日も、区画ごと出す。
     # 一日は歩いていない時間のほうが長い。
     # 空だから隠す、では朝からずっと区画が消えていることになる。
@@ -274,6 +258,22 @@ def side_panel(state, here):
         blocks.append(one_side_block("気にかかっていること", [
             f'      <p class="side-word">{one["what"]}</p>' for one in minded
         ]))
+
+    # 彼女が書いたもの。この子のものとは分けて、いちばん下に置く。
+    # 何も書かれていないうちは、その道を出さない
+    hers = [
+        a_link_or_here(page, here, label)
+        for page, label in WHERE_SHE_WROTE
+        if os.path.exists(page)
+    ]
+    if hers:
+        blocks.append(
+            '    <div class="side-block">\n'
+            '      <div class="side-title">管理人より</div>\n'
+            '      <nav class="side-nav">\n'
+            + "\n".join(hers)
+            + "\n      </nav>\n    </div>"
+        )
 
     return '  <aside class="side">\n' + "\n\n".join(blocks) + "\n  </aside>\n"
 
