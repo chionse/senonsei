@@ -1219,6 +1219,64 @@ def put_iine_script(html):
     return html.replace("</body>", script + "</body>", 1)
 
 
+# 背景の草。描いてもらった絵を、手を加えずにそのまま置いてある
+KUSA_FOLDER = "kusa"
+
+
+def kusa_pictures():
+    """草の絵の一覧。置いてある分だけ。増やせばそのまま候補に入る。"""
+    if not os.path.isdir(KUSA_FOLDER):
+        return []
+    found = [
+        name for name in os.listdir(KUSA_FOLDER)
+        if name.lower().endswith(".png")
+    ]
+    # kusa-2 が kusa-10 より前に来るように、数の順に並べる
+    found.sort(key=lambda name: [
+        int(part) if part.isdigit() else part
+        for part in re.split(r"(\d+)", name)
+    ])
+    return [f"{KUSA_FOLDER}/{name}" for name in found]
+
+
+KESHIKI_SCRIPT = re.compile(
+    r'\s*<script id="keshiki-script">.*?</script>', re.DOTALL
+)
+
+
+def put_keshiki(html, pictures):
+    """来るたびに、草の絵を一枚選んで背景に敷く。
+
+    本文より先に決めておかないと、一瞬ちがう草が出てから入れ替わる。
+    だから頭の中で選ぶ。選べない閲覧機では、一枚目が出る(sen.css)。"""
+    html = KESHIKI_SCRIPT.sub("", html)
+    if not pictures or "</head>" not in html:
+        return html
+    script = f"""  <script id="keshiki-script">
+    (function () {{
+      var kusa = {json.dumps(pictures)};
+      var one = kusa[Math.floor(Math.random() * kusa.length)];
+      document.documentElement.style.setProperty(
+        "--kusa", 'url("' + new URL(one, document.baseURI).href + '")'
+      );
+    }})();
+  </script>
+"""
+    return html.replace("</head>", script + "</head>", 1)
+
+
+def keshiki_on_pages(pages):
+    """出来上がったページに、背景の草を選ぶ仕掛けを添えて回る。"""
+    pictures = kusa_pictures()
+    for page in pages:
+        if not os.path.exists(page):
+            continue
+        with open(page, "r", encoding="utf-8") as f:
+            made = f.read()
+        with open(page, "w", encoding="utf-8") as f:
+            f.write(put_keshiki(made, pictures))
+
+
 def iine_on_pages(pages):
     """出来上がったページに、いいねの動きを添えて回る。"""
     for page in pages:
@@ -1678,10 +1736,12 @@ def regenerate_pages(articles):
         os.remove(HIMITSU_PAGE)
     clear_old_himitsu_pages(all_himitsu_pages(himitsu))
 
-    side_panels(
+    every_page = (
         EVERY_PAGE + tuple(all_news_pages(news)) + tuple(all_himitsu_pages(himitsu))
     )
+    side_panels(every_page)
     iine_on_pages(EVERY_PAGE + tuple(all_himitsu_pages(himitsu)))
+    keshiki_on_pages(every_page)
 
 
 def add_new_article(title, content, date_str=None):
