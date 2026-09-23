@@ -13,6 +13,9 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # 封をしたメモと手紙を開ける鍵。ページを作り直すたびに要る
+    env:
+      MEMO_KEY: ${{ secrets.MEMO_KEY }}
 
     steps:
       - name: Checkout repository

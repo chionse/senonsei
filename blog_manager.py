@@ -4,6 +4,8 @@ import os
 import re
 import zlib
 
+import fuuin
+
 ARTICLES_FILE = "articles.json"
 KEYWORDS_FILE = "keywords.json"
 STYLE_FILE = "sen.css"
@@ -518,15 +520,20 @@ def sorted_articles(articles):
 
 
 def load_keywords():
+    """メモ1。封がしてあるものは、鍵があれば開けて渡す(fuuin)。"""
     if os.path.exists(KEYWORDS_FILE):
         with open(KEYWORDS_FILE, "r", encoding="utf-8") as f:
-            return json.load(f)
+            return [fuuin.open_memo(one) for one in json.load(f)]
     return []
 
 
 def save_keywords(keywords):
+    """しまう時は、まだ開いていないメモの中身を書き出さない。封だけを書く。"""
     with open(KEYWORDS_FILE, "w", encoding="utf-8") as f:
-        json.dump(keywords, f, ensure_ascii=False, indent=2)
+        json.dump(
+            [fuuin.put_memo_away(one) for one in keywords],
+            f, ensure_ascii=False, indent=2,
+        )
 
 
 def stamp_when(entries, save):
@@ -541,6 +548,10 @@ def stamp_when(entries, save):
     today = today_in_japan().isoformat()
     changed = False
     for one in entries:
+        # 鍵が無くて中身が読めないものは、指紋も取れない。
+        # 取れないものを「書き直された」ことにはしない
+        if one.get("_shut"):
+            continue
         mark = str(len(one.get("content") or "")) + ":" + str(
             zlib.crc32((one.get("content") or "").encode("utf-8"))
         )
@@ -575,8 +586,12 @@ def it_has_written(word, articles=None):
 
 
 def save_menu(menu_items):
+    """手紙は、開く日が来ても封のまましまう。"""
     with open(MENU_FILE, "w", encoding="utf-8") as f:
-        json.dump(menu_items, f, ensure_ascii=False, indent=2)
+        json.dump(
+            [fuuin.put_letter_away(one) for one in menu_items],
+            f, ensure_ascii=False, indent=2,
+        )
 
 
 def update_keywords(articles):
@@ -586,7 +601,9 @@ def update_keywords(articles):
     changed = False
 
     for kw in keywords:
-        if kw["unlocked"]:
+        # 鍵が無くて中身の分からないメモは、開いたかどうかも確かめられない。
+        # 鍵のある回に、それまでの日記を全部見直して開く
+        if kw["unlocked"] or kw.get("_shut"):
             continue
         # ふつうは見出しの言葉そのものが出たら開く。
         # 見出しが長すぎてこの子には書けないときは、
@@ -598,6 +615,8 @@ def update_keywords(articles):
             ):
                 kw["unlocked"] = True
                 kw["unlocked_date"] = art["date"]
+                # 貼ってある絵も、この日に封を解く
+                fuuin.unseal_pictures_in(kw.get("content"))
                 changed = True
                 break
 
@@ -688,7 +707,8 @@ def generate_memo_html(keywords, menu_items, articles):
     menu_items = stamp_when(menu_items, save_menu)
     keyword_entries = [
         {
-            "unlocked": kw["unlocked"],
+            # 鍵が無くて中身の読めないメモは、開いていても閉じた姿で出す
+            "unlocked": kw["unlocked"] and not kw.get("_shut"),
             "label": kw["word"],
             "content": kw.get("content", ""),
             "added": kw.get("added"),
@@ -709,7 +729,8 @@ def generate_memo_html(keywords, menu_items, articles):
         {
             "unlocked": elapsed >= item["unlock_day"],
             "label": "???",  # 一覧では何番目かも見せない
-            "content": item["message"],
+            # 鍵が無くて読めない手紙は、伏せ字で出す
+            "content": HIDDEN if item.get("_shut") else item["message"],
             "heading": f"{item['unlock_day']}日目",  # 開けば、いつのものかは分かる
             "added": item.get("added"),
             "updated": item.get("updated"),
@@ -1289,9 +1310,10 @@ def iine_on_pages(pages):
 
 
 def load_menu():
+    """メモ2。封がしてある手紙は、鍵があれば開けて渡す(fuuin)。"""
     if os.path.exists(MENU_FILE):
         with open(MENU_FILE, "r", encoding="utf-8") as f:
-            return json.load(f)
+            return [fuuin.open_letter(one) for one in json.load(f)]
     return []
 
 
@@ -1708,6 +1730,9 @@ def generate_profile_html(state):
 
 
 def regenerate_pages(articles):
+    # 封の鍵が届いているかを、動いた記録に一行だけ残す。中身は書かない
+    if fuuin.the_lock():
+        print("封を開ける鍵:", "あり" if fuuin.the_key() else "なし")
     generate_kakodogu_html(articles)
     state = load_senonsei_state()
     generate_index_html(articles, state)
