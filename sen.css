@@ -14,17 +14,42 @@
   --line-color: #ccd3e8;
   /* 手前に開いている紙の縁だけ、他の線より少し濃い */
   --paper-line: #a3b1dc;
+  /* 空。空の絵が届くまでの仮の色 */
+  --sky: #d6e6f5;
 }
 
+/* 景色。草の絵は地平線から上が透けているので、そこに空の色が見える。
+   絵は画面に留めておき、紙だけが上を流れていく。
+   どの草が出るかは、ページの頭で一枚選ぶ(keshiki-script)。
+   選べない閲覧機では一枚目が出る。
+   (仮の姿。空の絵が届いたら、ここを描き直す) */
+html {
+  background: var(--sky);
+}
+
+html::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: var(--kusa, url("kusa/kusa-1.png")) center bottom / cover no-repeat;
+}
+
+/* 本文は一枚の紙として、景色の上に浮かべる。
+   四方に余白を取って、上には空、下には草が見えるようにする。
+   左右はどんなに狭い画面でも 40px ずつは空ける */
 body {
   background-color: var(--bg-color);
+  border: 1px solid var(--paper-line);
+  box-sizing: border-box;
   font-family: "DotGothic16", "MS Gothic", monospace;
   /* 点をそのまま出す。滑らかにされると、点で描いた意味が無くなる */
   -webkit-font-smoothing: none;
   color: var(--main-color);
-  margin: 20px auto;
+  width: calc(100% - 80px);
   max-width: 1200px;
-  padding: 0 10px;
+  margin: 56px auto 200px;
+  padding: 12px 24px 32px;
   line-height: 1.6;
 }
 
