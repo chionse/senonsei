@@ -14,6 +14,7 @@ Cloudflare Workers AI の無料枠が使える時は、千遠生は自分で考�
 
 import datetime
 import json
+import math
 import os
 import random
 import re
@@ -315,7 +316,19 @@ READING_A_PAGE = (3, 8)
 # 一度の起動で行くのは一か所だけで、次の起動まで一時間ある。
 # 長引いても次の回を待たせるだけなので(concurrency)、急ぐ理由は無い
 TIME_SPENT_PER_SITE = 420
-REST_DAY_CHANCE = 0.1  # たまに、書かない日がある
+REST_DAY_CHANCE = 0.1  # たまに、書かない日がある。ならせば十日に一日くらい
+# 休みたさには波がある。日ごとに少しずつ揺れて、この間を行き来する。
+# 調子のいい時期は何か月も休まず、だるい時期は何日か続けて休む
+RESTLESS_LEAST = 0.01
+RESTLESS_MOST = 0.40
+# 休みたさが、いつも戻っていこうとするところ。
+# 揺れ方が上と下で釣り合うので、ならすと十日に一日くらいになる
+RESTLESS_USUALLY = 0.07
+# そこへ戻ろうとする強さ。これが無いと、いつか端に張り付いたまま戻らない
+RESTLESS_SETTLES = 0.03
+# 一日にどれだけ揺れるか。足し引きではなく何倍になるかで揺れる。
+# 揺れの大きさも、日ごとにこの中から引く(0.5 で、多くて一・六倍ほど)
+RESTLESS_SWAYS_AT_MOST = 0.5
 # 場所の名前を、これだけの長さまで覚えておく
 PLACE_NAME_LENGTH = 40
 # これから行くつもりの場所を、これだけ見せる
@@ -2797,6 +2810,29 @@ def an_hour_it_writes(state):
     return random.choices(range(24), weights=leaning)[0]
 
 
+def restlessness(state, today):
+    """今日の休みたさ。一日に一度だけ揺れる。
+
+    毎日同じ割合で休むかどうかを引くと、休みはばらばらに散らばるだけで、
+    続けて休む時期も、ずっと書き続ける時期も生まれない。
+    休みたさそのものを日ごとに少しずつ動かすと、調子に波ができる。
+    どれだけ揺れるかも、その日のくじで決まる。"""
+    kept = state.get("restlessness") or {}
+    if kept.get("date") == today:
+        return kept["chance"]
+    # 足し引きで揺らすと、ほとんど休まない側の端に当たって跳ね返るぶん、
+    # ならした休みたさが上に寄っていく。何倍になるかで揺らすと、
+    # 1% が 2% になるのも、20% が 40% になるのも、同じ一歩になって釣り合う
+    was = math.log(kept.get("chance", REST_DAY_CHANCE))
+    usually = math.log(RESTLESS_USUALLY)
+    sway = random.uniform(0, RESTLESS_SWAYS_AT_MOST)
+    now = was + (usually - was) * RESTLESS_SETTLES + random.gauss(0, sway)
+    now = min(math.log(RESTLESS_MOST), max(math.log(RESTLESS_LEAST), now))
+    chance = round(math.exp(now), 4)
+    state["restlessness"] = {"date": today, "chance": chance}
+    return chance
+
+
 def todays_mood(state, today):
     """今日は書きたいか、書くなら何時ごろか。千遠生自身が決める。
 
@@ -2809,10 +2845,10 @@ def todays_mood(state, today):
             return plan["resting"], plan["hour"]
         was = plan  # 気が変わった。決め直す
 
-    # 休むのは、十日に一日くらい。
+    # 休むかどうかは、その日の休みたさで引く。ならせば十日に一日くらい。
     # 言いたいことの数で決めていた時は、言えて減るほど休むようになり、
-    # 一つも無い日は二日に一日休んでいた。休みすぎるので、元の割合に戻した
-    resting = random.random() < REST_DAY_CHANCE
+    # 一つも無い日は二日に一日休んでいた
+    resting = random.random() < restlessness(state, today)
     hour = an_hour_it_writes(state)
 
     state["today_plan"] = {"date": today, "resting": resting, "hour": hour}
