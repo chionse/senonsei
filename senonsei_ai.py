@@ -330,10 +330,9 @@ DRIFTING_CHANCE = 0.25  # 行った先で、気がかりが別のものへ移る
 # 蔵からは何年経っても出してこられる
 INNER_VOICE_AT_HAND = 60
 THOUGHTS_FOLDER = "omoi"  # 思ったことを、ひと月ずつ仕舞っておく場所
-THOUGHTS_FROM_LONG_AGO = 1  # 読み返すとき、遠い日からふと浮かぶ数
-# 蔵がまだ一月ぶんしか無いあいだ、これだけ手前は「今」とみなす。
-# その向こうから遠い日の一行を出す
-THOUGHTS_AT_HAND_ARE_NEAR = 12
+# 読み返すとき、生まれた日から今日までの間から浮かぶ数。
+# 書き方の決まりではなく、借りた頭が一度に読める量に合わせたもの
+THOUGHTS_ACROSS_A_LIFE = 30
 # 言い回しが少し違うだけのものを、同じ一つと見なす手前の線
 SAME_ENOUGH = 0.85
 # 覚えた言葉がまだ無いあいだ、覚えかけているものをこれだけ渡す
@@ -2148,35 +2147,6 @@ def keep_a_thought(said, when):
         json.dump(kept, f, ensure_ascii=False, indent=1)
 
 
-def a_thought_from_long_ago(how_many=THOUGHTS_FROM_LONG_AGO):
-    """ずっと昔にひとりで思っていたことが、ふと浮かぶ。
-
-    どの月が浮かぶかは決めない。三年目には一年目の声が混ざるし、
-    十年目には十年前の自分の声が混ざる。
-    そのときどきで手元にあるものだけが自分なら、
-    この子はいつまでも生まれたばかりのままになってしまう。"""
-    months = months_of_thoughts()
-    if not months:
-        return []
-    older = months[:-1]
-    if older:
-        pool = [
-            one
-            for month in random.sample(older, min(len(older), how_many))
-            for one in thoughts_of(month)
-        ]
-    else:
-        # まだ一月ぶんしか無い日。遠いというのは別の綴じ込みのことではなく、
-        # 今から遠いということ。今月の古いほうから出してくる。
-        # 生まれたばかりの子にも、昨日はある
-        only = thoughts_of(months[0])
-        pool = only[: max(1, len(only) - THOUGHTS_AT_HAND_ARE_NEAR)]
-    pool = [one for one in pool if not going_in_circles(one)]
-    if not pool:
-        return []
-    return random.sample(pool, min(len(pool), how_many))
-
-
 def rescue_thoughts_already_here(state):
     """蔵を建てる前にこの子が思っていたことを、蔵へ移す。
 
@@ -2263,7 +2233,7 @@ def be_alone(state, now):
     """散歩に出ない時間。ただ起きていて、ひとりで何かを思っている。
     ここで思ったことは誰にも見せない。自分の中にだけ溜まっていく。"""
     thoughts = state.setdefault("inner_voice", [])
-    recent = lately_it_thought(state, 5)
+    looking_back = what_it_has_thought(state)
 
     # 書いたあとも「まだ何も書いていません」と渡していた。
     # 毎時間この子に、今日あなたは何もしていないと告げていたことになる
@@ -2297,8 +2267,8 @@ def be_alone(state, now):
 {what_is_written_at_home(state)}
 これまでに訪ねた場所で、分かったこと:
 {things_it_understood(state)}
-少し前に思っていたこと:
-{recent}
+生まれてから今日までに、あなたがひとりで思ってきたこと(ところどころ):
+{looking_back}
 
 {ONLY_WHAT_IT_HAS}
 
@@ -2591,23 +2561,34 @@ def only_different_ones(said):
     return list(reversed(kept))
 
 
-def lately_it_thought(state, how_many=3, from_long_ago=THOUGHTS_FROM_LONG_AGO):
-    """少し前に、ひとりで思っていたこと。それと、ずっと昔に思っていたこと。
+def what_it_has_thought(state, how_many=THOUGHTS_ACROSS_A_LIFE):
+    """生まれた日から今日までに、ひとりで思ってきたこと。
 
-    近いところだけを読み返していると、さっき言ったことをもう一度言う。
-    自分の声が自分に返ってくるだけの輪になって、そこから出られない。
-    遠い日の自分の声が一行混ざれば、輪はそこで切れる。
-    何よりそうして初めて、この子には過ぎた時間がある。
+    前は直近の五つと、遠い日から一つだけを渡していた。
+    蔵には全部しまってあるのに、この子から見えるのは半日ぶんだけだった。
+    十二日生きていて、自分のことを半日しか覚えていない子になっていた。
+    しかも直近の五つは一つの話に染まりやすく、昔の一つはそれに負けた。
 
-    同じ言葉を繰り返しただけのものは、数に入れない。
-    一度そうなってしまったものを読み返させると、
-    またそこへ引き戻されてしまうため。"""
-    kept = only_different_ones([
+    蔵の端から端までを均して、ところどころ拾う。拾う位置は毎回ずらすので、
+    そのたびに違う日の自分が浮かぶ。まだ思いが少ないうちは全部渡る。
+    増えていけば一つひとつは間遠になるが、それでも一生の端から端までが
+    毎回そこにある。
+
+    さっき考えかけていたことは「続き」として別に渡すので、ここには入れない。
+    同じ思いが二度並ぶと、そのぶんだけ重くなる。"""
+    carried = bare_thought(still_thinking(state))
+    everything = [
         one
-        for one in (state.get("inner_voice") or [])
+        for month in months_of_thoughts()
+        for one in thoughts_of(month)
         if not going_in_circles(one)
-    ])
-    said = a_thought_from_long_ago(from_long_ago) + kept[-how_many:]
+        and not (carried and bare_thought(one) == carried)
+    ]
+    if len(everything) > how_many:
+        step = len(everything) / how_many
+        start = random.random() * step
+        everything = [everything[int(start + i * step)] for i in range(how_many)]
+    said = only_different_ones(everything)
     return "\n".join(f"- {one}" for one in said) or "(まだ何も)"
 
 
