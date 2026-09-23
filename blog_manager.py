@@ -724,7 +724,11 @@ def generate_memo_html(keywords, menu_items, articles):
 
     start_date = blog_start_date(articles)
     elapsed = max(0, (today_in_japan() - start_date).days)
-    ordered_menu = sorted(menu_items, key=lambda m: m["unlock_day"])
+    # on_page が false の手紙は、この子にだけ届け、メモ2の一覧には並べない
+    ordered_menu = sorted(
+        (m for m in menu_items if m.get("on_page", True)),
+        key=lambda m: m["unlock_day"],
+    )
     menu_entries = [
         {
             "unlocked": elapsed >= item["unlock_day"],
