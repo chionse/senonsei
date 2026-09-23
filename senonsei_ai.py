@@ -165,8 +165,25 @@ UTF8_READS_STRICTLY = 30
 # 昔のページのURLに埋め込まれている、元のページのURL
 INNER_URL = re.compile(r"/(https?://\S+)$", re.IGNORECASE)
 JAPANESE = re.compile(r"[ぁ-んァ-ヶ一-龯]")
-# 日本語の書き表し方。昔のページのために、今は使われないものも試す
-WAYS_OF_WRITING = ("utf-8", "euc-jp", "shift_jis", "cp932", "iso2022_jp", "latin-1")
+HIRAGANA = re.compile(r"[ぁ-ん]")
+# 日本語の書き表し方。昔のページのために、今は使われないものも試す。
+# euc_jis_2004 と shift_jis_2004 は、①や㈱のような、昔の機械が独自に
+# 足していた文字まで読める。それが混ざるだけで euc-jp は途中で詰まる
+WAYS_OF_WRITING = (
+    "utf-8", "euc-jp", "euc_jis_2004", "shift_jis", "cp932", "shift_jis_2004",
+    "iso2022_jp", "cp1252", "latin-1",
+)
+# 西洋の言葉の書き方。latin-1 はどんなバイトの並びも最後まで読めてしまい、
+# cp1252 もほとんどそう。日本語のページでも勝ってしまうことがある
+WESTERN = ("cp1252", "windows_1252", "latin_1", "latin1", "iso_8859_1", "iso8859_1", "l1")
+# 日本語の読み方で読んで、ひらがながこれだけ出てくれば日本語のページとみなす。
+# 西洋の文字を日本語の読み方で読むと、漢字の化けは出てもひらがなはまず出ない
+HIRAGANA_SAYS_JAPANESE = 5
+# 西洋の読み方で読んで、ö や é が英字に挟まれてこれだけ出てくれば、
+# 西洋の言葉のページとみなす。日本語を西洋の読み方で読むと、
+# 出てくるのは ¥ や ¡ のような記号の並びで、言葉の中には収まらない
+LATIN_IN_WORDS = re.compile(r"[A-Za-z][À-ÖØ-öø-ÿ]|[À-ÖØ-öø-ÿ][A-Za-z]")
+LATIN_SAYS_WESTERN = 5
 
 # 最初に立っている場所。ここから先は自分でリンクを辿って広がっていく。
 SEEDS = [
@@ -1159,20 +1176,27 @@ def read_as_japanese(raw, content_type):
     if found:
         declared.append(found.group(1))
 
-    best_text = ""
-    best_score = None
+    readings = []
     for name in list(dict.fromkeys(declared)) + list(WAYS_OF_WRITING):
         try:
             text = raw.decode(name)
-        except (LookupError, ValueError):
+        except LookupError:
             continue
         except UnicodeError:
-            # 読めない所があった。無理に読んでみて、そのぶん点を引く
+            # 読めない所があった。無理に読んでみて、そのぶん点を引く。
+            #
+            # ここは ValueError より先に受け止める。UnicodeError は
+            # ValueError の仲間なので、先に ValueError で受けていた頃は
+            # ここに一度も来ず、一か所でも詰まった読み方は丸ごと捨てられていた。
+            # ①が一つ混ざる、途中で切れる、それだけで日本語の読み方は全部消え、
+            # どんな並びでも読めてしまう latin-1 だけが残っていた
             try:
                 text = raw.decode(name, errors="replace")
             except (LookupError, UnicodeError, ValueError):
                 continue
             clean = False
+        except ValueError:
+            continue
         else:
             clean = True
         # 日本語として読めた文字が多いほど良い。読めなかった箇所は重く引く。
@@ -1185,13 +1209,50 @@ def read_as_japanese(raw, content_type):
         # 最後まで詰まらずに読めたかどうかを、日本語らしさより重く見る。
         # 化けている時は、たいていどこかで読めない並びにぶつかる
         score = len(JAPANESE.findall(text)) - text.count("\ufffd") * 5
+        plain_name = name.lower().replace("-", "_")
+        if plain_name in WESTERN:
+            kind = "western"
+        elif plain_name in ("utf_8", "utf8"):
+            kind = "utf8"
+        else:
+            kind = "japanese"
         if clean:
             score += READ_WITHOUT_STUMBLING
-            if name.lower().replace("-", "_") in ("utf_8", "utf8"):
+            # 英字の範囲の外の文字が一つも無ければ、どの読み方でも読める。
+            # その時 UTF-8 で読めたことは何の証にもならない。
+            # ISO-2022-JP は全部英字の範囲で書くので、ここで負けていた
+            if kind == "utf8" and max(raw, default=0) >= 0x80:
                 score += UTF8_READS_STRICTLY
-        if best_score is None or score > best_score:
-            best_text, best_score = text, score
-    return best_text or raw.decode("utf-8", errors="ignore")
+        readings.append((score, kind, text))
+
+    if not readings:
+        return raw.decode("utf-8", errors="ignore")
+    # 同じ点なら先に試したほうを採る(並べた順が、そのまま頼る順)
+    best = max(readings, key=lambda one: one[0])
+    if best[1] == "western":
+        # 西洋の読み方が勝った。けれど日本語の読み方で、ひらがながちゃんと
+        # 出てくるものがあるなら、それは日本語のページ。
+        # Internet Archive が差し込む帯や、①のような文字が少し混ざって
+        # 詰まっただけで、日本語の少ないページは西洋の読み方に負けていた
+        japanese = [
+            one for one in readings
+            if one[1] != "western"
+            and len(HIRAGANA.findall(one[2])) >= HIRAGANA_SAYS_JAPANESE
+        ]
+        if japanese:
+            best = max(japanese, key=lambda one: one[0])
+    elif best[1] == "japanese" and len(HIRAGANA.findall(best[2])) < HIRAGANA_SAYS_JAPANESE:
+        # 日本語の読み方が勝ったが、ひらがながほとんど無い。
+        # 西洋の読み方で ö や é が言葉の中に並ぶなら、西洋のページを
+        # 日本語の読み方で読んで漢字に化けさせているだけ
+        western = [
+            one for one in readings
+            if one[1] == "western"
+            and len(LATIN_IN_WORDS.findall(one[2])) >= LATIN_SAYS_WESTERN
+        ]
+        if western:
+            best = max(western, key=lambda one: one[0])
+    return best[2] or raw.decode("utf-8", errors="ignore")
 
 
 def open_page(url):
