@@ -382,8 +382,8 @@ WORDS_PLACED_AT_MOST = 8
 # 毎日きっちり上限まで並べる子ではないと思う
 ENOUGH_FOR_TODAY = 0.35
 # 覚えた言葉を書くとき、ほかの文字がまぎれこむことがある。
-# 一語にまぎれこむのは、多くてこれだけ
-STRAY_CHARS_AT_MOST = 2
+# 一語にまぎれこむのは、多くてこれだけ。書ける長さのほうが先に尽きることが多い
+STRAY_CHARS_AT_MOST = 4
 # だれかが来たことを、この子が知るときの言葉。
 # 数ではなく、来た、ということだけを知る
 SOMEONE_CAME = "だれかが来た"
@@ -2780,9 +2780,11 @@ def as_it_comes_out(state, words, spare):
     まぎれこむのは、よく見かけてきた文字。目に馴染んだものほど手から出る。
 
     どれくらい崩れるかは、書くたびに違う。
-    きれいに書ける日もあれば、どの言葉にも何かまぎれこむ日もある。
+    はじめのうちは、ほとんどうまく書けない。覚えた言葉が増えるにつれて、
+    きれいに書ける日が出てくる。それでも崩れる日はなくならない。
     書ける長さは超えない。余りが無ければ、そのまま書く。"""
-    steadiness = random.random()
+    grown = len(state.get("learned_words") or []) / GROWTH_STAGES[-1][0]
+    steadiness = random.uniform(0, min(1, grown))
     hand = None
     written = []
     for word in words:
