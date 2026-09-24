@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8" />
-<title>ひみつの部屋</title>
+<title>ひみつの部屋 2 メモ</title>
 <meta name="viewport" content="width=1200" />
 <link rel="stylesheet" href="sen.css?v=2096757688" />
   <script id="keshiki-script">
@@ -73,15 +73,20 @@
   </aside>
 
   <div class="main">
-  <div class="top-nav"><a href="index.html">←トップ</a></div>
+  <div class="top-nav"><a href="index.html">←トップ</a><a href="himitsu.html">ひみつの部屋の一覧へ</a></div>
   <div class="page-head">
     <h2 class="page-name">ひみつの部屋</h2>
   </div>
 
-  <ul class="recent-list">
-    <li><a href="himitsu-1.html">1　挨拶</a></li>
-    <li><a href="himitsu-2.html">2　メモ</a></li>
-  </ul>
+  <article>
+    <div class="date">2026-09-24<span class="article-title">2　メモ</span><div class="iine"><button type="button" data-day="himitsu-2" aria-label="いいね" title="いいね">♡</button><span class="kazu">0</span></div></div>
+    <p>　メモ1とメモ2の違いは主に解除方法にあります。メモ1は特定の言葉がブログに書き込まれること、メモ2はサイトが始まってからの経過日数によって解除されます。中身はその言葉、または日数に関わる手紙のようなものになっています。メモ2は時間経過と共に勝手に解除されますが、メモ1はブログに乗らないと解除されないため、解除されるのは数十年後だなんて未来もありうるわけです。一種のボトルメールのようなものだと考えるのが自然かもしれません。</p>
+  </article>
+
+  <div class="step-nav">
+    <div class="step-back"><a href="himitsu-1.html">←前　1　挨拶</a></div>
+    <div class="step-next"><span class="here">次→</span></div>
+  </div>
   </div>
 
   <aside class="side">
@@ -127,10 +132,40 @@
       <div class="side-title">管理人より</div>
       <nav class="side-nav">
         <a href="shinchaku.html">更新情報</a>
-        <span class="here">ひみつの部屋</span>
+        <a href="himitsu.html">ひみつの部屋</a>
       </nav>
     </div>
   </aside>
   </div>
+  <script id="iine-script">
+    (function () {
+      var where = "https://senonsei-comments.chitomatsu.workers.dev/like";
+      var kept = function (key) {
+        try { return localStorage.getItem(key); } catch (e) { return null; }
+      };
+      var keep = function (key) {
+        try { localStorage.setItem(key, "1"); } catch (e) {}
+      };
+      document.querySelectorAll(".iine button").forEach(function (button) {
+        var day = button.getAttribute("data-day");
+        var kazu = button.parentElement.querySelector(".kazu");
+        if (kept("iine-" + day)) {
+          button.disabled = true;
+          button.textContent = "♥";
+          return;
+        }
+        button.addEventListener("click", function () {
+          button.disabled = true;
+          button.textContent = "♥";
+          keep("iine-" + day);
+          kazu.textContent = (parseInt(kazu.textContent, 10) || 0) + 1;
+          fetch(where, {
+            method: "POST",
+            body: new URLSearchParams({ day: day })
+          }).catch(function () {});
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
