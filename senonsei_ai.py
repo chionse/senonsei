@@ -384,6 +384,9 @@ ENOUGH_FOR_TODAY = 0.35
 # 覚えた言葉を書くとき、ほかの文字がまぎれこむことがある。
 # 一語にまぎれこむのは、多くてこれだけ。書ける長さのほうが先に尽きることが多い
 STRAY_CHARS_AT_MOST = 4
+# はじめのうちの書きにくさ。三で、崩れずに書ける言葉はならして四つに一つ。
+# 育つにつれて零に近づき、育ちきると崩れなくなる
+CLUMSY_AT_FIRST = 3
 # だれかが来たことを、この子が知るときの言葉。
 # 数ではなく、来た、ということだけを知る
 SOMEONE_CAME = "だれかが来た"
@@ -2780,11 +2783,12 @@ def as_it_comes_out(state, words, spare):
     まぎれこむのは、よく見かけてきた文字。目に馴染んだものほど手から出る。
 
     どれくらい崩れるかは、書くたびに違う。
-    はじめのうちは、ほとんどうまく書けない。覚えた言葉が増えるにつれて、
-    きれいに書ける日が出てくる。それでも崩れる日はなくならない。
+    はじめのうちは、たいてい崩れる。それでも、たまにはうまく書ける。
+    覚えた言葉が増えるにつれて、うまく書ける日が増えていき、
+    育ちきるころには崩れなくなる。
     書ける長さは超えない。余りが無ければ、そのまま書く。"""
-    grown = len(state.get("learned_words") or []) / GROWTH_STAGES[-1][0]
-    steadiness = random.uniform(0, min(1, grown))
+    grown = min(1, len(state.get("learned_words") or []) / GROWTH_STAGES[-1][0])
+    steadiness = random.random() ** (CLUMSY_AT_FIRST * (1 - grown))
     hand = None
     written = []
     for word in words:
