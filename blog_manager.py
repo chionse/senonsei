@@ -609,6 +609,9 @@ def update_keywords(articles):
         # 見出しが長すぎてこの子には書けないときは、
         # opens_with に、開くきっかけになる短い言葉を並べておく
         opens_with = kw.get("opens_with") or [kw["word"]]
+        # 見るのは、ページに書けた文字だけ。書こうとした言葉ではない。
+        # 手が滑って「ヨーロ気ッパ」になった日は開かない。
+        # その惜しさも含めて、この子の書いたもの
         for art in ordered:
             if any(
                 one in art["content"] or one in art["title"] for one in opens_with
