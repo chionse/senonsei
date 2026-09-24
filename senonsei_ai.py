@@ -381,6 +381,12 @@ WORDS_PLACED_AT_MOST = 8
 # もう一語置けるとしても、ここで終わりにする割合。
 # 毎日きっちり上限まで並べる子ではないと思う
 ENOUGH_FOR_TODAY = 0.35
+# 覚えた言葉を書くとき、ほかの文字がまぎれこむことがある。
+# 一語にまぎれこむのは、多くてこれだけ。書ける長さのほうが先に尽きることが多い
+STRAY_CHARS_AT_MOST = 4
+# はじめのうちの書きにくさ。三で、崩れずに書ける言葉はならして四つに一つ。
+# 育つにつれて零に近づき、育ちきると崩れなくなる
+CLUMSY_AT_FIRST = 3
 # だれかが来たことを、この子が知るときの言葉。
 # 数ではなく、来た、ということだけを知る
 SOMEONE_CAME = "だれかが来た"
@@ -1867,6 +1873,7 @@ def speak_from_what_it_knows(state, how_long):
             break
         said.append(next_word)
         in_this_sentence += 1
+    said = as_it_comes_out(state, said, how_long - len("".join(said)))
     written = "".join(said).rstrip("。")
     # 区切り方を知っているなら、最後も区切って終わる
     if closes and written:
@@ -2764,7 +2771,63 @@ def compose_locally(state):
             break
         if random.random() < ENOUGH_FOR_TODAY:
             break
+    placed = as_it_comes_out(state, placed, max_length - len(" ".join(placed)))
     return " ".join(placed)
+
+
+def as_it_comes_out(state, words, spare):
+    """覚えた言葉を、手で書いてみる。
+
+    覚えた言葉だからといって、そのとおりに書けるとは限らない。
+    「学校」が「学あ校」になったり、「学校らな」になったりする。
+    まぎれこむのは、よく見かけてきた文字。目に馴染んだものほど手から出る。
+
+    どれくらい崩れるかは、書くたびに違う。
+    はじめのうちは、たいてい崩れる。それでも、たまにはうまく書ける。
+    覚えた言葉が増えるにつれて、うまく書ける日が増えていき、
+    育ちきるころには崩れなくなる。
+    書ける長さは超えない。余りが無ければ、そのまま書く。"""
+    grown = min(1, len(state.get("learned_words") or []) / GROWTH_STAGES[-1][0])
+    steadiness = random.random() ** (CLUMSY_AT_FIRST * (1 - grown))
+    hand = None
+    written = []
+    for word in words:
+        if word == "。" or spare <= 0 or random.random() < steadiness:
+            written.append(word)
+            continue
+        if hand is None:
+            hand = familiar_chars(state)
+        if not hand:
+            written.append(word)
+            continue
+        chars, weights = hand
+        how_many = random.randint(1, min(spare, STRAY_CHARS_AT_MOST))
+        letters = list(word)
+        for _ in range(how_many):
+            letters.insert(
+                random.randint(0, len(letters)),
+                random.choices(chars, weights=weights)[0],
+            )
+        spare -= how_many
+        written.append("".join(letters))
+    return written
+
+
+def familiar_chars(state):
+    """見かけてきた文字と、その馴染み具合。
+
+    文字ごとの回数は取っていないので、覚えかけの言葉から数える。
+    何日も見かけた言葉に入っている文字ほど、よく見てきた文字。"""
+    seen = set(state.get("seen_chars") or [])
+    counted = {}
+    for word, record in (state.get("words_met") or {}).items():
+        for ch in word:
+            if ch in seen and not ch.isspace():
+                counted[ch] = counted.get(ch, 0) + record[0]
+    if not counted:
+        return None
+    chars = list(counted)
+    return chars, [counted[ch] for ch in chars]
 
 
 def keep_only_what_it_knows(state, text):
