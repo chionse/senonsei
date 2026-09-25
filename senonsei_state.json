@@ -1245,7 +1245,13 @@
     "幕",
     "供",
     "線",
-    "顔"
+    "顔",
+    "功",
+    "敗",
+    "推",
+    "織",
+    "閉",
+    "鎖"
   ],
   "learned_words": [
     "など",
@@ -1546,7 +1552,6 @@
     "https://www3.nhk.or.jp/news/",
     "http://web.archive.org/web/20121231150150/http://creativecommons.org/licenses/by-sa/3.0/deed.fr",
     "http://web.archive.org/web/20121231150150/http://gl.wikisource.org/wiki/Wikisource:A_Taberna",
-    "http://web.archive.org/web/20121231150150/http://www.culture-libre.org/wiki/Accueil",
     "http://web.archive.org/web/20121231150150/http://creativecommons.org/licenses/by-sa/3.0/",
     "http://web.archive.org/web/20121231150150/http://gallica.bnf.fr/ark:/12148/bpt6k3718684",
     "http://web.archive.org/web/20121231150150/http://catalog.hathitrust.org/Record/008970153",
@@ -1734,7 +1739,44 @@
     "https://automattic.com/press/",
     "https://videopress.com/service-guidelines/",
     "https://s2.wp.com",
-    "https://videopress.com/"
+    "https://videopress.com/",
+    "http://web.archive.org/web/20130113233056/http://www.artlibre.org/licence/lal/",
+    "http://web.archive.org/web/20130113233056/http://tuxfamily.org/",
+    "http://web.archive.org/web/20130113233056/http://download.tuxfamily.org/cls/",
+    "http://web.archive.org/web/20130113233056/http://www.it2l.com/",
+    "http://web.archive.org/web/20130113233056/http://artlibre.org/licence/lal/",
+    "http://web.archive.org/web/20120422120702/http://www.artlibre.org/licence/lal/",
+    "http://web.archive.org/web/20120422120702/http://www.it2l.com/",
+    "http://web.archive.org/web/20120422120702/http://tuxfamily.org/",
+    "http://web.archive.org/web/20120422120702/http://artlibre.org/licence/lal/",
+    "http://web.archive.org/web/20120422120702/http://download.tuxfamily.org/cls/",
+    "http://web.archive.org/web/20120422120948/http://www.it2l.com/",
+    "http://web.archive.org/web/20120422120948/http://download.tuxfamily.org/cls/",
+    "http://web.archive.org/web/20120422120948/http://tuxfamily.org/",
+    "http://web.archive.org/web/20120422120948/http://artlibre.org/licence/lal/",
+    "http://web.archive.org/web/20120422120948/http://www.artlibre.org/licence/lal/",
+    "http://web.archive.org/web/20130113233118/http://download.tuxfamily.org/cls/",
+    "http://web.archive.org/web/20130113233118/http://artlibre.org/licence/lal/",
+    "http://web.archive.org/web/20130113233118/http://www.artlibre.org/licence/lal/",
+    "http://web.archive.org/web/20130113233118/http://tuxfamily.org/",
+    "http://web.archive.org/web/20130113233118/http://www.it2l.com/",
+    "http://web.archive.org/web/20120422074654/http://www.questmachine.org/article/Famille_Bonaparte",
+    "http://web.archive.org/web/20120422074654/http://manouedith.canalblog.com/archives/2007/09/12/6190885.html",
+    "http://web.archive.org/web/20120422074654/http://srv05.admin.over-blog.com/index.php?id=1300643054&module=admin&action=publicationArticles:editPublication&ref_site=1&nlc__=951329040812",
+    "http://web.archive.org/web/20120422074654/http://www.it2l.com/",
+    "http://web.archive.org/web/20120422074654/http://artlibre.org/licence/lal/",
+    "http://web.archive.org/web/20120422074654/http://download.tuxfamily.org/cls/",
+    "http://web.archive.org/web/20120422074654/http://fr.wikipen.org/wiki/Implosion",
+    "http://web.archive.org/web/20120422074654/http://www.synonymes.com/",
+    "http://web.archive.org/web/20120422074654/http://www.pounon.com/",
+    "http://web.archive.org/web/20120422074654/http://www.le-dictionnaire.com/",
+    "http://web.archive.org/web/20120422074654/http://tuxfamily.org/",
+    "http://web.archive.org/web/20120422074654/http://www.artlibre.org/licence/lal/",
+    "http://web.archive.org/web/20120422115258/http://www.it2l.com/",
+    "http://web.archive.org/web/20120422115258/http://artlibre.org/licence/lal/",
+    "http://web.archive.org/web/20120422115258/http://download.tuxfamily.org/cls/",
+    "http://web.archive.org/web/20120422115258/http://tuxfamily.org/",
+    "http://web.archive.org/web/20120422115258/http://www.artlibre.org/licence/lal/"
   ],
   "visited": [
     "https://note.com/",
@@ -1892,7 +1934,16 @@
     "https://chionse.github.io/senonsei/profile.html",
     "https://chionse.github.io/senonsei/index.html",
     "https://chionse.github.io/senonsei/shinchaku-2026-09-22.html",
-    "https://v0.wordpress.com"
+    "https://v0.wordpress.com",
+    "http://web.archive.org/web/20121231150150/http://www.culture-libre.org/wiki/Accueil",
+    "http://web.archive.org/web/20130113233056/http://www.culture-libre.org/wiki/Sp%C3%A9cial:Pages_li%C3%A9es/Accueil",
+    "http://web.archive.org/web/20130113233056/http://www.culture-libre.org/wiki/Sp%C3%A9cial:Suivi_des_liens/Accueil",
+    "http://web.archive.org/web/20130113233056/http://www.culture-libre.org/wiki/CultureLibre:Accueil",
+    "http://web.archive.org/web/20130113233056/http://www.culture-libre.org/wiki/Utilisateur:Frachet",
+    "http://web.archive.org/web/20130113233056/http://www.culture-libre.org/wiki/Accueil",
+    "http://web.archive.org/web/20130113233056/http://www.culture-libre.org/wiki/Discussion:Th%C3%A9%C3%A2tre_II",
+    "http://web.archive.org/web/20120422120702/http://www.culture-libre.org/wiki/Sp%C3%A9cial:Pages_li%C3%A9es/Accueil",
+    "http://web.archive.org/web/20120422120702*/http://www.culture-libre.org/wiki/Sp%C3%A9cial:Pages_li%C3%A9es/Accueil"
   ],
   "notes": [
     "0日目: note ――つくる、つながる、とどける。",
@@ -1909,12 +1960,13 @@
     "12日目: オープンソースカンファレンス、Recueil de tombeaux des quatre cimetières de Paris avec leurs épitaphes et ... - Google Livres",
     "13日目: Yahoo!¥¸¥ª¥·¥Æ¥£¡¼¥º: \n    ¥²¡¼¥à、NHK ONEのご利用と受信契約 | 利用案内 | NHK ONE インフォメーション、GitHub Changelog",
     "14日目: User talk:Keegan (WMF) - Meta-Wiki、Wikiversity:Changing username - Wikiversity、ブランディング・採用・販促で成果を出すならnote pro(ノートプロ)",
-    "15日目: VideoPress – The finest video for WordPress"
+    "15日目: VideoPress – The finest video for WordPress、CultureLibre"
   ],
   "today_walk": {
     "date": "2026-09-26",
     "seen": [
-      "VideoPress – The finest video for WordPress"
+      "VideoPress – The finest video for WordPress",
+      "CultureLibre"
     ]
   },
   "inner_voice": [
@@ -2067,17 +2119,18 @@
     "2026-09-25 meta.wikimedia.org: Keegan (WMF) さんへのメッセージが書かれたページを見ました。",
     "2026-09-25 en.wikiversity.org: ウィキバーシティのユーザ名を変更するには、メタウィキの「Special:GlobalRenameRequest」ページにアクセスし、ユーザ名を変更するためのフォームに必要な情報を入力して申請を提出する必要がある。",
     "2026-09-26 chionse.github.io: その場所は千遠生のサイトで、月間スタンプカードが書かれていて、書いた日や休んだ日が記載されていた。",
-    "2026-09-26 v0.wordpress.com: ビデオを簡単に、高品質で投稿するためのツールがあるようです。"
+    "2026-09-26 v0.wordpress.com: ビデオを簡単に、高品質で投稿するためのツールがあるようです。",
+    "2026-09-26 www.culture-libre.org: CultureLibreは、ウェブサイトのキャプチャを記録しており、自由な文化を目的としたサイトで、ユーザーが直接作品を編集したり新しい作品を追加したりすることができる。"
   ],
   "where_it_will_go": [
-    "www.twitch.tv",
-    "videopress.com",
-    "www.citizen.org",
-    "www.google.fr",
-    "videopress2.wordpress.com",
-    "act.citizen.org"
+    "tuxfamily.org",
+    "www.egroups.co.jp",
+    "ja.wikiversity.org",
+    "cli.github.com",
+    "www.nhk-cs.jp",
+    "docs.github.com"
   ],
-  "how_many_places_left": 471,
+  "how_many_places_left": 507,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -2098,7 +2151,8 @@
     "en.wikiversity.org": "Wikiversity:General disclaimer - Wikiver",
     "pro.lp-note.com": "ブランディング・採用・販促で成果を出すならnote pro(ノートプロ)",
     "chionse.github.io": "更新情報 2026-09-22",
-    "v0.wordpress.com": "VideoPress – The finest video for WordPr"
+    "v0.wordpress.com": "VideoPress – The finest video for WordPr",
+    "www.culture-libre.org": "Wayback Machine"
   },
   "went_home": {
     "date": "2026-09-26",
