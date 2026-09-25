@@ -13,6 +13,7 @@ Cloudflare Workers AI の無料枠が使える時は、千遠生は自分で考�
 """
 
 import datetime
+import difflib
 import json
 import math
 import os
@@ -372,6 +373,8 @@ THOUGHTS_ACROSS_A_LIFE = 30
 THINKING_AT_MOST = 200
 # 言い回しが少し違うだけのものを、同じ一つと見なす手前の線
 SAME_ENOUGH = 0.85
+# 前の思いと、並びまでこれだけ重なっていたら書き写しとみなす
+WRITTEN_AGAIN = 0.8
 # 覚えた言葉がまだ無いあいだ、覚えかけているものをこれだけ渡す
 WORDS_NEARLY_KNOWN = 8
 # 今日その言葉に会ったかどうかを、これだけ抱えておく。
@@ -2493,16 +2496,40 @@ def be_alone(state, now):
         looking_back[:] = [looking_back[i] for i in keep]
         return the_question()
 
-    thought = ask_ai(
-        the_question(),
-        max_tokens=THINKING_AT_MOST,
-        state=state,
-        read_less=read_less,
-    )
-
-    if thought:
+    def asked():
+        thought = ask_ai(
+            the_question(),
+            max_tokens=THINKING_AT_MOST,
+            state=state,
+            read_less=read_less,
+        )
         # 何行にわたってもいい。一つの思いとして一行に畳んで残す
-        said = " ".join(line.strip() for line in thought.splitlines() if line.strip())
+        return " ".join(
+            line.strip() for line in (thought or "").splitlines() if line.strip()
+        )
+
+    # さっきの思いを丸ごと渡すと、借りた頭はそれを書き写してしまうことがある。
+    # 長さを決めなくなってから、同じ長い文が毎時間ほとんどそのまま続いた。
+    # 書き写しは考えたことではないので、思いとしては数えない
+    lately = [carried] + [line.split(": ", 1)[-1] for line in thoughts[-3:]]
+
+    def copied(said):
+        return any(written_again(said, one) for one in lately if one)
+
+    said = asked()
+    if said and copied(said):
+        print("さっきとほとんど同じことを書き写していたので、考え直してもらいます")
+        going_on = ""  # さっきの続きは渡さずに、まっさらから
+        said = asked()
+        if said and copied(said):
+            # それでも同じなら、この時間は何も思わなかったことにする。
+            # 考えかけも手放して、次の時間はまっさらから始める
+            print("それでも同じだったので、この時間は何も残しません")
+            state["thinking_about"] = ""
+            save_state(state)
+            return
+
+    if said:
         state["thinking_about"] = said
         keep_a_thought(f"{now:%Y-%m-%d %H時}: {said}", now)
         thoughts.append(f"{now:%m-%d %H時}: {said}")
@@ -2757,6 +2784,19 @@ def what_is_on_its_mind(state):
 def bare_thought(line):
     """思ったことから、時刻と句読点を落として中身だけにする。"""
     return re.sub(r"[、。，．？！?!\s]", "", (line or "").split(": ", 1)[-1])
+
+
+def written_again(one, another):
+    """前の思いを、ほとんどそのまま書き写しているかどうか。
+
+    much_the_same は使っている字の重なりで見るので、長い思いどうしだと
+    中身が違っても同じと見なしやすい。こちらは並びまで見る。"""
+    a, b = bare_thought(one), bare_thought(another)
+    if not a or not b:
+        return False
+    if a in b or b in a:
+        return True
+    return difflib.SequenceMatcher(None, a, b, autojunk=False).ratio() >= WRITTEN_AGAIN
 
 
 def much_the_same(one, another):
