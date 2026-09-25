@@ -4,7 +4,9 @@
    DotGothic16 / SIL Open Font License 1.1 / fonts/OFL.txt */
 @font-face {
   font-family: "DotGothic16";
-  src: url("fonts/DotGothic16-Regular.ttf") format("truetype");
+  /* woff2 は同じ書体を Web 向けに縮めたもの(2.1MB → 0.5MB)。形は変わらない */
+  src: url("fonts/DotGothic16-Regular.woff2") format("woff2"),
+       url("fonts/DotGothic16-Regular.ttf") format("truetype");
   font-display: swap;
 }
 
@@ -35,7 +37,7 @@ html::before {
   inset: 0;
   z-index: -1;
   background:
-    var(--kusa, url("kusa/kusa-1.png")) center bottom / cover no-repeat,
+    var(--kusa, url("kusa/kusa-1.webp")) center bottom / cover no-repeat,
     linear-gradient(var(--sky-top), var(--sky-bottom));
 }
 

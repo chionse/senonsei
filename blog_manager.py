@@ -1252,12 +1252,21 @@ KUSA_FOLDER = "kusa"
 
 
 def kusa_pictures():
-    """草の絵の一覧。置いてある分だけ。増やせばそのまま候補に入る。"""
+    """草の絵の一覧。置いてある分だけ。増やせばそのまま候補に入る。
+
+    元の絵は PNG で一枚 1.2〜1.6MB あり、開くたびに待たされていた。
+    画質を落とさない WebP に直して置いている(一枚 0.5〜0.7MB、画素は元と同じ)。
+    同じ名前の PNG と WebP が両方あれば、軽い WebP のほうを使う。"""
     if not os.path.isdir(KUSA_FOLDER):
         return []
-    found = [
+    names = [
         name for name in os.listdir(KUSA_FOLDER)
-        if name.lower().endswith(".png")
+        if name.lower().endswith((".png", ".webp"))
+    ]
+    stems = {os.path.splitext(name)[0] for name in names if name.lower().endswith(".webp")}
+    found = [
+        name for name in names
+        if name.lower().endswith(".webp") or os.path.splitext(name)[0] not in stems
     ]
     # kusa-2 が kusa-10 より前に来るように、数の順に並べる
     found.sort(key=lambda name: [
