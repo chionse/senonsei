@@ -381,6 +381,8 @@ WORDS_PLACED_AT_MOST = 8
 # もう一語置けるとしても、ここで終わりにする割合。
 # 毎日きっちり上限まで並べる子ではないと思う
 ENOUGH_FOR_TODAY = 0.35
+# 題や本文を書くとき、昔の書き方に戻る割合。十回に一回くらい
+BACK_TO_OLD_WAYS = 0.1
 # 覚えた言葉を書くとき、ほかの文字がまぎれこむことがある。
 # 一語にまぎれこむのは、多くてこれだけ。書ける長さのほうが先に尽きることが多い
 STRAY_CHARS_AT_MOST = 4
@@ -2741,23 +2743,43 @@ def compose_locally(state):
     大事なのは正しさではなく、これがこの子自身の言葉だということ。
 
     繋がりを一つも持たないうちは、覚えた言葉をそのまま置くか、
-    見た文字を並べるだけになる。"""
+    見た文字を並べるだけになる。
+
+    ときどき、昔の書き方に戻る。言葉を覚えたあとでも、
+    見た文字をぽつんと置くだけの日がある。"""
     _, max_length = current_stage(state)
     words = state["learned_words"]
 
     said = speak_from_what_it_knows(state, max_length)
+    # もう通り過ぎた書き方
+    outgrown = []
+    if words:
+        outgrown.append("見た文字を置く")
+    if said:
+        outgrown.append("覚えた言葉を置く")
+    if outgrown and random.random() < BACK_TO_OLD_WAYS:
+        if random.choice(outgrown) == "見た文字を置く":
+            return babble(state, min(max_length, 4))
+        return place_words(state, max_length)
     if said:
         return said
+    if not words:
+        return babble(state, min(max_length, 4))
+    return place_words(state, max_length)
 
-    # まだ繋がりを知らない。持っているものを、書ける長さに入るだけ置く。
+
+def place_words(state, max_length):
+    """覚えた言葉を、書ける長さに入るだけ置く。
+
+    繋がりを知らないうちの書き方。"""
+    # 持っているものを、書ける長さに入るだけ置く。
     # それでも、置くなら今日触れた言葉のほうから置きたい。
     #
     # 六十語という区切りを別に持っていた。表のどの段とも合っておらず、
     # 五字しか書けない段でも三語並ぶことがあった。
     # 入るだけ、にすれば、書ける長さがそのまま置ける数になり、
     # 段の名前と動きがひとりでに揃う
-    if not words:
-        return babble(state, min(max_length, 4))
+    words = state["learned_words"]
     todays = [one for one in words if one in words_from_today(state)]
     pick = todays or words
     placed = []
