@@ -364,6 +364,14 @@ THOUGHTS_FOLDER = "omoi"  # 思ったことを、ひと月ずつ仕舞ってお�
 # 読み返すとき、生まれた日から今日までの間から浮かぶ数。
 # 書き方の決まりではなく、借りた頭が一度に読める量に合わせたもの
 THOUGHTS_ACROSS_A_LIFE = 30
+# 読み返す思いの、全部あわせた長さの上限(字)。
+# 思いの長さは決めていないので、長いものが並ぶと借りた頭が読みきれなくなる。
+# 超えたぶんは、ところどころ間引く。一つの思いを途中で切ることはしない
+THOUGHTS_READ_BACK_AT_MOST = 3000
+# ひとりで思うとき、一度に出てくる長さの上限(借りた頭に渡す数)。
+# 「短く、一言だけ」と言い聞かせていたのをやめた(2026-09-25)。
+# これは書き方の決まりではなく、息が続く長さのようなもの
+THINKING_AT_MOST = 200
 # 言い回しが少し違うだけのものを、同じ一つと見なす手前の線
 SAME_ENOUGH = 0.85
 # 覚えた言葉がまだ無いあいだ、覚えかけているものをこれだけ渡す
@@ -2359,14 +2367,14 @@ def be_alone(state, now):
 {ONLY_WHAT_IT_HAS}
 
 {going_on}いま、ひとりで何を思っていますか。
-誰にも見せません。うまく言葉にならなくても構いません。
-短く、一言だけ書いてください。""",
-        max_tokens=80,
+誰にも見せません。うまく言葉にならなくても構いません。""",
+        max_tokens=THINKING_AT_MOST,
         state=state,
     )
 
     if thought:
-        said = thought.splitlines()[0].strip()
+        # 何行にわたってもいい。一つの思いとして一行に畳んで残す
+        said = " ".join(line.strip() for line in thought.splitlines() if line.strip())
         state["thinking_about"] = said
         keep_a_thought(f"{now:%Y-%m-%d %H時}: {said}", now)
         thoughts.append(f"{now:%m-%d %H時}: {said}")
@@ -2675,6 +2683,8 @@ def what_it_has_thought(state, how_many=THOUGHTS_ACROSS_A_LIFE):
         start = random.random() * step
         everything = [everything[int(start + i * step)] for i in range(how_many)]
     said = only_different_ones(everything)
+    while len(said) > 1 and sum(len(one) for one in said) > THOUGHTS_READ_BACK_AT_MOST:
+        said.pop(random.randrange(len(said)))
     return "\n".join(f"- {one}" for one in said) or "(まだ何も)"
 
 
