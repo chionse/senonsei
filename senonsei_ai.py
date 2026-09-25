@@ -381,8 +381,9 @@ WORDS_PLACED_AT_MOST = 8
 # もう一語置けるとしても、ここで終わりにする割合。
 # 毎日きっちり上限まで並べる子ではないと思う
 ENOUGH_FOR_TODAY = 0.35
-# 題や本文を書くとき、昔の書き方に戻る割合。十回に一回くらい
-BACK_TO_OLD_WAYS = 0.1
+# 昔の書き方に戻る日の割合。四十五日に一日くらい。
+# その日は、題も本文も昔の書き方で書く
+BACK_TO_OLD_WAYS = 1 / 45
 # 覚えた言葉を書くとき、ほかの文字がまぎれこむことがある。
 # 一語にまぎれこむのは、多くてこれだけ。書ける長さのほうが先に尽きることが多い
 STRAY_CHARS_AT_MOST = 4
@@ -2727,15 +2728,35 @@ def learn(state):
     return learned
 
 
-def babble(state, length):
-    """覚えた文字を、意味も分からないまま並べる。"""
+def babble(state, length, hand=None):
+    """覚えた文字を、意味も分からないまま並べる。
+
+    hand に (文字, 馴染み具合) が渡されたら、馴染んだ文字ほど出やすくなる。"""
+    if hand:
+        chars, weights = hand
+        count = random.randint(1, max(1, length))
+        return "".join(random.choices(chars, weights=weights, k=count))
     if not state["seen_chars"]:
         return "・"
     count = random.randint(1, max(1, length))
     return "".join(random.choice(state["seen_chars"]) for _ in range(count))
 
 
-def compose_locally(state):
+def an_old_way(state):
+    """今日は昔の書き方に戻るか。戻るなら、どの書き方に。
+
+    戻れるのは、もう通り過ぎた書き方だけ。"""
+    if random.random() >= BACK_TO_OLD_WAYS:
+        return None
+    outgrown = []
+    if state.get("learned_words"):
+        outgrown.append("見た文字を置く")
+    if speak_from_what_it_knows(state, current_stage(state)[1]):
+        outgrown.append("覚えた言葉を置く")
+    return random.choice(outgrown) if outgrown else None
+
+
+def compose_locally(state, old_way=None):
     """それまでに積み上げた経験だけで、今の自分に書けるものを書く。
 
     覚えた繋がりを辿って、自分で組み立てる。誰にも文法を教わっていないので、
@@ -2745,22 +2766,18 @@ def compose_locally(state):
     繋がりを一つも持たないうちは、覚えた言葉をそのまま置くか、
     見た文字を並べるだけになる。
 
-    ときどき、昔の書き方に戻る。言葉を覚えたあとでも、
-    見た文字をぽつんと置くだけの日がある。"""
+    ときどき、昔の書き方に戻る日がある(old_way)。"""
     _, max_length = current_stage(state)
     words = state["learned_words"]
 
-    said = speak_from_what_it_knows(state, max_length)
-    # もう通り過ぎた書き方
-    outgrown = []
-    if words:
-        outgrown.append("見た文字を置く")
-    if said:
-        outgrown.append("覚えた言葉を置く")
-    if outgrown and random.random() < BACK_TO_OLD_WAYS:
-        if random.choice(outgrown) == "見た文字を置く":
-            return babble(state, min(max_length, 4))
+    if old_way == "見た文字を置く":
+        # 言葉にせず、文字だけを置く。使う文字は昔のものではなく、
+        # 今の手に馴染んだもの。戻るのは書き方で、知っていることではない
+        return babble(state, GROWTH_STAGES[0][2], familiar_chars(state))
+    if old_way == "覚えた言葉を置く":
         return place_words(state, max_length)
+
+    said = speak_from_what_it_knows(state, max_length)
     if said:
         return said
     if not words:
@@ -3292,8 +3309,11 @@ def run_today():
     # 全部わたしが足したものだった。書き方を決めるのは自由ではない。
     # 書ける長さはその日の段が決める。それはこの子の育ちであって、
     # 書き方の決まりではない
-    body = compose_locally(state)
-    title = compose_locally(state)
+    old_way = an_old_way(state)
+    if old_way:
+        print(f"今日は昔の書き方で書く: {old_way}")
+    body = compose_locally(state, old_way)
+    title = compose_locally(state, old_way)
 
     # 書いたものに出てきたことだけが、言えたことになる
     said = it_said_them(state, f"{title}{body}")
