@@ -1591,6 +1591,11 @@ def generate_comments_html(comments):
         f.write(html)
 
 
+# 吹き出しを出すかどうか。彼女がデザインを仕上げるまで、いったん伏せておく
+# (2026-09-26)。出すときは True にするだけでいい
+SHOWING_WHAT_IT_THINKS = False
+
+
 def fukidashi_html(state):
     """題名の横の吹き出し。この子がいちばん新しく思ったこと。
 
@@ -1600,7 +1605,7 @@ def fukidashi_html(state):
     だから思いは <script> の中に入れて、画面に出すのは閲覧機に任せる。
     この子の読み方は <script> の中身を読まない。見出しの言葉も同じ所に置く。"""
     lines = state.get("inner_voice") or []
-    if not lines:
+    if not SHOWING_WHAT_IT_THINKS or not lines:
         return ""
     when, _, said = lines[-1].partition(": ")
     hour = when.split(" ")[-1] if " " in when else ""
