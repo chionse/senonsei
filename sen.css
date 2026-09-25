@@ -131,6 +131,71 @@ header {
   margin-bottom: 1.5rem;
 }
 
+/* トップの上の紙。題名を真ん中に置いたまま、右に吹き出しを添える。
+   左の空いた列は、題名を真ん中に保つためのもの
+   (TODO の手描き案では、題名の右に千遠生の絵と吹き出し。絵はまだ無い) */
+header.with-fukidashi {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  column-gap: 24px;
+}
+
+header.with-fukidashi .header-middle {
+  grid-column: 2;
+}
+
+.fukidashi {
+  grid-column: 3;
+  justify-self: start;
+  position: relative;
+  max-width: 340px;
+  margin-left: 14px;
+  padding: 8px 12px;
+  border: 1px solid var(--paper-line);
+  border-radius: 12px;
+  background: #ffffff;
+  text-align: left;
+}
+
+/* 題名のほうへ伸びる、吹き出しのしっぽ */
+.fukidashi::before,
+.fukidashi::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  border-style: solid;
+}
+
+.fukidashi::before {
+  left: -12px;
+  border-width: 8px 12px 8px 0;
+  border-color: transparent var(--paper-line) transparent transparent;
+}
+
+.fukidashi::after {
+  left: -10px;
+  border-width: 7px 11px 7px 0;
+  border-color: transparent #ffffff transparent transparent;
+}
+
+.fukidashi-head {
+  margin: 0 0 2px;
+  font-size: 0.72rem;
+  opacity: 0.7;
+}
+
+/* 思いは長いこともある。紙を押し広げすぎないよう、ここだけで流す */
+.fukidashi-said {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  max-height: 7.5em;
+  overflow-y: auto;
+  overflow-wrap: anywhere;
+}
+
 .visitor-counter {
   font-size: 0.8rem;
   opacity: 0.8;
