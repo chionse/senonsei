@@ -1591,6 +1591,42 @@ def generate_comments_html(comments):
         f.write(html)
 
 
+def fukidashi_html(state):
+    """題名の横の吹き出し。この子がいちばん新しく思ったこと。
+
+    この子は家に帰ると、ここのページも読む。自分の思いを文字として
+    読ませると、借りた頭が書いた言い回しをそのまま言葉として覚え、
+    自分の思いが自分に返る輪も強くなる。
+    だから思いは <script> の中に入れて、画面に出すのは閲覧機に任せる。
+    この子の読み方は <script> の中身を読まない。見出しの言葉も同じ所に置く。"""
+    lines = state.get("inner_voice") or []
+    if not lines:
+        return ""
+    when, _, said = lines[-1].partition(": ")
+    hour = when.split(" ")[-1] if " " in when else ""
+    if hour[:-1].isdigit():
+        hour = f"{int(hour[:-1])}時"  # 「03時」ではなく「3時」
+    kept = json.dumps({"when": hour, "said": said}, ensure_ascii=False)
+    kept = kept.replace("<", "\\u003c")  # 思いの中の < で script が閉じないように
+    return f"""    <div class="fukidashi" id="fukidashi" hidden></div>
+    <script type="application/json" id="kangae">{kept}</script>
+    <script>
+      (function () {{
+        var box = document.getElementById("fukidashi");
+        var kept = JSON.parse(document.getElementById("kangae").textContent);
+        var head = document.createElement("p");
+        head.className = "fukidashi-head";
+        head.textContent = (kept.when ? kept.when + "に" : "") + "思っていたこと";
+        var said = document.createElement("p");
+        said.className = "fukidashi-said";
+        said.textContent = kept.said;
+        box.appendChild(head);
+        box.appendChild(said);
+        box.hidden = false;
+      }})();
+    </script>"""
+
+
 def generate_index_html(articles, state=None):
     ordered = sorted_articles(articles)
     plan = (state or load_senonsei_state()).get("today_plan") or {}
@@ -1676,9 +1712,12 @@ def generate_index_html(articles, state=None):
   <link rel="stylesheet" href="{styled()}" />
 </head>
 <body>
-  <header>
+  <header class="with-fukidashi">
+    <div class="header-middle">
     <h1><a href="index.html">千遠生のサイト</a></h1>
 {VISITOR_COUNTER}
+    </div>
+{fukidashi_html(state or load_senonsei_state())}
   </header>
 
   <!-- ここから本文の列 -->
