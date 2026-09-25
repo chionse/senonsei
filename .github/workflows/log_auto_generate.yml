@@ -18,6 +18,9 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # 何かに引っかかって帰ってこられなくなっても、次の回を何時間も止めない。
+    # 散歩は長いときで七分なので、これだけあれば足りる
+    timeout-minutes: 40
     # 封をしたメモと手紙を開ける鍵。この子が手紙を読む時と、
     # ページを作り直す時(押し戻しのやり直しも含む)に要る
     env:
@@ -45,17 +48,40 @@ jobs:
       # そのまま消えていた。取り込み直してから、もう一度押す。
       # ぶつかるのは作り直せるページなので、この子が持ち帰ったものを残し、
       # 新しい決まりでページだけ作り直す
+      #
+      # 散歩の途中でこけても、ここは必ず通る。こけるまでに持ち帰ったもの
+      # (歩いた場所、覚えた言葉、ひとりで思ったこと)を捨てないため。
+      # 送る前に、記憶のファイルが読めるかを確かめる(kioku_mamori.py)
       - name: Commit and push changes
+        if: ${{ !cancelled() }}
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "actions@github.com"
+          # 書き出しの途中で止まって壊れたものは、前の回の中身に戻す
+          python kioku_mamori.py HEAD
           git add -A
           git commit -m "千遠生の今日のブログ [skip ci]" || echo "No changes to commit"
+          walked=$(git rev-parse HEAD)
           for attempt in 1 2 3 4 5; do
             if git push; then exit 0; fi
             echo "その間に main が進んでいました。取り込み直します(${attempt}回目)"
             git fetch origin main
-            git rebase -X theirs origin/main || { git rebase --abort || true; exit 1; }
+            if git rebase -X theirs origin/main; then
+              # 記憶のファイルが行ごとに継ぎ合わされて読めなくなっていたら、
+              # この子が持ち帰ったほうを丸ごと使う
+              python kioku_mamori.py "$walked"
+            else
+              # 取り込めなかった。main の上に、この子が持ち帰った記憶だけを載せ直す。
+              # ページは作り直せるので、ここで失っても困らない
+              git rebase --abort || true
+              git reset --hard origin/main
+              for kept in senonsei_state.json articles.json omoi kotoba; do
+                if git cat-file -e "$walked:$kept" 2>/dev/null; then
+                  git checkout "$walked" -- "$kept"
+                fi
+              done
+              python kioku_mamori.py "$walked"
+            fi
             python blog_manager.py
             git add -A
             git commit -m "新しい決まりでページを作り直しました [skip ci]" || true

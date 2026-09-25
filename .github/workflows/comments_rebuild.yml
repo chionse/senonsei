@@ -43,6 +43,8 @@ jobs:
             echo "その間に main が進んでいました。取り込み直します(${attempt}回目)"
             git fetch origin main
             git rebase -X theirs origin/main || { git rebase --abort || true; exit 1; }
+            # 記憶のファイルが継ぎ合わされて読めなくなっていたら、main のほうを使う
+            python kioku_mamori.py origin/main
             python blog_manager.py
             git add -A
             git commit -m "新しい決まりでページを作り直しました [skip ci]" || true

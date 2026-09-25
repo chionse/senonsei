@@ -510,9 +510,23 @@ def load_articles():
     return []
 
 
+def write_whole(path, text):
+    """書き出しが途中で止まっても、前の中身が壊れないように書く。
+
+    そのまま上書きすると、書いている最中に止められた時に
+    半分だけのファイルが残り、次の回から読めなくなる。
+    隣に書いてから、一息で差し替える。"""
+    folder = os.path.dirname(path)
+    if folder:
+        os.makedirs(folder, exist_ok=True)
+    temporary = f"{path}.kakikake"
+    with open(temporary, "w", encoding="utf-8") as f:
+        f.write(text)
+    os.replace(temporary, path)
+
+
 def save_articles(articles):
-    with open(ARTICLES_FILE, "w", encoding="utf-8") as f:
-        json.dump(articles, f, ensure_ascii=False, indent=2)
+    write_whole(ARTICLES_FILE, json.dumps(articles, ensure_ascii=False, indent=2))
 
 
 def sorted_articles(articles):
@@ -529,11 +543,9 @@ def load_keywords():
 
 def save_keywords(keywords):
     """しまう時は、まだ開いていないメモの中身を書き出さない。封だけを書く。"""
-    with open(KEYWORDS_FILE, "w", encoding="utf-8") as f:
-        json.dump(
-            [fuuin.put_memo_away(one) for one in keywords],
-            f, ensure_ascii=False, indent=2,
-        )
+    write_whole(KEYWORDS_FILE, json.dumps(
+        [fuuin.put_memo_away(one) for one in keywords], ensure_ascii=False, indent=2,
+    ))
 
 
 def stamp_when(entries, save):
@@ -552,9 +564,20 @@ def stamp_when(entries, save):
         # 取れないものを「書き直された」ことにはしない
         if one.get("_shut"):
             continue
-        mark = str(len(one.get("content") or "")) + ":" + str(
+        plain = str(len(one.get("content") or "")) + ":" + str(
             zlib.crc32((one.get("content") or "").encode("utf-8"))
         )
+        mark = plain
+        if one.get("_sealed"):
+            # 封をしたものは、封のほうから指紋を取る。
+            # 中身から取った指紋(字数と CRC32)を表に置くと、
+            # 短いメモなら総当たりで中身が当てられてしまう。
+            # 書き直すときは封をし直すので、封が変われば書き直されたと分かる
+            mark = "封:" + str(zlib.crc32(one["_sealed"].encode("utf-8")))
+            if one.get("mark") == plain:
+                one["mark"] = mark  # 前の形の指紋から移すだけ。書き直されてはいない
+                changed = True
+                continue
         if not one.get("added"):
             one["added"] = today
             one["updated"] = today
@@ -587,11 +610,9 @@ def it_has_written(word, articles=None):
 
 def save_menu(menu_items):
     """手紙は、開く日が来ても封のまましまう。"""
-    with open(MENU_FILE, "w", encoding="utf-8") as f:
-        json.dump(
-            [fuuin.put_letter_away(one) for one in menu_items],
-            f, ensure_ascii=False, indent=2,
-        )
+    write_whole(MENU_FILE, json.dumps(
+        [fuuin.put_letter_away(one) for one in menu_items], ensure_ascii=False, indent=2,
+    ))
 
 
 def update_keywords(articles):
