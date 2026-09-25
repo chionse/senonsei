@@ -1,2 +1,5 @@
 __pycache__/
 *.pyc
+
+# 書き出しの途中で止まった時に残る書きかけ(blog_manager.write_whole)
+*.kakikake

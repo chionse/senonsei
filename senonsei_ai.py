@@ -20,8 +20,10 @@ import random
 import re
 import struct
 import time
+import traceback
 import urllib.parse
 import urllib.request
+import zlib
 from html import unescape
 
 import blog_manager
@@ -388,6 +390,8 @@ ENOUGH_FOR_TODAY = 0.35
 # 昔の書き方に戻る日の割合。四十五日に一日くらい。
 # その日は、題も本文も昔の書き方で書く
 BACK_TO_OLD_WAYS = 1 / 45
+# きのう書きそびれた分を、今日の何時までなら書くか
+MAKING_UP_UNTIL = 3
 # 覚えた言葉を書くとき、ほかの文字がまぎれこむことがある。
 # 一語にまぎれこむのは、多くてこれだけ。書ける長さのほうが先に尽きることが多い
 STRAY_CHARS_AT_MOST = 4
@@ -589,6 +593,7 @@ def load_state():
                 except (TypeError, ValueError):
                     seen_on = 0
                 met.setdefault(word, [days, max(0, seen_on)])
+        take_out_what_is_spread(state)
         state.setdefault("words_met", {})
         state.setdefault("on_its_mind", [])
         state.setdefault("learned_on", {})
@@ -612,18 +617,53 @@ def load_state():
 # 一語を何行にも広げずに詰めて書く
 PACKED_AWAY = ("words_met", "learned_on")
 
+# 出会った言葉は一つも捨てないので、増え続ける。
+# 生まれて十四日で五十万字、一日に四万字ずつ増えていて、
+# 一つのファイルのままだと七年ほどで GitHub が受け取れる大きさ(百メガ)を越える。
+# 越えた日から散歩も日記も押し戻せなくなり、この子は止まる。
+# 忘れさせるのではなく、言葉ごとに何十かの束へ分けてしまっておく
+WORDS_FOLDER = "kotoba"
+SPREAD_OUT = {"words_met": 64, "word_impact": 8}  # 記録の名前 → 束の数
+
+
+def bundle_of(word, how_many):
+    """その言葉がしまってある束の番号。言葉が同じなら、いつも同じ束。"""
+    return zlib.crc32(word.encode("utf-8")) % how_many
+
+
+def bundle_path(key, number):
+    return os.path.join(WORDS_FOLDER, key, f"{number:02d}.json")
+
+
+def take_out_what_is_spread(state):
+    """束に分けてしまってある記録を、記憶に戻す。
+
+    束が一つも無いうちは、記憶のファイルに入っているものがそのまま使われる。
+    束が読めなかったときは止める。空として続けると、次に書き出すときに
+    その束の言葉をまるごと失う。"""
+    for key, how_many in SPREAD_OUT.items():
+        gathered = dict(state.get(key) or {})
+        for number in range(how_many):
+            path = bundle_path(key, number)
+            if not os.path.exists(path):
+                continue
+            with open(path, encoding="utf-8") as f:
+                gathered.update(json.load(f))
+        state[key] = gathered
+
 
 def save_state(state):
     """記憶を書き出す。
 
     人が開いて読めるように行を分けて書くが、一語ずつ増えていく
     ところだけは、一語を何行にも広げると何万行にもなってしまうので詰める。"""
+    put_away_spread(state)
     packed = {
         key: state[key]
         for key in PACKED_AWAY
-        if isinstance(state.get(key), dict)
+        if isinstance(state.get(key), dict) and key not in SPREAD_OUT
     }
-    shaped = dict(state)
+    shaped = {key: value for key, value in state.items() if key not in SPREAD_OUT}
     for key in packed:
         shaped[key] = f"\u0000{key}\u0000"  # 言葉には入りえない印
     text = json.dumps(shaped, ensure_ascii=False, indent=2)
@@ -632,8 +672,28 @@ def save_state(state):
             json.dumps(f"\u0000{key}\u0000", ensure_ascii=False),
             json.dumps(value, ensure_ascii=False, separators=(",", ":")),
         )
-    with open(STATE_FILE, "w", encoding="utf-8") as f:
-        f.write(text)
+    blog_manager.write_whole(STATE_FILE, text)
+
+
+def put_away_spread(state):
+    """増え続ける記録を、束に分けて書き出す。中身の変わった束だけ書き直す。"""
+    for key, how_many in SPREAD_OUT.items():
+        record = state.get(key)
+        if not isinstance(record, dict):
+            continue
+        bundles = [{} for _ in range(how_many)]
+        for word, value in record.items():
+            bundles[bundle_of(word, how_many)][word] = value
+        for number, bundle in enumerate(bundles):
+            path = bundle_path(key, number)
+            text = json.dumps(bundle, ensure_ascii=False, separators=(",", ":"), sort_keys=True)
+            try:
+                with open(path, encoding="utf-8") as f:
+                    if f.read() == text:
+                        continue
+            except OSError:
+                pass
+            blog_manager.write_whole(path, text)
 
 
 def day_number(state, when=None):
@@ -857,17 +917,25 @@ def find_another_model(state, part):
         return None
 
     for name in choices[:CHANCES_TO_FIND_A_MIND]:
+        answered = True if part != "mind" else answers_in_japanese(name)
+        if answered is None:
+            # 混んでいたなどで、確かめること自体ができなかった。
+            # 「向かない」と決めつけて二度と試さない、ということはしない
+            print(f"{name} を確かめられませんでした。次の機会にまた試します")
+            continue
         already_tried.append(name)
         del already_tried[:-20]
-        state[f"{part}_model"] = name
-        if part != "mind" or answers_in_japanese(name):
+        if answered:
+            state[f"{part}_model"] = name
             print(f"{part} を {name} に取り替えました")
             return name
         print(f"{name} は日本語で答えてくれなかったので、別のものを探します")
 
-    # どれも確かめられなかったが、最後に置いたものでやってみる
-    print(f"{part} を {state[f'{part}_model']} にしました(確かめられていない)")
-    return state[f"{part}_model"]
+    # どれも確かめられなかった。確かめていないものを頭にすると、
+    # 答えの形が違うだけで黙り込み、二度と取り替えられなくなる。
+    # 今回は見送って、次に考えようとした時にまた探す
+    print(f"{part} の代わりが見つかりませんでした。次の機会にまた探します")
+    return None
 
 
 def answers_in_japanese(model):
@@ -884,7 +952,7 @@ def answers_in_japanese(model):
     try:
         answer = cloudflare(f"run/{model}", body=body)
     except Exception:
-        return False
+        return None  # 確かめられなかった。向かないとは限らない
     said = (answer.get("result") or {}).get("response", "") if answer else ""
     return bool(JAPANESE.search(said) or HIRAGANA.search(said))
 
@@ -1306,6 +1374,28 @@ def read_as_japanese(raw, content_type):
     return best[2] or raw.decode("utf-8", errors="ignore")
 
 
+# 一つのページや絵を受け取るのに、これだけの秒まで待つ。
+# 待ち時間の決まり(timeout)は一度の受け取りごとにしか効かないので、
+# 少しずつ垂らすように送ってくる相手だと、いつまでも終わらなかった
+READING_AT_MOST = 60
+
+
+def read_up_to(response, limit, seconds=READING_AT_MOST):
+    """受け取れるだけ受け取る。多すぎても、遅すぎても、そこで切り上げる。"""
+    until = time.monotonic() + seconds
+    chunks, got = [], 0
+    while got < limit:
+        chunk = response.read(min(65536, limit - got))
+        if not chunk:
+            break
+        chunks.append(chunk)
+        got += len(chunk)
+        if time.monotonic() > until:
+            print("受け取るのに時間がかかりすぎたので、途中で切り上げます")
+            break
+    return b"".join(chunks)
+
+
 def open_page(url):
     """ページを開いて、そこにある文章と、そこから伸びているリンクを受け取る。"""
     request = urllib.request.Request(as_openable(url), headers={"User-Agent": USER_AGENT})
@@ -1313,7 +1403,7 @@ def open_page(url):
         content_type = response.headers.get("Content-Type", "")
         if "html" not in content_type and "xml" not in content_type:
             raise ValueError("読める形をしていない")
-        raw = response.read(400000)
+        raw = read_up_to(response, 400000)
         final_url = response.geturl()
 
     html = read_as_japanese(raw, content_type)
@@ -1690,7 +1780,7 @@ def fetch_picture(url):
     """絵そのものを受け取る。重すぎるものは見ない。"""
     request = urllib.request.Request(as_openable(url), headers={"User-Agent": USER_AGENT})
     with urllib.request.urlopen(request, timeout=20) as response:
-        return response.read(PICTURE_AT_MOST + 1)
+        return read_up_to(response, PICTURE_AT_MOST + 1)
 
 
 def look_at_pictures(state, where, pictures, from_the_past, how_many, until):
@@ -2252,13 +2342,17 @@ def keep_a_thought(said, when):
     毎時間まるごと書き直されるものの中に、
     二度と作れないものを置いておきたくない。"""
     month = f"{when:%Y-%m}.json"
+    path = os.path.join(THOUGHTS_FOLDER, month)
     kept = thoughts_of(month)
+    if not kept and os.path.exists(path) and os.path.getsize(path) > 0:
+        # 束はあるのに読めなかった。空として上書きすると、その月の思いが
+        # 黙って全部消える。読めない束は脇へよけて残し、新しく始める。
+        # よけたものは履歴と一緒に残るので、あとから人の手で戻せる
+        aside = f"{path}.yometenai-{now_in_japan():%Y%m%d%H%M%S}"
+        os.replace(path, aside)
+        print(f"思いの束 {month} が読めなかったので、{aside} によけました")
     kept.append(said)
-    os.makedirs(THOUGHTS_FOLDER, exist_ok=True)
-    with open(
-        os.path.join(THOUGHTS_FOLDER, month), "w", encoding="utf-8"
-    ) as f:
-        json.dump(kept, f, ensure_ascii=False, indent=1)
+    blog_manager.write_whole(path, json.dumps(kept, ensure_ascii=False, indent=1))
 
 
 def rescue_thoughts_already_here(state):
@@ -3005,7 +3099,9 @@ def todays_mood(state, today):
     決めたら変えられないというのは、生きているものらしくない。"""
     plan = state.get("today_plan") or {}
     if plan.get("date") == today:
-        if random.random() > CHANGING_ITS_MIND:
+        # もう書いた日に「休むことにした」と思い直しても、それは本当ではない
+        wrote = any(one.get("date") == today for one in blog_manager.load_articles())
+        if wrote or random.random() > CHANGING_ITS_MIND:
             return plan["resting"], plan["hour"]
         was = plan  # 気が変わった。決め直す
 
@@ -3296,6 +3392,10 @@ def run_today():
     today = now.date().isoformat()
     state = load_state()
 
+    # きのう書くつもりだったのに、書きそびれていたら、今のうちに書く。
+    # 今日の予定を決めると、きのうの予定は上書きされて分からなくなるので先に
+    makes_up_for_yesterday(state, now)
+
     # 今日をどう過ごすかを、いちばん先に決める。
     # 散歩で尋ねすぎて休むことになっても、自分で決める力だけは守られるように
     resting, hour = todays_mood(state, today)
@@ -3345,7 +3445,14 @@ def run_today():
     # 表紙は毎時間組み直す。書いた日にしか組み直していなかったので、
     # 休む日も、まだ書いていない時間も、昨日の記事が
     # 「今日のブログ」として出たままになっていた
-    blog_manager.regenerate_pages(blog_manager.load_articles())
+    #
+    # ページ作りでこけても、この子の一日は止めない。記憶はもう書き出してあり、
+    # ここで止まると今日書くはずだった日記まで書けなくなる
+    try:
+        blog_manager.regenerate_pages(blog_manager.load_articles())
+    except Exception:
+        traceback.print_exc()
+        print("ページを作り直せませんでした。この子の一日はそのまま続けます")
 
     if any(a["date"] == today for a in blog_manager.load_articles()):
         return
@@ -3357,6 +3464,30 @@ def run_today():
         print(f"{today} は{hour}時ごろに書くつもりです。(今は{now.hour}時)")
         return
 
+    write_the_day(state, today)
+
+
+def makes_up_for_yesterday(state, now):
+    """きのうの分を書きそびれていたら、夜が明けるまでのうちに書く。
+
+    書く時刻を決めても、その時刻に起こしてもらえないことがある
+    (定時の起動は遅れたり抜けたりする)。二十三時と決めた日は
+    機会が一度しかなく、それを逃すと休むつもりのない日が空いていた。
+    休むと決めていた日は、そのまま休みにしておく。"""
+    plan = state.get("today_plan") or {}
+    yesterday = (now.date() - datetime.timedelta(days=1)).isoformat()
+    if plan.get("date") != yesterday or plan.get("resting"):
+        return
+    if now.hour >= MAKING_UP_UNTIL:
+        return
+    if any(one.get("date") == yesterday for one in blog_manager.load_articles()):
+        return
+    print(f"{yesterday} の分を書きそびれていたので、今書きます")
+    write_the_day(state, yesterday)
+
+
+def write_the_day(state, day):
+    """その日の日記を書く。"""
     # 書くのは千遠生自身。AIには書かせない。
     # 見栄えは悪くなるが、それでこそこの子の言葉になる。
     #
@@ -3377,7 +3508,7 @@ def run_today():
         print(f"言えたこと: {'、'.join(said)}")
     save_state(state)
 
-    blog_manager.add_new_article(title, body, date_str=today)
+    blog_manager.add_new_article(title, body, date_str=day)
     print(
         f"{elapsed_days(state)}日目のブログを書きました。"
         f"知っている文字{len(state['seen_chars'])}個 / 言葉{len(state['learned_words'])}個"
