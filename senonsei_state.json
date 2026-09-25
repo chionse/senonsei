@@ -1235,7 +1235,17 @@
     "歩",
     "♡",
     "誕",
-    "己"
+    "己",
+    "監",
+    "督",
+    "想",
+    "ヤ",
+    "清",
+    "輝",
+    "幕",
+    "供",
+    "線",
+    "顔"
   ],
   "learned_words": [
     "など",
@@ -1633,7 +1643,6 @@
     "https://js.monitor.azure.com",
     "https://githubuniverse.com/",
     "https://ghcc.githubassets.com",
-    "https://v0.wordpress.com",
     "https://www.electronjs.org/",
     "https://atom.io/",
     "https://gmpg.org/xfn/11",
@@ -1704,7 +1713,28 @@
     "https://policies.hatena.ne.jp/cookie-policy",
     "http://d.hatena.ne.jp/",
     "https://www.hatena.ne.jp/register?location=https%3A%2F%2Fb.hatena.ne.jp%2F%3Fregistered_from%3Dglobal-header&via=201037",
-    "https://soredoko.jp/"
+    "https://soredoko.jp/",
+    "https://automattic.com/work-with-us/",
+    "https://videopress.com/_static/??-eJydztEKwjAMBdAfsmZuw+1F/Jauxlppm9KkU//eDvRBBJG95V7ugcAtKUNRMArIBQMy6NHA7E5IKSNz27QdsDw8bg3zBv7aa2YUhgoA75L1Omp0psLo1+naJYrs5u/HQ1HJF+vispo82XraF3rHX8giKU9Gi6P4EdTZa5cXegyH3X4c+r7phub6BDMMgvo=&cssminify=yes",
+    "https://public-api.wordpress.com/oembed/?format=xml&url=https%3A%2F%2Fvideopress.com%2F&for=wpcom-auto-discovery",
+    "https://senseilms.com",
+    "https://jetpack.com/videopress",
+    "https://s1.wp.com/opensearch.xml",
+    "https://automattic.crowdsignal.net/videopress-com-feedback",
+    "https://videopress.com",
+    "https://videopress.com/?openidserver=1",
+    "https://public-api.wordpress.com/oembed/?format=json&url=https%3A%2F%2Fvideopress.com%2F&for=wpcom-auto-discovery",
+    "https://videopress.com/osd.xml",
+    "https://wordpress.com/advertising-program-optout/",
+    "https://videopress.com/_static/??-eJyNjMEKhDAMBX9IfaiIXsRPWdxskGqbFNPi7y+CevY4wzA4YkkqiSUh5DL6vDgxrJziTNvFCKqCjxPC1yttBjtc5L0iswLvD0F/2bOB5l2zsX+iW5zDKYx1P3RN07b1sP4BKPs7aw==&cssminify=yes",
+    "https://wp.me/PLXkB-1fZ",
+    "https://videopress.com/feed/",
+    "https://videopress2.wordpress.com/xmlrpc.php?rsd",
+    "https://s0.wp.com",
+    "https://automattic.com/press/",
+    "https://videopress.com/service-guidelines/",
+    "https://s2.wp.com",
+    "https://videopress.com/"
   ],
   "visited": [
     "https://note.com/",
@@ -1861,7 +1891,8 @@
     "https://chionse.github.io/senonsei/kakodogu.html",
     "https://chionse.github.io/senonsei/profile.html",
     "https://chionse.github.io/senonsei/index.html",
-    "https://chionse.github.io/senonsei/shinchaku-2026-09-22.html"
+    "https://chionse.github.io/senonsei/shinchaku-2026-09-22.html",
+    "https://v0.wordpress.com"
   ],
   "notes": [
     "0日目: note ――つくる、つながる、とどける。",
@@ -1878,11 +1909,13 @@
     "12日目: オープンソースカンファレンス、Recueil de tombeaux des quatre cimetières de Paris avec leurs épitaphes et ... - Google Livres",
     "13日目: Yahoo!¥¸¥ª¥·¥Æ¥£¡¼¥º: \n    ¥²¡¼¥à、NHK ONEのご利用と受信契約 | 利用案内 | NHK ONE インフォメーション、GitHub Changelog",
     "14日目: User talk:Keegan (WMF) - Meta-Wiki、Wikiversity:Changing username - Wikiversity、ブランディング・採用・販促で成果を出すならnote pro(ノートプロ)",
-    "15日目: 何も見られなかった"
+    "15日目: VideoPress – The finest video for WordPress"
   ],
   "today_walk": {
     "date": "2026-09-26",
-    "seen": []
+    "seen": [
+      "VideoPress – The finest video for WordPress"
+    ]
   },
   "inner_voice": [
     "09-23 15時: 「なぜ、ここにいるのか……」",
@@ -1973,9 +2006,8 @@
       "times": 1
     }
   ],
-  "saw_on": "2026-09-24",
+  "saw_on": "2026-09-26",
   "pictures_seen": [
-    "2026-09-14 note.jp: この絵には、人々が描かれています。",
     "2026-09-14 note.jp: 手",
     "2026-09-14 note.jp: この絵には、日本語の文字が写っています。",
     "2026-09-16 www3.nhk.or.jp: 地球",
@@ -2002,7 +2034,10 @@
     "2026-09-23 www.ospn.jp: 絵には、紙製品、食べ物、お菓子、お茶、お酒、お茶漬け、お茶漬けの箱、お茶漬けの箱の中に茶漬け、お茶漬けの箱の中に茶漬け、お茶漬けの箱の中に茶漬け、お茶漬けの箱の中",
     "2026-09-24 www.nhk.or.jp: 絵には、白い家、窓、ドア、壁、屋根、窓、ドア、壁、屋根が見えます。",
     "2026-09-24 www.nhk.or.jp: 絵には、大きな建物が描かれており、その建物の中には、円形の窓があります。また、絵には、太陽が描かれており、その太陽が建物の上に描かれています。",
-    "2026-09-24 www.nhk.or.jp: 絵には、白い建物、黄色の円形の窓、そして円形の時計が描かれています。"
+    "2026-09-24 www.nhk.or.jp: 絵には、白い建物、黄色の円形の窓、そして円形の時計が描かれています。",
+    "2026-09-26 v0.wordpress.com: 絵には、細い線で描かれた人物がいます。その人物は、細い線で描かれた顔を持っており、細い線で描かれた口を持っています。",
+    "2026-09-26 v0.wordpress.com: 絵には、車が描かれています。",
+    "2026-09-26 v0.wordpress.com: 木材"
   ],
   "impressions": [
     "2026-09-14 note.jp: note株式会社はクリエイターが文章や画像、音声、動画を投稿し、ユーザーがそのコンテンツを楽しんで応援できるメディアプラットフォームです。",
@@ -2031,17 +2066,18 @@
     "2026-09-24 github.blog: GitHubのチェンジログに書かれていたことが、GitHub Copilot、アプリの更新や新機能の追加などだった。",
     "2026-09-25 meta.wikimedia.org: Keegan (WMF) さんへのメッセージが書かれたページを見ました。",
     "2026-09-25 en.wikiversity.org: ウィキバーシティのユーザ名を変更するには、メタウィキの「Special:GlobalRenameRequest」ページにアクセスし、ユーザ名を変更するためのフォームに必要な情報を入力して申請を提出する必要がある。",
-    "2026-09-26 chionse.github.io: その場所は千遠生のサイトで、月間スタンプカードが書かれていて、書いた日や休んだ日が記載されていた。"
+    "2026-09-26 chionse.github.io: その場所は千遠生のサイトで、月間スタンプカードが書かれていて、書いた日や休んだ日が記載されていた。",
+    "2026-09-26 v0.wordpress.com: ビデオを簡単に、高品質で投稿するためのツールがあるようです。"
   ],
   "where_it_will_go": [
-    "en.wikinews.org",
-    "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
-    "tr.wikisource.org",
-    "heart-net.nhk.or.jp",
-    "note.com",
-    "resources.github.com"
+    "www.twitch.tv",
+    "videopress.com",
+    "www.citizen.org",
+    "www.google.fr",
+    "videopress2.wordpress.com",
+    "act.citizen.org"
   ],
-  "how_many_places_left": 451,
+  "how_many_places_left": 471,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -2061,7 +2097,8 @@
     "meta.wikimedia.org": "Main public logs - Meta-Wiki",
     "en.wikiversity.org": "Wikiversity:General disclaimer - Wikiver",
     "pro.lp-note.com": "ブランディング・採用・販促で成果を出すならnote pro(ノートプロ)",
-    "chionse.github.io": "更新情報 2026-09-22"
+    "chionse.github.io": "更新情報 2026-09-22",
+    "v0.wordpress.com": "VideoPress – The finest video for WordPr"
   },
   "went_home": {
     "date": "2026-09-26",
@@ -2072,15 +2109,15 @@
     "など": 7,
     "しかし": 1,
     "では": 6,
-    "っていま": 1,
-    "かれてい": 2
+    "っていま": 2,
+    "かれてい": 3
   },
   "closes_a_sentence": {
     "など": 7,
     "しかし": 1,
     "では": 6,
-    "っていま": 1,
-    "かれてい": 2
+    "っていま": 2,
+    "かれてい": 3
   },
   "visitors": {
     "comments": 0,
@@ -2095,7 +2132,9 @@
       "セミナー",
       "仲間",
       "っていま",
-      "など"
+      "など",
+      "絵",
+      "かれてい"
     ]
   },
   "wants_to_say": [
