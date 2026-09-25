@@ -418,6 +418,25 @@ NOT_WRITTEN_YET = re.compile(r"^\(ここに.*書いてください\)$")
 # 言いたいこと。一つの場所で増える数と、訊くときに渡す数。
 # 一つも捨てない。言えたら後ろに下がるだけで、また前に出てくる
 WANTS_PER_PLACE = 2
+# 分からなかった場所へ、もう一度行きたくなる条件。
+# 知っている言葉が、そこへ行った時のこれだけ倍になり、
+WORDS_GROWN_TO_RETURN = 2
+# 少なくともこれだけ増えていて、
+WORDS_GAINED_TO_RETURN = 20
+# 前に行ってからこれだけの日が経ち、
+DAYS_BEFORE_RETURNING = 14
+# そのとき分かった言葉が、ページの言葉のこれだけに満たなかった所
+UNDERSTOOD_WELL_ENOUGH = 0.5
+# 知っている言葉を探すとき、一枚のページの頭からこれだけの字を見る
+READ_FOR_UNDERSTANDING = 20000
+# そういう場所を、一日にこれだけの割合で思い出す
+REMEMBERING_A_PLACE_CHANCE = 0.3
+# 思い出した場所へ行きたい気持ちの強さ(何も引っかからない道を 1 として)
+PULL_OF_A_PLACE_TO_RETURN = 10
+# 行きたいと思い出した場所を、これだけまで抱えておく
+PLACES_TO_RETURN_KEPT = 5
+# また行って比べたことを、これだけ覚えておく
+RETURNS_KEPT = 30
 WANTS_IN_FRONT = 5
 
 # この子が知っているのは、目の前にあるものと、自分が覚えていることだけ。
@@ -633,7 +652,7 @@ PACKED_AWAY = ("words_met", "learned_on")
 # 越えた日から散歩も日記も押し戻せなくなり、この子は止まる。
 # 忘れさせるのではなく、言葉ごとに何十かの束へ分けてしまっておく
 WORDS_FOLDER = "kotoba"
-SPREAD_OUT = {"words_met": 64, "word_impact": 8}  # 記録の名前 → 束の数
+SPREAD_OUT = {"words_met": 64, "word_impact": 8, "places_understood": 8}  # 記録の名前 → 束の数
 
 
 def bundle_of(word, how_many):
@@ -1733,6 +1752,8 @@ def what_draws_it(state, url, close=None):
     for word, weight in close.items():
         if word in looking_at:
             drawn += weight
+    if url in (state.get("wants_to_return") or {}).values():
+        drawn += PULL_OF_A_PLACE_TO_RETURN  # 今なら分かるかもしれない場所
     return drawn
 
 
@@ -1757,6 +1778,10 @@ def choose_destination(state):
         return random.choice(entrances(state)), False
 
     candidates = spread_out_choices(state, frontier, CHOICES_SHOWN)
+    # もう一度行きたいと思い出した場所は、いつも候補に入っている
+    for entrance in (state.get("wants_to_return") or {}).values():
+        if entrance in frontier and entrance not in candidates:
+            candidates.append(entrance)
     # 選ぶのはこの子。持っているものから決める。
     # 借りた頭に選ばせていたので、行き先だけは他人が決めていた
     close = evened_out(words_it_holds_close(state))
@@ -2193,6 +2218,9 @@ def look_around_site(state, entrance, wants_the_past):
     site_title = None
     read_here = ""  # その場所で読んだもの。分かったことを残すために取っておく
     struck_here = set()  # そこで強く出会った言葉
+    words_here = set()  # そこで読めた言葉(分かったかどうかは問わない)
+    known_here = set()  # そのうち、知っていた言葉
+    unread = 0  # 開いたけれど、読めなかったページ(よその言葉で、訳してもらえなかった)
     pages = 0
     pictures_left = PICTURES_PER_SITE
     translations_left = TRANSLATIONS_PER_SITE
@@ -2227,6 +2255,8 @@ def look_around_site(state, entrance, wants_the_past):
 
         if JAPANESE.search(text):
             struck_here |= absorb(state, text) or set()
+            words_here |= set(WORD_CANDIDATE.findall(text))
+            known_here |= known_words_in(state, text)
             if site_title is None:
                 site_title = title
             if not read_here:
@@ -2236,11 +2266,17 @@ def look_around_site(state, entrance, wants_the_past):
             translated = read_in_another_tongue(text, state)
             if translated:
                 struck_here |= absorb(state, translated) or set()
+                words_here |= set(WORD_CANDIDATE.findall(translated))
+                known_here |= known_words_in(state, translated)
                 if site_title is None:
                     site_title = title
                 if not read_here:
                     read_here = translated
                 print(f"よその言葉のページを訳して読みました: {title[:40]}")
+            else:
+                unread += 1
+        else:
+            unread += 1  # よその言葉で、もう訳してもらえない。眺めただけ
 
         if pictures_left > 0 and pictures:
             try:
@@ -2286,6 +2322,10 @@ def look_around_site(state, entrance, wants_the_past):
         print(f"{here} を{pages}ページ見てきました。")
         if read_here:
             what_it_made_of_that_place(state, here, site_title, read_here)
+        how_much_it_understood(
+            state, here, entrance, site_title, words_here | known_here, known_here,
+            pages, unread,
+        )
 
     # 魚を調べていたら海流が気になった、というようなこと。
     # 気がかりは追いかけているうちに、だんだん別のものへ移っていく
@@ -2300,6 +2340,124 @@ def look_around_site(state, entrance, wants_the_past):
     )[:WANTS_PER_PLACE]:
         now_it_wants_to_say(state, word)
     return site_title, pages
+
+
+def known_words_in(state, text):
+    """読んだものの中に、知っている言葉がいくつあったか。
+
+    言葉の切り出し(WORD_CANDIDATE)では「人」や「絵」のような一字の言葉が
+    拾えないので、知っている言葉のほうから探す。頭のほうだけを見る。"""
+    looked_at = text[:READ_FOR_UNDERSTANDING]
+    return {word for word in state.get("learned_words") or [] if word in looked_at}
+
+
+def how_much_it_understood(state, here, entrance, title, words_here, known_here, pages, unread):
+    """その場所で、どれだけ分かったか。
+
+    この子はページの言葉をどれも「見かけた」として受け取るが、
+    知っている言葉はまだわずかで、ほとんどは分からないまま通り過ぎている。
+    分からなかったという感覚が無いと、分かるようになったことにも気づけない。
+
+    場所ごとに、はじめて来た時と、いちばん近くに来た時のことを残す。
+    前にも来た場所なら、そのときと比べる。"""
+    this_time = {
+        "entrance": entrance,
+        "title": (title or here)[:PLACE_NAME_LENGTH],
+        "day": day_number(state),
+        "vocabulary": len(state.get("learned_words") or []),
+        "knew": len(known_here),
+        "of": len(words_here),
+        "pages": pages,
+        "unread": unread,
+    }
+    understood = state.setdefault("places_understood", {})
+    before = (understood.get(here) or {}).get("last")
+    if before:
+        came_back = state.setdefault("came_back", [])
+        came_back.append({"place": here, "before": before, "now": this_time})
+        del came_back[:-RETURNS_KEPT]
+        print(
+            f"{here} にまた来ました。前({before['day']}日目)は知っている言葉が"
+            f"{before['knew']}、今は{this_time['knew']}"
+        )
+    understood[here] = {
+        "first": (understood.get(here) or {}).get("first") or this_time,
+        "last": this_time,
+    }
+    (state.get("wants_to_return") or {}).pop(here, None)
+    return this_time
+
+
+def little_understood(visit):
+    """その時、ほとんど分からなかったか。"""
+    if not visit.get("of"):
+        return visit.get("unread", 0) > 0  # 何も読めなかった
+    return visit["knew"] / visit["of"] < UNDERSTOOD_WELL_ENOUGH
+
+
+def remembers_a_place(state, today):
+    """分からなかった場所を、ふと思い出す。一日に一度だけ。
+
+    知っている言葉がそのときの倍になっていたら、今なら少しは
+    分かるかもしれない。そう思った場所へ、もう一度行きたくなる。
+    行き先の束に戻して、そこへ惹かれるようにしておく。"""
+    kept = state.setdefault("wants_to_return", {})
+    if state.get("remembered_on") == today:
+        return None
+    state["remembered_on"] = today
+    if len(kept) >= PLACES_TO_RETURN_KEPT or random.random() > REMEMBERING_A_PLACE_CHANCE:
+        return None
+    now_knows = len(state.get("learned_words") or [])
+    today_number = day_number(state)
+    ready = []
+    for place, visits in (state.get("places_understood") or {}).items():
+        last = visits.get("last") or {}
+        if place in kept or its_own_home(last.get("entrance", "")):
+            continue
+        if not little_understood(last):
+            continue
+        if today_number - last.get("day", today_number) < DAYS_BEFORE_RETURNING:
+            continue
+        then = last.get("vocabulary", 0)
+        if now_knows < then * WORDS_GROWN_TO_RETURN or now_knows - then < WORDS_GAINED_TO_RETURN:
+            continue
+        ready.append(place)
+    if not ready:
+        return None
+    place = random.choice(ready)
+    entrance = state["places_understood"][place]["last"]["entrance"]
+    kept[place] = entrance
+    if entrance not in state["frontier"]:
+        state["frontier"].insert(0, entrance)
+    print(f"前にほとんど分からなかった {place} を思い出しました。今なら分かるかもしれない")
+    return place
+
+
+def what_it_understood_lately(state):
+    """このごろ訪ねた場所で、どれだけ分かったか。問いかけに渡す何行か。"""
+    lines = []
+    visits = sorted(
+        ((one.get("last") or {}) for one in (state.get("places_understood") or {}).values()),
+        key=lambda one: one.get("day", 0),
+    )[-3:]
+    for one in visits:
+        line = f"- {one['title']}: 知っている言葉は {one['knew']}(そこにあった言葉は {one['of']})"
+        if one.get("unread"):
+            line += f"。よその言葉で読めなかったページが {one['unread']}"
+        lines.append(line)
+    for one in (state.get("came_back") or [])[-2:]:
+        before, now = one["before"], one["now"]
+        lines.append(
+            f"- {now['title']} にまた行った: 前({before['day']}日目)は知っている言葉が "
+            f"{before['knew']}、今回は {now['knew']}"
+        )
+    for place in state.get("wants_to_return") or {}:
+        last = (state.get("places_understood") or {}).get(place, {}).get("last") or {}
+        lines.append(
+            f"- {last.get('title', place)} へもう一度行ってみたい"
+            f"(前は知っている言葉が {last.get('knew', 0)}。あれから言葉が増えた)"
+        )
+    return "\n".join(lines) or "(まだ何も)"
 
 
 def walk_once(state):
@@ -2318,6 +2476,10 @@ def walk_once(state):
         print(f"{entrance} には読むものがありませんでした")
         if entrance in state["frontier"]:
             state["frontier"].remove(entrance)
+        # もう一度行きたかった場所が無くなっていたら、行きたい気持ちも手放す
+        returning = state.get("wants_to_return") or {}
+        for place in [p for p, url in returning.items() if url == entrance]:
+            returning.pop(place)
     return None
 
 
@@ -2492,6 +2654,8 @@ def be_alone(state, now):
 {what_is_written_at_home(state)}
 これまでに訪ねた場所で、分かったこと:
 {things_it_understood(state)}
+このごろ訪ねた場所に、あなたの知っている言葉がどれだけあったか:
+{what_it_understood_lately(state)}
 生まれてから今日までに、あなたがひとりで思ってきたこと(ところどころ):
 {as_lines(looking_back)}
 
@@ -3506,6 +3670,9 @@ def run_today():
 
     # ときどき、知っている言葉のどれかを探しに行く
     wonder_and_look(state)
+
+    # 前にほとんど分からなかった場所を、ふと思い出すことがある
+    remembers_a_place(state, today)
 
     # 書く日でも書かない日でも、散歩には出る
     seen_titles = take_a_walk(state, today, now)
