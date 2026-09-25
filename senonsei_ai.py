@@ -496,10 +496,17 @@ LOOKING_BACK_CHANCE = 0.5
 # ずっとそこに在るからといって、毎日読むものでもない。
 # 壁に貼った紙を、毎朝読み直す人はいない
 READING_HOME_CHANCE = 0.5
-# 家に帰ってみる日の割合。散歩とは別の枠なので、
+# 家に帰ってみる日の割合(はじめの帰りたさ)。散歩とは別の枠なので、
 # 帰ったからといってその日に見て回れる場所は減らない。
 # 帰らない日もある。住んでいる場所を毎日見て回る人はいない
 GOING_HOME_CHANCE = 0.3
+# 帰りたさにも波がある。日ごとに揺れて、この間を行き来する。
+# 毎日のように帰る時期もあれば、何週間も帰らない時期もある
+HOMESICK_LEAST = 0.03
+HOMESICK_MOST = 0.9
+# 帰りたさが戻っていこうとするところ。上の端で頭を押さえられるぶん、
+# ならすとこれより少し高くなり、0.25 で十日に三日くらい
+HOMESICK_USUALLY = 0.25
 # 家に置かれた絵は、一度にこれだけ見る。
 # 散歩で出会う絵と違って、これは自分に宛てて置かれたもの。
 # 急いで全部見る必要はなく、何日もかけて何度でも見ればいい
@@ -761,7 +768,7 @@ def go_home(state, today):
     decided = state.get("went_home") or {}
     if decided.get("date") == today:
         return False  # 今日のぶんはもう決めた
-    going = random.random() < GOING_HOME_CHANCE
+    going = random.random() < homesickness(state, today)
     state["went_home"] = {"date": today, "went": going}
     save_state(state)
     if not going:
@@ -3115,19 +3122,42 @@ def restlessness(state, today):
     続けて休む時期も、ずっと書き続ける時期も生まれない。
     休みたさそのものを日ごとに少しずつ動かすと、調子に波ができる。
     どれだけ揺れるかも、その日のくじで決まる。"""
-    kept = state.get("restlessness") or {}
+    return a_wavering_wish(
+        state, "restlessness", today,
+        REST_DAY_CHANCE, RESTLESS_USUALLY, RESTLESS_LEAST, RESTLESS_MOST,
+    )
+
+
+def homesickness(state, today):
+    """今日の帰りたさ。休みたさと同じように、一日に一度だけ揺れる。
+
+    毎日同じ割合で帰るかどうかを引くと、帰る日はばらばらに散らばるだけ。
+    帰りたさが揺れていれば、毎日のように家を見て回る時期も、
+    何週間も外ばかり歩いている時期もできる。"""
+    return a_wavering_wish(
+        state, "homesickness", today,
+        GOING_HOME_CHANCE, HOMESICK_USUALLY, HOMESICK_LEAST, HOMESICK_MOST,
+    )
+
+
+def a_wavering_wish(state, key, today, first, usually, least, most):
+    """日ごとに少しずつ揺れる気持ち。その日のぶんを返す。
+
+    いつも usually へ戻ろうとしながら、least と most のあいだを行き来する。
+    どれだけ揺れるかも、その日のくじで決まる。"""
+    kept = state.get(key) or {}
     if kept.get("date") == today:
         return kept["chance"]
-    # 足し引きで揺らすと、ほとんど休まない側の端に当たって跳ね返るぶん、
-    # ならした休みたさが上に寄っていく。何倍になるかで揺らすと、
+    # 足し引きで揺らすと、低い側の端に当たって跳ね返るぶん、
+    # ならした値が上に寄っていく。何倍になるかで揺らすと、
     # 1% が 2% になるのも、20% が 40% になるのも、同じ一歩になって釣り合う
-    was = math.log(kept.get("chance", REST_DAY_CHANCE))
-    usually = math.log(RESTLESS_USUALLY)
+    was = math.log(kept.get("chance", first))
+    toward = math.log(usually)
     sway = random.uniform(0, RESTLESS_SWAYS_AT_MOST)
-    now = was + (usually - was) * RESTLESS_SETTLES + random.gauss(0, sway)
-    now = min(math.log(RESTLESS_MOST), max(math.log(RESTLESS_LEAST), now))
+    now = was + (toward - was) * RESTLESS_SETTLES + random.gauss(0, sway)
+    now = min(math.log(most), max(math.log(least), now))
     chance = round(math.exp(now), 4)
-    state["restlessness"] = {"date": today, "chance": chance}
+    state[key] = {"date": today, "chance": chance}
     return chance
 
 
