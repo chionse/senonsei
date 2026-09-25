@@ -4288,5 +4288,6 @@
   "restlessness": {
     "date": "2026-09-25",
     "chance": 0.176
-  }
+  },
+  "chars_before_words": 76
 }

@@ -2712,6 +2712,10 @@ def learn(state):
         if word not in known and days_held(state, word) >= days_needed_for(state, word)
     ]
     learned.sort(key=lambda w: days_held(state, w), reverse=True)
+    # はじめて言葉を覚えたとき、それまでに知っていた文字の数を残す。
+    # 昔の書き方に戻る日に、その頃の文字で書けるように
+    if learned and not known:
+        state.setdefault("chars_before_words", len(state["seen_chars"]))
     state["learned_words"].extend(learned)
 
     # 覚えた日を残す。取り始めないと、あとからは分からない。
@@ -2751,6 +2755,8 @@ def an_old_way(state):
     outgrown = []
     if state.get("learned_words"):
         outgrown.append("見た文字を置く")
+        if state.get("chars_before_words"):
+            outgrown.append("あの頃の文字を置く")
     if speak_from_what_it_knows(state, current_stage(state)[1]):
         outgrown.append("覚えた言葉を置く")
     return random.choice(outgrown) if outgrown else None
@@ -2770,9 +2776,13 @@ def compose_locally(state, old_way=None):
     _, max_length = current_stage(state)
     words = state["learned_words"]
 
+    if old_way == "あの頃の文字を置く":
+        # 言葉を持たなかった頃に知っていた文字だけで、その頃のように置く
+        back_then = state["seen_chars"][: state.get("chars_before_words")]
+        return babble(state, GROWTH_STAGES[0][2], (back_then, [1] * len(back_then)))
     if old_way == "見た文字を置く":
-        # 言葉にせず、文字だけを置く。使う文字は昔のものではなく、
-        # 今の手に馴染んだもの。戻るのは書き方で、知っていることではない
+        # 言葉にせず、文字だけを置く。使う文字は今の手に馴染んだもの。
+        # 戻るのは書き方だけで、知っていることまでは戻らない
         return babble(state, GROWTH_STAGES[0][2], familiar_chars(state))
     if old_way == "覚えた言葉を置く":
         return place_words(state, max_length)
