@@ -1443,7 +1443,6 @@
     "https://gtwaction.org/building-a-fair-economy-for-all-town-hall-tour-on-trade-tariffs/",
     "https://gtwaction.org/mapping-big-techs-success-in-forming-trumps-deregulatory-trade-agenda/",
     "https://www.threads.net/intent/post?text=Report%3A+The+Trump+Administration%E2%80%99s+Stop-Work+Order+and+Funding+Freeze+likely+affected+32+USAID-Funded+Clinical+Trials&url=https%3A%2F%2Fwww.citizen.org%2Farticle%2Freport-the-trump-administrations-stop-work-order-and-funding-freeze-likely-affected-32-usaid-funded-clinical-trials%2F",
-    "https://bsky.app/intent/compose?text=Report%3A+The+Trump+Administration%E2%80%99s+Stop-Work+Order+and+Funding+Freeze+likely+affected+32+USAID-Funded+Clinical+Trials+https%3A%2F%2Fwww.citizen.org%2Farticle%2Freport-the-trump-administrations-stop-work-order-and-funding-freeze-likely-affected-32-usaid-funded-clinical-trials%2F",
     "https://www.citizen.org/about/careers/",
     "https://www.pinterest.com/pin/find/?url=https%3A%2F%2Fdonate.citizen.org%2Fpage%2F55690%2Fdonate%2F1",
     "https://www.linkedin.com/shareArticle?url=https%3A%2F%2Fdonate.citizen.org%2Fpage%2F55690%2Fdonate%2F1",
@@ -1776,7 +1775,11 @@
     "http://web.archive.org/web/20120422115258/http://artlibre.org/licence/lal/",
     "http://web.archive.org/web/20120422115258/http://download.tuxfamily.org/cls/",
     "http://web.archive.org/web/20120422115258/http://tuxfamily.org/",
-    "http://web.archive.org/web/20120422115258/http://www.artlibre.org/licence/lal/"
+    "http://web.archive.org/web/20120422115258/http://www.artlibre.org/licence/lal/",
+    "https://web.archive.org/web/2002/http://www.readme.jp/",
+    "https://atproto.com",
+    "https://go.bsky.app",
+    "https://bsky.social"
   ],
   "visited": [
     "https://note.com/",
@@ -1943,7 +1946,8 @@
     "http://web.archive.org/web/20130113233056/http://www.culture-libre.org/wiki/Accueil",
     "http://web.archive.org/web/20130113233056/http://www.culture-libre.org/wiki/Discussion:Th%C3%A9%C3%A2tre_II",
     "http://web.archive.org/web/20120422120702/http://www.culture-libre.org/wiki/Sp%C3%A9cial:Pages_li%C3%A9es/Accueil",
-    "http://web.archive.org/web/20120422120702*/http://www.culture-libre.org/wiki/Sp%C3%A9cial:Pages_li%C3%A9es/Accueil"
+    "http://web.archive.org/web/20120422120702*/http://www.culture-libre.org/wiki/Sp%C3%A9cial:Pages_li%C3%A9es/Accueil",
+    "https://bsky.app/intent/compose?text=Report%3A+The+Trump+Administration%E2%80%99s+Stop-Work+Order+and+Funding+Freeze+likely+affected+32+USAID-Funded+Clinical+Trials+https%3A%2F%2Fwww.citizen.org%2Farticle%2Freport-the-trump-administrations-stop-work-order-and-funding-freeze-likely-affected-32-usaid-funded-clinical-trials%2F"
   ],
   "notes": [
     "0日目: note ――つくる、つながる、とどける。",
@@ -1960,13 +1964,14 @@
     "12日目: オープンソースカンファレンス、Recueil de tombeaux des quatre cimetières de Paris avec leurs épitaphes et ... - Google Livres",
     "13日目: Yahoo!¥¸¥ª¥·¥Æ¥£¡¼¥º: \n    ¥²¡¼¥à、NHK ONEのご利用と受信契約 | 利用案内 | NHK ONE インフォメーション、GitHub Changelog",
     "14日目: User talk:Keegan (WMF) - Meta-Wiki、Wikiversity:Changing username - Wikiversity、ブランディング・採用・販促で成果を出すならnote pro(ノートプロ)",
-    "15日目: VideoPress – The finest video for WordPress、CultureLibre"
+    "15日目: VideoPress – The finest video for WordPress、CultureLibre、Bluesky"
   ],
   "today_walk": {
     "date": "2026-09-26",
     "seen": [
       "VideoPress – The finest video for WordPress",
-      "CultureLibre"
+      "CultureLibre",
+      "Bluesky"
     ]
   },
   "inner_voice": [
@@ -2123,14 +2128,14 @@
     "2026-09-26 www.culture-libre.org: CultureLibreは、ウェブサイトのキャプチャを記録しており、自由な文化を目的としたサイトで、ユーザーが直接作品を編集したり新しい作品を追加したりすることができる。"
   ],
   "where_it_will_go": [
-    "tuxfamily.org",
-    "www.egroups.co.jp",
-    "ja.wikiversity.org",
-    "cli.github.com",
-    "www.nhk-cs.jp",
-    "docs.github.com"
+    "www.news24.jp",
+    "go.bsky.app",
+    "b.hatena.ne.jp",
+    "www.it2l.com",
+    "gl.wikisource.org",
+    "www.google.com"
   ],
-  "how_many_places_left": 507,
+  "how_many_places_left": 510,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -2152,7 +2157,8 @@
     "pro.lp-note.com": "ブランディング・採用・販促で成果を出すならnote pro(ノートプロ)",
     "chionse.github.io": "更新情報 2026-09-22",
     "v0.wordpress.com": "VideoPress – The finest video for WordPr",
-    "www.culture-libre.org": "Wayback Machine"
+    "www.culture-libre.org": "Wayback Machine",
+    "bsky.app": "Bluesky"
   },
   "went_home": {
     "date": "2026-09-26",
