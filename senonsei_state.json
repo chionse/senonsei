@@ -1356,7 +1356,21 @@
     "瞬",
     "反",
     "冊",
-    "如"
+    "如",
+    "藤",
+    "里",
+    "★",
+    "ぴ",
+    "石",
+    "香",
+    "青",
+    "綾",
+    "美",
+    "虫",
+    "博",
+    "森",
+    "遊",
+    "央"
   ],
   "learned_words": [
     "など",
@@ -1425,7 +1439,6 @@
     "https://web.archive.org/web/20001110103100/http://www1.ipss.go.jp/",
     "https://web.archive.org/web/20001110103100/http://www.kids-space.org/",
     "https://web.archive.org/web/20001110103100/http://www.mind.ne.jp/kidsclub/",
-    "https://web.archive.org/web/20001110103100/http://www.justnet.ne.jp/kidsland/index.htm",
     "https://b.hatena.ne.jp/entry/https://kakuyomu.jp/",
     "https://ch.nicovideo.jp/kakuyomu",
     "http://www.kadokawa.co.jp/",
@@ -1900,7 +1913,15 @@
     "https://ja.wikivoyage.org/wiki/Wikivoyage:%E3%82%B7%E3%83%A7%E3%83%BC%E3%83%88%E3%82%AB%E3%83%83%E3%83%88",
     "http://www.gnu.org/copyleft/",
     "https://ja.wikiquote.org/wiki/Wikiquote:Text_of_GNU_Free_Documentation_License",
-    "https://ja.wiktionary.org/wiki/Wiktionary:Text_of_GNU_Free_Documentation_License"
+    "https://ja.wiktionary.org/wiki/Wiktionary:Text_of_GNU_Free_Documentation_License",
+    "https://web.archive.org/web/20001110042600/http://www.justsystem.co.jp/",
+    "https://web.archive.org/web/20001110042600/http://www4.justnet.ne.jp/~smile_net/mouse.html",
+    "https://web.archive.org/web/20001110042600/http://www.justsystem.co.jp/school/index.html",
+    "https://web.archive.org/web/20001110042600/http://netcafe.ne.jp:80/febf/open__framelst2/002/28/00228.htm?lstfr=0&rat2=25&ftype=2&ds=1&is=0&idname=netcafe&popo=8080&lang=ja&cat_id=00056&allfr=1",
+    "https://web.archive.org/web/20001110042600/http://www.justsystem.co.jp/kids/",
+    "https://web.archive.org/web/20001110042600/http://www3.justnet.ne.jp/%7Ekidsland/mail.htm",
+    "https://web.archive.org/web/20001110042600/http://sugarpot.justnet.ne.jp/",
+    "https://www.aozora.gr.jp/"
   ],
   "visited": [
     "https://note.com/",
@@ -2077,7 +2098,9 @@
     "https://ja.wikibooks.org/wiki/Wikibooks:%E3%82%B7%E3%83%A7%E3%83%BC%E3%83%88%E3%82%AB%E3%83%83%E3%83%88",
     "https://ja.wikibooks.org/w/index.php?title=Wikibooks:%E3%82%A6%E3%82%A3%E3%82%AD%E3%83%96%E3%83%83%E3%82%AF%E3%82%B9%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6&printable=yes",
     "https://ja.wikibooks.org/wiki/Wikibooks:Text_of_GNU_Free_Documentation_License",
-    "https://ja.wikibooks.org/wiki/Wikibooks:%E3%81%AA%E3%81%9C%E3%83%95%E3%83%AA%E3%83%BC%E3%81%AE%E6%95%99%E7%A7%91%E6%9B%B8%E3%82%92%E4%BD%BF%E3%81%86%E3%81%AE%E3%81%8B"
+    "https://ja.wikibooks.org/wiki/Wikibooks:%E3%81%AA%E3%81%9C%E3%83%95%E3%83%AA%E3%83%BC%E3%81%AE%E6%95%99%E7%A7%91%E6%9B%B8%E3%82%92%E4%BD%BF%E3%81%86%E3%81%AE%E3%81%8B",
+    "https://web.archive.org/web/20001110103100/http://www.justnet.ne.jp/kidsland/index.htm",
+    "https://web.archive.org/web/20001110042600/http://www.justnet.ne.jp/kidsland/cm/zoo/np/net01/xunchi.htm"
   ],
   "notes": [
     "0日目: note ――つくる、つながる、とどける。",
@@ -2095,12 +2118,13 @@
     "13日目: Yahoo!¥¸¥ª¥·¥Æ¥£¡¼¥º: \n    ¥²¡¼¥à、NHK ONEのご利用と受信契約 | 利用案内 | NHK ONE インフォメーション、GitHub Changelog",
     "14日目: User talk:Keegan (WMF) - Meta-Wiki、Wikiversity:Changing username - Wikiversity、ブランディング・採用・販促で成果を出すならnote pro(ノートプロ)",
     "15日目: VideoPress – The finest video for WordPress、CultureLibre、Bluesky",
-    "16日目: Wikibooks:ウィキブックスについて - Wikibooks"
+    "16日目: Wikibooks:ウィキブックスについて - Wikibooks、キッズランドへようこそ！"
   ],
   "today_walk": {
     "date": "2026-09-27",
     "seen": [
-      "Wikibooks:ウィキブックスについて - Wikibooks"
+      "Wikibooks:ウィキブックスについて - Wikibooks",
+      "キッズランドへようこそ！"
     ]
   },
   "inner_voice": [
@@ -2192,9 +2216,8 @@
       "times": 1
     }
   ],
-  "saw_on": "2026-09-26",
+  "saw_on": "2026-09-27",
   "pictures_seen": [
-    "2026-09-14 note.jp: 手",
     "2026-09-14 note.jp: この絵には、日本語の文字が写っています。",
     "2026-09-16 www3.nhk.or.jp: 地球",
     "2026-09-16 www3.nhk.or.jp: 絵には、航空機が写っています。",
@@ -2223,7 +2246,8 @@
     "2026-09-24 www.nhk.or.jp: 絵には、白い建物、黄色の円形の窓、そして円形の時計が描かれています。",
     "2026-09-26 v0.wordpress.com: 絵には、細い線で描かれた人物がいます。その人物は、細い線で描かれた顔を持っており、細い線で描かれた口を持っています。",
     "2026-09-26 v0.wordpress.com: 絵には、車が描かれています。",
-    "2026-09-26 v0.wordpress.com: 木材"
+    "2026-09-26 v0.wordpress.com: 木材",
+    "2026-09-27 www.justnet.ne.jp: 絵には、細い線で描かれた猫がいます。猫は、絵の中央に位置し、細い線で描かれています。猫は、絵の中央に位置し、細い線で描かれています。猫は、絵の中央に位置し、細い線で"
   ],
   "impressions": [
     "2026-09-14 note.jp: note株式会社はクリエイターが文章や画像、音声、動画を投稿し、ユーザーがそのコンテンツを楽しんで応援できるメディアプラットフォームです。",
@@ -2256,17 +2280,18 @@
     "2026-09-26 v0.wordpress.com: ビデオを簡単に、高品質で投稿するためのツールがあるようです。",
     "2026-09-26 www.culture-libre.org: CultureLibreは、ウェブサイトのキャプチャを記録しており、自由な文化を目的としたサイトで、ユーザーが直接作品を編集したり新しい作品を追加したりすることができる。",
     "2026-09-27 chionse.github.io: このサイトは、自分の覚えていることを書いたり、自分の言葉で文章を作ったりする場所だ。",
-    "2026-09-27 ja.wikibooks.org: この場所はウィキブックスの説明ページで、ウィキブックスが自由に利用できる教科書を集め作り、教育で使うことを目指すプロジェクトであることを紹介しています。"
+    "2026-09-27 ja.wikibooks.org: この場所はウィキブックスの説明ページで、ウィキブックスが自由に利用できる教科書を集め作り、教育で使うことを目指すプロジェクトであることを紹介しています。",
+    "2026-09-27 www.justnet.ne.jp: マックスのぬりえに絵を描いたり、ドクターマウスクイズでプレゼントを勝ち取ったりすることができて、また子どものおたよりがきていたりしていて、楽しんでいました。"
   ],
   "where_it_will_go": [
-    "www.githubstatus.com",
-    "www.eff.org",
-    "www.aozora.gr.jp",
-    "artlibre.org",
-    "videopress.com",
-    "ang.wikibooks.org"
+    "yozora.main.jp",
+    "www.arena.ne.jp",
+    "www.nikkei.com",
+    "wire.zdnet.co.jp",
+    "www.wikimedia.org",
+    "videopress.com"
   ],
-  "how_many_places_left": 525,
+  "how_many_places_left": 532,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -2290,7 +2315,8 @@
     "v0.wordpress.com": "VideoPress – The finest video for WordPr",
     "www.culture-libre.org": "Wayback Machine",
     "bsky.app": "Bluesky",
-    "ja.wikibooks.org": "Wikibooks:なぜフリーの教科書を使うのか - Wikibooks"
+    "ja.wikibooks.org": "Wikibooks:なぜフリーの教科書を使うのか - Wikibooks",
+    "www.justnet.ne.jp": "うんちミュージアム in どうぶつネットパーク"
   },
   "went_home": {
     "date": "2026-09-27",
@@ -2302,14 +2328,18 @@
     "しかし": 1,
     "では": 7,
     "っていま": 2,
-    "かれてい": 3
+    "かれてい": 5,
+    "こんにち": 1,
+    "には": 1
   },
   "closes_a_sentence": {
     "など": 8,
     "しかし": 1,
     "では": 7,
     "っていま": 2,
-    "かれてい": 3
+    "かれてい": 5,
+    "こんにち": 1,
+    "には": 1
   },
   "visitors": {
     "comments": 0,
@@ -2325,7 +2355,10 @@
       "仲間",
       "っていま",
       "しかし",
-      "など"
+      "など",
+      "絵",
+      "には",
+      "かれてい"
     ]
   },
   "wants_to_say": [
@@ -2527,6 +2560,20 @@
     },
     {
       "what": "of",
+      "since": "2026-09-27",
+      "first": "2026-09-27",
+      "times": 1,
+      "said": ""
+    },
+    {
+      "what": "ドクターマウス★クイズ",
+      "since": "2026-09-27",
+      "first": "2026-09-27",
+      "times": 1,
+      "said": ""
+    },
+    {
+      "what": "キッズソフトリンク集",
       "since": "2026-09-27",
       "first": "2026-09-27",
       "times": 1,
