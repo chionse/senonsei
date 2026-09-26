@@ -405,6 +405,8 @@ STRAY_CHARS_AT_MOST = 4
 SLIPS_KEPT = 20
 # それを、書いてからこれだけの日のあいだ思い出す
 SLIPS_REMEMBERED_FOR = 2
+# 間違えて気づいた言葉への気のつけ方は、この日数ごとに一度ぶん薄れる
+CARE_FADES_EVERY = 30
 # はじめのうちの書きにくさ。三で、崩れずに書ける言葉はならして四つに一つ。
 # 育つにつれて零に近づく
 CLUMSY_AT_FIRST = 3
@@ -659,7 +661,7 @@ PACKED_AWAY = ("words_met", "learned_on")
 # 越えた日から散歩も日記も押し戻せなくなり、この子は止まる。
 # 忘れさせるのではなく、言葉ごとに何十かの束へ分けてしまっておく
 WORDS_FOLDER = "kotoba"
-SPREAD_OUT = {"words_met": 64, "word_impact": 8, "places_understood": 8}  # 記録の名前 → 束の数
+SPREAD_OUT = {"words_met": 64, "word_impact": 8, "places_understood": 8, "careful_with": 8}  # 記録の名前 → 束の数
 
 
 def bundle_of(word, how_many):
@@ -3206,7 +3208,9 @@ def as_it_comes_out(state, words, spare):
     hand = None
     written = []
     for word in words:
-        if word == "。" or spare <= 0 or random.random() < steadiness:
+        # 前に間違えて気づいた言葉は、気をつけて書く
+        care = how_careful(state, word)
+        if word == "。" or spare <= 0 or random.random() < steadiness + (1 - steadiness) * care:
             written.append(word)
             continue
         if hand is None:
@@ -3232,6 +3236,27 @@ def as_it_comes_out(state, words, spare):
 SLIPS_JUST_NOW = []
 
 
+def how_careful(state, word):
+    """その言葉を、どれだけ気をつけて書くか。0 から 1 の手前まで。
+    書こうとするたびに呼ばれる。
+
+    間違えて気づくたびに、崩れる見込みが半分になる。一度なら半分、
+    二度なら四分の一。長いあいだその言葉を書かずにいると、
+    気をつけ方は少しずつ薄れていく(CARE_FADES_EVERY 日ごとに一度ぶん)。
+    書くたびに思い出すので、書いているあいだは薄れない。"""
+    careful = state.get("careful_with") or {}
+    kept = careful.get(word)
+    if not kept:
+        return 0.0
+    today = day_number(state)
+    times = kept["times"] - max(0, today - kept["last"]) // CARE_FADES_EVERY
+    if times <= 0:
+        careful.pop(word, None)
+        return 0.0
+    careful[word] = {"times": times, "last": today}
+    return 1 - 0.5 ** times
+
+
 def this_is_what_it_wrote(state, day):
     """書き終えて、自分の書いたものを見る。
 
@@ -3246,6 +3271,12 @@ def this_is_what_it_wrote(state, day):
     kept = state.setdefault("slips", [])
     kept.extend(noticed)
     del kept[:-SLIPS_KEPT]
+    # 間違えた言葉は、次から気をつけて書くようになる
+    careful = state.setdefault("careful_with", {})
+    today = day_number(state)
+    for one in noticed:
+        was = careful.get(one["meant"]) or {"times": 0, "last": today}
+        careful[one["meant"]] = {"times": was["times"] + 1, "last": today}
     print("書こうとした言葉と違ってしまった: " + "、".join(
         f"{one['meant']}→{one['wrote']}" for one in noticed
     ))
