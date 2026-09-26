@@ -1251,7 +1251,112 @@
     "推",
     "織",
     "閉",
-    "鎖"
+    "鎖",
+    "談",
+    "頭",
+    "略",
+    "複",
+    "許",
+    "諾",
+    "替",
+    "Б",
+    "Т",
+    "閲",
+    "操",
+    "固",
+    "抽",
+    "財",
+    "多",
+    "針",
+    "拘",
+    "束",
+    "頂",
+    "説",
+    "将",
+    "糧",
+    "軽",
+    "減",
+    "呼",
+    "導",
+    "ゼ",
+    "韓",
+    "ヒ",
+    "ҡ",
+    "Æ",
+    "古",
+    "త",
+    "ె",
+    "ల",
+    "ు",
+    "గ",
+    "တ",
+    "ႆ",
+    "း",
+    "ਪ",
+    "ੰ",
+    "ਜ",
+    "ਾ",
+    "ਬ",
+    "ੀ",
+    "Ч",
+    "ӑ",
+    "ヴ",
+    "К",
+    "𐌲",
+    "𐌿",
+    "𐍄",
+    "𐌹",
+    "𐍃",
+    "𐌺",
+    "ā",
+    "ಕ",
+    "ನ",
+    "್",
+    "ಡ",
+    "低",
+    "継",
+    "責",
+    "範",
+    "⧼",
+    "⧽",
+    "標",
+    "‐",
+    "隠",
+    "転",
+    "息",
+    "王",
+    "津",
+    "田",
+    "概",
+    "傾",
+    "困",
+    "難",
+    "冒",
+    "悩",
+    "相",
+    "既",
+    "越",
+    "達",
+    "板",
+    "候",
+    "即",
+    "態",
+    "奨",
+    "永",
+    "素",
+    "妨",
+    "値",
+    "搾",
+    "裕",
+    "二",
+    "及",
+    "段",
+    "階",
+    "ヶ",
+    "瞬",
+    "反",
+    "冊",
+    "如"
   ],
   "learned_words": [
     "など",
@@ -1267,7 +1372,8 @@
     "人",
     "絵",
     "仲間",
-    "セミナー"
+    "セミナー",
+    "には"
   ],
   "frontier": [
     "https://b.hatena.ne.jp/hotentry",
@@ -1519,7 +1625,6 @@
     "https://www.wikifunctions.org/wiki/Wikifunctions:About",
     "https://ja.wikinews.org/wiki/%E3%82%A6%E3%82%A3%E3%82%AD%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9:%E3%82%A6%E3%82%A3%E3%82%AD%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6",
     "https://www.wikidata.org/wiki/Special:EntityPage/Q4387616",
-    "https://ja.wikibooks.org/wiki/Wikibooks:%E3%82%A6%E3%82%A3%E3%82%AD%E3%83%96%E3%83%83%E3%82%AF%E3%82%B9%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6",
     "https://www.wikidata.org/wiki/Wikidata:Introduction",
     "https://zh-yue.wikipedia.org/wiki/Wikipedia:%E4%BB%8B%E7%B4%B9",
     "https://tl.wikipedia.org/wiki/Wikipedia:Patungkol",
@@ -1558,7 +1663,6 @@
     "http://web.archive.org/web/20121231150150/http://blockhaus.editions.free.fr/revues.htm",
     "http://web.archive.org/web/20121231150150/http://www.faitsetcauses.com/2012/11/28/le-droit-dauteur-renouvele/",
     "http://web.archive.org/web/20121231150150/http://www.unicode.org/iso15924/iso15924-codes.html",
-    "http://web.archive.org/web/20121231150150/http://search.ugent.be/",
     "http://web.archive.org/web/20121231150150/https://docs.google.com/open?id=0B37bKCvIjIuwbm5mMjZDTXZzRms",
     "http://web.archive.org/web/20121231150150/http://books.google.com/books?id=E0MIAAAAQAAJ",
     "http://web.archive.org/web/20121231150150/http://gallica.bnf.fr/Search?ArianeWireIndex=index&p=1&q=%22jules+borain%22",
@@ -1779,7 +1883,24 @@
     "https://web.archive.org/web/2002/http://www.readme.jp/",
     "https://atproto.com",
     "https://go.bsky.app",
-    "https://bsky.social"
+    "https://bsky.social",
+    "https://et.wikibooks.org/wiki/",
+    "https://ang.wikibooks.org/wiki/",
+    "https://sk.wikibooks.org/wiki/",
+    "https://uz.wikibooks.org/wiki/",
+    "https://is.wikibooks.org/wiki/",
+    "https://mk.wikibooks.org/wiki/",
+    "https://be.wikibooks.org/wiki/%D0%92%D1%96%D0%BA%D1%96%D0%BA%D0%BD%D1%96%D0%B3%D1%96:%D0%9F%D1%80%D0%B0_%D0%92%D1%96%D0%BA%D1%96%D0%BA%D0%BD%D1%96%D0%B3%D1%96",
+    "https://el.wikibooks.org/wiki/",
+    "https://tg.wikibooks.org/wiki/%D0%A0%D0%BE%D2%B3%D0%BD%D0%B0%D0%BC%D0%BE:%D0%94%D0%B0%D1%80_%D0%B1%D0%BE%D1%80%D0%B0%D0%B8",
+    "https://li.wikibooks.org/wiki/",
+    "https://ja.wiktionary.org/wiki/Wiktionary:%E3%82%B7%E3%83%A7%E3%83%BC%E3%83%88%E3%82%AB%E3%83%83%E3%83%88",
+    "https://ja.wikiquote.org/wiki/Wikiquote:%E3%82%B7%E3%83%A7%E3%83%BC%E3%83%88%E3%82%AB%E3%83%83%E3%83%88",
+    "https://ja.wikinews.org/wiki/%E3%82%A6%E3%82%A3%E3%82%AD%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9:%E3%82%B7%E3%83%A7%E3%83%BC%E3%83%88%E3%82%AB%E3%83%83%E3%83%88",
+    "https://ja.wikivoyage.org/wiki/Wikivoyage:%E3%82%B7%E3%83%A7%E3%83%BC%E3%83%88%E3%82%AB%E3%83%83%E3%83%88",
+    "http://www.gnu.org/copyleft/",
+    "https://ja.wikiquote.org/wiki/Wikiquote:Text_of_GNU_Free_Documentation_License",
+    "https://ja.wiktionary.org/wiki/Wiktionary:Text_of_GNU_Free_Documentation_License"
   ],
   "visited": [
     "https://note.com/",
@@ -1947,7 +2068,16 @@
     "http://web.archive.org/web/20130113233056/http://www.culture-libre.org/wiki/Discussion:Th%C3%A9%C3%A2tre_II",
     "http://web.archive.org/web/20120422120702/http://www.culture-libre.org/wiki/Sp%C3%A9cial:Pages_li%C3%A9es/Accueil",
     "http://web.archive.org/web/20120422120702*/http://www.culture-libre.org/wiki/Sp%C3%A9cial:Pages_li%C3%A9es/Accueil",
-    "https://bsky.app/intent/compose?text=Report%3A+The+Trump+Administration%E2%80%99s+Stop-Work+Order+and+Funding+Freeze+likely+affected+32+USAID-Funded+Clinical+Trials+https%3A%2F%2Fwww.citizen.org%2Farticle%2Freport-the-trump-administrations-stop-work-order-and-funding-freeze-likely-affected-32-usaid-funded-clinical-trials%2F"
+    "https://bsky.app/intent/compose?text=Report%3A+The+Trump+Administration%E2%80%99s+Stop-Work+Order+and+Funding+Freeze+likely+affected+32+USAID-Funded+Clinical+Trials+https%3A%2F%2Fwww.citizen.org%2Farticle%2Freport-the-trump-administrations-stop-work-order-and-funding-freeze-likely-affected-32-usaid-funded-clinical-trials%2F",
+    "https://chionse.github.io/senonsei/",
+    "https://chionse.github.io/senonsei/index.html",
+    "https://chionse.github.io/senonsei/kakodogu.html",
+    "https://ja.wikibooks.org/wiki/Wikibooks:%E3%82%A6%E3%82%A3%E3%82%AD%E3%83%96%E3%83%83%E3%82%AF%E3%82%B9%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6",
+    "https://ja.wikibooks.org/wiki/%E7%89%B9%E5%88%A5:%E3%83%AA%E3%83%B3%E3%82%AF%E5%85%83/Wikibooks:%E3%82%A6%E3%82%A3%E3%82%AD%E3%83%96%E3%83%83%E3%82%AF%E3%82%B9%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6",
+    "https://ja.wikibooks.org/wiki/Wikibooks:%E3%82%B7%E3%83%A7%E3%83%BC%E3%83%88%E3%82%AB%E3%83%83%E3%83%88",
+    "https://ja.wikibooks.org/w/index.php?title=Wikibooks:%E3%82%A6%E3%82%A3%E3%82%AD%E3%83%96%E3%83%83%E3%82%AF%E3%82%B9%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6&printable=yes",
+    "https://ja.wikibooks.org/wiki/Wikibooks:Text_of_GNU_Free_Documentation_License",
+    "https://ja.wikibooks.org/wiki/Wikibooks:%E3%81%AA%E3%81%9C%E3%83%95%E3%83%AA%E3%83%BC%E3%81%AE%E6%95%99%E7%A7%91%E6%9B%B8%E3%82%92%E4%BD%BF%E3%81%86%E3%81%AE%E3%81%8B"
   ],
   "notes": [
     "0日目: note ――つくる、つながる、とどける。",
@@ -1964,14 +2094,13 @@
     "12日目: オープンソースカンファレンス、Recueil de tombeaux des quatre cimetières de Paris avec leurs épitaphes et ... - Google Livres",
     "13日目: Yahoo!¥¸¥ª¥·¥Æ¥£¡¼¥º: \n    ¥²¡¼¥à、NHK ONEのご利用と受信契約 | 利用案内 | NHK ONE インフォメーション、GitHub Changelog",
     "14日目: User talk:Keegan (WMF) - Meta-Wiki、Wikiversity:Changing username - Wikiversity、ブランディング・採用・販促で成果を出すならnote pro(ノートプロ)",
-    "15日目: VideoPress – The finest video for WordPress、CultureLibre、Bluesky"
+    "15日目: VideoPress – The finest video for WordPress、CultureLibre、Bluesky",
+    "16日目: Wikibooks:ウィキブックスについて - Wikibooks"
   ],
   "today_walk": {
-    "date": "2026-09-26",
+    "date": "2026-09-27",
     "seen": [
-      "VideoPress – The finest video for WordPress",
-      "CultureLibre",
-      "Bluesky"
+      "Wikibooks:ウィキブックスについて - Wikibooks"
     ]
   },
   "inner_voice": [
@@ -2036,7 +2165,7 @@
     "09-26 22時: なぜ、README.jpって何なのか、自分でもわからない……",
     "09-26 23時: なぜ、自由は何を意味しているのか、わからなくなってしまったのか。"
   ],
-  "thought_on": "2026-09-26",
+  "thought_on": "2026-09-27",
   "on_its_mind": [
     {
       "what": "ペルシャ",
@@ -2125,17 +2254,19 @@
     "2026-09-25 en.wikiversity.org: ウィキバーシティのユーザ名を変更するには、メタウィキの「Special:GlobalRenameRequest」ページにアクセスし、ユーザ名を変更するためのフォームに必要な情報を入力して申請を提出する必要がある。",
     "2026-09-26 chionse.github.io: その場所は千遠生のサイトで、月間スタンプカードが書かれていて、書いた日や休んだ日が記載されていた。",
     "2026-09-26 v0.wordpress.com: ビデオを簡単に、高品質で投稿するためのツールがあるようです。",
-    "2026-09-26 www.culture-libre.org: CultureLibreは、ウェブサイトのキャプチャを記録しており、自由な文化を目的としたサイトで、ユーザーが直接作品を編集したり新しい作品を追加したりすることができる。"
+    "2026-09-26 www.culture-libre.org: CultureLibreは、ウェブサイトのキャプチャを記録しており、自由な文化を目的としたサイトで、ユーザーが直接作品を編集したり新しい作品を追加したりすることができる。",
+    "2026-09-27 chionse.github.io: このサイトは、自分の覚えていることを書いたり、自分の言葉で文章を作ったりする場所だ。",
+    "2026-09-27 ja.wikibooks.org: この場所はウィキブックスの説明ページで、ウィキブックスが自由に利用できる教科書を集め作り、教育で使うことを目指すプロジェクトであることを紹介しています。"
   ],
   "where_it_will_go": [
-    "zh.wikisource.org",
-    "www.it2l.com",
-    "tuxfamily.org",
-    "resources.github.com",
-    "steinsplitter.toolforge.org",
-    "www.egroups.co.jp"
+    "anond.hatelabo.jp",
+    "www.threads.net",
+    "www.nhk.jp",
+    "cy.wikisource.org",
+    "es.wikiversity.org",
+    "Yahoo!¥¸¥ª¥·¥Æ¥£¡¼¥º: \n    ¥²¡¼¥à"
   ],
-  "how_many_places_left": 510,
+  "how_many_places_left": 525,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -2155,27 +2286,28 @@
     "meta.wikimedia.org": "Main public logs - Meta-Wiki",
     "en.wikiversity.org": "Wikiversity:General disclaimer - Wikiver",
     "pro.lp-note.com": "ブランディング・採用・販促で成果を出すならnote pro(ノートプロ)",
-    "chionse.github.io": "更新情報 2026-09-22",
+    "chionse.github.io": "過去のブログ",
     "v0.wordpress.com": "VideoPress – The finest video for WordPr",
     "www.culture-libre.org": "Wayback Machine",
-    "bsky.app": "Bluesky"
+    "bsky.app": "Bluesky",
+    "ja.wikibooks.org": "Wikibooks:なぜフリーの教科書を使うのか - Wikibooks"
   },
   "went_home": {
-    "date": "2026-09-26",
+    "date": "2026-09-27",
     "went": true
   },
   "what_follows": {},
   "opens_a_sentence": {
-    "など": 7,
+    "など": 8,
     "しかし": 1,
-    "では": 6,
+    "では": 7,
     "っていま": 2,
     "かれてい": 3
   },
   "closes_a_sentence": {
-    "など": 7,
+    "など": 8,
     "しかし": 1,
-    "では": 6,
+    "では": 7,
     "っていま": 2,
     "かれてい": 3
   },
@@ -2184,7 +2316,7 @@
     "likes": 0
   },
   "met_today": {
-    "date": "2026-09-26",
+    "date": "2026-09-27",
     "words": [
       "では",
       "こんにち",
@@ -2192,9 +2324,8 @@
       "セミナー",
       "仲間",
       "っていま",
-      "など",
-      "絵",
-      "かれてい"
+      "しかし",
+      "など"
     ]
   },
   "wants_to_say": [
@@ -2375,26 +2506,47 @@
     },
     {
       "what": "2026",
-      "since": "2026-09-26",
+      "since": "2026-09-27",
       "first": "2026-09-26",
+      "times": 2,
+      "said": ""
+    },
+    {
+      "what": "言葉",
+      "since": "2026-09-27",
+      "first": "2026-09-27",
+      "times": 1,
+      "said": ""
+    },
+    {
+      "what": "this",
+      "since": "2026-09-27",
+      "first": "2026-09-27",
+      "times": 1,
+      "said": ""
+    },
+    {
+      "what": "of",
+      "since": "2026-09-27",
+      "first": "2026-09-27",
       "times": 1,
       "said": ""
     }
   ],
   "thinking_about": "なぜ、自由は何を意味しているのか、わからなくなってしまったのか。",
-  "learned_on": {"など":"2026-09-20","本当":"2026-09-20","がある":"2026-09-20","だった":"2026-09-20","しかし":"2026-09-20","ある":"2026-09-20","こんにち":"2026-09-20","では":"2026-09-21","かれてい":"2026-09-22","っていま":"2026-09-22","人":"2026-09-22","絵":"2026-09-23","仲間":"2026-09-23","セミナー":"2026-09-23"},
+  "learned_on": {"など":"2026-09-20","本当":"2026-09-20","がある":"2026-09-20","だった":"2026-09-20","しかし":"2026-09-20","ある":"2026-09-20","こんにち":"2026-09-20","では":"2026-09-21","かれてい":"2026-09-22","っていま":"2026-09-22","人":"2026-09-22","絵":"2026-09-23","仲間":"2026-09-23","セミナー":"2026-09-23","には":"2026-09-27"},
   "today_keen": {
-    "date": "2026-09-26",
-    "keen": true
+    "date": "2026-09-27",
+    "keen": false
   },
   "today_plan": {
-    "date": "2026-09-26",
+    "date": "2026-09-27",
     "resting": false,
-    "hour": 16
+    "hour": 12
   },
   "restlessness": {
-    "date": "2026-09-26",
-    "chance": 0.1839
+    "date": "2026-09-27",
+    "chance": 0.2182
   },
   "chars_before_words": 76,
   "looked_on": "2026-09-26",
@@ -2402,5 +2554,9 @@
     "2026-09-26 しかし"
   ],
   "wants_to_return": {},
-  "remembered_on": "2026-09-26"
+  "remembered_on": "2026-09-27",
+  "homesickness": {
+    "date": "2026-09-27",
+    "chance": 0.6037
+  }
 }
