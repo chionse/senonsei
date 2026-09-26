@@ -405,8 +405,6 @@ STRAY_CHARS_AT_MOST = 4
 SLIPS_KEPT = 20
 # それを、書いてからこれだけの日のあいだ思い出す
 SLIPS_REMEMBERED_FOR = 2
-# 間違えて気づいた言葉への気のつけ方は、この日数ごとに一度ぶん薄れる
-CARE_FADES_EVERY = 30
 # はじめのうちの書きにくさ。三で、崩れずに書ける言葉はならして四つに一つ。
 # 育つにつれて零に近づく
 CLUMSY_AT_FIRST = 3
@@ -3242,14 +3240,21 @@ def how_careful(state, word):
 
     間違えて気づくたびに、崩れる見込みが半分になる。一度なら半分、
     二度なら四分の一。長いあいだその言葉を書かずにいると、
-    気をつけ方は少しずつ薄れていく(CARE_FADES_EVERY 日ごとに一度ぶん)。
-    書くたびに思い出すので、書いているあいだは薄れない。"""
+    気をつけ方は少しずつ薄れていく。書くたびに思い出すので、
+    書いているあいだは薄れない。
+
+    薄れる速さは、覚えかけの言葉を抱えていられる長さ(how_long_it_holds)と同じ
+    ものさしで測る。何度も間違えて気づいた言葉ほど長く持つ。
+    小さいうちはすぐ薄れ、何度も間違えながら覚えていく。
+    言葉が増えて大きくなるほど、一度気をつけたことを長く覚えていられる。
+    三十日と決め打ちにしていたが、この子の育ちと関係の無い数だった"""
     careful = state.get("careful_with") or {}
     kept = careful.get(word)
     if not kept:
         return 0.0
     today = day_number(state)
-    times = kept["times"] - max(0, today - kept["last"]) // CARE_FADES_EVERY
+    holds_for = how_long_it_holds(state) * max(1, kept["times"])
+    times = kept["times"] - max(0, today - kept["last"]) // holds_for
     if times <= 0:
         careful.pop(word, None)
         return 0.0
