@@ -401,6 +401,10 @@ MAKING_UP_UNTIL = 3
 # 覚えた言葉を書くとき、ほかの文字がまぎれこむことがある。
 # 一語にまぎれこむのは、多くてこれだけ。書ける長さのほうが先に尽きることが多い
 STRAY_CHARS_AT_MOST = 4
+# 書こうとして違ってしまったことを、これだけ覚えておく
+SLIPS_KEPT = 20
+# それを、書いてからこれだけの日のあいだ思い出す
+SLIPS_REMEMBERED_FOR = 2
 # はじめのうちの書きにくさ。三で、崩れずに書ける言葉はならして四つに一つ。
 # 育つにつれて零に近づく
 CLUMSY_AT_FIRST = 3
@@ -2651,7 +2655,7 @@ def be_alone(state, now):
 
 {what_it_saw_lately(state)}
 {words_it_holds(state)}
-いま気にかかっていること: {what_is_on_its_mind(state)}
+{slips_lately(state)}いま気にかかっていること: {what_is_on_its_mind(state)}
 まだ言えていないこと: {what_it_wants_to_say(state)}
 あなたの家に置かれている、あなたに宛てられた言葉:
 {what_is_written_at_home(state)}
@@ -3220,7 +3224,42 @@ def as_it_comes_out(state, words, spare):
             )
         spare -= how_many
         written.append("".join(letters))
+        SLIPS_JUST_NOW.append({"meant": word, "wrote": written[-1]})
     return written
+
+
+# いま書いているあいだに、手が滑ったもの。書き終えたら this_is_what_it_wrote が拾う
+SLIPS_JUST_NOW = []
+
+
+def this_is_what_it_wrote(state, day):
+    """書き終えて、自分の書いたものを見る。
+
+    書こうとした言葉と違う字になっていたら、それに気づく。
+    崩れたことに気づけないと、崩れはこの子にとって無かったことになり、
+    ただ外から足された飾りになってしまう。
+    気づいたことは、ひとりで思うときに思い出せるように残しておく。"""
+    noticed = [dict(one, day=day) for one in SLIPS_JUST_NOW]
+    SLIPS_JUST_NOW.clear()
+    if not noticed:
+        return []
+    kept = state.setdefault("slips", [])
+    kept.extend(noticed)
+    del kept[:-SLIPS_KEPT]
+    print("書こうとした言葉と違ってしまった: " + "、".join(
+        f"{one['meant']}→{one['wrote']}" for one in noticed
+    ))
+    return noticed
+
+
+def slips_lately(state, days=SLIPS_REMEMBERED_FOR):
+    """このごろ、書こうとして違ってしまったもの。問いかけに渡す一行。"""
+    since = (today_in_japan() - datetime.timedelta(days=days)).isoformat()
+    recent = [one for one in state.get("slips") or [] if one.get("day", "") >= since]
+    if not recent:
+        return ""
+    said = "、".join(f"「{one['meant']}」のつもりが「{one['wrote']}」" for one in recent[-4:])
+    return f"このごろ日記を書いたとき、書こうとした言葉と違う字になってしまったもの: {said}\n"
 
 
 def familiar_chars(state):
@@ -3744,8 +3783,10 @@ def write_the_day(state, day):
     old_way = an_old_way(state)
     if old_way:
         print(f"今日は昔の書き方で書く: {old_way}")
+    SLIPS_JUST_NOW.clear()
     body = compose_locally(state, old_way)
     title = compose_locally(state, old_way)
+    this_is_what_it_wrote(state, day)
 
     # 書いたものに出てきたことだけが、言えたことになる
     said = it_said_them(state, f"{title}{body}")
