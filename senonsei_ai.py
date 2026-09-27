@@ -2571,15 +2571,20 @@ def what_it_saw_lately(state):
     一日の始めの何時間か、この子は自分がどこにも行っていないことだけを
     手に持って、いま何を思うかと訊かれていたことになる。
     きのうまで歩いたことは、無かったことではない。"""
-    seen = (state.get("today_walk") or {}).get("seen") or []
+    walk = state.get("today_walk") or {}
+    seen = walk.get("seen") or [] if walk.get("date") == today_in_japan().isoformat() else []
     if seen:
         return "今日見てきたもの: " + "、".join(seen)
     # 今日ぶんの一行は、まだ歩いていなくても先に置かれている。
-    # 中身のある日までさかのぼる
+    # 中身のある日までさかのぼる。
+    # きのうのことは「きのう」と言う。日付が変わったとたんに
+    # 「この前」と言われると、さっきまでのことが遠くへ押しやられる
+    yesterday = f"{elapsed_days(state) - 1}日目:"
     for note in reversed(state.get("notes") or []):
         where = note.split(": ", 1)[-1].strip()
         if where and where != NOTHING_WAS_SEEN:
-            return "この前見てきたもの: " + where
+            when = "きのう" if note.startswith(yesterday) else "この前"
+            return f"{when}見てきたもの: " + where
     return "見てきたもの: (まだどこにも行っていない)"
 
 
@@ -2632,12 +2637,23 @@ def be_alone(state, now):
     # 書いたあとも「まだ何も書いていません」と渡していた。
     # 毎時間この子に、今日あなたは何もしていないと告げていたことになる
     today = f"{now:%Y-%m-%d}"
-    wrote = [one for one in blog_manager.load_articles() if one.get("date") == today]
+    articles = blog_manager.load_articles()
+    wrote = [one for one in articles if one.get("date") == today]
     how_today_went = (
         f"今日はもう書きました。{wrote[-1].get('time', '')}に書きました。"
         if wrote
         else "今日はまだ書いていません。"
     )
+    # まだ書いていない日は、きのうのことも添える。
+    # 日付が変わったとたんに「まだ書いていません」とだけ言われると、
+    # 数時間前に書いたことが無かったように聞こえる
+    if not wrote:
+        the_day_before = f"{now.date() - datetime.timedelta(days=1)}"
+        before = [one for one in articles if one.get("date") == the_day_before]
+        how_today_went = (
+            f"きのうは{before[-1].get('time', '')}に書きました。" if before
+            else "きのうは書きませんでした。"
+        ) + how_today_went
 
     # さっきの続きから始める。続けても、やめて別のことを思っても構わない
     carried = still_thinking(state)
