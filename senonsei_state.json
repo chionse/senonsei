@@ -1370,7 +1370,9 @@
     "博",
     "森",
     "遊",
-    "央"
+    "央",
+    "辞",
+    "芸"
   ],
   "learned_words": [
     "など",
@@ -1679,7 +1681,6 @@
     "http://web.archive.org/web/20121231150150/https://docs.google.com/open?id=0B37bKCvIjIuwbm5mMjZDTXZzRms",
     "http://web.archive.org/web/20121231150150/http://books.google.com/books?id=E0MIAAAAQAAJ",
     "http://web.archive.org/web/20121231150150/http://gallica.bnf.fr/Search?ArianeWireIndex=index&p=1&q=%22jules+borain%22",
-    "http://web.archive.org/web/20121231150150/http://books.google.com/books?id=liI-AAAAcAAJ&pg",
     "http://web.archive.org/web/20121231150150/http://viaf.org/",
     "http://web.archive.org/web/20121231150150/https://docs.google.com/open?id=0B37bKCvIjIuwZ2tHLW1ZM3RQVnc",
     "http://web.archive.org/web/20121231150150/http://opteron1.kbr.be/cgi-bin/opac.cgi?P0=FBB&P1=3_JAN&P9=&P5=20&P4=&P2=3&P3=R_TI&P6=BORAIN_JULES",
@@ -1921,7 +1922,18 @@
     "https://web.archive.org/web/20001110042600/http://www.justsystem.co.jp/kids/",
     "https://web.archive.org/web/20001110042600/http://www3.justnet.ne.jp/%7Ekidsland/mail.htm",
     "https://web.archive.org/web/20001110042600/http://sugarpot.justnet.ne.jp/",
-    "https://www.aozora.gr.jp/"
+    "https://www.aozora.gr.jp/",
+    "http://web.archive.org/web/20160612095247/http://www.google.com/preferences?hl=en",
+    "http://web.archive.org/web/20160612095247/https://photos.google.com/?pg=&sa=N&tab=pq",
+    "http://web.archive.org/web/20160612095247/https://www.blogger.com/?tab=pj",
+    "http://web.archive.org/web/20160612095247/http://dogbert.abebooks.com/servlet/SearchResults?tn\\x3dDictionnaire+universel,+contenant+g%C3%A9n%C3%A9ralement+tous+les+mots+fran%C3%A7ois,+tant+vieux+que+modernes+et+les+termes+des+sciences+des+arts+%5B...%5D",
+    "http://web.archive.org/web/20160612095247/http://www.amazon.com/exec/obidos/external-search/?field-keywords=Dictionnaire+universel,+contenant+g%C3%A9n%C3%A9ralement+tous+les+mots+fran%C3%A7ois,+tant+vieux+que+modernes+et+les+termes+des+sciences+des+arts+%5B...%5D&index=books",
+    "http://web.archive.org/web/20160612095247/http://booksearch.blogspot.com/",
+    "http://web.archive.org/web/20160612095247/http://www.amazon.com/exec/obidos/external-search/?field-keywords\\x3dDictionnaire+universel,+contenant+g%C3%A9n%C3%A9ralement+tous+les+mots+fran%C3%A7ois,+tant+vieux+que+modernes+et+les+termes+des+sciences+des+arts+%5B...%5D\\x26index\\x3dbooks",
+    "http://web.archive.org/web/20160612095247/http://net.ondemandbooks.com/google/liI-AAAAcAAJ",
+    "http://web.archive.org/web/20160612095247/http://dogbert.abebooks.com/servlet/SearchResults?tn=Dictionnaire+universel,+contenant+g%C3%A9n%C3%A9ralement+tous+les+mots+fran%C3%A7ois,+tant+vieux+que+modernes+et+les+termes+des+sciences+des+arts+%5B...%5D",
+    "http://web.archive.org/web/20160521125107/http://booksearch.blogspot.com/",
+    "http://web.archive.org/web/20160603222743/http://booksearch.blogspot.com/?utm_source=gbssite&utm_campaign=gbsblog&utm_medium=et"
   ],
   "visited": [
     "https://note.com/",
@@ -2100,7 +2112,15 @@
     "https://ja.wikibooks.org/wiki/Wikibooks:Text_of_GNU_Free_Documentation_License",
     "https://ja.wikibooks.org/wiki/Wikibooks:%E3%81%AA%E3%81%9C%E3%83%95%E3%83%AA%E3%83%BC%E3%81%AE%E6%95%99%E7%A7%91%E6%9B%B8%E3%82%92%E4%BD%BF%E3%81%86%E3%81%AE%E3%81%8B",
     "https://web.archive.org/web/20001110103100/http://www.justnet.ne.jp/kidsland/index.htm",
-    "https://web.archive.org/web/20001110042600/http://www.justnet.ne.jp/kidsland/cm/zoo/np/net01/xunchi.htm"
+    "https://web.archive.org/web/20001110042600/http://www.justnet.ne.jp/kidsland/cm/zoo/np/net01/xunchi.htm",
+    "http://web.archive.org/web/20121231150150/http://books.google.com/books?id=liI-AAAAcAAJ&pg",
+    "http://web.archive.org/web/20160612095247/https://books.google.com/intl/en/googlebooks/about.html",
+    "http://web.archive.org/web/20160612095247/https://books.google.com/intl/en/googlebooks/tos.html",
+    "http://web.archive.org/web/20160612095247/https://books.google.com/sitemap/Sitemap.html",
+    "http://web.archive.org/web/20160604021724/https://books.google.com/intl/en/googlebooks/about/index.html",
+    "http://web.archive.org/web/20160521125107/http://books.google.com/intl/en/googlebooks/tos.html",
+    "http://web.archive.org/web/20160521125107/http://books.google.com/intl/en/googlebooks/about.html",
+    "http://web.archive.org/web/20160521125107/http://books.google.com/books"
   ],
   "notes": [
     "0日目: note ――つくる、つながる、とどける。",
@@ -2119,11 +2139,13 @@
     "14日目: User talk:Keegan (WMF) - Meta-Wiki、Wikiversity:Changing username - Wikiversity、ブランディング・採用・販促で成果を出すならnote pro(ノートプロ)",
     "15日目: VideoPress – The finest video for WordPress、CultureLibre、Bluesky",
     "16日目: Wikibooks:ウィキブックスについて - Wikibooks、キッズランドへようこそ！",
-    "17日目: 何も見られなかった"
+    "17日目: Dictionnaire universel, contenant gÃ©nÃ©ralement tous les mots franÃ§ois, tant ... - Antoine FuretiÃ¨re - Google Books"
   ],
   "today_walk": {
     "date": "2026-09-28",
-    "seen": []
+    "seen": [
+      "Dictionnaire universel, contenant gÃ©nÃ©ralement tous les mots franÃ§ois, tant ... - Antoine FuretiÃ¨re - Google Books"
+    ]
   },
   "inner_voice": [
     "09-25 08時: 「なぜ、私は存在するのか、全くわからない……」",
@@ -2214,7 +2236,7 @@
       "times": 1
     }
   ],
-  "saw_on": "2026-09-27",
+  "saw_on": "2026-09-28",
   "pictures_seen": [
     "2026-09-14 note.jp: この絵には、日本語の文字が写っています。",
     "2026-09-16 www3.nhk.or.jp: 地球",
@@ -2282,14 +2304,14 @@
     "2026-09-27 www.justnet.ne.jp: マックスのぬりえに絵を描いたり、ドクターマウスクイズでプレゼントを勝ち取ったりすることができて、また子どものおたよりがきていたりしていて、楽しんでいました。"
   ],
   "where_it_will_go": [
-    "honnomirai.net",
-    "www.questmachine.org",
-    "ghcc.githubassets.com",
-    "README.jp へようこそ！",
-    "www.wikifunctions.org",
-    "en.wikiquote.org"
+    "jetpack.com",
+    "b.hatena.ne.jp",
+    "tuxfamily.org",
+    "www.nhk-ondemand.jp",
+    "www.geocities.jp",
+    "el.wikibooks.org"
   ],
-  "how_many_places_left": 532,
+  "how_many_places_left": 542,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -2314,7 +2336,8 @@
     "www.culture-libre.org": "Wayback Machine",
     "bsky.app": "Bluesky",
     "ja.wikibooks.org": "Wikibooks:なぜフリーの教科書を使うのか - Wikibooks",
-    "www.justnet.ne.jp": "うんちミュージアム in どうぶつネットパーク"
+    "www.justnet.ne.jp": "うんちミュージアム in どうぶつネットパーク",
+    "books.google.com": "Google Books Terms of Service"
   },
   "went_home": {
     "date": "2026-09-28",
@@ -2455,9 +2478,9 @@
     },
     {
       "what": "アーカイブに寄付する",
-      "since": "2026-09-24",
+      "since": "2026-09-28",
       "first": "2026-09-24",
-      "times": 1,
+      "times": 2,
       "said": ""
     },
     {
@@ -2562,6 +2585,13 @@
       "what": "キッズソフトリンク集",
       "since": "2026-09-27",
       "first": "2026-09-27",
+      "times": 1,
+      "said": ""
+    },
+    {
+      "what": "イラスト",
+      "since": "2026-09-28",
+      "first": "2026-09-28",
       "times": 1,
       "said": ""
     }
