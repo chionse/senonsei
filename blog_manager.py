@@ -1632,9 +1632,39 @@ def fukidashi_html(state):
     </script>"""
 
 
+# 気が変わったときに、この子が自分の中に残す一行(senonsei_ai.todays_mood)。
+# 「09-28 01時: 13時に書くつもりだったけれど、22時に書くことにした。」
+A_CHANGE_OF_MIND = re.compile(r"^(\d\d-\d\d) (\d+)時: (.+?)つもりだったけれど、(.+?)ことにした。$")
+
+
+def changes_of_mind_today(state):
+    """今日、書く時刻や休むかどうかについて、気が変わったこと。古い順に。"""
+    today = today_in_japan().strftime("%m-%d")
+    changes = []
+    for line in (state or {}).get("inner_voice") or []:
+        found = A_CHANGE_OF_MIND.match(line)
+        if found and found.group(1) == today:
+            changes.append((int(found.group(2)), found.group(3), found.group(4)))
+    return changes
+
+
+def mind_changed_html(state):
+    """気が変わったことを、トップの「今日のブログ」の下に小さく添える。"""
+    changes = changes_of_mind_today(state)
+    if not changes:
+        return ""
+    lines = "".join(
+        f"<br />{hour}時に、{before}つもりだったのを、{after}ことにしたようです。"
+        for hour, before, after in changes
+    )
+    return f'\n    <p class="kimochi">気が変わったこと{lines}</p>'
+
+
 def generate_index_html(articles, state=None):
     ordered = sorted_articles(articles)
-    plan = (state or load_senonsei_state()).get("today_plan") or {}
+    state = state or load_senonsei_state()
+    plan = state.get("today_plan") or {}
+    changed = mind_changed_html(state)
 
     if not ordered:
         latest_html = "<p>まだブログ記事がありません。</p>"
@@ -1647,11 +1677,11 @@ def generate_index_html(articles, state=None):
             latest = ordered[0]
             latest_html = f"""<article>
     <div class="date">{latest['date']} {latest.get('time', '')}<span class="article-title">{latest['title']}</span>{iine_html(latest['date'])}</div>
-    <p>{latest['content']}</p>
+    <p>{latest['content']}</p>{changed}
   </article>"""
         elif plan.get("date") == today_in_japan().isoformat() and plan.get("resting"):
             # 今日は書かないと、この子自身が決めた日
-            latest_html = '<article>\n    <p>今日のブログはお休みです。</p>\n  </article>'
+            latest_html = f'<article>\n    <p>今日のブログはお休みです。</p>{changed}\n  </article>'
         else:
             # 書くつもりでまだ書いていないか、今日をどう過ごすかまだ決めていない。
             # 何時ごろに書くつもりかを自分で決めているなら、それも添える。
@@ -1663,7 +1693,7 @@ def generate_index_html(articles, state=None):
                 and now_in_japan().hour <= plan.get("hour", 0)
             ):
                 yet += f"（{plan['hour']}時頃に書くつもりのようです。）"
-            latest_html = f"<article>\n    <p>{yet}</p>\n  </article>"
+            latest_html = f"<article>\n    <p>{yet}</p>{changed}\n  </article>"
 
         # 今日書いていないなら、いちばん新しい記事は直近のほうに並ぶ
         start = 1 if wrote_today else 0

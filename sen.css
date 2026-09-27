@@ -991,3 +991,11 @@ nav a,
 }
 
 /* 狭い画面では、五列のまま文字を少しだけ小さくする */
+
+/* 今日のブログの下に添える、気が変わったこと */
+.kimochi {
+  margin-top: 0.6rem;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  opacity: 0.75;
+}
