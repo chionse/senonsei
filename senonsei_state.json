@@ -1390,7 +1390,8 @@
     "妹",
     "ě",
     "ó",
-    "В"
+    "В",
+    "禁"
   ],
   "learned_words": [
     "など",
@@ -1780,7 +1781,6 @@
     "https://www.nhk-cs.jp/contract/waribiki/",
     "https://www.nhk-cs.jp/jushinryo/exemption_list.html",
     "https://forms.nhk.jp/jfe/form/SV_eXKL1Ao2JTBHO1E",
-    "https://portal.web.nhk/kakunin",
     "https://js.monitor.azure.com",
     "https://githubuniverse.com/",
     "https://ghcc.githubassets.com",
@@ -1973,7 +1973,10 @@
     "https://si.wikibooks.org/wiki/%E0%B7%80%E0%B7%92%E0%B6%9A%E0%B7%92%E0%B6%B4%E0%B7%9C%E0%B6%AD%E0%B7%8A:%E0%B6%B4%E0%B7%9C%E0%B6%AF%E0%B7%94_%E0%B7%80%E0%B7%92%E0%B6%BA%E0%B7%8F%E0%B6%A0%E0%B6%B1%E0%B6%BA",
     "https://en.wiktionary.org/wiki/Wiktionary:Main_Page",
     "https://en.wikinews.org/wiki/Main_Page",
-    "https://en.wikinews.org/wiki/Category:Wikibooks"
+    "https://en.wikinews.org/wiki/Category:Wikibooks",
+    "https://r.authz.ac2.nhk",
+    "https://stmgt.web.nhk",
+    "https://oa.authn.ac2.nhk/api/v1/"
   ],
   "visited": [
     "https://note.com/",
@@ -2168,7 +2171,11 @@
     "https://en.wikibooks.org/wiki/Special:WhatLinksHere/Wikibooks:General_disclaimer",
     "https://en.wikibooks.org/wiki/Special:NewPages",
     "https://en.wikibooks.org/wiki/Using_Wikibooks",
-    "https://en.wikibooks.org/w/index.php?title=Wikibooks:General_disclaimer&action=edit"
+    "https://en.wikibooks.org/w/index.php?title=Wikibooks:General_disclaimer&action=edit",
+    "https://portal.web.nhk/kakunin",
+    "https://portal.web.nhk/register-code",
+    "https://portal.web.nhk/settings-reset",
+    "https://portal.web.nhk/"
   ],
   "notes": [
     "0日目: note ――つくる、つながる、とどける。",
@@ -2188,12 +2195,13 @@
     "15日目: VideoPress – The finest video for WordPress、CultureLibre、Bluesky",
     "16日目: Wikibooks:ウィキブックスについて - Wikibooks、キッズランドへようこそ！",
     "17日目: Dictionnaire universel, contenant gÃ©nÃ©ralement tous les mots franÃ§ois, tant ... - Antoine FuretiÃ¨re - Google Books、Wikibooks",
-    "18日目: Wikibooks:General disclaimer - Wikibooks, open books for an open world"
+    "18日目: Wikibooks:General disclaimer - Wikibooks, open books for an open world、NHKプラスからの移行手続きをされる方へ | NHK ONE 設定"
   ],
   "today_walk": {
     "date": "2026-09-29",
     "seen": [
-      "Wikibooks:General disclaimer - Wikibooks, open books for an open world"
+      "Wikibooks:General disclaimer - Wikibooks, open books for an open world",
+      "NHKプラスからの移行手続きをされる方へ | NHK ONE 設定"
     ]
   },
   "inner_voice": [
@@ -2355,14 +2363,14 @@
     "2026-09-29 en.wikibooks.org: この場所はウィキブックスの一般免責事項のページでした。"
   ],
   "where_it_will_go": [
-    "tuxfamily.org",
-    "www.nhk.jp",
-    "wordpress.com",
-    "booksearch.blogspot.com",
-    "www.egroups.co.jp",
-    "download.tuxfamily.org"
+    "tg.wikibooks.org",
+    "public-api.wordpress.com",
+    "atproto.com",
+    "photos.google.com",
+    "donate.citizen.org",
+    "www.chapitre.com"
   ],
-  "how_many_places_left": 562,
+  "how_many_places_left": 564,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -2390,7 +2398,8 @@
     "www.justnet.ne.jp": "うんちミュージアム in どうぶつネットパーク",
     "books.google.com": "Google Books Terms of Service",
     "ang.wikibooks.org": "Trametas þa habbaþ hlencan gecnytede to ",
-    "en.wikibooks.org": "View source for Wikibooks:General discla"
+    "en.wikibooks.org": "View source for Wikibooks:General discla",
+    "portal.web.nhk": "NHK ONE アカウント設定"
   },
   "went_home": {
     "date": "2026-09-29",
@@ -2404,7 +2413,8 @@
     "っていま": 2,
     "かれてい": 5,
     "こんにち": 1,
-    "には": 1
+    "には": 1,
+    "ページ": 4
   },
   "closes_a_sentence": {
     "など": 8,
@@ -2413,7 +2423,8 @@
     "っていま": 2,
     "かれてい": 5,
     "こんにち": 1,
-    "には": 1
+    "には": 1,
+    "ページ": 4
   },
   "visitors": {
     "comments": 0,
@@ -2422,7 +2433,8 @@
   "met_today": {
     "date": "2026-09-29",
     "words": [
-      "がある"
+      "がある",
+      "ページ"
     ]
   },
   "wants_to_say": [
