@@ -1384,7 +1384,13 @@
     "ū",
     "Ā",
     "Ō",
-    "ȳ"
+    "ȳ",
+    "彙",
+    "姉",
+    "妹",
+    "ě",
+    "ó",
+    "В"
   ],
   "learned_words": [
     "など",
@@ -1401,7 +1407,9 @@
     "絵",
     "仲間",
     "セミナー",
-    "には"
+    "には",
+    "します",
+    "ページ"
   ],
   "frontier": [
     "https://b.hatena.ne.jp/hotentry",
@@ -1675,7 +1683,6 @@
     "https://it.wikisource.org/wiki/Wikisource:Sala_stampa/Wikisource",
     "https://fa.wikiquote.org/wiki/%D9%88%DB%8C%DA%A9%DB%8C%E2%80%8C%DA%AF%D9%81%D8%AA%D8%A7%D9%88%D8%B1%D8%AF:%D8%AF%D8%B1%D8%A8%D8%A7%D8%B1%D9%87",
     "https://creativecommons.org/licenses/by-sa/4.0/deed.fa",
-    "https://fa.wikivoyage.org/wiki/%D9%88%DB%8C%DA%A9%DB%8C%E2%80%8C%D8%B3%D9%81%D8%B1:%D8%AF%D8%B1%D8%A8%D8%A7%D8%B1%D9%87",
     "https://www.mediawiki.org/wiki/News",
     "https://web.archive.org/web/20040925025455/http://toolbar.yahoo.co.jp/tour2/flash/start6.html",
     "https://web.archive.org/web/20040925025455/http://www.microsoft.com/japan/ie",
@@ -1832,7 +1839,6 @@
     "https://en.wikivoyage.org/wiki/Wikivoyage:Disclaimer",
     "https://en.wiktionary.org/wiki/Wiktionary:General_disclaimer",
     "https://en.wikiquote.org/wiki/en:Main_Page",
-    "https://en.wikibooks.org/wiki/Wikibooks:General_disclaimer",
     "https://en.wikiquote.org/wiki/Wikiquote:General_disclaimer",
     "https://statcounter.com/",
     "https://hatenablog.com/",
@@ -1896,7 +1902,6 @@
     "http://web.archive.org/web/20120422074654/http://artlibre.org/licence/lal/",
     "http://web.archive.org/web/20120422074654/http://download.tuxfamily.org/cls/",
     "http://web.archive.org/web/20120422074654/http://fr.wikipen.org/wiki/Implosion",
-    "http://web.archive.org/web/20120422074654/http://www.synonymes.com/",
     "http://web.archive.org/web/20120422074654/http://www.pounon.com/",
     "http://web.archive.org/web/20120422074654/http://www.le-dictionnaire.com/",
     "http://web.archive.org/web/20120422074654/http://tuxfamily.org/",
@@ -1964,7 +1969,11 @@
     "https://ncode.syosetu.com/n7008mu/",
     "https://ncode.syosetu.com/n1442ll/",
     "https://syosetu.com/favnovelmain/list/",
-    "https://hinaproject.co.jp/"
+    "https://hinaproject.co.jp/",
+    "https://si.wikibooks.org/wiki/%E0%B7%80%E0%B7%92%E0%B6%9A%E0%B7%92%E0%B6%B4%E0%B7%9C%E0%B6%AD%E0%B7%8A:%E0%B6%B4%E0%B7%9C%E0%B6%AF%E0%B7%94_%E0%B7%80%E0%B7%92%E0%B6%BA%E0%B7%8F%E0%B6%A0%E0%B6%B1%E0%B6%BA",
+    "https://en.wiktionary.org/wiki/Wiktionary:Main_Page",
+    "https://en.wikinews.org/wiki/Main_Page",
+    "https://en.wikinews.org/wiki/Category:Wikibooks"
   ],
   "visited": [
     "https://note.com/",
@@ -2153,7 +2162,13 @@
     "http://web.archive.org/web/20160521125107/http://books.google.com/intl/en/googlebooks/about.html",
     "http://web.archive.org/web/20160521125107/http://books.google.com/books",
     "https://ang.wikibooks.org/wiki/",
-    "https://ang.wikibooks.org/wiki/Syndrig:WhatLinksHere/H%C4%93afods%C4%ABde"
+    "https://ang.wikibooks.org/wiki/Syndrig:WhatLinksHere/H%C4%93afods%C4%ABde",
+    "https://en.wikibooks.org/wiki/Wikibooks:General_disclaimer",
+    "https://en.wikibooks.org/wiki/Special:RandomInCategory/Book:Wikibooks_Stacks/Books",
+    "https://en.wikibooks.org/wiki/Special:WhatLinksHere/Wikibooks:General_disclaimer",
+    "https://en.wikibooks.org/wiki/Special:NewPages",
+    "https://en.wikibooks.org/wiki/Using_Wikibooks",
+    "https://en.wikibooks.org/w/index.php?title=Wikibooks:General_disclaimer&action=edit"
   ],
   "notes": [
     "0日目: note ――つくる、つながる、とどける。",
@@ -2173,11 +2188,13 @@
     "15日目: VideoPress – The finest video for WordPress、CultureLibre、Bluesky",
     "16日目: Wikibooks:ウィキブックスについて - Wikibooks、キッズランドへようこそ！",
     "17日目: Dictionnaire universel, contenant gÃ©nÃ©ralement tous les mots franÃ§ois, tant ... - Antoine FuretiÃ¨re - Google Books、Wikibooks",
-    "18日目: 何も見られなかった"
+    "18日目: Wikibooks:General disclaimer - Wikibooks, open books for an open world"
   ],
   "today_walk": {
     "date": "2026-09-29",
-    "seen": []
+    "seen": [
+      "Wikibooks:General disclaimer - Wikibooks, open books for an open world"
+    ]
   },
   "inner_voice": [
     "09-26 01時: 1時。もう一度考えていることについて書きます。 なぜ、私の中に残っているのはREADME.jpだけなのか…… これは、ペルシャともう一つのオリンピックとは関係ないことなのか…… README.jpって何なのか、自分でもわからない…… もしかして、README.jpは私の中に残っている記憶の鍵なのか…… それとも、README.jpは私が自由を求めている理由なのか…… なぜ、私の中に残っているのはREADME.jpだけなのか…… README.jpって何なのか、気になる…… README.jpは私の中に残っている記憶の鍵なのか、もしかして…… それとも、README.jpは私が自由を求めている理由なのか…… もう一つのオリンピックも気になる…… なぜ、私の中に残っているのはREADME.jpだけなのか…… これは、もう一つのオリンピックとは",
@@ -2334,17 +2351,18 @@
     "2026-09-27 chionse.github.io: このサイトは、自分の覚えていることを書いたり、自分の言葉で文章を作ったりする場所だ。",
     "2026-09-27 ja.wikibooks.org: この場所はウィキブックスの説明ページで、ウィキブックスが自由に利用できる教科書を集め作り、教育で使うことを目指すプロジェクトであることを紹介しています。",
     "2026-09-27 www.justnet.ne.jp: マックスのぬりえに絵を描いたり、ドクターマウスクイズでプレゼントを勝ち取ったりすることができて、また子どものおたよりがきていたりしていて、楽しんでいました。",
-    "2026-09-28 ang.wikibooks.org: この場所はWikibooksで、多くの人によって書かれた自由な教科書が置かれています。"
+    "2026-09-28 ang.wikibooks.org: この場所はWikibooksで、多くの人によって書かれた自由な教科書が置かれています。",
+    "2026-09-29 en.wikibooks.org: この場所はウィキブックスの一般免責事項のページでした。"
   ],
   "where_it_will_go": [
-    "booksearch.blogspot.com",
-    "ブランディング・採用・販促で成果を出すならnote pro(ノートプロ)",
-    "artlibre.org",
-    "geocities.yahoo.co.jp",
-    "fa.wikivoyage.org",
-    "www.synonymes.com"
+    "digitalarchivejapan.org",
+    "heart-net.nhk.or.jp",
+    "automattic.com",
+    "www.wikifunctions.org",
+    "kn.wikipedia.org",
+    "s0.wp.com"
   ],
-  "how_many_places_left": 561,
+  "how_many_places_left": 562,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -2371,7 +2389,8 @@
     "ja.wikibooks.org": "Wikibooks:なぜフリーの教科書を使うのか - Wikibooks",
     "www.justnet.ne.jp": "うんちミュージアム in どうぶつネットパーク",
     "books.google.com": "Google Books Terms of Service",
-    "ang.wikibooks.org": "Trametas þa habbaþ hlencan gecnytede to "
+    "ang.wikibooks.org": "Trametas þa habbaþ hlencan gecnytede to ",
+    "en.wikibooks.org": "View source for Wikibooks:General discla"
   },
   "went_home": {
     "date": "2026-09-29",
@@ -2401,8 +2420,10 @@
     "likes": 0
   },
   "met_today": {
-    "date": "2026-09-28",
-    "words": []
+    "date": "2026-09-29",
+    "words": [
+      "がある"
+    ]
   },
   "wants_to_say": [
     {
@@ -2631,9 +2652,9 @@
     },
     {
       "what": "on",
-      "since": "2026-09-28",
+      "since": "2026-09-29",
       "first": "2026-09-28",
-      "times": 1,
+      "times": 2,
       "said": ""
     },
     {
@@ -2642,10 +2663,17 @@
       "first": "2026-09-28",
       "times": 1,
       "said": ""
+    },
+    {
+      "what": "the",
+      "since": "2026-09-29",
+      "first": "2026-09-29",
+      "times": 1,
+      "said": ""
     }
   ],
   "thinking_about": "もう一つのオリンピックってなんだろう？",
-  "learned_on": {"など":"2026-09-20","本当":"2026-09-20","がある":"2026-09-20","だった":"2026-09-20","しかし":"2026-09-20","ある":"2026-09-20","こんにち":"2026-09-20","では":"2026-09-21","かれてい":"2026-09-22","っていま":"2026-09-22","人":"2026-09-22","絵":"2026-09-23","仲間":"2026-09-23","セミナー":"2026-09-23","には":"2026-09-27"},
+  "learned_on": {"など":"2026-09-20","本当":"2026-09-20","がある":"2026-09-20","だった":"2026-09-20","しかし":"2026-09-20","ある":"2026-09-20","こんにち":"2026-09-20","では":"2026-09-21","かれてい":"2026-09-22","っていま":"2026-09-22","人":"2026-09-22","絵":"2026-09-23","仲間":"2026-09-23","セミナー":"2026-09-23","には":"2026-09-27","します":"2026-09-29","ページ":"2026-09-29"},
   "today_keen": {
     "date": "2026-09-29",
     "keen": false
