@@ -1648,23 +1648,44 @@ def changes_of_mind_today(state):
     return changes
 
 
-def mind_changed_html(state):
-    """気が変わったことを、トップの「今日のブログ」の下に小さく添える。"""
+def first_plan_today(state):
+    """今日いちばん初めに決めていたこと。気が変わっていなければ None。
+
+    返すのは (休むつもりだったか, 何時に書くつもりだったか)。"""
     changes = changes_of_mind_today(state)
     if not changes:
-        return ""
-    lines = "".join(
-        f"<br />{hour}時に、{before}つもりだったのを、{after}ことにしたようです。"
-        for hour, before, after in changes
-    )
-    return f'\n    <p class="kimochi">気が変わったこと{lines}</p>'
+        return None
+    before = changes[0][1]
+    if before == "休む":
+        return True, None
+    hour = re.match(r"(\d+)時に書く", before)
+    return (False, int(hour.group(1))) if hour else None
+
+
+def what_it_meant_to_do(plan, first):
+    """初めに決めていたことから、今の予定に変わったなら、それを一文にする。
+
+    何度変わっても、初めと今だけを言う。初めに戻ったなら何も言わない。
+    文は彼女が決めた(2026-09-28)。"""
+    if not first:
+        return None
+    was_resting, was_hour = first
+    now_resting, now_hour = bool(plan.get("resting")), plan.get("hour")
+    if (was_resting, was_hour) == (now_resting, None if now_resting else now_hour):
+        return None
+    if was_resting:
+        return f"（初めはお休みするつもりでしたが{now_hour}時頃に書くことに変更したようです。）"
+    if now_resting:
+        return f"（初めは{was_hour}時頃に書くつもりでしたがお休みに変更したようです。）"
+    return f"（初めは{was_hour}時頃に書くつもりでしたが{now_hour}時頃に変更したようです。）"
 
 
 def generate_index_html(articles, state=None):
     ordered = sorted_articles(articles)
     state = state or load_senonsei_state()
     plan = state.get("today_plan") or {}
-    changed = mind_changed_html(state)
+    today = today_in_japan().isoformat()
+    changed = what_it_meant_to_do(plan, first_plan_today(state)) if plan.get("date") == today else None
 
     if not ordered:
         latest_html = "<p>まだブログ記事がありません。</p>"
@@ -1677,23 +1698,26 @@ def generate_index_html(articles, state=None):
             latest = ordered[0]
             latest_html = f"""<article>
     <div class="date">{latest['date']} {latest.get('time', '')}<span class="article-title">{latest['title']}</span>{iine_html(latest['date'])}</div>
-    <p>{latest['content']}</p>{changed}
+    <p>{latest['content']}</p>
   </article>"""
         elif plan.get("date") == today_in_japan().isoformat() and plan.get("resting"):
             # 今日は書かないと、この子自身が決めた日
-            latest_html = f'<article>\n    <p>今日のブログはお休みです。</p>{changed}\n  </article>'
+            latest_html = f'<article>\n    <p>今日のブログはお休みです。{changed or ""}</p>\n  </article>'
         else:
             # 書くつもりでまだ書いていないか、今日をどう過ごすかまだ決めていない。
             # 何時ごろに書くつもりかを自分で決めているなら、それも添える。
             # 気が変わることもあるので「ようです」と書いておく
             yet = "今日のブログはまだです。"
-            if (
+            if changed:
+                # 気が変わった日は、初めと今を言う
+                yet += changed
+            elif (
                 plan.get("date") == today_in_japan().isoformat()
                 and not plan.get("resting")
                 and now_in_japan().hour <= plan.get("hour", 0)
             ):
                 yet += f"（{plan['hour']}時頃に書くつもりのようです。）"
-            latest_html = f"<article>\n    <p>{yet}</p>{changed}\n  </article>"
+            latest_html = f"<article>\n    <p>{yet}</p>\n  </article>"
 
         # 今日書いていないなら、いちばん新しい記事は直近のほうに並ぶ
         start = 1 if wrote_today else 0
