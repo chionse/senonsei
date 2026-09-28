@@ -1674,10 +1674,10 @@ def what_it_meant_to_do(plan, first):
     if (was_resting, was_hour) == (now_resting, None if now_resting else now_hour):
         return None
     if was_resting:
-        return f"（初めはお休みするつもりでしたが{now_hour}時頃に書くことに変更したようです。）"
+        return f"（初めはお休みするつもりでしたが、{now_hour}時頃に書くことに変更したようです。）"
     if now_resting:
-        return f"（初めは{was_hour}時頃に書くつもりでしたがお休みに変更したようです。）"
-    return f"（初めは{was_hour}時頃に書くつもりでしたが{now_hour}時頃に変更したようです。）"
+        return f"（初めは{was_hour}時頃に書くつもりでしたが、お休みに変更したようです。）"
+    return f"（初めは{was_hour}時頃に書くつもりでしたが、{now_hour}時頃に変更したようです。）"
 
 
 def generate_index_html(articles, state=None):
