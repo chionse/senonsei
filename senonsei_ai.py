@@ -1337,6 +1337,26 @@ def read_as_japanese(raw, content_type):
             text = raw.decode(name)
         except LookupError:
             continue
+        except UnicodeDecodeError as stumbled:
+            # 受け取るのを途中で切り上げると(read_up_to)、最後の一文字が
+            # 二バイト三バイトの途中で切れていることがある。そこで詰まっただけなら、
+            # 切れ端を捨てて読む。それを「読めなかった」とすると、
+            # UTF-8 のページがまるごと別の読み方に負けて化けていた
+            if stumbled.start < len(raw) - 3:
+                text = None
+            else:
+                try:
+                    text = raw[:stumbled.start].decode(name)
+                except (UnicodeError, ValueError):
+                    text = None
+            if text is None:
+                try:
+                    text = raw.decode(name, errors="replace")
+                except (LookupError, UnicodeError, ValueError):
+                    continue
+                clean = False
+            else:
+                clean = True
         except UnicodeError:
             # 読めない所があった。無理に読んでみて、そのぶん点を引く。
             #
@@ -1399,10 +1419,15 @@ def read_as_japanese(raw, content_type):
     elif best[1] == "japanese" and len(HIRAGANA.findall(best[2])) < HIRAGANA_SAYS_JAPANESE:
         # 日本語の読み方が勝ったが、ひらがながほとんど無い。
         # 西洋の読み方で ö や é が言葉の中に並ぶなら、西洋のページを
-        # 日本語の読み方で読んで漢字に化けさせているだけ
+        # 日本語の読み方で読んで漢字に化けさせているだけ。
+        #
+        # UTF-8 で書かれた西洋のページも、ここで UTF-8 の読み方を候補に入れる。
+        # 入れていなかった頃は、UTF-8 の é(二バイト)を latin-1 で読んだ「Ã©」も
+        # 「言葉の中に並ぶ西洋の文字」に数えられ、化けたほうが選ばれていた
+        # (Google ブックスの『Dictionnaire universel』が「gÃ©nÃ©ralement」になった)
         western = [
             one for one in readings
-            if one[1] == "western"
+            if one[1] in ("western", "utf8")
             and len(LATIN_IN_WORDS.findall(one[2])) >= LATIN_SAYS_WESTERN
         ]
         if western:
