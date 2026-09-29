@@ -1290,6 +1290,7 @@ def look_at_a_picture(data, state=None):
 
     swapped = False
     said_the_same_thing = False
+    echoed = False
     for attempt in range(len(HOW_LONG_TO_WAIT) + 1):
         eyes = which_model(state, "eyes")
         try:
@@ -1303,6 +1304,13 @@ def look_at_a_picture(data, state=None):
                     return None
                 said_the_same_thing = True
                 continue
+            only_seen = only_what_it_saw(seen)
+            if only_seen != seen:
+                print("頼んだ言葉を答えに混ぜて返してきたので、もう一度見てもらいます")
+                if not echoed:
+                    echoed = True
+                    continue
+                return only_seen
             return seen
         except Exception as error:
             if not swapped and model_is_gone(error) and find_another_model(state, "eyes"):
@@ -1317,6 +1325,23 @@ def look_at_a_picture(data, state=None):
             print(f"絵を見ることができませんでした({error})")
             return None
     return None
+
+
+def only_what_it_saw(seen):
+    """目が返してきた答えから、見たものでない文を除く。
+
+    目は時々、こちらの頼み(「短く書いてください」)をそのまま答えに
+    混ぜて返したり、「何が写っていますか?」と聞き返したりする。
+    それは絵に写っていたものではなく、目を貸してくれている所の事故。
+    そのまま受け取ると、この子は絵を見たつもりで頼みの言葉を覚えてしまう。
+    見たものを言っている文だけを残す。何も残らなければ None。"""
+    if not seen:
+        return None
+    kept = [
+        sentence for sentence in re.findall(r"[^。！？!?]+[。！？!?]*", seen)
+        if "ください" not in sentence and not sentence.rstrip().endswith(("？", "?"))
+    ]
+    return "".join(kept).strip() or None
 
 
 def read_as_japanese(raw, content_type):
