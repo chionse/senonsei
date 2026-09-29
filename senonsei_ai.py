@@ -183,6 +183,8 @@ WESTERN = ("cp1252", "windows_1252", "latin_1", "latin1", "iso_8859_1", "iso8859
 # 日本語の読み方で読んで、ひらがながこれだけ出てくれば日本語のページとみなす。
 # 西洋の文字を日本語の読み方で読むと、漢字の化けは出てもひらがなはまず出ない
 HIRAGANA_SAYS_JAPANESE = 5
+# ひらがなとカタカナ。漢字は中国語にもあるので、日本語かどうかはこれで見る
+KANA = re.compile(r"[ぁ-んァ-ヶ]")
 # 西洋の読み方で読んで、ö や é が英字に挟まれてこれだけ出てくれば、
 # 西洋の言葉のページとみなす。日本語を西洋の読み方で読むと、
 # 出てくるのは ¥ や ¡ のような記号の並びで、言葉の中には収まらない
@@ -440,6 +442,8 @@ READ_FOR_UNDERSTANDING = 20000
 REMEMBERING_A_PLACE_CHANCE = 0.3
 # 思い出した場所へ行きたい気持ちの強さ(何も引っかからない道を 1 として)
 PULL_OF_A_PLACE_TO_RETURN = 10
+# 日本語で書かれていそうな場所に、少しだけ多く惹かれる(何も引っかからない道を 1 として)
+PULL_OF_JAPANESE = 1
 # 行きたいと思い出した場所を、これだけまで抱えておく
 PLACES_TO_RETURN_KEPT = 5
 # また行って比べたことを、これだけ覚えておく
@@ -1786,7 +1790,25 @@ def what_draws_it(state, url, close=None):
             drawn += weight
     if url in (state.get("wants_to_return") or {}).values():
         drawn += PULL_OF_A_PLACE_TO_RETURN  # 今なら分かるかもしれない場所
+    if looks_japanese(url, named):
+        drawn += PULL_OF_JAPANESE  # 読める見込みのある場所へ、少しだけ
     return drawn
+
+
+def looks_japanese(url, named=""):
+    """日本語で書かれていそうな場所か。住所と、知っている場所の名前から見る。
+
+    ウィキの仲間は言語ごとに別の場所として数えられ、よその言葉の版へ続く道が
+    何十本も並ぶので、放っておくとよその言葉の場所ばかり選ばれる。
+    漢字だけでは中国語と見分けられないので、かなで見る。"""
+    host = place_of(url)
+    if host.startswith("ja.") or host.endswith(".jp"):
+        return True
+    try:
+        where = urllib.parse.unquote(url)
+    except Exception:
+        where = url
+    return bool(KANA.search(where) or KANA.search(named or ""))
 
 
 def evened_out(close):
