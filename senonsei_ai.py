@@ -1304,6 +1304,7 @@ def look_at_a_picture(data, state=None):
                     return None
                 said_the_same_thing = True
                 continue
+            seen = said_once(seen)
             only_seen = only_what_it_saw(seen)
             if only_seen != seen:
                 print("頼んだ言葉を答えに混ぜて返してきたので、もう一度見てもらいます")
@@ -1325,6 +1326,29 @@ def look_at_a_picture(data, state=None):
             print(f"絵を見ることができませんでした({error})")
             return None
     return None
+
+
+def said_once(seen):
+    """目が同じ言い回しを続けて繰り返していたら、一度ぶんだけにする。
+
+    目は時々、言い終えられずに同じところを回り続ける
+    (「お茶漬けの箱の中に茶漬け、お茶漬けの箱の中に茶漬け、……」)。
+    回り始める前までは、ちゃんと絵を見て言っているので、そこは受け取る。
+    最後に途中で切れた繰り返しの続きが残っていたら、言い終わりの区切りまでにする。
+    going_in_circles が見る短い切れ端より長い、八字からの言い回しを見る。"""
+    if not seen:
+        return seen
+    while True:
+        again = re.search(r"(.{8,}?)\1+", seen)
+        if not again:
+            return seen
+        once = again.group(1)
+        rest = seen[again.end():]
+        if once.startswith(rest):
+            # 途中で切れた繰り返し。区切りまでは、切れる前の言い終わり
+            ends = max(rest.rfind(mark) for mark in "。！？!?")
+            rest = rest[:ends + 1]
+        seen = seen[:again.start()] + once + rest
 
 
 def only_what_it_saw(seen):
