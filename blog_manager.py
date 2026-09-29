@@ -1762,11 +1762,13 @@ def generate_index_html(articles, state=None):
     else:
         all_comments_html = ""
 
+    # description は検索した時に出る説明。彼女の言葉のまま(2026-09-30)
     html = f"""<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
   <title>千遠生のサイト</title>
+  <meta name="description" content="千遠生のサイト" />
   <meta name="viewport" content="width=1200" />
   <link rel="stylesheet" href="{styled()}" />
 </head>
