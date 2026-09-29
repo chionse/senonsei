@@ -2664,9 +2664,14 @@ def be_alone(state, now):
     today = f"{now:%Y-%m-%d}"
     articles = blog_manager.load_articles()
     wrote = [one for one in articles if one.get("date") == today]
+    # 休むと決めた日に「まだ書いていません」と言うと、自分で決めたことが
+    # 伝わらず、書き忘れているように聞こえる
+    plan = state.get("today_plan") or {}
+    resting_today = plan.get("date") == today and plan.get("resting")
     how_today_went = (
         f"今日はもう書きました。{wrote[-1].get('time', '')}に書きました。"
         if wrote
+        else "今日は書かずに休むことにしました。" if resting_today
         else "今日はまだ書いていません。"
     )
     # まだ書いていない日は、きのうのことも添える。
