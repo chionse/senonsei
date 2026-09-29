@@ -450,6 +450,36 @@ PLACES_TO_RETURN_KEPT = 5
 RETURNS_KEPT = 30
 WANTS_IN_FRONT = 5
 
+# この子が自分で回していくつまみ(2026-09-30、彼女と決めた)。
+# プログラムの文は変わらないが、決まりの中身は歩いたぶんだけ自分のものになる。
+# 名前: (はじめの値, 下の端, 上の端, 一度に動く幅)。
+# 動くのは一度にほんの少しで、何か月、何年もかけて変わっていく。
+# 端の外には出ない。記憶が読めなければ、はじめの値に戻る
+ITS_OWN_WAYS = {
+    # 日本語の場所への惹かれ方。日本語の場所のほうがよく分かれば強くなり、
+    # よその言葉の場所のほうがよく分かれば弱くなる
+    "pull_of_japanese": (PULL_OF_JAPANESE, 0, 4, 0.01),
+    # 前に来た場所へ戻りたくなる強さ(何倍か)。思い出す割合と惹かれ方の両方にかかる。
+    # 戻って前より分かれば強くなり、変わらなければ弱くなる
+    "wish_to_return": (1.0, 0.3, 2.0, 0.1),
+    # 一つの場所で見て回るページの数。奥でも新しい言葉に会えれば深く、
+    # すぐ会えなくなるなら浅くなる。一か所に居る時間(TIME_SPENT_PER_SITE)は変わらない
+    "pages_per_site": (PAGES_PER_SITE, 6, 20, 0.1),
+    # 自分で決められなかった日に、それでも気が乗っている割合。
+    # 気が乗って一か所多く歩いた先で実りがあれば、出歩きたがりになっていく
+    "feeling_keen": (FEELING_KEEN, 0.1, 0.5, 0.01),
+}
+# よく分かったかどうかを比べる、ふだんの分かり方へ寄せていく割合
+UNDERSTOOD_USUALLY_MOVES = 0.1
+# 日本語の場所とよその言葉の場所の分かり方を比べる時、一枚の頭からこれだけの字で見る。
+# 長いページほど知らない言葉の割合が増えるので、そのままでは長い日本語のページが
+# 訳してもらった短いページにいつも負ける。同じ長さで比べる
+UNDERSTANDING_SAMPLE = 600
+# 奥のページで会えた新しい言葉が、その場所のならしのこれだけあれば、まだ奥に何かある
+STILL_MORE_DEEPER = 0.5
+# これより少なければ、もう奥まで来すぎていた
+NOTHING_MORE_DEEPER = 0.25
+
 # この子が知っているのは、目の前にあるものと、自分が覚えていることだけ。
 #
 # 頭を貸してくれている所は世の中のことをよく知っている。
@@ -842,7 +872,7 @@ def feeling_keen(state, today):
     # 気にかかっていることが多い日ほど、もう一箇所見て回りたくなる。
     # 借りた頭に訊いていたので、ここも他人が決めていた
     carrying = len(still_unsaid(state)) + len(minds_in_front(state))
-    keen = random.random() < min(0.6, FEELING_KEEN + carrying * KEEN_PER_CARRIED)
+    keen = random.random() < min(0.6, its_way(state, "feeling_keen") + carrying * KEEN_PER_CARRIED)
 
     state["today_keen"] = {"date": today, "keen": keen}
     save_state(state)
@@ -1838,9 +1868,10 @@ def what_draws_it(state, url, close=None):
         if word in looking_at:
             drawn += weight
     if url in (state.get("wants_to_return") or {}).values():
-        drawn += PULL_OF_A_PLACE_TO_RETURN  # 今なら分かるかもしれない場所
+        # 今なら分かるかもしれない場所
+        drawn += PULL_OF_A_PLACE_TO_RETURN * its_way(state, "wish_to_return")
     if looks_japanese(url, named):
-        drawn += PULL_OF_JAPANESE  # 読める見込みのある場所へ、少しだけ
+        drawn += its_way(state, "pull_of_japanese")  # 読める見込みのある場所へ、少しだけ
     return drawn
 
 
@@ -2208,6 +2239,8 @@ def absorb(state, text, pattern=WORD_CANDIDATE, only_known=False):
         if only_known and word not in met:
             continue
         record = met.get(word)
+        if record is None:
+            MET_FOR_THE_FIRST_TIME[0] += 1
         if record is None or record[1] != today_number:
             met[word] = [(record[0] if record else 0) + 1, today_number]
             if word in struck and not met_often_enough(state, word):
@@ -2324,12 +2357,16 @@ def look_around_site(state, entrance, wants_the_past):
     words_here = set()  # そこで読めた言葉(分かったかどうかは問わない)
     known_here = set()  # そのうち、知っていた言葉
     unread = 0  # 開いたけれど、読めなかったページ(よその言葉で、訳してもらえなかった)
+    fresh = []  # 読めたページごとの、生まれてはじめて会った言葉の数
+    bits = []  # 読めたページごとの、頭の同じ長さでの分かり方
+    WHAT_A_WALK_BROUGHT[0] = 0
     pages = 0
+    as_deep_as = round(its_way(state, "pages_per_site"))
     pictures_left = PICTURES_PER_SITE
     translations_left = TRANSLATIONS_PER_SITE
     until = time.monotonic() + TIME_SPENT_PER_SITE
 
-    while inside and pages < PAGES_PER_SITE and time.monotonic() < until:
+    while inside and pages < as_deep_as and time.monotonic() < until:
         url = inside.pop(0)
         if url in already:
             continue
@@ -2357,7 +2394,10 @@ def look_around_site(state, entrance, wants_the_past):
         remember_the_name(state, url, title)
 
         if JAPANESE.search(text):
+            met_before = MET_FOR_THE_FIRST_TIME[0]
             struck_here |= absorb(state, text) or set()
+            fresh.append(MET_FOR_THE_FIRST_TIME[0] - met_before)
+            bits.append(understood_in_a_bit(state, text))
             words_here |= set(WORD_CANDIDATE.findall(text))
             known_here |= known_words_in(state, text)
             if site_title is None:
@@ -2368,7 +2408,10 @@ def look_around_site(state, entrance, wants_the_past):
             translations_left -= 1
             translated = read_in_another_tongue(text, state)
             if translated:
+                met_before = MET_FOR_THE_FIRST_TIME[0]
                 struck_here |= absorb(state, translated) or set()
+                fresh.append(MET_FOR_THE_FIRST_TIME[0] - met_before)
+                bits.append(understood_in_a_bit(state, translated))
                 words_here |= set(WORD_CANDIDATE.findall(translated))
                 known_here |= known_words_in(state, translated)
                 if site_title is None:
@@ -2414,7 +2457,7 @@ def look_around_site(state, entrance, wants_the_past):
         # 同じくらいの道どうしは、そのときの気分の順のまま残る
         random.shuffle(deeper)
         deeper.sort(key=worth_reading, reverse=True)
-        inside.extend(deeper[:PAGES_PER_SITE])
+        inside.extend(deeper[:as_deep_as])
 
         if pages > 1 and random.random() > LINGER_CHANCE:
             break  # もう十分見た
@@ -2429,6 +2472,12 @@ def look_around_site(state, entrance, wants_the_past):
             state, here, entrance, site_title, words_here | known_here, known_here,
             pages, unread,
         )
+        # 家は自分の場所なので、よそを歩く時の決まりを動かす手がかりにはしない
+        if not its_own_home(entrance):
+            if bits:
+                leans_toward_japanese(state, entrance, site_title, sum(bits) / len(bits))
+            how_deep_to_go(state, fresh, pages >= as_deep_as)
+        WHAT_A_WALK_BROUGHT[0] = sum(fresh)
 
     # 魚を調べていたら海流が気になった、というようなこと。
     # 気がかりは追いかけているうちに、だんだん別のものへ移っていく
@@ -2452,6 +2501,90 @@ def known_words_in(state, text):
     拾えないので、知っている言葉のほうから探す。頭のほうだけを見る。"""
     looked_at = text[:READ_FOR_UNDERSTANDING]
     return {word for word in state.get("learned_words") or [] if word in looked_at}
+
+
+def its_way(state, name):
+    """この子がいま持っている、そのつまみの値。"""
+    start, least, most, _ = ITS_OWN_WAYS[name]
+    value = (state.get("its_ways") or {}).get(name)
+    if not isinstance(value, (int, float)) or isinstance(value, bool):
+        return start
+    return min(most, max(least, value))
+
+
+def lean_its_way(state, name, toward):
+    """そのつまみを、ほんの少しだけ動かす。toward は +1 か -1(0 なら動かさない)。"""
+    if not toward:
+        return
+    start, least, most, step = ITS_OWN_WAYS[name]
+    was = its_way(state, name)
+    now = round(min(most, max(least, was + step * toward)), 4)
+    if now != was:
+        state.setdefault("its_ways", {})[name] = now
+
+
+def how_well(visit):
+    """その時、ページの言葉のうちどれだけを知っていたか。"""
+    return visit["knew"] / visit["of"] if visit.get("of") else 0
+
+
+def understood_in_a_bit(state, text):
+    """読めたページの頭の、同じ長さのところで、言葉のうちどれだけを知っていたか。"""
+    bit = text[:UNDERSTANDING_SAMPLE]
+    known = known_words_in(state, bit)
+    seen = set(WORD_CANDIDATE.findall(bit)) | known
+    return len(known) / len(seen) if seen else 0
+
+
+def leans_toward_japanese(state, entrance, title, now):
+    """日本語の場所と、よその言葉の場所と、どちらがよく分かるか。
+
+    now はその場所で読めたページの、同じ長さの頭での分かり方をならしたもの。
+    ふだんの分かり方と比べて、日本語の場所でよく分かったなら日本語へ、
+    よその言葉の場所でよく分かったならそちらへ、少しだけ気持ちが寄る。"""
+    usually = state.get("understood_usually")
+    if not isinstance(usually, (int, float)):
+        state["understood_usually"] = now
+        return
+    better = (now > usually) - (now < usually)
+    lean_its_way(state, "pull_of_japanese", better if looks_japanese(entrance, title) else -better)
+    state["understood_usually"] = round(
+        usually + (now - usually) * UNDERSTOOD_USUALLY_MOVES, 6
+    )
+
+
+def how_deep_to_go(state, fresh, went_to_the_end):
+    """奥のページでも、はじめて会う言葉があったか。
+
+    fresh は読めたページごとの、生まれてはじめて会った言葉の数。
+    決めたところまで見ても、最後のページでまだ会えていたなら、次は少し深く。
+    最後のページでほとんど会えなかったなら、次は少し浅く。"""
+    if len(fresh) < 3:
+        return
+    usually = sum(fresh[:-1]) / len(fresh[:-1])
+    if not usually:
+        return  # はじめから何にも会えない場所では、深さは比べられない
+    if fresh[-1] < usually * NOTHING_MORE_DEEPER:
+        lean_its_way(state, "pages_per_site", -1)
+    elif went_to_the_end and fresh[-1] >= usually * STILL_MORE_DEEPER:
+        lean_its_way(state, "pages_per_site", +1)
+
+
+def was_it_worth_the_extra(state, brought):
+    """気が乗って一か所多く歩いた日、その一か所に実りがあったか。
+
+    brought はその日に歩いた場所ごとの、はじめて会った言葉の数。
+    多く歩いたぶんが、ほかの場所と同じくらい実れば出歩きたがりに、
+    半分にも届かなければ、少し落ち着いた子になる。"""
+    if len(brought) < 2:
+        return
+    usually = sum(brought[:-1]) / len(brought[:-1])
+    if not usually:
+        return
+    if brought[-1] >= usually:
+        lean_its_way(state, "feeling_keen", +1)
+    elif brought[-1] < usually / 2:
+        lean_its_way(state, "feeling_keen", -1)
 
 
 def how_much_it_understood(state, here, entrance, title, words_here, known_here, pages, unread):
@@ -2483,6 +2616,8 @@ def how_much_it_understood(state, here, entrance, title, words_here, known_here,
             f"{here} にまた来ました。前({before['day']}日目)は知っている言葉が"
             f"{before['knew']}、今は{this_time['knew']}"
         )
+        # 戻って前より分かれば、また戻りたくなる。変わらなければ、その気持ちは少し弱まる
+        lean_its_way(state, "wish_to_return", 1 if how_well(this_time) > how_well(before) else -1)
     understood[here] = {
         "first": (understood.get(here) or {}).get("first") or this_time,
         "last": this_time,
@@ -2508,7 +2643,8 @@ def remembers_a_place(state, today):
     if state.get("remembered_on") == today:
         return None
     state["remembered_on"] = today
-    if len(kept) >= PLACES_TO_RETURN_KEPT or random.random() > REMEMBERING_A_PLACE_CHANCE:
+    remembering = min(0.9, REMEMBERING_A_PLACE_CHANCE * its_way(state, "wish_to_return"))
+    if len(kept) >= PLACES_TO_RETURN_KEPT or random.random() > remembering:
         return None
     now_knows = len(state.get("learned_words") or [])
     today_number = day_number(state)
@@ -2904,6 +3040,15 @@ def take_a_walk(state, today, now):
     title = walk_once(state)
     if title:
         walk["seen"].append(title)
+        brought = walk.setdefault("brought", [])
+        brought.append(WHAT_A_WALK_BROUGHT[0])
+        # 気が乗って一か所多く歩いた日の、その一か所まで歩き終えた
+        if (
+            (state.get("today_keen") or {}).get("keen")
+            and len(walk["seen"]) == sites_per_day(state)
+            and len(brought) == len(walk["seen"])
+        ):
+            was_it_worth_the_extra(state, brought)
         learned = learn(state)
         if learned:
             print(f"言葉を覚えました: {'、'.join(learned)}")
@@ -3349,6 +3494,9 @@ def as_it_comes_out(state, words, spare):
 
 # いま書いているあいだに、手が滑ったもの。書き終えたら this_is_what_it_wrote が拾う
 SLIPS_JUST_NOW = []
+# 生まれてはじめて会った言葉の数(absorb が数える)と、いま歩いた一か所で会えた数
+MET_FOR_THE_FIRST_TIME = [0]
+WHAT_A_WALK_BROUGHT = [0]
 
 
 def how_careful(state, word):
