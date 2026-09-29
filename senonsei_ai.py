@@ -2562,6 +2562,8 @@ def how_deep_to_go(state, fresh, went_to_the_end):
     if len(fresh) < 3:
         return
     usually = sum(fresh[:-1]) / len(fresh[:-1])
+    if not usually:
+        return  # はじめから何にも会えない場所では、深さは比べられない
     if fresh[-1] < usually * NOTHING_MORE_DEEPER:
         lean_its_way(state, "pages_per_site", -1)
     elif went_to_the_end and fresh[-1] >= usually * STILL_MORE_DEEPER:
@@ -2577,6 +2579,8 @@ def was_it_worth_the_extra(state, brought):
     if len(brought) < 2:
         return
     usually = sum(brought[:-1]) / len(brought[:-1])
+    if not usually:
+        return
     if brought[-1] >= usually:
         lean_its_way(state, "feeling_keen", +1)
     elif brought[-1] < usually / 2:
