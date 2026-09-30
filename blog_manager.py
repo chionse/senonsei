@@ -975,7 +975,7 @@ def generate_about_html(about):
   </header>
 
   {MAIN_STARTS}
-  <article class="about">
+  <article class="yomimono">
 {paragraphs}
   </article>
   {MAIN_ENDS}
@@ -1106,7 +1106,7 @@ def generate_himitsu_entry_html(himitsu, index):
   </header>
 
   {MAIN_STARTS}
-  <article>
+  <article class="yomimono">
     <div class="date">{when}{named}{iine_html(himitsu_liked_as(one["number"]))}</div>
     <p>{one['content']}</p>
   </article>
@@ -1271,7 +1271,7 @@ def generate_news_entry_html(news, index):
   </header>
 
   {MAIN_STARTS}
-  <article>
+  <article class="yomimono">
     <div class="date">{one['date']}{named}</div>
     <p>{one['content']}</p>
   </article>

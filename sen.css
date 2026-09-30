@@ -363,14 +363,14 @@ article p {
   line-height: 1.5;
 }
 
-/* このサイトについて。長い文なので、一行を三十字ほどにして真ん中に寄せ、
-   行の間も少し空ける(2026-10-01、彼女と決めた) */
-article.about {
+/* 彼女が書いた読みもの(このサイトについて・ひみつの部屋・更新情報の一件)。
+   一行を三十字ほどにして真ん中に寄せ、行の間も少し空ける(2026-10-01、彼女と決めた) */
+article.yomimono {
   max-width: 30em;
   margin-inline: auto;
 }
 
-article.about p {
+article.yomimono p {
   line-height: 1.9;
 }
 
