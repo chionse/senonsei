@@ -216,6 +216,9 @@ def side_panel(state, here):
             now.append(f'      <p class="side-fact">{its_age(born, today)}</p>')
     except ValueError:
         pass
+    # 覚えた言葉の数。彼女の書き方のまま(2026-09-30)
+    vocabulary = len([one for one in (state.get("learned_words") or []) if one])
+    now.append(f'      <p class="side-fact">覚えた言葉 {vocabulary}個</p>')
     if now:
         blocks.append(one_side_block("成長記録", now))
 
@@ -347,11 +350,22 @@ def how_it_grows(state):
 
     表を直接読む。記録に写しておく形にしていた時は、
     名前を直しても次の散歩まで古いままだった。"""
-    ladder = [name for _, name, _ in GROWTH_STAGES] + [FULL_STAGE[0]]
+    ladder = [(name, limit) for limit, name, _ in GROWTH_STAGES] + [(FULL_STAGE[0], None)]
     now = current_stage(state)[0]
+    vocabulary = len([one for one in ((state or {}).get("learned_words") or []) if one])
+
+    def how_far(name, limit):
+        # 今いる段にだけ、覚えた数と、次の段に上がる数を添える(2026-09-30、彼女と決めた)
+        if name != now:
+            return name
+        # 欄が細いので、数は段の名前の下に一行で置く。途中で折り返さない
+        if limit is None:
+            return f'{name}<span class="dan-kazu">（{vocabulary}個）</span>'
+        return f'{name}<span class="dan-kazu">（{vocabulary}個 / {limit}個）</span>'
+
     return [
-        f'      <p class="dan{" here" if one == now else ""}">{one}</p>'
-        for one in ladder
+        f'      <p class="dan{" here" if name == now else ""}">{how_far(name, limit)}</p>'
+        for name, limit in ladder
     ]
 
 
@@ -1050,9 +1064,61 @@ def generate_himitsu_entry_html(himitsu, index):
         f.write(html)
 
 
-def news_page_name(date_str):
-    """その一件だけのページの名前。"""
-    return f"{NEWS_PAGE[: -len('.html')]}-{date_str}.html"
+def news_page_name(one):
+    """その一件だけのページの名前。ふつうは日付で、同じ日に並ぶものは印を足す。"""
+    return f"{NEWS_PAGE[: -len('.html')]}-{one.get('page') or one['date']}.html"
+
+
+# メモが開いた日に、更新情報に自然と並ぶ一行。彼女の言葉のまま(2026-09-30)。
+# 開いた言葉や中身は書かない
+MEMO1_OPENED = "メモ１が解除されました。"  # 一つだけの日
+MEMO1_OPENED_MANY = "メモ１が{}つ解除されました。"  # 二つ以上の日
+MEMO2_OPENED = "メモ２が解除されました。"
+WIDE_DIGITS = str.maketrans("0123456789", "０１２３４５６７８９")
+
+
+def memos_opened_news(keywords, menu_items, articles):
+    """メモ1とメモ2が開いた日を、更新情報の形で並べる。
+
+    メモ1は同じ日に開いた数をまとめて一行に(一つだけの日は数を言わない)。
+    メモ2は数を言わずに一行。
+    メモ2のうち、この子にだけ届けてメモ2の一覧に並べない手紙(on_page が false)と、
+    まだ中身の書かれていない枠は数えない。
+    news.json には書かない。あちらは彼女が書くところ。"""
+    opened = {}
+    for kw in keywords or []:
+        if kw.get("unlocked") and kw.get("unlocked_date"):
+            opened[kw["unlocked_date"]] = opened.get(kw["unlocked_date"], 0) + 1
+    news = [
+        {"date": day,
+         "content": MEMO1_OPENED if count == 1
+         else MEMO1_OPENED_MANY.format(str(count).translate(WIDE_DIGITS)),
+         "page": f"{day}-memo1"}
+        for day, count in opened.items()
+    ]
+
+    start_date = blog_start_date(articles)
+    elapsed = max(0, (today_in_japan() - start_date).days)
+    letter_days = set()
+    for item in menu_items or []:
+        if not item.get("on_page", True) or elapsed < item.get("unlock_day", 0):
+            continue
+        written = item.get("_shut") or (
+            (item.get("message") or "").strip()
+            and not fuuin.NOT_WRITTEN_YET.match((item.get("message") or "").strip())
+        )
+        if written:
+            letter_days.add((start_date + datetime.timedelta(days=item["unlock_day"])).isoformat())
+    news += [
+        {"date": day, "content": MEMO2_OPENED, "page": f"{day}-memo2"}
+        for day in letter_days
+    ]
+    return news
+
+
+def all_news(keywords, menu_items, articles):
+    """彼女が書いた更新情報と、メモが開いた知らせを、新しい順に一つにする。"""
+    return sorted_articles(load_news() + memos_opened_news(keywords, menu_items, articles))
 
 
 def news_title(one):
@@ -1077,7 +1143,7 @@ def news_rows(news, how_many=None):
     """日付と見出しを一列に並べる。トップでも一覧でも同じ形。"""
     return "\n".join(
         f'    <li><span class="date">{one["date"]}</span>'
-        f'<a href="{news_page_name(one["date"])}">{news_title(one)}</a></li>'
+        f'<a href="{news_page_name(one)}">{news_title(one)}</a></li>'
         for one in (news[:how_many] if how_many else news)
     )
 
@@ -1126,7 +1192,7 @@ def generate_news_entry_html(news, index):
     def step(entry, label):
         if not entry:
             return f'<span class="here">{label}</span>'
-        return (f'<a href="{news_page_name(entry["date"])}">'
+        return (f'<a href="{news_page_name(entry)}">'
                 f'{label}　{news_title(entry)}</a>')
 
     named = f'<span class="article-title">{one["title"]}</span>' if one.get("title") else ""
@@ -1159,7 +1225,7 @@ def generate_news_entry_html(news, index):
 </body>
 </html>
 """
-    with open(news_page_name(one["date"]), "w", encoding="utf-8") as f:
+    with open(news_page_name(one), "w", encoding="utf-8") as f:
         f.write(html)
 
 
@@ -1176,7 +1242,7 @@ def all_news_pages(news):
     """更新情報に関わるページを全部。欄や版を付けて回るために使う。"""
     if not news:
         return []
-    return [NEWS_PAGE] + [news_page_name(one["date"]) for one in news]
+    return [NEWS_PAGE] + [news_page_name(one) for one in news]
 
 
 def load_likes():
@@ -1703,7 +1769,7 @@ def what_it_meant_to_do(plan, first):
     return f"（初めは{was_hour}時頃に書くつもりでしたが、{now_hour}時頃に変更したようです。）"
 
 
-def generate_index_html(articles, state=None):
+def generate_index_html(articles, state=None, news=None):
     ordered = sorted_articles(articles)
     state = state or load_senonsei_state()
     plan = state.get("today_plan") or {}
@@ -1759,9 +1825,10 @@ def generate_index_html(articles, state=None):
         else:
             recent_html = ""
 
-    # 彼女が書いた更新情報。一件も無い日は、見出しごと出さない。
+    # 彼女が書いた更新情報と、メモが開いた知らせ。一件も無い日は、見出しごと出さない。
     # 空の見出しだけが残っているのは、間が抜けている
-    news = load_news()
+    if news is None:
+        news = load_news()
     news_html = ""
     if news:
         news_html = f"""
@@ -1935,14 +2002,16 @@ def regenerate_pages(articles):
         print("封を開ける鍵:", "あり" if fuuin.the_key() else "なし")
     generate_kakodogu_html(articles)
     state = load_senonsei_state()
-    generate_index_html(articles, state)
+    # メモが開いたかを先に確かめる。開いた日は、トップの更新情報にも並ぶ
     keywords = update_keywords(articles)
-    generate_memo_html(keywords, load_menu(), articles)
+    menu = load_menu()
+    news = all_news(keywords, menu, articles)
+    generate_index_html(articles, state, news)
+    generate_memo_html(keywords, menu, articles)
     generate_profile_html(state)
     generate_comments_html(load_comments())
 
-    # 彼女が書いた更新情報。一覧と、一件ずつのページ
-    news = load_news()
+    # 彼女が書いた更新情報と、メモが開いた知らせ。一覧と、一件ずつのページ
     for index in range(len(news)):
         generate_news_entry_html(news, index)
     if news:
