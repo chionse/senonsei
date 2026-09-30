@@ -1845,9 +1845,9 @@ def generate_index_html(articles, state=None, news=None):
     comments = load_comments()
     comments_html = render_comments(comments[:COMMENTS_ON_TOP])
     if len(comments) > COMMENTS_ON_TOP:
+        # 直近のブログや更新情報と同じ形にそろえる(2026-09-30、彼女と決めた)
         all_comments_html = (
-            '\n  <div class="more-link"><a href="comments.html">'
-            f"コメントをぜんぶ見る({len(comments)}件)</a></div>"
+            '\n  <div class="more-link"><a href="comments.html">More...</a></div>'
         )
     else:
         all_comments_html = ""
