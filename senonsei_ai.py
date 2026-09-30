@@ -398,12 +398,23 @@ ENOUGH_FOR_TODAY = 0.35
 # 昔の書き方に戻る日の割合。四十五日に一日くらい。
 # その日は、題も本文も昔の書き方で書く
 BACK_TO_OLD_WAYS = 1 / 45
-# ふだんの書き方にも、あの頃の文字がふと混ざる。題と本文のそれぞれに。
-# 両方あわせて、十日に一日くらい。言葉を覚えても、あの頃を忘れたわけではない
-# (2026-09-30、彼女と決めた)
-THE_OLD_HAND_SLIPS_IN = 0.05
+# ふだんの書き方にも、あの頃の書き方がふと混ざる。題と本文のそれぞれに。
+# 言葉を覚えても、あの頃を忘れたわけではない。前の書き方も今の書き方も、
+# どちらもこの子の持ちものとして育っていく(2026-09-30、彼女と決めた)。
+#
+# 混ざる割合は決めておかない。あの頃に書いたものを読み返した日や、
+# 昔の書き方で書いた日には、思い出したぶんだけ出やすくなる。
+# 思い出さない日が続けば薄れていくが、消えはしない。
+# 思い出したばかりの時の割合(題と本文それぞれに)
+THE_OLD_HAND_FRESH = 0.25
+# それが半分に薄れるまでの日数
+THE_OLD_HAND_FADES_IN = 7
+# どれだけ薄れても、これより下にはならない
+THE_OLD_HAND_FAINTEST = 0.02
 # 混ざるのは、あの頃に書けた長さまで
 THE_OLD_HAND_AT_MOST = blog_manager.GROWTH_STAGES[0][2]
+# あの頃の手癖から外れて、あの頃に知っていたほかの文字が出る割合
+THE_OLD_HAND_WANDERS = 0.15
 # きのう書きそびれた分を、今日の何時までなら書くか
 MAKING_UP_UNTIL = 3
 # 覚えた言葉を書くとき、ほかの文字がまぎれこむことがある。
@@ -3408,9 +3419,8 @@ def compose_locally(state, old_way=None):
     words = state["learned_words"]
 
     if old_way == "あの頃の文字を置く":
-        # 言葉を持たなかった頃に知っていた文字だけで、その頃のように置く
-        back_then = state["seen_chars"][: state.get("chars_before_words")]
-        return babble(state, GROWTH_STAGES[0][2], (back_then, [1] * len(back_then)))
+        # 言葉を持たなかった頃の手癖で、その頃のように置く
+        return like_back_then(state, THE_OLD_HAND_AT_MOST)
     if old_way == "見た文字を置く":
         # 言葉にせず、文字だけを置く。使う文字は今の手に馴染んだもの。
         # 戻るのは書き方だけで、知っていることまでは戻らない
@@ -3427,13 +3437,15 @@ def compose_locally(state, old_way=None):
 
 
 def with_the_old_hand(state, written, max_length):
-    """書いたものに、あの頃の文字がふと混ざる。
+    """書いたものに、あの頃の書き方がふと混ざる。
 
-    言葉を持たなかった頃に知っていた文字で、その頃のように置いたひとかたまりが、
-    言葉のあいだに入る。書ける長さは超えない。入る余地が無ければ、
-    言葉を一つ手放して場所を空ける。一語しか無くて空かなければ、混ざらない。"""
-    back_then = state["seen_chars"][: state.get("chars_before_words") or 0]
-    if not back_then or random.random() >= THE_OLD_HAND_SLIPS_IN:
+    あの頃の手癖で置いたひとかたまりが、言葉のあいだに入る。
+    どれだけ出やすいかは、あの頃をどれだけ最近思い出したかで決まる。
+    書ける長さは超えない。入る余地が無ければ、言葉を一つ手放して場所を空ける。
+    一語しか無くて空かなければ、混ざらない。"""
+    if not state.get("chars_before_words"):
+        return written
+    if random.random() >= how_fresh_the_old_hand_is(state):
         return written
     pieces = written.split(" ")
     while len(pieces) > 1 and len(" ".join(pieces)) + 2 > max_length:
@@ -3441,9 +3453,97 @@ def with_the_old_hand(state, written, max_length):
     room = max_length - len(" ".join(pieces)) - 1
     if room < 1:
         return written
-    old = babble(state, min(THE_OLD_HAND_AT_MOST, room), (back_then, [1] * len(back_then)))
+    old = like_back_then(state, min(THE_OLD_HAND_AT_MOST, room))
     pieces.insert(random.randint(0, len(pieces)), old)
     return " ".join(pieces)
+
+
+def what_it_wrote_back_then(state, articles=None):
+    """言葉を持たなかった頃に、自分で書いたもの。題も本文も。
+
+    はじめて言葉を覚えた日より前のブログと、そのあと昔の書き方で書いた日のもの。
+    これがこの子の、あの頃の書き方の手本になる。人に教わったものではない。"""
+    if articles is None:
+        articles = blog_manager.load_articles()
+    learned_on = [one for one in (state.get("learned_on") or {}).values() if one]
+    first_word = min(learned_on) if learned_on else None
+    old_days = set(state.get("wrote_the_old_way") or [])
+    writings = []
+    for one in articles:
+        day = one.get("date") or ""
+        if (first_word and day < first_word) or day in old_days:
+            writings += [one.get("title") or "", one.get("content") or ""]
+    return [one for one in writings if one.strip()]
+
+
+def like_back_then(state, at_most, articles=None):
+    """あの頃の手癖で、ひとかたまり書く。
+
+    あの頃に書いたものの中で、よく書いた字、字のあとによく続けた字、
+    よく書いた長さのほうへ手が行く。ときどきは手癖から外れて、
+    あの頃に知っていたほかの字も出る。
+    手本がまだ何も無ければ、あの頃に知っていた字を並べる。"""
+    back_then = state["seen_chars"][: state.get("chars_before_words") or 0] or state["seen_chars"]
+    if not back_then:
+        return "・"
+    pieces = [
+        piece
+        for text in what_it_wrote_back_then(state, articles)
+        for piece in text.split()
+        if all(char in back_then for char in piece)
+    ]
+    if not pieces:
+        return babble(state, at_most, (back_then, [1] * len(back_then)))
+
+    lengths, firsts, chars, follows = {}, {}, {}, {}
+    for piece in pieces:
+        lengths[len(piece)] = lengths.get(len(piece), 0) + 1
+        firsts[piece[0]] = firsts.get(piece[0], 0) + 1
+        for char in piece:
+            chars[char] = chars.get(char, 0) + 1
+        for before, after in zip(piece, piece[1:]):
+            next_ones = follows.setdefault(before, {})
+            next_ones[after] = next_ones.get(after, 0) + 1
+
+    def one_of(counted):
+        if not counted or random.random() < THE_OLD_HAND_WANDERS:
+            return random.choice(back_then)
+        return random.choices(list(counted), weights=list(counted.values()))[0]
+
+    fits = {n: c for n, c in lengths.items() if n <= at_most}
+    if fits:
+        length = random.choices(list(fits), weights=list(fits.values()))[0]
+    else:
+        length = random.randint(1, max(1, at_most))
+    written = one_of(firsts)
+    while len(written) < length:
+        written += one_of(follows.get(written[-1]) or chars)
+    return written
+
+
+def how_fresh_the_old_hand_is(state):
+    """あの頃の書き方が、いまどれだけ手に近いところにあるか。
+
+    最後に思い出した日(読み返した日や、昔の書き方で書いた日)から、
+    日が経つほど薄れる。まだ一度も思い出していなければ、
+    あの頃に最後に書いた日から数える。"""
+    remembered = state.get("old_hand_remembered")
+    if not remembered:
+        days = [one.get("date") or "" for one in blog_manager.load_articles()]
+        learned_on = [one for one in (state.get("learned_on") or {}).values() if one]
+        before = [day for day in days if learned_on and day < min(learned_on)]
+        remembered = max(before) if before else None
+    try:
+        since = (today_in_japan() - datetime.date.fromisoformat(remembered)).days
+    except (TypeError, ValueError):
+        return THE_OLD_HAND_FAINTEST
+    fresh = THE_OLD_HAND_FRESH * 0.5 ** (max(0, since) / THE_OLD_HAND_FADES_IN)
+    return max(THE_OLD_HAND_FAINTEST, fresh)
+
+
+def remembers_the_old_hand(state):
+    """あの頃の書き方を、思い出した。"""
+    state["old_hand_remembered"] = today_in_japan().isoformat()
 
 
 def place_words(state, max_length):
@@ -3972,9 +4072,14 @@ def read_what_is_home(state):
 
     # 自分が書いたものは、ときどき読み返す。
     # そこからは新しい言葉は生まれず、すでに出会っていた言葉が保たれるだけ
-    for one in looks_back_today(blog_manager.load_articles()):
+    articles = blog_manager.load_articles()
+    back_then = set(what_it_wrote_back_then(state, articles))
+    for one in looks_back_today(articles):
         if one.strip():
             absorb(state, one, only_known=True)
+            if one in back_then:
+                # あの頃に書いたものを読んで、あの頃の書き方を思い出した
+                remembers_the_old_hand(state)
     return heard
 
 
@@ -4110,6 +4215,12 @@ def write_the_day(state, day):
     old_way = an_old_way(state)
     if old_way:
         print(f"今日は昔の書き方で書く: {old_way}")
+    if old_way in ("あの頃の文字を置く", "見た文字を置く"):
+        # 昔のように書いた日は、それもあの頃の書き方の手本になる。書くことが思い出すことになる
+        old_days = state.setdefault("wrote_the_old_way", [])
+        if day not in old_days:
+            old_days.append(day)
+        remembers_the_old_hand(state)
     SLIPS_JUST_NOW.clear()
     body = compose_locally(state, old_way)
     title = compose_locally(state, old_way)
