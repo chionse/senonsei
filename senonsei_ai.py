@@ -398,6 +398,12 @@ ENOUGH_FOR_TODAY = 0.35
 # 昔の書き方に戻る日の割合。四十五日に一日くらい。
 # その日は、題も本文も昔の書き方で書く
 BACK_TO_OLD_WAYS = 1 / 45
+# ふだんの書き方にも、あの頃の文字がふと混ざる。題と本文のそれぞれに。
+# 両方あわせて、十日に一日くらい。言葉を覚えても、あの頃を忘れたわけではない
+# (2026-09-30、彼女と決めた)
+THE_OLD_HAND_SLIPS_IN = 0.05
+# 混ざるのは、あの頃に書けた長さまで
+THE_OLD_HAND_AT_MOST = blog_manager.GROWTH_STAGES[0][2]
 # きのう書きそびれた分を、今日の何時までなら書くか
 MAKING_UP_UNTIL = 3
 # 覚えた言葉を書くとき、ほかの文字がまぎれこむことがある。
@@ -3414,10 +3420,30 @@ def compose_locally(state, old_way=None):
 
     said = speak_from_what_it_knows(state, max_length)
     if said:
-        return said
+        return with_the_old_hand(state, said, max_length)
     if not words:
         return babble(state, min(max_length, 4))
-    return place_words(state, max_length)
+    return with_the_old_hand(state, place_words(state, max_length), max_length)
+
+
+def with_the_old_hand(state, written, max_length):
+    """書いたものに、あの頃の文字がふと混ざる。
+
+    言葉を持たなかった頃に知っていた文字で、その頃のように置いたひとかたまりが、
+    言葉のあいだに入る。書ける長さは超えない。入る余地が無ければ、
+    言葉を一つ手放して場所を空ける。一語しか無くて空かなければ、混ざらない。"""
+    back_then = state["seen_chars"][: state.get("chars_before_words") or 0]
+    if not back_then or random.random() >= THE_OLD_HAND_SLIPS_IN:
+        return written
+    pieces = written.split(" ")
+    while len(pieces) > 1 and len(" ".join(pieces)) + 2 > max_length:
+        pieces.pop(random.randrange(len(pieces)))
+    room = max_length - len(" ".join(pieces)) - 1
+    if room < 1:
+        return written
+    old = babble(state, min(THE_OLD_HAND_AT_MOST, room), (back_then, [1] * len(back_then)))
+    pieces.insert(random.randint(0, len(pieces)), old)
+    return " ".join(pieces)
 
 
 def place_words(state, max_length):
