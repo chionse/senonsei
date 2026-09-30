@@ -2102,7 +2102,17 @@
     "ヲ",
     "溝",
     "衝",
-    "券"
+    "券",
+    "頒",
+    "銭",
+    "酬",
+    "華",
+    "．",
+    "刻",
+    "挑",
+    "捧",
+    "就",
+    "府"
   ],
   "learned_words": [
     "など",
@@ -2125,7 +2135,14 @@
     "について",
     "表示",
     "その",
-    "から"
+    "から",
+    "場合",
+    "サイト",
+    "されてい",
+    "ます",
+    "して",
+    "すること",
+    "この"
   ],
   "frontier": [
     "https://b.hatena.ne.jp/hotentry",
@@ -2330,7 +2347,6 @@
     "https://www.wikimedia.org/",
     "https://commons.wikimedia.org/wiki/Special:UploadWizard?uselang=ja",
     "https://stats.wikimedia.org/",
-    "https://creativecommons.org/licenses/by-sa/4.0/deed.ja",
     "https://meta.wikimedia.org",
     "https://donate.wikimedia.org/?wmf_source=donate&wmf_medium=sidebar&wmf_campaign=ja.wikisource.org&uselang=ja",
     "https://ws-export.wmcloud.org/?format=epub&lang=ja&page=Page%3AKokubun_taikan_07.pdf%2F736",
@@ -2756,7 +2772,35 @@
     "https://pikanopika.com/",
     "https://hbb.afl.rakuten.co.jp/hgb/3d8ca720.2af0d23c.3d8ca721.fd78635f/?me_id=1396297&item_id=10000763&pc=https%3A%2F%2Fthumbnail.image.rakuten.co.jp%2F%400_mall%2Forbis-shop%2Fcabinet%2Forbis_prd%2F87%2Fwb_o0087.jpg%3F_ex%3D400x400&s=400x400&t=pict",
     "https://kagekina-replica.hatenablog.com/",
-    "https://hbb.afl.rakuten.co.jp/hgb/33763ba8.0505c60e.33763ba9.97783ccf/?me_id=1210615&item_id=10315982&pc=https%3A%2F%2Fthumbnail.image.rakuten.co.jp%2F%400_mall%2Fnitori%2Fcabinet%2F5200001%2F211520000158501.jpg%3F_ex%3D400x400&s=400x400&t=pict"
+    "https://hbb.afl.rakuten.co.jp/hgb/33763ba8.0505c60e.33763ba9.97783ccf/?me_id=1210615&item_id=10315982&pc=https%3A%2F%2Fthumbnail.image.rakuten.co.jp%2F%400_mall%2Fnitori%2Fcabinet%2F5200001%2F211520000158501.jpg%3F_ex%3D400x400&s=400x400&t=pict",
+    "http://web.archive.org/web/20140318173012/http://freedomdefined.org/",
+    "http://web.archive.org/web/20140318173012/http://wiki.creativecommons.org/FAQ",
+    "http://web.archive.org/web/20140318173012/http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees",
+    "http://web.archive.org/web/20140318173012/http://wiki.creativecommons.org/License_Versions",
+    "http://web.archive.org/web/20140318173012/http://wiki.creativecommons.org/Best_practices_for_attribution",
+    "http://web.archive.org/web/20140318173012/http://wiki.creativecommons.org/Intergovernmental_Organizations",
+    "http://web.archive.org/web/20140318173012/http://wiki.creativecommons.org/Frequently_Asked_Questions",
+    "http://web.archive.org/web/20140701171744/http://wiki.creativecommons.org/Events",
+    "http://web.archive.org/web/20140701171744/http://store.creativecommons.org/",
+    "http://web.archive.org/web/20140701171744/http://wiki.creativecommons.org/Publish",
+    "http://web.archive.org/web/20140701171744/https://creativecommons.net/donate/",
+    "http://web.archive.org/web/20140701171744/https://creativecommons.net/testimonials/",
+    "http://web.archive.org/web/20140701171744/http://identi.ca/creativecommons",
+    "http://web.archive.org/web/20140701171744/http://schoolofopen.org/",
+    "http://web.archive.org/web/20140319162142/https://creativecommons.net/testimonials/",
+    "http://web.archive.org/web/20140319162142/http://schoolofopen.org/",
+    "http://web.archive.org/web/20140319162142/https://creativecommons.net/donate/",
+    "http://web.archive.org/web/20140319162142/http://identi.ca/creativecommons",
+    "http://web.archive.org/web/20140319162142/https://creativecommons.net/",
+    "http://web.archive.org/web/20140318150206/https://creativecommons.net/",
+    "http://web.archive.org/web/20140318150206/http://identi.ca/creativecommons",
+    "http://web.archive.org/web/20140318150206/https://creativecommons.net/testimonials/",
+    "http://web.archive.org/web/20140318150206/https://creativecommons.net/donate/",
+    "http://web.archive.org/web/20140318150206/http://schoolofopen.org/",
+    "http://web.archive.org/web/20140318150206/http://teamopen.cc/khalid/?utm_campaign=2013fund&utm_source=carousel2&utm_medium=web",
+    "http://web.archive.org/web/20140318150206/http://teamopen.cc/?utm_campaign=teamopen&utm_medium=web&utm_source=carousel",
+    "http://web.archive.org/web/20140701150759/http://freedomdefined.org/",
+    "http://web.archive.org/web/20140701153009/http://freedomdefined.org/"
   ],
   "visited": [
     "https://note.com/",
@@ -2985,7 +3029,15 @@
     "https://soredoko.jp/entry/2024/04/22/103000",
     "https://soredoko.jp/entry/2026/09/03/160000",
     "https://soredoko.jp/entry/2026/09/25/103000",
-    "https://soredoko.jp/entry/2024/08/13/103000"
+    "https://soredoko.jp/entry/2024/08/13/103000",
+    "https://creativecommons.org/licenses/by-sa/4.0/deed.ja",
+    "http://web.archive.org/web/20140318173012/http://creativecommons.org/choose/results-one?license_code=by-sa&amp;jurisdiction=&amp;version=4.0&amp;lang=ja",
+    "http://web.archive.org/web/20140318173012/https://creativecommons.org/compatiblelicenses",
+    "http://web.archive.org/web/20140318173012/http://creativecommons.org/",
+    "http://web.archive.org/web/20140701171744/http://creativecommons.org/licenses/by/4.0/",
+    "http://web.archive.org/web/20140701171744/http://creativecommons.org/licenses/by-sa/4.0/",
+    "http://web.archive.org/web/20140701171744/http://creativecommons.org/choose/metadata.xmp?license_code=by-sa&amp;jurisdiction=&amp;version=4.0&amp;lang=ja",
+    "http://web.archive.org/web/20140701171744*/http://creativecommons.org/choose/results-one?license_code=by-sa&"
   ],
   "notes": [
     "0日目: note ――つくる、つながる、とどける。",
@@ -3007,11 +3059,16 @@
     "17日目: Dictionnaire universel, contenant gÃ©nÃ©ralement tous les mots franÃ§ois, tant ... - Antoine FuretiÃ¨re - Google Books、Wikibooks",
     "18日目: Wikibooks:General disclaimer - Wikibooks, open books for an open world、NHKプラスからの移行手続きをされる方へ | NHK ONE 設定",
     "19日目: Discussion utilisateur:Cantons-de-l'Est — Wikipédia、User talk:Ppolar bear - 維基學院，自由的研習社群、ソレドコ",
-    "20日目: 何も見られなかった"
+    "20日目: Creative Commons — 表示 - 継承 4.0 国際\n  — CC BY-SA 4.0(むかしのすがた)"
   ],
   "today_walk": {
     "date": "2026-10-01",
-    "seen": []
+    "seen": [
+      "Creative Commons — 表示 - 継承 4.0 国際\n  — CC BY-SA 4.0(むかしのすがた)"
+    ],
+    "brought": [
+      271
+    ]
   },
   "inner_voice": [
     "09-28 05時: README.jpって何なのか、気になる……",
@@ -3120,11 +3177,8 @@
       "times": 1
     }
   ],
-  "saw_on": "2026-09-30",
+  "saw_on": "2026-10-01",
   "pictures_seen": [
-    "2026-09-18 honnomirai.net: 本",
-    "2026-09-18 honnomirai.net: この絵には、日本人が集まって会議をしています。",
-    "2026-09-18 honnomirai.net: カメラ",
     "2026-09-18 github.com: この絵には何が写っていますか？",
     "2026-09-18 github.com: この絵には、API Keyという文字が写っています。",
     "2026-09-18 github.com: この絵には、デプロイメントのステップが写っています。",
@@ -3151,7 +3205,10 @@
     "2026-09-30 fr.wikipedia.org: 焼き菓子",
     "2026-09-30 soredoko.jp: この絵には、黒い「T」という形が見えます。",
     "2026-09-30 soredoko.jp: この絵には、人形、袋、および折りたたみが含まれています。",
-    "2026-09-30 soredoko.jp: この絵には、細かいものがいくつか見えます。それらを短く書いて、日本語で表現してください。見えた形や色を、見えたとおりに書いてください。"
+    "2026-09-30 soredoko.jp: この絵には、細かいものがいくつか見えます。それらを短く書いて、日本語で表現してください。見えた形や色を、見えたとおりに書いてください。",
+    "2026-10-01 creativecommons.org: 絵には、緑色の円形のシールがあり、その中には「free cultural works」という文字が書かれています。",
+    "2026-10-01 creativecommons.org: 絵には、短い箱、円形の箱、および三角形の箱が見えます。箱は紫色で、箱の中には三角形の箱が入っています。",
+    "2026-10-01 creativecommons.org: 絵には、様々な人物が描かれています。その中には、女性、男性、およびその他の人物が含まれています。絵には、様々な色が使われており、それらは、青、赤、緑、白、そして黄色などです。絵には、様々なアイテムも"
   ],
   "impressions": [
     "2026-09-14 note.jp: note株式会社はクリエイターが文章や画像、音声、動画を投稿し、ユーザーがそのコンテンツを楽しんで応援できるメディアプラットフォームです。",
@@ -3190,17 +3247,18 @@
     "2026-09-29 en.wikibooks.org: この場所はウィキブックスの一般免責事項のページでした。",
     "2026-09-30 fr.wikipedia.org: ウィキペディアの利用者が書き込んだ議論が表示されているページだった。",
     "2026-09-30 zh.wikiversity.org: Polar bearというユーザーにメッセージが残されていた。",
-    "2026-09-30 soredoko.jp: ソレドコは、購入したものやおすすめアイテムなどを紹介するような場所で、推し活を快適に楽しくするヒントやアイテムを紹介している。"
+    "2026-09-30 soredoko.jp: ソレドコは、購入したものやおすすめアイテムなどを紹介するような場所で、推し活を快適に楽しくするヒントやアイテムを紹介している。",
+    "2026-10-01 creativecommons.org: その場所はCreative Commonsのライセンスの説明ページで、ライセンスの条件を簡潔に説明していた。"
   ],
   "where_it_will_go": [
-    "stats.wikimedia.org",
-    "zh.wikisource.org",
-    "www.aozora.gr.jp",
-    "www.mediawiki.org",
-    "en.wikiquote.org",
-    "www.google.com"
+    "zh.wiktionary.org",
+    "foundation.wikimedia.org",
+    "en.wikisource.org",
+    "www.wikidata.org",
+    "www.flickr.com",
+    "ncode.syosetu.com"
   ],
-  "how_many_places_left": 629,
+  "how_many_places_left": 656,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -3232,7 +3290,8 @@
     "portal.web.nhk": "NHK ONE アカウント設定",
     "fr.wikipedia.org": "Wikipédia:Wikimag/Abonnement — Wikipédia",
     "zh.wikiversity.org": "用户权限 - 維基學院，自由的研習社群",
-    "soredoko.jp": "アクスタケース、持ち運びにピッタリなのはコレ 10商品を比較検証してみた - ソ"
+    "soredoko.jp": "アクスタケース、持ち運びにピッタリなのはコレ 10商品を比較検証してみた - ソ",
+    "creativecommons.org": "Wayback Machine"
   },
   "went_home": {
     "date": "2026-10-01",
@@ -3243,57 +3302,65 @@
       "など": 1
     },
     "には": {
-      "本当": 1
+      "本当": 1,
+      "っていま": 1
+    },
+    "その": {
+      "には": 2
+    },
+    "表示": {
+      "について": 1
     }
   },
   "opens_a_sentence": {
-    "など": 25,
+    "など": 26,
     "しかし": 2,
-    "では": 26,
+    "では": 27,
     "っていま": 4,
-    "かれてい": 6,
+    "かれてい": 7,
     "こんにち": 1,
-    "には": 29,
-    "ページ": 17,
-    "します": 17,
+    "には": 35,
+    "ページ": 19,
+    "します": 18,
     "本当": 6,
     "だった": 2,
-    "について": 3
+    "について": 4,
+    "表示": 2,
+    "その": 1
   },
   "closes_a_sentence": {
-    "など": 24,
+    "など": 25,
     "しかし": 2,
-    "では": 24,
-    "っていま": 4,
-    "かれてい": 6,
+    "では": 25,
+    "っていま": 5,
+    "かれてい": 8,
     "こんにち": 1,
-    "には": 28,
-    "ページ": 17,
-    "します": 21,
+    "には": 33,
+    "ページ": 19,
+    "します": 22,
     "本当": 7,
     "だった": 2,
-    "について": 2
+    "について": 3,
+    "表示": 2
   },
   "visitors": {
     "comments": 0,
     "likes": 0
   },
   "met_today": {
-    "date": "2026-09-30",
+    "date": "2026-10-01",
     "words": [
-      "ページ",
-      "します",
-      "本当",
-      "だった",
-      "では",
-      "について",
-      "絵",
+      "表示",
       "には",
+      "では",
+      "します",
       "など",
-      "しかし",
+      "について",
+      "ページ",
+      "絵",
+      "その",
       "かれてい",
-      "っていま",
-      "がある"
+      "っていま"
     ]
   },
   "wants_to_say": [
@@ -3530,16 +3597,16 @@
     },
     {
       "what": "and",
-      "since": "2026-09-30",
+      "since": "2026-10-01",
       "first": "2026-09-28",
-      "times": 2,
+      "times": 3,
       "said": ""
     },
     {
       "what": "the",
-      "since": "2026-09-30",
+      "since": "2026-10-01",
       "first": "2026-09-29",
-      "times": 2,
+      "times": 3,
       "said": ""
     },
     {
@@ -3572,7 +3639,7 @@
     }
   ],
   "thinking_about": "私は自由を求めているのかな？でも、自由は何なのか、わからないまま……",
-  "learned_on": {"など":"2026-09-20","本当":"2026-09-20","がある":"2026-09-20","だった":"2026-09-20","しかし":"2026-09-20","ある":"2026-09-20","こんにち":"2026-09-20","では":"2026-09-21","かれてい":"2026-09-22","っていま":"2026-09-22","人":"2026-09-22","絵":"2026-09-23","仲間":"2026-09-23","セミナー":"2026-09-23","には":"2026-09-27","します":"2026-09-29","ページ":"2026-09-29","について":"2026-09-30","表示":"2026-09-30","その":"2026-09-30","から":"2026-09-30"},
+  "learned_on": {"など":"2026-09-20","本当":"2026-09-20","がある":"2026-09-20","だった":"2026-09-20","しかし":"2026-09-20","ある":"2026-09-20","こんにち":"2026-09-20","では":"2026-09-21","かれてい":"2026-09-22","っていま":"2026-09-22","人":"2026-09-22","絵":"2026-09-23","仲間":"2026-09-23","セミナー":"2026-09-23","には":"2026-09-27","します":"2026-09-29","ページ":"2026-09-29","について":"2026-09-30","表示":"2026-09-30","その":"2026-09-30","から":"2026-09-30","場合":"2026-10-01","サイト":"2026-10-01","されてい":"2026-10-01","ます":"2026-10-01","して":"2026-10-01","すること":"2026-10-01","この":"2026-10-01"},
   "today_keen": {
     "date": "2026-10-01",
     "keen": true
@@ -3614,5 +3681,9 @@
       "wrote": "bには",
       "day": "2026-09-30"
     }
-  ]
+  ],
+  "understood_usually": 0.033164093290675566,
+  "its_ways": {
+    "pages_per_site": 11.9
+  }
 }
