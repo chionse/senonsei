@@ -253,10 +253,18 @@ header.with-fukidashi .header-middle {
       shimmer 5s linear infinite;
   }
 
-  /* StatCounterは数字をリンクで包み、色を直接書き込んでくる。
+  /* StatCounterは数字をリンクや span で包み、色を直接書き込んでくる。
      直接書かれた色はこちらの指定より強いので、!important で押し返す。
-     ここが透けないと、下に敷いた虹が出てこない */
+     それでも向こうが !important で書いてくると負けるので、
+     文字を塗る色(text-fill-color)のほうも透かしておく。こちらは向こうが触らない。
+     ここが透けないと、下に敷いた虹が出てこない(2026-09-30、数字が黒いままだった) */
   .count,
+  .count * {
+    -webkit-text-fill-color: transparent !important;
+  }
+
+  .count,
+  .count *,
   .count a,
   .count a:link,
   .count a:visited,
