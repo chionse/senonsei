@@ -2,12 +2,6 @@
 
 ## あなたの手が必要なもの
 
-- [ ] **封の鍵(MEMO_KEY)を置く**
-      GitHub → リポジトリ → Settings → Secrets and variables → Actions
-      → New repository secret。Name は `MEMO_KEY`、Secret には
-      渡した `MEMO_KEY.txt` の中身を丸ごと貼る。
-      置いたら知らせる → メモと手紙に封をする(`python3 fuuin.py seal-all`)。
-      それまではメモと手紙が平文のまま、誰でも読める
 - [ ] **いいね・コメントの受け取り口を Cloudflare に貼り直す**
       Cloudflare → Workers & Pages → senonsei-comments → コードを
       `cloudflare-worker/worker.js` の中身で丸ごと置き換え → Deploy。
