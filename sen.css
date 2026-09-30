@@ -363,6 +363,17 @@ article p {
   line-height: 1.5;
 }
 
+/* このサイトについて。長い文なので、一行を三十字ほどにして真ん中に寄せ、
+   行の間も少し空ける(2026-10-01、彼女と決めた) */
+article.about {
+  max-width: 30em;
+  margin-inline: auto;
+}
+
+article.about p {
+  line-height: 1.9;
+}
+
 .section-title {
   font-size: 1rem;
   border-bottom: 1px solid var(--main-color);
