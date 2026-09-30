@@ -358,9 +358,10 @@ def how_it_grows(state):
         # 今いる段にだけ、覚えた数と、次の段に上がる数を添える(2026-09-30、彼女と決めた)
         if name != now:
             return name
+        # 欄が細いので、数は段の名前の下に一行で置く。途中で折り返さない
         if limit is None:
-            return f"{name}（{vocabulary}個）"
-        return f"{name}（{vocabulary}個 / {limit}個）"
+            return f'{name}<span class="dan-kazu">（{vocabulary}個）</span>'
+        return f'{name}<span class="dan-kazu">（{vocabulary}個 / {limit}個）</span>'
 
     return [
         f'      <p class="dan{" here" if name == now else ""}">{how_far(name, limit)}</p>'
