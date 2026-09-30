@@ -3,6 +3,7 @@ import json
 import os
 import re
 import zlib
+from html import escape as escape_html
 
 import fuuin
 
@@ -20,6 +21,9 @@ NEWS_TITLE_LENGTH = 24  # 一覧に出す見出しの長さ。題が無い時は
 # 外から貼られた道が切れないように
 HIMITSU_FILE = "himitsu.json"
 HIMITSU_PAGE = "himitsu.html"
+# このサイトについて。彼女が書いたものを、そのまま一枚に置く(2026-10-01)
+ABOUT_FILE = "about.json"
+ABOUT_PAGE = "about.html"
 # 言い切りの印。ここで一文が終わる
 SENTENCE_ENDINGS = ("。", "！", "？", "!", "?")
 A_SENTENCE_ENDS = re.compile("[" + "".join(SENTENCE_ENDINGS) + "]")
@@ -39,7 +43,11 @@ WHERE_YOU_CAN_GO = (
     ("profile.html", "プロフィール"),
 )
 # 彼女が書いた方。この子のものとは分けて並べる
-WHERE_SHE_WROTE = ((NEWS_PAGE, "更新情報"), (HIMITSU_PAGE, "ひみつの部屋"))
+WHERE_SHE_WROTE = (
+    (ABOUT_PAGE, "このサイトについて"),
+    (NEWS_PAGE, "更新情報"),
+    (HIMITSU_PAGE, "ひみつの部屋"),
+)
 WALKED_SHOWN = 3  # 今日歩いたところを、多くてもこれだけ出す
 LEARNED_SHOWN = 5  # 最近覚えた言葉を、新しいほうからこれだけ出す
 # 気がかりは一つも捨てないので、ここに出すのは前に出ているぶんだけ。
@@ -925,6 +933,57 @@ def load_news():
     return sorted_articles(
         [one for one in kept if one.get("date") and one.get("content")]
     )
+
+
+def load_about():
+    """このサイトについて。彼女が書いたもの。無ければ None。"""
+    try:
+        with open(ABOUT_FILE, "r", encoding="utf-8") as f:
+            kept = json.load(f)
+    except (ValueError, OSError):
+        return None
+    if not isinstance(kept, dict) or not (kept.get("content") or "").strip():
+        return None
+    return kept
+
+
+def generate_about_html(about):
+    """このサイトについての一枚。書いたとおりに、一行を一段落にして並べる。"""
+    if not about:
+        if os.path.exists(ABOUT_PAGE):
+            os.remove(ABOUT_PAGE)
+        return
+    title = escape_html(about.get("title") or "このサイトについて")
+    paragraphs = "\n".join(
+        f"    <p>{escape_html(line)}</p>"
+        for line in about["content"].split("\n")
+        if line.strip()
+    )
+    html = f"""<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<title>{title}</title>
+<meta name="viewport" content="width=1200" />
+<link rel="stylesheet" href="{styled()}" />
+</head>
+<body>
+  <div class="top-nav"><a href="index.html">←トップ</a></div>
+
+  <header>
+    <h1>{title}</h1>
+  </header>
+
+  {MAIN_STARTS}
+  <article class="about">
+{paragraphs}
+  </article>
+  {MAIN_ENDS}
+</body>
+</html>
+"""
+    with open(ABOUT_PAGE, "w", encoding="utf-8") as f:
+        f.write(html)
 
 
 def load_himitsu():
@@ -2030,8 +2089,12 @@ def regenerate_pages(articles):
         os.remove(HIMITSU_PAGE)
     clear_old_himitsu_pages(all_himitsu_pages(himitsu))
 
+    about = load_about()
+    generate_about_html(about)
+
     every_page = (
         EVERY_PAGE + tuple(all_news_pages(news)) + tuple(all_himitsu_pages(himitsu))
+        + ((ABOUT_PAGE,) if about else ())
     )
     side_panels(every_page)
     page_heads_on_pages(every_page)
