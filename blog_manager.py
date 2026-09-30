@@ -1070,7 +1070,8 @@ def news_page_name(one):
 
 # メモが開いた日に、更新情報に自然と並ぶ一行。彼女の言葉のまま(2026-09-30)。
 # 開いた言葉や中身は書かない
-MEMO1_OPENED = "メモ１が{}つ解除されました。"
+MEMO1_OPENED = "メモ１が解除されました。"  # 一つだけの日
+MEMO1_OPENED_MANY = "メモ１が{}つ解除されました。"  # 二つ以上の日
 MEMO2_OPENED = "メモ２が解除されました。"
 WIDE_DIGITS = str.maketrans("0123456789", "０１２３４５６７８９")
 
@@ -1078,7 +1079,8 @@ WIDE_DIGITS = str.maketrans("0123456789", "０１２３４５６７８９")
 def memos_opened_news(keywords, menu_items, articles):
     """メモ1とメモ2が開いた日を、更新情報の形で並べる。
 
-    メモ1は同じ日に開いた数をまとめて一行に。メモ2は数を言わずに一行。
+    メモ1は同じ日に開いた数をまとめて一行に(一つだけの日は数を言わない)。
+    メモ2は数を言わずに一行。
     メモ2のうち、この子にだけ届けてメモ2の一覧に並べない手紙(on_page が false)と、
     まだ中身の書かれていない枠は数えない。
     news.json には書かない。あちらは彼女が書くところ。"""
@@ -1087,7 +1089,9 @@ def memos_opened_news(keywords, menu_items, articles):
         if kw.get("unlocked") and kw.get("unlocked_date"):
             opened[kw["unlocked_date"]] = opened.get(kw["unlocked_date"], 0) + 1
     news = [
-        {"date": day, "content": MEMO1_OPENED.format(str(count).translate(WIDE_DIGITS)),
+        {"date": day,
+         "content": MEMO1_OPENED if count == 1
+         else MEMO1_OPENED_MANY.format(str(count).translate(WIDE_DIGITS)),
          "page": f"{day}-memo1"}
         for day, count in opened.items()
     ]
