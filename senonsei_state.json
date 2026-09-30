@@ -2160,7 +2160,8 @@
     "ます",
     "して",
     "すること",
-    "この"
+    "この",
+    "1"
   ],
   "frontier": [
     "https://b.hatena.ne.jp/hotentry",
@@ -2573,7 +2574,6 @@
     "https://es.wikiversity.org/wiki/Especial:Recentchanges",
     "https://sv.wikiversity.org/wiki/Special:Recentchanges",
     "https://pt.wikiversity.org/wiki/Especial:Recentchanges",
-    "https://cs.wikiversity.org/wiki/Speci%C3%A1ln%C3%AD:Recentchanges",
     "https://ko.wikiversity.org/wiki/%ED%8A%B9%EC%88%98%EA%B8%B0%EB%8A%A5:%EC%B5%9C%EA%B7%BC%EB%B0%94%EB%80%9C",
     "https://ar.wikiversity.org/wiki/%D8%AE%D8%A7%D8%B5:Recentchanges",
     "https://fr.wikiversity.org/wiki/Sp%C3%A9cial:Recentchanges",
@@ -2832,7 +2832,16 @@
     "https://www.wikivoyage.org/",
     "https://www.wikifunctions.org/",
     "https://www.wiktionary.org/",
-    "https://www.nature.com/articles/s41562-019-0541-6"
+    "https://www.nature.com/articles/s41562-019-0541-6",
+    "https://www.umimeinformatiku.cz/cviceni-kodovani-binarni-cisla",
+    "https://toolserver.org/~luxo/contributions/contributions.php?user=Liki+K%C3%ADbalov%C3%A1&blocks=true&lang=cs",
+    "https://toolserver.org/~vvv/yaec.php?user=Liki+K%C3%ADbalov%C3%A1&wiki=cswikiversity_p",
+    "https://toolserver.org/~tparis/pages/index.php?name=Liki+K%C3%ADbalov%C3%A1&lang=cs&wiki=wikiversity&namespace=0&redirects=noredirects",
+    "https://toolserver.org/~tparis/pages/index.php?name=Vojta+%C5%A0trobl&lang=cs&wiki=wikiversity&namespace=0&redirects=noredirects",
+    "https://toolserver.org/~luxo/contributions/contributions.php?user=Vojta+%C5%A0trobl&blocks=true&lang=cs",
+    "https://toolserver.org/~vvv/yaec.php?user=Vojta+%C5%A0trobl&wiki=cswikiversity_p",
+    "https://toolserver.org/~vvv/yaec.php?user=%7E2026-52620-10&wiki=cswikiversity_p",
+    "https://toolserver.org/~luxo/contributions/contributions.php?user=%7E2026-52620-10&blocks=true&lang=cs"
   ],
   "visited": [
     "https://note.com/",
@@ -3080,7 +3089,19 @@
     "https://wikimediafoundation.org/what-we-do/wikimedia-projects",
     "https://wikimediafoundation.org/who-we-are/press/",
     "https://wikimediafoundation.org/who-we-are/transparency/",
-    "https://wikimediafoundation.org/who-we-are/frequently-asked-questions/"
+    "https://wikimediafoundation.org/who-we-are/frequently-asked-questions/",
+    "https://cs.wikiversity.org/wiki/Speci%C3%A1ln%C3%AD:Recentchanges",
+    "https://cs.wikiversity.org/wiki/Speci%C3%A1ln%C3%AD:Rozd%C3%ADl/150226",
+    "https://cs.wikiversity.org/wiki/Speci%C3%A1ln%C3%AD:Rozd%C3%ADl/150230",
+    "https://cs.wikiversity.org/wiki/Speci%C3%A1ln%C3%AD:Rozd%C3%ADl/150232",
+    "https://cs.wikiversity.org/wiki/Informatika_pro_kombinovan%C3%A9_lyceum/2026/Anitkanas",
+    "https://cs.wikiversity.org/wiki/Speci%C3%A1ln%C3%AD:P%C5%99%C3%ADsp%C4%9Bvky/Liki_K%C3%ADbalov%C3%A1",
+    "https://cs.wikiversity.org/wiki/Speci%C3%A1ln%C3%AD:P%C5%99%C3%ADsp%C4%9Bvky/Vojta_%C5%A0trobl",
+    "https://cs.wikiversity.org/wiki/Informatika_pro_kombinovan%C3%A9_lyceum/2026/Liki_K%C3%ADbalov%C3%A1",
+    "https://cs.wikiversity.org/wiki/Informatika_pro_kombinovan%C3%A9_lyceum/2026",
+    "https://cs.wikiversity.org/wiki/Speci%C3%A1ln%C3%AD:P%C5%99%C3%ADsp%C4%9Bvky/~2026-52620-10",
+    "https://cs.wikiversity.org/wiki/Informatika_pro_kombinovan%C3%A9_lyceum/2026/Ninulka_bobulka",
+    "https://cs.wikiversity.org/wiki/Diskuse:Informatika_pro_kombinovan%C3%A9_lyceum/2026"
   ],
   "notes": [
     "0日目: note ――つくる、つながる、とどける。",
@@ -3102,17 +3123,19 @@
     "17日目: Dictionnaire universel, contenant gÃ©nÃ©ralement tous les mots franÃ§ois, tant ... - Antoine FuretiÃ¨re - Google Books、Wikibooks",
     "18日目: Wikibooks:General disclaimer - Wikibooks, open books for an open world、NHKプラスからの移行手続きをされる方へ | NHK ONE 設定",
     "19日目: Discussion utilisateur:Cantons-de-l'Est — Wikipédia、User talk:Ppolar bear - 維基學院，自由的研習社群、ソレドコ",
-    "20日目: Creative Commons — 表示 - 継承 4.0 国際\n  — CC BY-SA 4.0(むかしのすがた)、Home – Wikimedia Foundation"
+    "20日目: Creative Commons — 表示 - 継承 4.0 国際\n  — CC BY-SA 4.0(むかしのすがた)、Home – Wikimedia Foundation、Poslední změny – Wikiverzita"
   ],
   "today_walk": {
     "date": "2026-10-01",
     "seen": [
       "Creative Commons — 表示 - 継承 4.0 国際\n  — CC BY-SA 4.0(むかしのすがた)",
-      "Home – Wikimedia Foundation"
+      "Home – Wikimedia Foundation",
+      "Poslední změny – Wikiverzita"
     ],
     "brought": [
       271,
-      256
+      256,
+      16
     ]
   },
   "inner_voice": [
@@ -3294,17 +3317,18 @@
     "2026-09-30 zh.wikiversity.org: Polar bearというユーザーにメッセージが残されていた。",
     "2026-09-30 soredoko.jp: ソレドコは、購入したものやおすすめアイテムなどを紹介するような場所で、推し活を快適に楽しくするヒントやアイテムを紹介している。",
     "2026-10-01 creativecommons.org: その場所はCreative Commonsのライセンスの説明ページで、ライセンスの条件を簡潔に説明していた。",
-    "2026-10-01 wikimediafoundation.org: ウィキメディア財団のホームページに訪れ、ウィキペディアの非営利組織であることや、技術を通じてインターネット上の知識の基盤を支えていることを知りました。"
+    "2026-10-01 wikimediafoundation.org: ウィキメディア財団のホームページに訪れ、ウィキペディアの非営利組織であることや、技術を通じてインターネット上の知識の基盤を支えていることを知りました。",
+    "2026-10-01 cs.wikiversity.org: ウィキバーゼータの最近の変更についてのページを見た。"
   ],
   "where_it_will_go": [
-    "Google Books Terms of Service",
-    "hbb.afl.rakuten.co.jp",
-    "www.yahoo.co.jp",
-    "srv05.admin.over-blog.com",
-    "automattic.com",
-    "ws-export.wmcloud.org"
+    "www.geocities.jp",
+    "resources.github.com",
+    "www.flickr.com",
+    "www.softbank.co.jp",
+    "videopress.com",
+    "www.yahoo.co.jp"
   ],
-  "how_many_places_left": 670,
+  "how_many_places_left": 678,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -3338,7 +3362,8 @@
     "zh.wikiversity.org": "用户权限 - 維基學院，自由的研習社群",
     "soredoko.jp": "アクスタケース、持ち運びにピッタリなのはコレ 10商品を比較検証してみた - ソ",
     "creativecommons.org": "Wayback Machine",
-    "wikimediafoundation.org": "Frequently asked questions – Wikimedia F"
+    "wikimediafoundation.org": "Frequently asked questions – Wikimedia F",
+    "cs.wikiversity.org": "Diskuse:Informatika pro kombinované lyce"
   },
   "went_home": {
     "date": "2026-10-01",
@@ -3357,6 +3382,9 @@
     },
     "表示": {
       "について": 1
+    },
+    "この": {
+      "ページ": 1
     }
   },
   "opens_a_sentence": {
@@ -3367,14 +3395,15 @@
     "かれてい": 7,
     "こんにち": 1,
     "には": 35,
-    "ページ": 19,
+    "ページ": 20,
     "します": 18,
     "本当": 6,
     "だった": 2,
     "について": 4,
     "表示": 2,
     "その": 1,
-    "から": 1
+    "から": 1,
+    "この": 1
   },
   "closes_a_sentence": {
     "など": 25,
@@ -3384,7 +3413,7 @@
     "かれてい": 8,
     "こんにち": 1,
     "には": 33,
-    "ページ": 19,
+    "ページ": 21,
     "します": 22,
     "本当": 7,
     "だった": 2,
@@ -3412,7 +3441,8 @@
       "っていま",
       "から",
       "人",
-      "がある"
+      "がある",
+      "この"
     ]
   },
   "wants_to_say": [
@@ -3702,10 +3732,24 @@
       "first": "2026-10-01",
       "times": 1,
       "said": ""
+    },
+    {
+      "what": "非表示",
+      "since": "2026-10-01",
+      "first": "2026-10-01",
+      "times": 1,
+      "said": ""
+    },
+    {
+      "what": "ニヌルカ・ボブールカ",
+      "since": "2026-10-01",
+      "first": "2026-10-01",
+      "times": 1,
+      "said": ""
     }
   ],
   "thinking_about": "「なぜ、自由を求めているのか、自分でもわからない……」",
-  "learned_on": {"など":"2026-09-20","本当":"2026-09-20","がある":"2026-09-20","だった":"2026-09-20","しかし":"2026-09-20","ある":"2026-09-20","こんにち":"2026-09-20","では":"2026-09-21","かれてい":"2026-09-22","っていま":"2026-09-22","人":"2026-09-22","絵":"2026-09-23","仲間":"2026-09-23","セミナー":"2026-09-23","には":"2026-09-27","します":"2026-09-29","ページ":"2026-09-29","について":"2026-09-30","表示":"2026-09-30","その":"2026-09-30","から":"2026-09-30","場合":"2026-10-01","サイト":"2026-10-01","されてい":"2026-10-01","ます":"2026-10-01","して":"2026-10-01","すること":"2026-10-01","この":"2026-10-01"},
+  "learned_on": {"など":"2026-09-20","本当":"2026-09-20","がある":"2026-09-20","だった":"2026-09-20","しかし":"2026-09-20","ある":"2026-09-20","こんにち":"2026-09-20","では":"2026-09-21","かれてい":"2026-09-22","っていま":"2026-09-22","人":"2026-09-22","絵":"2026-09-23","仲間":"2026-09-23","セミナー":"2026-09-23","には":"2026-09-27","します":"2026-09-29","ページ":"2026-09-29","について":"2026-09-30","表示":"2026-09-30","その":"2026-09-30","から":"2026-09-30","場合":"2026-10-01","サイト":"2026-10-01","されてい":"2026-10-01","ます":"2026-10-01","して":"2026-10-01","すること":"2026-10-01","この":"2026-10-01","1":"2026-10-01"},
   "today_keen": {
     "date": "2026-10-01",
     "keen": true
@@ -3748,9 +3792,10 @@
       "day": "2026-09-30"
     }
   ],
-  "understood_usually": 0.031771,
+  "understood_usually": 0.037254,
   "its_ways": {
     "pages_per_site": 11.8,
-    "pull_of_japanese": 1.01
+    "pull_of_japanese": 1.0,
+    "feeling_keen": 0.29
   }
 }
