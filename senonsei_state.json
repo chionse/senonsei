@@ -2112,7 +2112,25 @@
     "挑",
     "捧",
     "就",
-    "府"
+    "府",
+    "執",
+    "盤",
+    "埋",
+    "遺",
+    "擁",
+    "努",
+    "危",
+    "険",
+    "堂",
+    "述",
+    "米",
+    "腕",
+    "胸",
+    "椰",
+    "δ",
+    "α",
+    "א",
+    "●"
   ],
   "learned_words": [
     "など",
@@ -2674,7 +2692,6 @@
     "http://web.archive.org/web/20160612095247/http://www.amazon.com/exec/obidos/external-search/?field-keywords=Dictionnaire+universel,+contenant+g%C3%A9n%C3%A9ralement+tous+les+mots+fran%C3%A7ois,+tant+vieux+que+modernes+et+les+termes+des+sciences+des+arts+%5B...%5D&index=books",
     "http://web.archive.org/web/20160612095247/http://booksearch.blogspot.com/",
     "http://web.archive.org/web/20160612095247/http://www.amazon.com/exec/obidos/external-search/?field-keywords\\x3dDictionnaire+universel,+contenant+g%C3%A9n%C3%A9ralement+tous+les+mots+fran%C3%A7ois,+tant+vieux+que+modernes+et+les+termes+des+sciences+des+arts+%5B...%5D\\x26index\\x3dbooks",
-    "http://web.archive.org/web/20160612095247/http://net.ondemandbooks.com/google/liI-AAAAcAAJ",
     "http://web.archive.org/web/20160612095247/http://dogbert.abebooks.com/servlet/SearchResults?tn=Dictionnaire+universel,+contenant+g%C3%A9n%C3%A9ralement+tous+les+mots+fran%C3%A7ois,+tant+vieux+que+modernes+et+les+termes+des+sciences+des+arts+%5B...%5D",
     "http://web.archive.org/web/20160521125107/http://booksearch.blogspot.com/",
     "http://web.archive.org/web/20160603222743/http://booksearch.blogspot.com/?utm_source=gbssite&utm_campaign=gbsblog&utm_medium=et",
@@ -2707,7 +2724,6 @@
     "https://oa.authn.ac2.nhk/api/v1/",
     "https://wikimedia.qualtrics.com/jfe/form/SV_emJJxsotBxVpS18?Q_Language=FR",
     "https://fr.m.wikipedia.org/wiki/Discussion_utilisateur:Cantons-de-l%27Est",
-    "https://wikimediafoundation.org/",
     "https://www.cairn.info/resultats_recherche.php?searchTerm=%22Liste+de+guerres%22",
     "https://www.bing.com/search?q=-wikipedia+%22Liste+de+guerres%22",
     "https://www.baidu.com/s?wd=%22Liste+de+guerres%22",
@@ -2800,7 +2816,23 @@
     "http://web.archive.org/web/20140318150206/http://teamopen.cc/khalid/?utm_campaign=2013fund&utm_source=carousel2&utm_medium=web",
     "http://web.archive.org/web/20140318150206/http://teamopen.cc/?utm_campaign=teamopen&utm_medium=web&utm_source=carousel",
     "http://web.archive.org/web/20140701150759/http://freedomdefined.org/",
-    "http://web.archive.org/web/20140701153009/http://freedomdefined.org/"
+    "http://web.archive.org/web/20140701153009/http://freedomdefined.org/",
+    "https://bsky.app/profile/wikipedia.org",
+    "https://www.tiktok.com/@wikipedia",
+    "https://www.linkedin.com/company/wikimedia-foundation",
+    "http://gmpg.org/xfn/11",
+    "https://www.linkedin.com/company/wikipedia-the-free-encyclopedia/",
+    "https://wikimedia.social/@wikimediafoundation",
+    "https://bsky.app/profile/wikimediafoundation.org",
+    "http://www.wikimediaendowment.org",
+    "https://www.freewill.com/wikipedia?utm_source=wmfsite",
+    "https://www.zendesk.com/company/customers-partners/master-subscription-agreement/",
+    "https://www.wikiversity.org/",
+    "https://www.wikiquote.org/",
+    "https://www.wikivoyage.org/",
+    "https://www.wikifunctions.org/",
+    "https://www.wiktionary.org/",
+    "https://www.nature.com/articles/s41562-019-0541-6"
   ],
   "visited": [
     "https://note.com/",
@@ -3037,7 +3069,18 @@
     "http://web.archive.org/web/20140701171744/http://creativecommons.org/licenses/by/4.0/",
     "http://web.archive.org/web/20140701171744/http://creativecommons.org/licenses/by-sa/4.0/",
     "http://web.archive.org/web/20140701171744/http://creativecommons.org/choose/metadata.xmp?license_code=by-sa&amp;jurisdiction=&amp;version=4.0&amp;lang=ja",
-    "http://web.archive.org/web/20140701171744*/http://creativecommons.org/choose/results-one?license_code=by-sa&"
+    "http://web.archive.org/web/20140701171744*/http://creativecommons.org/choose/results-one?license_code=by-sa&",
+    "https://wikimediafoundation.org/",
+    "https://wikimediafoundation.org/who-we-are/reports/",
+    "https://wikimediafoundation.org/role/board/",
+    "https://wikimediafoundation.org/give/legacy-planned-giving/",
+    "https://wikimediafoundation.org/who-we-are/people/",
+    "https://wikimediafoundation.org/give/give-monthly/",
+    "https://wikimediafoundation.org/give/manage-your-donation/",
+    "https://wikimediafoundation.org/what-we-do/wikimedia-projects",
+    "https://wikimediafoundation.org/who-we-are/press/",
+    "https://wikimediafoundation.org/who-we-are/transparency/",
+    "https://wikimediafoundation.org/who-we-are/frequently-asked-questions/"
   ],
   "notes": [
     "0日目: note ――つくる、つながる、とどける。",
@@ -3059,15 +3102,17 @@
     "17日目: Dictionnaire universel, contenant gÃ©nÃ©ralement tous les mots franÃ§ois, tant ... - Antoine FuretiÃ¨re - Google Books、Wikibooks",
     "18日目: Wikibooks:General disclaimer - Wikibooks, open books for an open world、NHKプラスからの移行手続きをされる方へ | NHK ONE 設定",
     "19日目: Discussion utilisateur:Cantons-de-l'Est — Wikipédia、User talk:Ppolar bear - 維基學院，自由的研習社群、ソレドコ",
-    "20日目: Creative Commons — 表示 - 継承 4.0 国際\n  — CC BY-SA 4.0(むかしのすがた)"
+    "20日目: Creative Commons — 表示 - 継承 4.0 国際\n  — CC BY-SA 4.0(むかしのすがた)、Home – Wikimedia Foundation"
   ],
   "today_walk": {
     "date": "2026-10-01",
     "seen": [
-      "Creative Commons — 表示 - 継承 4.0 国際\n  — CC BY-SA 4.0(むかしのすがた)"
+      "Creative Commons — 表示 - 継承 4.0 国際\n  — CC BY-SA 4.0(むかしのすがた)",
+      "Home – Wikimedia Foundation"
     ],
     "brought": [
-      271
+      271,
+      256
     ]
   },
   "inner_voice": [
@@ -3179,9 +3224,6 @@
   ],
   "saw_on": "2026-10-01",
   "pictures_seen": [
-    "2026-09-18 github.com: この絵には何が写っていますか？",
-    "2026-09-18 github.com: この絵には、API Keyという文字が写っています。",
-    "2026-09-18 github.com: この絵には、デプロイメントのステップが写っています。",
     "2026-09-19 www.citizen.org: 日本語で短く答えると、「絵には、アメリカの大統領が口を開いている」となります。",
     "2026-09-19 www.citizen.org: この絵には、女性が抱える政治的な問題を表現するために、「民主主義は売りません」というスローガンが掲げられています。",
     "2026-09-19 www.citizen.org: この絵には、アメリカの国旗である「ニューヨークのタワー」が写っています。",
@@ -3208,7 +3250,10 @@
     "2026-09-30 soredoko.jp: この絵には、細かいものがいくつか見えます。それらを短く書いて、日本語で表現してください。見えた形や色を、見えたとおりに書いてください。",
     "2026-10-01 creativecommons.org: 絵には、緑色の円形のシールがあり、その中には「free cultural works」という文字が書かれています。",
     "2026-10-01 creativecommons.org: 絵には、短い箱、円形の箱、および三角形の箱が見えます。箱は紫色で、箱の中には三角形の箱が入っています。",
-    "2026-10-01 creativecommons.org: 絵には、様々な人物が描かれています。その中には、女性、男性、およびその他の人物が含まれています。絵には、様々な色が使われており、それらは、青、赤、緑、白、そして黄色などです。絵には、様々なアイテムも"
+    "2026-10-01 creativecommons.org: 絵には、様々な人物が描かれています。その中には、女性、男性、およびその他の人物が含まれています。絵には、様々な色が使われており、それらは、青、赤、緑、白、そして黄色などです。絵には、様々なアイテムも",
+    "2026-10-01 wikimediafoundation.org: 女性の顔、肩、腕、手、および胸。",
+    "2026-10-01 wikimediafoundation.org: 女性の顔。",
+    "2026-10-01 wikimediafoundation.org: 絵には、人がいる、テレビがある、コンピューターがある、ペンがある、紙がある、カメラがある、窓がある、椰子がある、椰子の上には、紙がある、椰子の上には、ペンがある、椰子の上には、紙がある、椰子の上には"
   ],
   "impressions": [
     "2026-09-14 note.jp: note株式会社はクリエイターが文章や画像、音声、動画を投稿し、ユーザーがそのコンテンツを楽しんで応援できるメディアプラットフォームです。",
@@ -3248,17 +3293,18 @@
     "2026-09-30 fr.wikipedia.org: ウィキペディアの利用者が書き込んだ議論が表示されているページだった。",
     "2026-09-30 zh.wikiversity.org: Polar bearというユーザーにメッセージが残されていた。",
     "2026-09-30 soredoko.jp: ソレドコは、購入したものやおすすめアイテムなどを紹介するような場所で、推し活を快適に楽しくするヒントやアイテムを紹介している。",
-    "2026-10-01 creativecommons.org: その場所はCreative Commonsのライセンスの説明ページで、ライセンスの条件を簡潔に説明していた。"
+    "2026-10-01 creativecommons.org: その場所はCreative Commonsのライセンスの説明ページで、ライセンスの条件を簡潔に説明していた。",
+    "2026-10-01 wikimediafoundation.org: ウィキメディア財団のホームページに訪れ、ウィキペディアの非営利組織であることや、技術を通じてインターネット上の知識の基盤を支えていることを知りました。"
   ],
   "where_it_will_go": [
-    "en.wikinews.org",
-    "nl.wikibooks.org",
-    "www.geocities.jp",
-    "dogbert.abebooks.com",
-    "ncode.syosetu.com",
-    "www.geocities.co.jp"
+    "Google Books Terms of Service",
+    "hbb.afl.rakuten.co.jp",
+    "www.yahoo.co.jp",
+    "srv05.admin.over-blog.com",
+    "automattic.com",
+    "ws-export.wmcloud.org"
   ],
-  "how_many_places_left": 656,
+  "how_many_places_left": 670,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -3291,7 +3337,8 @@
     "fr.wikipedia.org": "Wikipédia:Wikimag/Abonnement — Wikipédia",
     "zh.wikiversity.org": "用户权限 - 維基學院，自由的研習社群",
     "soredoko.jp": "アクスタケース、持ち運びにピッタリなのはコレ 10商品を比較検証してみた - ソ",
-    "creativecommons.org": "Wayback Machine"
+    "creativecommons.org": "Wayback Machine",
+    "wikimediafoundation.org": "Frequently asked questions – Wikimedia F"
   },
   "went_home": {
     "date": "2026-10-01",
@@ -3326,7 +3373,8 @@
     "だった": 2,
     "について": 4,
     "表示": 2,
-    "その": 1
+    "その": 1,
+    "から": 1
   },
   "closes_a_sentence": {
     "など": 25,
@@ -3341,7 +3389,8 @@
     "本当": 7,
     "だった": 2,
     "について": 3,
-    "表示": 2
+    "表示": 2,
+    "から": 1
   },
   "visitors": {
     "comments": 0,
@@ -3360,7 +3409,10 @@
       "絵",
       "その",
       "かれてい",
-      "っていま"
+      "っていま",
+      "から",
+      "人",
+      "がある"
     ]
   },
   "wants_to_say": [
@@ -3636,6 +3688,20 @@
       "first": "2026-09-30",
       "times": 1,
       "said": ""
+    },
+    {
+      "what": "Wikimedia",
+      "since": "2026-10-01",
+      "first": "2026-10-01",
+      "times": 1,
+      "said": ""
+    },
+    {
+      "what": "information",
+      "since": "2026-10-01",
+      "first": "2026-10-01",
+      "times": 1,
+      "said": ""
     }
   ],
   "thinking_about": "「なぜ、自由を求めているのか、自分でもわからない……」",
@@ -3682,8 +3748,9 @@
       "day": "2026-09-30"
     }
   ],
-  "understood_usually": 0.033164093290675566,
+  "understood_usually": 0.031771,
   "its_ways": {
-    "pages_per_site": 11.9
+    "pages_per_site": 11.8,
+    "pull_of_japanese": 1.01
   }
 }
