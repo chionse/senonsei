@@ -2,11 +2,6 @@
 
 ## あなたの手が必要なもの
 
-- [ ] **いいね・コメントの受け取り口を Cloudflare に貼り直す**
-      Cloudflare → Workers & Pages → senonsei-comments → コードを
-      `cloudflare-worker/worker.js` の中身で丸ごと置き換え → Deploy。
-      貼るまで ♡ を押しても数が残らない。
-      ひみつの部屋とコメントの ♡ も、貼ってから受け付けるようになる
 - [ ] **カウンターを「訪問者数」に変える**(もう変えてあるかもしれない。要確認)
       確かめ方: トップを開いて再読み込みを何回かする。数が増えるなら、まだ。
       StatCounter → プロジェクト名 → Customize Counter → 「Starting Count」タブ
