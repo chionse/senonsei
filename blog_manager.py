@@ -1271,7 +1271,7 @@ def generate_news_entry_html(news, index):
   </header>
 
   {MAIN_STARTS}
-  <article class="yomimono">
+  <article>
     <div class="date">{one['date']}{named}</div>
     <p>{one['content']}</p>
   </article>
