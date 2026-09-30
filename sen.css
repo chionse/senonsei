@@ -20,25 +20,40 @@
      上ほど濃く、地平線に近いほど白っぽい */
   --sky-top: #4f9fe0;
   --sky-bottom: #b9dcf5;
+  /* 草の色(絵ごとの色が分からない時) */
+  --grass: #256d03;
 }
 
-/* 景色。草の絵は地平線から上が透けているので、そこに空の色が見える。
-   絵は画面に留めておき、紙だけが上を流れていく。
+/* 景色。草の絵は縦長で、地平線から上が透けているので、そこに空の色が見える。
    どの草が出るかは、ページの頭で一枚選ぶ(keshiki-script)。
    選べない閲覧機では一枚目が出る。
-   (仮の姿。空の絵が届いたら、ここを描き直す) */
-html {
-  background: var(--sky-bottom);
-}
 
-html::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
+   開いた時の画面には、いつも地平線がある。地平線は画面の上から6割のところ。
+   絵はページと一緒に動くので、ページが長くなるほど、下の草原が広く見えてくる。
+   絵より長いページでは、その下を絵のいちばん下の草の色で続ける(2026-09-30、彼女と決めた)。
+
+   絵は画面の横幅いっぱいまで広げる。縦長の画面では、画面の高さいっぱいまで広げる。
+   縦と横の割合は変えない。地平線の高さと下の色は、絵ごとに kusa/kusa.json に書いてある。
+   (空はまだ仮の色。空の絵が届いたら、ここを描き直す) */
+html {
+  /* 開いた時の画面の、どの高さに地平線を置くか */
+  --horizon-at: 60vh;
+  /* 絵の高さ。横いっぱい(縦は横の 1920/1080 倍)と、画面の高さの大きいほう */
+  --kusa-h: max(177.78vw, 100vh);
+  /* 絵の上端の位置。地平線を上の高さに合わせる。
+     ただし開いた時の画面の下に、絵の切れ目が出ないところまで */
+  --kusa-top: max(
+    calc(100vh - var(--kusa-h)),
+    calc(var(--horizon-at) - var(--kusa-horizon, 0.62) * var(--kusa-h))
+  );
+  min-height: 100%;
   background:
-    var(--kusa, url("kusa/kusa-1.webp")) center bottom / cover no-repeat,
-    linear-gradient(var(--sky-top), var(--sky-bottom));
+    var(--kusa, url("kusa/kusa-1.webp")) center var(--kusa-top) / auto var(--kusa-h) no-repeat,
+    /* 絵の下に続く草の色。絵の端と少し重ねて、隙間が出ないようにする */
+    linear-gradient(var(--kusa-under, var(--grass)), var(--kusa-under, var(--grass)))
+      center bottom / 100% calc(100% - var(--kusa-top) - var(--kusa-h) + 60px) no-repeat,
+    linear-gradient(var(--sky-top), var(--sky-bottom)) center top / 100% 100vh no-repeat,
+    var(--sky-bottom);
 }
 
 /* 紙(下の header と .frame)を景色の上に浮かべる。
