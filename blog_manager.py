@@ -1275,7 +1275,6 @@ KUSA_FOLDER = "kusa"
 def kusa_pictures():
     """草の絵の一覧。置いてある分だけ。増やせばそのまま候補に入る。
 
-    いまの十枚は完成版(2026-09-30)。受け取った WebP をそのまま置いている。
     同じ名前の PNG と WebP が両方あれば、軽い WebP のほうを使う。"""
     if not os.path.isdir(KUSA_FOLDER):
         return []
@@ -1296,6 +1295,22 @@ def kusa_pictures():
     return [f"{KUSA_FOLDER}/{name}" for name in found]
 
 
+# 草の絵ごとの、地平線の高さ(上から何割か)と、いちばん下の草の色。
+# 地平線を画面の同じ高さに置き、絵より長いページの下をその色で続けるのに使う。
+# 書いていない絵は、ならした値(sen.css)で敷かれる
+KUSA_ABOUT = os.path.join(KUSA_FOLDER, "kusa.json")
+
+
+def kusa_about():
+    """草の絵ごとの地平線と下の色。読めなければ空。"""
+    try:
+        with open(KUSA_ABOUT, encoding="utf-8") as f:
+            about = json.load(f)
+    except (OSError, ValueError):
+        return {}
+    return about if isinstance(about, dict) else {}
+
+
 KESHIKI_SCRIPT = re.compile(
     r'\s*<script id="keshiki-script">.*?</script>', re.DOTALL
 )
@@ -1309,13 +1324,22 @@ def put_keshiki(html, pictures):
     html = KESHIKI_SCRIPT.sub("", html)
     if not pictures or "</head>" not in html:
         return html
+    about = kusa_about()
+    known = {
+        path: about[os.path.basename(path)]
+        for path in pictures
+        if isinstance(about.get(os.path.basename(path)), dict)
+    }
     script = f"""  <script id="keshiki-script">
     (function () {{
       var kusa = {json.dumps(pictures)};
+      var about = {json.dumps(known, ensure_ascii=False)};
       var one = kusa[Math.floor(Math.random() * kusa.length)];
-      document.documentElement.style.setProperty(
-        "--kusa", 'url("' + new URL(one, document.baseURI).href + '")'
-      );
+      var root = document.documentElement.style;
+      root.setProperty("--kusa", 'url("' + new URL(one, document.baseURI).href + '")');
+      var it = about[one] || {{}};
+      if (typeof it.chiheisen === "number") root.setProperty("--kusa-horizon", String(it.chiheisen));
+      if (typeof it.shita === "string") root.setProperty("--kusa-under", it.shita);
     }})();
   </script>
 """
