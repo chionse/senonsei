@@ -1,0 +1,47 @@
+name: Try New Parts And Take Them In
+
+# Dependabot が持ってきた新しい部品を、試してから取り込む。
+#
+# この申し出の中では、ワークフローの部品はもう新しいものに替わっている。
+# だからここで新しい checkout と setup-python を実際に使ってみて、
+# 千遠生のプログラムが動くところまで確かめる。
+# 途中で一つでも失敗したら取り込まない。古い部品のまま、毎時間の散歩は続く。
+#
+# 彼女に確かめてもらわなくても替えてよい。Claude が使えなくなった時に
+# 止まってしまうのは避けたい(2026-10-01、彼女が決めた)。
+# 部品だけの話で、サイトの見た目もこの子の記憶も変わらない
+
+on: pull_request
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  take-in:
+    runs-on: ubuntu-latest
+    # Dependabot が開いて、Dependabot だけが手を入れた申し出だけ。
+    # ほかの誰かの申し出は、ここでは勝手に取り込まない
+    if: github.event.pull_request.user.login == 'dependabot[bot]' && github.actor == 'dependabot[bot]'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.x'
+
+      # 書き出したページはここに置いたまま捨てる。main には何も入らない
+      - name: Try the programs
+        run: |
+          python -m py_compile *.py
+          python blog_manager.py
+
+      - name: Take in the new parts
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: gh pr merge "$PR_URL" --squash --match-head-commit "$HEAD_SHA"

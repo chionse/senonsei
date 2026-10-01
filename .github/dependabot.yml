@@ -1,0 +1,24 @@
+# 千遠生を動かしているしくみの部品(actions/checkout など)を、
+# 古くなったら自分で新しくする。
+#
+# 部品には寿命がある。2026-09 には、中で使っている Node 20 の支えが切れて、
+# 誰かが気づいて替えるまで古いままだった。Claude が使えなくなっても、
+# 見ている人がいなくなっても、部品の交換だけは止まらないようにしておく
+# (2026-10-01、彼女が決めた)。
+#
+# 新しい部品が出ると、ここから交換の申し出(プルリクエスト)が届く。
+# それを試してから取り込むのは workflows/buhin.yml の役目
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    # checkout と setup-python は一緒に替える。片方だけ新しくても意味がない
+    groups:
+      buhin:
+        patterns:
+          - "*"
+    commit-message:
+      prefix: "部品を新しくする"
+    labels: []
