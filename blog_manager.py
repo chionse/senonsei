@@ -2103,6 +2103,35 @@ def regenerate_pages(articles):
     page_heads_on_pages(every_page)
     iine_on_pages(EVERY_PAGE + tuple(all_himitsu_pages(himitsu)))
     keshiki_on_pages(every_page)
+    out_of_search_snippets(every_page)
+
+
+# 検索に出た時の説明に、ページの中の文を使わせない印。
+# 説明は「千遠生のサイト」だけでいい(2026-10-01、彼女が決めた)。
+# 印が無いと、Google はカウンターやスタンプカードの字を拾って
+# 「あなたは Statcounter · web stats. 人目の来訪者です」のように出していた。
+# 印は div にしか付けられないので、ページの中の div すべてに付ける。
+# 題の「千遠生のサイト」だけは div の外にあるので、そのまま拾われてよい
+A_DIV_WITHOUT_THE_MARK = re.compile(r"<div(?=[\s>])(?![^>]*\bdata-nosnippet\b)")
+A_SCRIPT = re.compile(r"(<script\b.*?</script>)", re.S)
+
+
+def out_of_search_snippets(pages):
+    """出来上がったページの div に、検索の説明に使わない印を付けて回る。
+    <script> の中は、字として書いてある <div を書き換えないように飛ばす。"""
+    for page in pages:
+        if not os.path.exists(page):
+            continue
+        with open(page, "r", encoding="utf-8") as f:
+            made = f.read()
+        parts = A_SCRIPT.split(made)
+        marked = "".join(
+            part if A_SCRIPT.fullmatch(part) else A_DIV_WITHOUT_THE_MARK.sub("<div data-nosnippet", part)
+            for part in parts
+        )
+        if marked != made:
+            with open(page, "w", encoding="utf-8") as f:
+                f.write(marked)
 
 
 def add_new_article(title, content, date_str=None):
