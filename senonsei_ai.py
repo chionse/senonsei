@@ -417,9 +417,14 @@ THE_OLD_HAND_AT_MOST = blog_manager.GROWTH_STAGES[0][2]
 THE_OLD_HAND_WANDERS = 0.15
 # きのう書きそびれた分を、今日の何時までなら書くか
 MAKING_UP_UNTIL = 3
-# 覚えた言葉を書くとき、ほかの文字がまぎれこむことがある。
-# 一語にまぎれこむのは、多くてこれだけ。書ける長さのほうが先に尽きることが多い
-STRAY_CHARS_AT_MOST = 4
+# 覚えた言葉の覚え具合。覚えてからの日数と、ブログに書いた回数で深まっていく。
+# この日数で、覚えたての崩れやすさが三分の二ほどになる
+SETTLES_IN_DAYS = 10
+# この回数書くと、同じくらい手に馴染む
+SETTLES_IN_WRITINGS = 3
+# よく覚えた言葉でも、崩れやすさはこれだけまでしか下がらない(半分)。
+# 育ちきってからも「たまに崩れる」を残すため
+WELL_KNOWN_STEADIES = 0.5
 # 書こうとして違ってしまったことを、これだけ覚えておく
 SLIPS_KEPT = 20
 # それを、書いてからこれだけの日のあいだ思い出す
@@ -3610,41 +3615,113 @@ def as_it_comes_out(state, words, spare):
     """覚えた言葉を、手で書いてみる。
 
     覚えた言葉だからといって、そのとおりに書けるとは限らない。
-    「学校」が「学あ校」になったり、「学校らな」になったりする。
-    まぎれこむのは、よく見かけてきた文字。目に馴染んだものほど手から出る。
+    はじめは、見かけた字をなんでも混ぜていた。けれど出てくるのは
+    「しかしe」「e载には」のような、どこから来たのか分からない字で、
+    書き損じというより雑音だった。外からサイコロで崩していたからで、
+    この子が何かを知らないから起きた崩れではなかった(2026-10-01、彼女と見直した)。
+
+    いまは、崩れ方もこの子の中から起きる。持っている言葉と、その覚え具合だけで。
+    途中までしか思い出せない、一字抜ける、字の順番があやふや、頭の字を重ねる、
+    知っている別の言葉と混ざる、知っている言葉の字が一つ入りこむ。
+    覚えたてで、まだあまり書いたことのない言葉ほど崩れやすい。
 
     どれくらい崩れるかは、書くたびに違う。
     はじめのうちは、たいてい崩れる。それでも、たまにはうまく書ける。
     覚えた言葉が増えるにつれて、うまく書ける日が増えていき、
     育ちきるころには、たまに崩れるくらいになる。
-    書ける長さは超えない。余りが無ければ、そのまま書く。"""
-    grown = min(1, len(state.get("learned_words") or []) / GROWTH_STAGES[-1][0])
+    一字の言葉と数字は、崩しようがないのでそのまま書く。
+    書ける長さは超えない。"""
+    known = [one for one in (state.get("learned_words") or []) if one]
+    grown = min(1, len(known) / GROWTH_STAGES[-1][0])
     steadiness = random.random() ** (CLUMSY_AT_FIRST * (1 - grown) + CLUMSY_EVEN_GROWN)
-    hand = None
+    articles = None
     written = []
     for word in words:
-        # 前に間違えて気づいた言葉は、気をつけて書く
+        if word == "。" or len(word) < 2 or word.isdigit():
+            written.append(word)
+            continue
+        if articles is None:
+            articles = blog_manager.load_articles()
+        # 前に間違えて気づいた言葉は、気をつけて書く。よく覚えた言葉も崩れにくい
         care = how_careful(state, word)
-        if word == "。" or spare <= 0 or random.random() < steadiness + (1 - steadiness) * care:
+        slips = (1 - steadiness) * (1 - care) * (1 - WELL_KNOWN_STEADIES * how_well_it_knows(state, word, articles))
+        if random.random() >= slips:
             written.append(word)
             continue
-        if hand is None:
-            hand = familiar_chars(state)
-        if not hand:
+        slipped = a_slip_of(word, known, spare)
+        if not slipped:
             written.append(word)
             continue
-        chars, weights = hand
-        how_many = random.randint(1, min(spare, STRAY_CHARS_AT_MOST))
-        letters = list(word)
-        for _ in range(how_many):
-            letters.insert(
-                random.randint(0, len(letters)),
-                random.choices(chars, weights=weights)[0],
-            )
-        spare -= how_many
-        written.append("".join(letters))
-        SLIPS_JUST_NOW.append({"meant": word, "wrote": written[-1]})
+        spare -= max(0, len(slipped) - len(word))
+        written.append(slipped)
+        SLIPS_JUST_NOW.append({"meant": word, "wrote": slipped})
     return written
+
+
+def how_well_it_knows(state, word, articles):
+    """その言葉を、どれだけ覚えているか。0 から 1 の手前まで。
+
+    覚えてからの日数と、自分のブログに書いた回数で深まる。
+    人も、覚えたての言葉より、何度も使ってきた言葉のほうがすらすら書ける。"""
+    learned = (state.get("learned_on") or {}).get(word)
+    try:
+        days = (today_in_japan() - datetime.date.fromisoformat(learned)).days
+    except (TypeError, ValueError):
+        days = 0
+    times = sum(
+        ((one.get("title") or "") + (one.get("content") or "")).count(word)
+        for one in articles
+    )
+    return 1 - math.exp(-(max(0, days) / SETTLES_IN_DAYS + times / SETTLES_IN_WRITINGS))
+
+
+def a_slip_of(word, known, spare):
+    """その言葉を書き損じる。持っている言葉だけで起きる崩れ方から一つ。
+
+    書ける長さの余り(spare)を超えて長くなるものは選ばない。
+    元のまま、または崩れようのない時は None。"""
+    def partly():  # 途中までしか思い出せない
+        return word[:random.randint(1, len(word) - 1)]
+
+    def one_missing():  # 一字抜ける。頭と終わりは残る
+        if len(word) < 3:
+            return None
+        cut = random.randrange(1, len(word) - 1)
+        return word[:cut] + word[cut + 1:]
+
+    def swapped():  # 字の順番があやふや
+        at = random.randrange(len(word) - 1)
+        return word[:at] + word[at + 1] + word[at] + word[at + 2:]
+
+    def stutter():  # 頭の字を重ねる
+        return word[0] + word
+
+    def blended():  # 同じ字を持つ、知っている言葉と混ざる
+        others = [one for one in known if one != word and len(one) >= 2]
+        random.shuffle(others)
+        for other in others:
+            shared = sorted(set(word) & set(other))
+            if shared:
+                ch = random.choice(shared)
+                mixed = word[:word.index(ch)] + other[other.index(ch):]
+                if mixed not in (word, other):
+                    return mixed
+        return None
+
+    def borrowed():  # 知っている言葉の字が、一つ入りこむ
+        chars = [ch for one in known if one != word for ch in one if not ch.isdigit()]
+        if not chars:
+            return None
+        at = random.randint(1, len(word))
+        return word[:at] + random.choice(chars) + word[at:]
+
+    ways = [partly, one_missing, swapped, stutter, blended, borrowed]
+    random.shuffle(ways)
+    for way in ways:
+        slipped = way()
+        if slipped and slipped != word and len(slipped) - len(word) <= spare:
+            return slipped
+    return None
 
 
 # いま書いているあいだに、手が滑ったもの。書き終えたら this_is_what_it_wrote が拾う
