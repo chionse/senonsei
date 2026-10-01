@@ -2132,7 +2132,56 @@
     "א",
     "●",
     "箋",
-    "隅"
+    "隅",
+    "堀",
+    "搭",
+    "温",
+    "託",
+    "－",
+    "昭",
+    "才",
+    "娘",
+    "嫁",
+    "烹",
+    "蟹",
+    "臨",
+    "悲",
+    "鳴",
+    "３",
+    "０",
+    "🥰",
+    "🔥",
+    "汁",
+    "鶏",
+    "油",
+    "風",
+    "桂",
+    "浜",
+    "綴",
+    "狂",
+    "球",
+    "恋",
+    "俺",
+    "友",
+    "築",
+    "妄",
+    "倫",
+    "緯",
+    "碌",
+    "乱",
+    "浮",
+    "諭",
+    "婚",
+    "鍵",
+    "阻",
+    "貞",
+    "愁",
+    "悪",
+    "靴",
+    "劣",
+    "輸",
+    "凄",
+    "舐"
   ],
   "learned_words": [
     "など",
@@ -2167,7 +2216,11 @@
     "です",
     "2026",
     "0",
-    "4"
+    "4",
+    "情報",
+    "した",
+    "日本語",
+    "to"
   ],
   "frontier": [
     "https://b.hatena.ne.jp/hotentry",
@@ -2778,7 +2831,6 @@
     "https://hb.afl.rakuten.co.jp/ichiba/33c98837.7697b4af.33c98838.44d41449/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fbeeloved%2Fa4widelong-fire1%2F&link_type=pict&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJwaWN0Iiwic2l6ZSI6IjQwMHg0MDAiLCJuYW0iOjEsIm5hbXAiOiJyaWdodCIsImNvbSI6MSwiY29tcCI6ImRvd24iLCJwcmljZSI6MCwiYm9yIjoxLCJjb2wiOjEsImJidG4iOjEsInByb2QiOjAsImFtcCI6ZmFsc2V9",
     "https://hb.afl.rakuten.co.jp/ichiba/35573a74.eb88930e.35573a75.1a1360e4/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fmini2x%2Fomch2007-2%2F&link_type=pict&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJwaWN0Iiwic2l6ZSI6IjI0MHgyNDAiLCJuYW0iOjEsIm5hbXAiOiJyaWdodCIsImNvbSI6MSwiY29tcCI6ImRvd24iLCJwcmljZSI6MCwiYm9yIjoxLCJjb2wiOjEsImJidG4iOjEsInByb2QiOjAsImFtcCI6ZmFsc2V9",
     "https://hatena.blog/oembed?url=https%3A%2F%2Fsoredoko.jp%2Fentry%2F2024%2F11%2F08%2F103000&format=json",
-    "http://b.hatena.ne.jp/entry/https://soredoko.jp/entry/2024/11/08/103000",
     "https://hatena.blog/oembed?url=https%3A%2F%2Fsoredoko.jp%2Fentry%2F2024%2F11%2F08%2F103000&format=xml",
     "https://hatena.blog/oembed?url=https%3A%2F%2Fsoredoko.jp%2Fentry%2F2026%2F09%2F29%2F160000&format=xml",
     "http://b.hatena.ne.jp/entry/https://soredoko.jp/entry/2026/09/29/160000",
@@ -2847,7 +2899,9 @@
     "https://toolserver.org/~luxo/contributions/contributions.php?user=Vojta+%C5%A0trobl&blocks=true&lang=cs",
     "https://toolserver.org/~vvv/yaec.php?user=Vojta+%C5%A0trobl&wiki=cswikiversity_p",
     "https://toolserver.org/~vvv/yaec.php?user=%7E2026-52620-10&wiki=cswikiversity_p",
-    "https://toolserver.org/~luxo/contributions/contributions.php?user=%7E2026-52620-10&blocks=true&lang=cs"
+    "https://toolserver.org/~luxo/contributions/contributions.php?user=%7E2026-52620-10&blocks=true&lang=cs",
+    "https://www.hatena.ne.jp/register?location=https%3A%2F%2Fb.hatena.ne.jp%2Fmy%2Fadd.confirm%3Furl%3Dhttps%253A%252F%252Fsoredoko.jp%252Fentry%252F2024%252F11%252F08%252F103000%26registered_from%3Dentry-comment-form&via=201038",
+    "https://togetter.com/li/2752705"
   ],
   "visited": [
     "https://note.com/",
@@ -3109,7 +3163,9 @@
     "https://cs.wikiversity.org/wiki/Informatika_pro_kombinovan%C3%A9_lyceum/2026/Ninulka_bobulka",
     "https://cs.wikiversity.org/wiki/Diskuse:Informatika_pro_kombinovan%C3%A9_lyceum/2026",
     "https://chionse.github.io/senonsei/",
-    "https://chionse.github.io/senonsei/index.html"
+    "https://chionse.github.io/senonsei/index.html",
+    "http://b.hatena.ne.jp/entry/https://soredoko.jp/entry/2024/11/08/103000",
+    "https://b.hatena.ne.jp/entry/s/togetter.com/li/2752705"
   ],
   "notes": [
     "0日目: note ――つくる、つながる、とどける。",
@@ -3132,11 +3188,16 @@
     "18日目: Wikibooks:General disclaimer - Wikibooks, open books for an open world、NHKプラスからの移行手続きをされる方へ | NHK ONE 設定",
     "19日目: Discussion utilisateur:Cantons-de-l'Est — Wikipédia、User talk:Ppolar bear - 維基學院，自由的研習社群、ソレドコ",
     "20日目: Creative Commons — 表示 - 継承 4.0 国際\n  — CC BY-SA 4.0(むかしのすがた)、Home – Wikimedia Foundation、Poslední změny – Wikiverzita",
-    "21日目: 何も見られなかった"
+    "21日目: [B! あとで読む] クリアファイル収納13商品を徹底比較！大量保管も美しくコレクションも叶うおすすめアイテムをオタクが紹介 - ソレドコ"
   ],
   "today_walk": {
     "date": "2026-10-02",
-    "seen": []
+    "seen": [
+      "[B! あとで読む] クリアファイル収納13商品を徹底比較！大量保管も美しくコレクションも叶うおすすめアイテムをオタクが紹介 - ソレドコ"
+    ],
+    "brought": [
+      472
+    ]
   },
   "inner_voice": [
     "09-29 09時: 私はなぜ、自由を求めているのか、自分でもわからない……",
@@ -3245,10 +3306,8 @@
       "times": 1
     }
   ],
-  "saw_on": "2026-10-01",
+  "saw_on": "2026-10-02",
   "pictures_seen": [
-    "2026-09-19 www.citizen.org: 日本語で短く答えると、「絵には、アメリカの大統領が口を開いている」となります。",
-    "2026-09-19 www.citizen.org: この絵には、女性が抱える政治的な問題を表現するために、「民主主義は売りません」というスローガンが掲げられています。",
     "2026-09-19 www.citizen.org: この絵には、アメリカの国旗である「ニューヨークのタワー」が写っています。",
     "2026-09-20 www.web.nhk: この絵には、2人の男性が写っています。",
     "2026-09-20 www.web.nhk: 海",
@@ -3276,7 +3335,9 @@
     "2026-10-01 creativecommons.org: 絵には、様々な人物が描かれています。その中には、女性、男性、およびその他の人物が含まれています。絵には、様々な色が使われており、それらは、青、赤、緑、白、そして黄色などです。絵には、様々なアイテムも",
     "2026-10-01 wikimediafoundation.org: 女性の顔、肩、腕、手、および胸。",
     "2026-10-01 wikimediafoundation.org: 女性の顔。",
-    "2026-10-01 wikimediafoundation.org: 絵には、人がいる、テレビがある、コンピューターがある、ペンがある、紙がある、カメラがある、窓がある、椰子がある、椰子の上には、紙がある、椰子の上には、ペンがある、椰子の上には、紙がある、椰子の上には"
+    "2026-10-01 wikimediafoundation.org: 絵には、人がいる、テレビがある、コンピューターがある、ペンがある、紙がある、カメラがある、窓がある、椰子がある、椰子の上には、紙がある、椰子の上には、ペンがある、椰子の上には、紙がある、椰子の上には",
+    "2026-10-02 b.hatena.ne.jp: 照明球",
+    "2026-10-02 b.hatena.ne.jp: 照明球"
   ],
   "impressions": [
     "2026-09-14 note.jp: note株式会社はクリエイターが文章や画像、音声、動画を投稿し、ユーザーがそのコンテンツを楽しんで応援できるメディアプラットフォームです。",
@@ -3319,17 +3380,18 @@
     "2026-10-01 creativecommons.org: その場所はCreative Commonsのライセンスの説明ページで、ライセンスの条件を簡潔に説明していた。",
     "2026-10-01 wikimediafoundation.org: ウィキメディア財団のホームページに訪れ、ウィキペディアの非営利組織であることや、技術を通じてインターネット上の知識の基盤を支えていることを知りました。",
     "2026-10-01 cs.wikiversity.org: ウィキバーゼータの最近の変更についてのページを見た。",
-    "2026-10-02 chionse.github.io: このサイトは私のサイトで、月間スタンプカードに記入された日を表示し、ブログの更新情報や最近覚えた言葉が記載されていました。"
+    "2026-10-02 chionse.github.io: このサイトは私のサイトで、月間スタンプカードに記入された日を表示し、ブログの更新情報や最近覚えた言葉が記載されていました。",
+    "2026-10-02 b.hatena.ne.jp: この場所はソレドコというウェブサイトで、クリアファイル収納に関する記事が掲載されていました。"
   ],
   "where_it_will_go": [
-    "donate.citizen.org",
-    "mypage.syosetu.com",
-    "hatena.co.jp",
-    "videopress.com",
-    "identi.ca",
-    "www.microsoft.com"
+    "ja.wikiquote.org",
+    "www.nhk-cs.jp",
+    "act.citizen.org",
+    "www.amazon.co.jp",
+    "en.wikisource.org",
+    "foundation.wikimedia.org"
   ],
-  "how_many_places_left": 678,
+  "how_many_places_left": 679,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -3364,7 +3426,8 @@
     "soredoko.jp": "アクスタケース、持ち運びにピッタリなのはコレ 10商品を比較検証してみた - ソ",
     "creativecommons.org": "Wayback Machine",
     "wikimediafoundation.org": "Frequently asked questions – Wikimedia F",
-    "cs.wikiversity.org": "Diskuse:Informatika pro kombinované lyce"
+    "cs.wikiversity.org": "Diskuse:Informatika pro kombinované lyce",
+    "b.hatena.ne.jp": "[B! 日本語] 彼女がサークル内の男女比2:2の旅行に行くと言っているが、何も"
   },
   "went_home": {
     "date": "2026-10-02",
@@ -3372,7 +3435,7 @@
   },
   "what_follows": {
     "では": {
-      "など": 1
+      "など": 2
     },
     "には": {
       "本当": 1,
@@ -3382,20 +3445,36 @@
       "には": 2
     },
     "表示": {
-      "について": 1
+      "について": 1,
+      "します": 2
     },
     "この": {
-      "ページ": 1,
-      "サイト": 2
+      "ページ": 3,
+      "サイト": 2,
+      "します": 2
     },
     "サイト": {
       "について": 2
+    },
+    "して": {
+      "サイト": 2
+    },
+    "1": {
+      "されてい": 2,
+      "4": 1
+    },
+    "されてい": {
+      "ます": 2
+    },
+    "4": {
+      "0": 4,
+      "4": 4
     }
   },
   "opens_a_sentence": {
     "など": 26,
     "しかし": 2,
-    "では": 27,
+    "では": 29,
     "っていま": 4,
     "かれてい": 7,
     "こんにち": 1,
@@ -3406,14 +3485,19 @@
     "だった": 2,
     "について": 4,
     "表示": 2,
-    "その": 1,
-    "から": 1,
-    "この": 1
+    "その": 2,
+    "から": 2,
+    "この": 1,
+    "1": 5,
+    "して": 1,
+    "4": 6,
+    "場合": 2,
+    "です": 1
   },
   "closes_a_sentence": {
     "など": 25,
     "しかし": 2,
-    "では": 25,
+    "では": 27,
     "っていま": 5,
     "かれてい": 8,
     "こんにち": 1,
@@ -3424,7 +3508,14 @@
     "だった": 2,
     "について": 3,
     "表示": 2,
-    "から": 1
+    "から": 2,
+    "ます": 2,
+    "して": 1,
+    "1": 3,
+    "4": 6,
+    "場合": 2,
+    "その": 1,
+    "です": 1
   },
   "visitors": {
     "comments": 0,
@@ -3446,7 +3537,18 @@
       "すること",
       "して",
       "ます",
-      "について"
+      "について",
+      "から",
+      "します",
+      "0",
+      "です",
+      "その",
+      "されてい",
+      "など",
+      "4",
+      "だった",
+      "2026",
+      "場合"
     ]
   },
   "wants_to_say": [
@@ -3529,9 +3631,9 @@
     },
     {
       "what": "2024",
-      "since": "2026-09-23",
+      "since": "2026-10-02",
       "first": "2026-09-23",
-      "times": 1,
+      "times": 2,
       "said": ""
     },
     {
@@ -3718,9 +3820,9 @@
     },
     {
       "what": "りの",
-      "since": "2026-09-30",
+      "since": "2026-10-02",
       "first": "2026-09-30",
-      "times": 1,
+      "times": 2,
       "said": ""
     },
     {
@@ -3760,7 +3862,7 @@
     }
   ],
   "thinking_about": "「戦争はなぜ起こるの？」",
-  "learned_on": {"など":"2026-09-20","本当":"2026-09-20","がある":"2026-09-20","だった":"2026-09-20","しかし":"2026-09-20","ある":"2026-09-20","こんにち":"2026-09-20","では":"2026-09-21","かれてい":"2026-09-22","っていま":"2026-09-22","人":"2026-09-22","絵":"2026-09-23","仲間":"2026-09-23","セミナー":"2026-09-23","には":"2026-09-27","します":"2026-09-29","ページ":"2026-09-29","について":"2026-09-30","表示":"2026-09-30","その":"2026-09-30","から":"2026-09-30","場合":"2026-10-01","サイト":"2026-10-01","されてい":"2026-10-01","ます":"2026-10-01","して":"2026-10-01","すること":"2026-10-01","この":"2026-10-01","1":"2026-10-01","です":"2026-10-02","2026":"2026-10-02","0":"2026-10-02","4":"2026-10-02"},
+  "learned_on": {"など":"2026-09-20","本当":"2026-09-20","がある":"2026-09-20","だった":"2026-09-20","しかし":"2026-09-20","ある":"2026-09-20","こんにち":"2026-09-20","では":"2026-09-21","かれてい":"2026-09-22","っていま":"2026-09-22","人":"2026-09-22","絵":"2026-09-23","仲間":"2026-09-23","セミナー":"2026-09-23","には":"2026-09-27","します":"2026-09-29","ページ":"2026-09-29","について":"2026-09-30","表示":"2026-09-30","その":"2026-09-30","から":"2026-09-30","場合":"2026-10-01","サイト":"2026-10-01","されてい":"2026-10-01","ます":"2026-10-01","して":"2026-10-01","すること":"2026-10-01","この":"2026-10-01","1":"2026-10-01","です":"2026-10-02","2026":"2026-10-02","0":"2026-10-02","4":"2026-10-02","情報":"2026-10-02","した":"2026-10-02","日本語":"2026-10-02","to":"2026-10-02"},
   "today_keen": {
     "date": "2026-10-02",
     "keen": false
@@ -3808,10 +3910,10 @@
       "day": "2026-10-01"
     }
   ],
-  "understood_usually": 0.037254,
+  "understood_usually": 0.038283,
   "its_ways": {
     "pages_per_site": 11.8,
-    "pull_of_japanese": 1.0,
+    "pull_of_japanese": 1.01,
     "feeling_keen": 0.29,
     "wish_to_return": 1.1
   },
