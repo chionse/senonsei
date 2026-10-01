@@ -1388,7 +1388,7 @@ def said_once(seen):
     while True:
         again = re.search(r"(.{8,}?)\1+", seen)
         if not again:
-            return seen
+            return taking_turns_cut(seen)
         once = again.group(1)
         rest = seen[again.end():]
         if once.startswith(rest):
@@ -1396,6 +1396,35 @@ def said_once(seen):
             ends = max(rest.rfind(mark) for mark in "。！？!?")
             rest = rest[:ends + 1]
         seen = seen[:again.start()] + once + rest
+
+
+# 同じ区切りの言い回しが、これだけの区切りのうちに三度出てきたら回っている
+TURNS_CLOSE_TOGETHER = 4
+
+
+def taking_turns_cut(seen):
+    """二つの言い回しを交互に繰り返して回っていたら、三度目の手前で切る。
+
+    「椰子の上には、紙がある、椰子の上には、ペンがある、椰子の上には、紙がある……」
+    のように、同じ言い回しが続けてではなく間をおいて戻ってくる回り方は、
+    said_once の続けての繰り返しでは拾えない。読点や句点で区切った一つが
+    すぐ近くで三度目に出てきたところで、そこから先を受け取らない(2026-10-01)。"""
+    pieces = re.split(r"([、。,，])", seen)
+    where = {}
+    kept = ""
+    for index in range(0, len(pieces), 2):
+        piece = pieces[index]
+        mark = pieces[index + 1] if index + 1 < len(pieces) else ""
+        key = piece.strip()
+        # 文の頭は数えない。「絵には、……。絵には、……。」は回っているのではない
+        opens_a_sentence = index == 0 or pieces[index - 1] == "。"
+        if len(key) >= 2 and not opens_a_sentence:
+            before = where.setdefault(key, [])
+            if len(before) >= 2 and (index - before[-2]) // 2 <= TURNS_CLOSE_TOGETHER:
+                return kept.rstrip("、,，") or seen
+            before.append(index)
+        kept += piece + mark
+    return seen.rstrip("、,，") or seen
 
 
 def only_what_it_saw(seen):
