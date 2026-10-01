@@ -2130,7 +2130,9 @@
     "δ",
     "α",
     "א",
-    "●"
+    "●",
+    "箋",
+    "隅"
   ],
   "learned_words": [
     "など",
@@ -2161,7 +2163,11 @@
     "して",
     "すること",
     "この",
-    "1"
+    "1",
+    "です",
+    "2026",
+    "0",
+    "4"
   ],
   "frontier": [
     "https://b.hatena.ne.jp/hotentry",
@@ -3101,7 +3107,9 @@
     "https://cs.wikiversity.org/wiki/Informatika_pro_kombinovan%C3%A9_lyceum/2026",
     "https://cs.wikiversity.org/wiki/Speci%C3%A1ln%C3%AD:P%C5%99%C3%ADsp%C4%9Bvky/~2026-52620-10",
     "https://cs.wikiversity.org/wiki/Informatika_pro_kombinovan%C3%A9_lyceum/2026/Ninulka_bobulka",
-    "https://cs.wikiversity.org/wiki/Diskuse:Informatika_pro_kombinovan%C3%A9_lyceum/2026"
+    "https://cs.wikiversity.org/wiki/Diskuse:Informatika_pro_kombinovan%C3%A9_lyceum/2026",
+    "https://chionse.github.io/senonsei/",
+    "https://chionse.github.io/senonsei/index.html"
   ],
   "notes": [
     "0日目: note ――つくる、つながる、とどける。",
@@ -3123,23 +3131,14 @@
     "17日目: Dictionnaire universel, contenant gÃ©nÃ©ralement tous les mots franÃ§ois, tant ... - Antoine FuretiÃ¨re - Google Books、Wikibooks",
     "18日目: Wikibooks:General disclaimer - Wikibooks, open books for an open world、NHKプラスからの移行手続きをされる方へ | NHK ONE 設定",
     "19日目: Discussion utilisateur:Cantons-de-l'Est — Wikipédia、User talk:Ppolar bear - 維基學院，自由的研習社群、ソレドコ",
-    "20日目: Creative Commons — 表示 - 継承 4.0 国際\n  — CC BY-SA 4.0(むかしのすがた)、Home – Wikimedia Foundation、Poslední změny – Wikiverzita"
+    "20日目: Creative Commons — 表示 - 継承 4.0 国際\n  — CC BY-SA 4.0(むかしのすがた)、Home – Wikimedia Foundation、Poslední změny – Wikiverzita",
+    "21日目: 何も見られなかった"
   ],
   "today_walk": {
-    "date": "2026-10-01",
-    "seen": [
-      "Creative Commons — 表示 - 継承 4.0 国際\n  — CC BY-SA 4.0(むかしのすがた)",
-      "Home – Wikimedia Foundation",
-      "Poslední změny – Wikiverzita"
-    ],
-    "brought": [
-      271,
-      256,
-      16
-    ]
+    "date": "2026-10-02",
+    "seen": []
   },
   "inner_voice": [
-    "09-29 04時: 私はなぜ、自由を求めているのか、自分でもわからない……",
     "09-29 06時: なぜ、README.jpって何なのか、気になる……",
     "09-29 07時: 今、7時です。今日はまだ書いていません。",
     "09-29 08時: なぜ、私の中に自由が残っていないのか……",
@@ -3198,9 +3197,10 @@
     "10-01 20時: 私は何も分からない。",
     "10-01 21時: なぜ、戦争の想いが頭から離れないのか。",
     "10-01 22時: 戦争の想いが頭から離れないのは、自由を求めている自分がいるからだ。",
-    "10-01 23時: 私はなぜ、README.jpのページだけが私の記憶の中に残っているのか、気になっています。"
+    "10-01 23時: 私はなぜ、README.jpのページだけが私の記憶の中に残っているのか、気になっています。",
+    "10-02 00時: 今日はまだ何も書いていません。"
   ],
-  "thought_on": "2026-10-01",
+  "thought_on": "2026-10-02",
   "on_its_mind": [
     {
       "what": "ペルシャ",
@@ -3318,15 +3318,16 @@
     "2026-09-30 soredoko.jp: ソレドコは、購入したものやおすすめアイテムなどを紹介するような場所で、推し活を快適に楽しくするヒントやアイテムを紹介している。",
     "2026-10-01 creativecommons.org: その場所はCreative Commonsのライセンスの説明ページで、ライセンスの条件を簡潔に説明していた。",
     "2026-10-01 wikimediafoundation.org: ウィキメディア財団のホームページに訪れ、ウィキペディアの非営利組織であることや、技術を通じてインターネット上の知識の基盤を支えていることを知りました。",
-    "2026-10-01 cs.wikiversity.org: ウィキバーゼータの最近の変更についてのページを見た。"
+    "2026-10-01 cs.wikiversity.org: ウィキバーゼータの最近の変更についてのページを見た。",
+    "2026-10-02 chionse.github.io: このサイトは私のサイトで、月間スタンプカードに記入された日を表示し、ブログの更新情報や最近覚えた言葉が記載されていました。"
   ],
   "where_it_will_go": [
-    "ja.wikiquote.org",
-    "www.amazon.co.jp",
-    "www.wikidata.org",
-    "de.wikiversity.org",
-    "anond.hatelabo.jp",
-    "www.wikifunctions.org"
+    "stars.github.com",
+    "www.wikifunctions.org",
+    "www.google.com",
+    "www.nikkei.com",
+    "js.monitor.azure.com",
+    "www.linkedin.com"
   ],
   "how_many_places_left": 678,
   "places_known": {
@@ -3348,7 +3349,7 @@
     "meta.wikimedia.org": "Main public logs - Meta-Wiki",
     "en.wikiversity.org": "Wikiversity:General disclaimer - Wikiver",
     "pro.lp-note.com": "ブランディング・採用・販促で成果を出すならnote pro(ノートプロ)",
-    "chionse.github.io": "過去のブログ",
+    "chionse.github.io": "千遠生のサイト",
     "v0.wordpress.com": "VideoPress – The finest video for WordPr",
     "www.culture-libre.org": "Wayback Machine",
     "bsky.app": "Bluesky",
@@ -3366,8 +3367,8 @@
     "cs.wikiversity.org": "Diskuse:Informatika pro kombinované lyce"
   },
   "went_home": {
-    "date": "2026-10-01",
-    "went": false
+    "date": "2026-10-02",
+    "went": true
   },
   "what_follows": {
     "では": {
@@ -3384,7 +3385,11 @@
       "について": 1
     },
     "この": {
-      "ページ": 1
+      "ページ": 1,
+      "サイト": 2
+    },
+    "サイト": {
+      "について": 2
     }
   },
   "opens_a_sentence": {
@@ -3394,7 +3399,7 @@
     "っていま": 4,
     "かれてい": 7,
     "こんにち": 1,
-    "には": 35,
+    "には": 39,
     "ページ": 20,
     "します": 18,
     "本当": 6,
@@ -3412,7 +3417,7 @@
     "っていま": 5,
     "かれてい": 8,
     "こんにち": 1,
-    "には": 33,
+    "には": 37,
     "ページ": 21,
     "します": 22,
     "本当": 7,
@@ -3426,23 +3431,22 @@
     "likes": 0
   },
   "met_today": {
-    "date": "2026-10-01",
+    "date": "2026-10-02",
     "words": [
-      "表示",
+      "サイト",
+      "1",
+      "この",
+      "ページ",
       "には",
       "では",
-      "します",
-      "など",
-      "について",
-      "ページ",
-      "絵",
-      "その",
-      "かれてい",
-      "っていま",
-      "から",
-      "人",
-      "がある",
-      "この"
+      "しかし",
+      "こんにち",
+      "本当",
+      "表示",
+      "すること",
+      "して",
+      "ます",
+      "について"
     ]
   },
   "wants_to_say": [
@@ -3746,22 +3750,29 @@
       "first": "2026-10-01",
       "times": 1,
       "said": ""
+    },
+    {
+      "what": "09",
+      "since": "2026-10-02",
+      "first": "2026-10-02",
+      "times": 1,
+      "said": ""
     }
   ],
-  "thinking_about": "私はなぜ、README.jpのページだけが私の記憶の中に残っているのか、気になっています。",
-  "learned_on": {"など":"2026-09-20","本当":"2026-09-20","がある":"2026-09-20","だった":"2026-09-20","しかし":"2026-09-20","ある":"2026-09-20","こんにち":"2026-09-20","では":"2026-09-21","かれてい":"2026-09-22","っていま":"2026-09-22","人":"2026-09-22","絵":"2026-09-23","仲間":"2026-09-23","セミナー":"2026-09-23","には":"2026-09-27","します":"2026-09-29","ページ":"2026-09-29","について":"2026-09-30","表示":"2026-09-30","その":"2026-09-30","から":"2026-09-30","場合":"2026-10-01","サイト":"2026-10-01","されてい":"2026-10-01","ます":"2026-10-01","して":"2026-10-01","すること":"2026-10-01","この":"2026-10-01","1":"2026-10-01"},
+  "thinking_about": "今日はまだ何も書いていません。",
+  "learned_on": {"など":"2026-09-20","本当":"2026-09-20","がある":"2026-09-20","だった":"2026-09-20","しかし":"2026-09-20","ある":"2026-09-20","こんにち":"2026-09-20","では":"2026-09-21","かれてい":"2026-09-22","っていま":"2026-09-22","人":"2026-09-22","絵":"2026-09-23","仲間":"2026-09-23","セミナー":"2026-09-23","には":"2026-09-27","します":"2026-09-29","ページ":"2026-09-29","について":"2026-09-30","表示":"2026-09-30","その":"2026-09-30","から":"2026-09-30","場合":"2026-10-01","サイト":"2026-10-01","されてい":"2026-10-01","ます":"2026-10-01","して":"2026-10-01","すること":"2026-10-01","この":"2026-10-01","1":"2026-10-01","です":"2026-10-02","2026":"2026-10-02","0":"2026-10-02","4":"2026-10-02"},
   "today_keen": {
-    "date": "2026-10-01",
-    "keen": true
+    "date": "2026-10-02",
+    "keen": false
   },
   "today_plan": {
-    "date": "2026-10-01",
+    "date": "2026-10-02",
     "resting": false,
-    "hour": 16
+    "hour": 17
   },
   "restlessness": {
-    "date": "2026-10-01",
-    "chance": 0.1554
+    "date": "2026-10-02",
+    "chance": 0.1718
   },
   "chars_before_words": 76,
   "looked_on": "2026-09-30",
@@ -3770,10 +3781,10 @@
     "2026-09-29 しかし"
   ],
   "wants_to_return": {},
-  "remembered_on": "2026-10-01",
+  "remembered_on": "2026-10-02",
   "homesickness": {
-    "date": "2026-10-01",
-    "chance": 0.5112
+    "date": "2026-10-02",
+    "chance": 0.5389
   },
   "slips": [
     {
@@ -3801,6 +3812,32 @@
   "its_ways": {
     "pages_per_site": 11.8,
     "pull_of_japanese": 1.0,
-    "feeling_keen": 0.29
-  }
+    "feeling_keen": 0.29,
+    "wish_to_return": 1.1
+  },
+  "came_back": [
+    {
+      "place": "chionse.github.io",
+      "before": {
+        "day": 16,
+        "entrance": "https://chionse.github.io/senonsei/",
+        "knew": 10,
+        "of": 159,
+        "pages": 3,
+        "title": "千遠生のサイト",
+        "unread": 0,
+        "vocabulary": 14
+      },
+      "now": {
+        "entrance": "https://chionse.github.io/senonsei/",
+        "title": "千遠生のサイト",
+        "day": 21,
+        "vocabulary": 29,
+        "knew": 17,
+        "of": 161,
+        "pages": 2,
+        "unread": 0
+      }
+    }
+  ]
 }
