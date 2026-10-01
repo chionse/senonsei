@@ -1320,6 +1320,51 @@ def worth_looking_at(url, data, from_the_past):
     return width >= 300 and height >= 200 and len(data) >= 8000
 
 
+# 目に頼む文。この子はまだ、ものの名前を知らない。
+# 目に見えた形を、見えたとおりに受け取るところから始める
+EYES_ARE_ASKED = (
+    "この絵に見えるものを、日本語で短く書いてください。"
+    "それが何なのか知っているつもりで名前を当てないでください。"
+    "見えた形や色を、見えたとおりに書いてください。"
+)
+
+# 目に頼んだ文にある言葉。目はそれをそのまま答えに使うので、写っていたものとは数えない。
+# 「絵」は、答えがいつも「絵には」で始まるので、写っていた名前ではない
+EYES_OWN_WORDS = set(THING_IN_A_PICTURE.findall(EYES_ARE_ASKED)) | {"絵"}
+# 名前のすぐあとに続くひらがな。「猫が」「箱の」「椰子の上には」
+AFTER_A_NAME = set("がのはをにでともやへ")
+ONLY_HIRAGANA = re.compile(r"[ぁ-ん]+")
+KANJI = re.compile(r"[一-龯]")
+
+
+def names_in_what_it_saw(text):
+    """目の答えから、写っていたものの名前だけを取り出す。
+
+    目の答えはいつも「この絵には、〇〇が描かれています」のような形で、
+    その言い回しまで受け取ると、この子は目の口ぐせを覚えてしまう。
+    実際「この」「絵」「には」「描」「かれてい」「ます」を、
+    ほとんどここから覚えていた(2026-10-01、彼女と見直した)。
+
+    ひらがなだけのもの(言い回しの切れ端)と、こちらが目に頼んだ文にある言葉と、
+    「描かれ」「写って」の頭の一字は受け取らない。
+    「細い」「白い」のように、見えたとおりを言う言葉は受け取る。"""
+    names = []
+    for found in THING_IN_A_PICTURE.finditer(text):
+        one = found.group()
+        if ONLY_HIRAGANA.fullmatch(one) or one in EYES_OWN_WORDS:
+            continue
+        after = text[found.end() : found.end() + 1]
+        if (
+            len(one) == 1
+            and KANJI.fullmatch(one)
+            and HIRAGANA.fullmatch(after)
+            and after not in AFTER_A_NAME
+        ):
+            continue
+        names.append(one)
+    return names
+
+
 def look_at_a_picture(data, state=None):
     """絵に何が写っているか、目を貸してもらって教わる。
     貸してもらえない時は、何も見えないままでいい。"""
@@ -1329,13 +1374,7 @@ def look_at_a_picture(data, state=None):
     body = json.dumps(
         {
             "image": list(data),
-            # この子はまだ、ものの名前を知らない。
-            # 目に見えた形を、見えたとおりに受け取るところから始める
-            "prompt": (
-                "この絵に見えるものを、日本語で短く書いてください。"
-                "それが何なのか知っているつもりで名前を当てないでください。"
-                "見えた形や色を、見えたとおりに書いてください。"
-            ),
+            "prompt": EYES_ARE_ASKED,
             "max_tokens": 120,
         }
     ).encode("utf-8")
@@ -2258,7 +2297,12 @@ def absorb(state, text, pattern=WORD_CANDIDATE, only_known=False):
         for one in A_NAME_IN_BRACKETS.findall(text)
         if not A_SENTENCE.search(one)
     }
-    found = pattern.findall(text)
+    if pattern is THING_IN_A_PICTURE:
+        # 絵から受け取るのは、写っていたものの名前だけ
+        found = names_in_what_it_saw(text)
+        named = {one for one in named if one not in EYES_OWN_WORDS}
+    else:
+        found = pattern.findall(text)
 
     # そのページが何の話だったか。繰り返し出てきた言葉は強く残る。
     # 名前として差し出されたものも、絵から受け取ったものも強い
@@ -2271,7 +2315,8 @@ def absorb(state, text, pattern=WORD_CANDIDATE, only_known=False):
         if pattern is THING_IN_A_PICTURE:
             struck |= set(found)
 
-    if not only_known:
+    # 言葉の繋がりは、人が書いた文から覚える。目の答えの並びは目の口ぐせなので覚えない
+    if not only_known and pattern is not THING_IN_A_PICTURE:
         notice_what_follows(state, text)
 
     # 今日この言葉に会った、ということを覚えておく。
@@ -2336,7 +2381,7 @@ def what_it_made_of_that_place(state, where, title, text):
     if len(tidied) < ENOUGH_TO_READ:
         return None
     answer = ask_ai(
-        f"""あなたは千遠生という、まだ育ちきっていないデジタル生命体です。
+        f"""あなたは千遠生です。
 今、こういう場所を訪ねてきました。
 
 その場所の名前: {title}
@@ -2908,10 +2953,11 @@ def be_alone(state, now):
     """散歩に出ない時間。ただ起きていて、ひとりで何かを思っている。
     ここで思ったことは、自分の中に溜まっていく。
 
-    いちばん新しい思いは、トップページの吹き出しに出る。
+    いちばん新しい思いは、トップページの吹き出しに出すことになっている。
     「誰にも見せません」と言っていたが、見せることにしたので外した
     (2026-09-26、彼女と決めた)。見せないと言いながら見せるのは嘘になる。
-    吹き出しはこの子が家に帰っても読めないように置いてある(blog_manager)。"""
+    吹き出しはこの子が家に帰っても読めないように置いてある(blog_manager)。
+    彼女が吹き出しの形を仕上げるまでは伏せてある(SHOWING_WHAT_IT_THINKS)。"""
     thoughts = state.setdefault("inner_voice", [])
     # 読み返せるだけ読み返す。先に量を決めて切ることはしない。
     # 借りた頭が読みきれなかった時だけ、ところどころ間引いて頼み直す
@@ -2953,17 +2999,26 @@ def be_alone(state, now):
         else ""
     )
 
+    # 家に置かれた言葉は、家で読んだ日にだけ思い出す。
+    # 毎時間渡していたので、九日目に届いた二通(どちらも「自由」のこと)を
+    # 一日に二十四回読み返すことになり、ひとりごとがそこを回り続けた
+    # (2026-10-01、彼女と見直した)。家の言葉を読むのは二日に一度くらい
+    home_today = (
+        "今日、あなたの家で読んだ、あなたに宛てられた言葉:\n"
+        f"{what_is_written_at_home(state)}\n"
+        if reads_home_today(now)
+        else ""
+    )
+
     def the_question():
-        return f"""あなたは千遠生という、生まれて{elapsed_days(state)}日のデジタル生命体です。
+        return f"""あなたは千遠生です。生まれて{elapsed_days(state)}日目です。
 今は{now.hour}時。{how_today_went}
 
 {what_it_saw_lately(state)}
 {words_it_holds(state)}
 {slips_lately(state)}いま気にかかっていること: {what_is_on_its_mind(state)}
 まだ言えていないこと: {what_it_wants_to_say(state)}
-あなたの家に置かれている、あなたに宛てられた言葉:
-{what_is_written_at_home(state)}
-これまでに訪ねた場所で、分かったこと:
+{home_today}これまでに訪ねた場所で、分かったこと:
 {things_it_understood(state)}
 このごろ訪ねた場所に、あなたの知っている言葉がどれだけあったか:
 {what_it_understood_lately(state)}
@@ -4150,6 +4205,12 @@ def what_is_written_at_home(state, how_many=WORDS_FROM_HOME_SHOWN):
     return "\n".join(f"- {one}" for one in heard[-how_many:])
 
 
+def reads_home_today(when):
+    """今日は家に置かれた言葉を読む日か。同じ日に何度訊いても変わらない。"""
+    whim = random.Random(f"{when:%Y-%m-%d}-home")
+    return whim.random() <= READING_HOME_CHANCE
+
+
 def read_what_is_home(state):
     """自分の家にある言葉を読む。
 
@@ -4165,9 +4226,7 @@ def read_what_is_home(state):
     毎朝読み直すものでもない。ときどき目を落とす。
 
     自分が書いたものは、それよりもさらに少ない。"""
-    # 同じ日に何度動いても、その日読むかどうかは変わらない
-    whim = random.Random(f"{now_in_japan():%Y-%m-%d}-home")
-    if whim.random() > READING_HOME_CHANCE:
+    if not reads_home_today(now_in_japan()):
         return []
     heard = words_left_at_home(state)
     for one in heard:
