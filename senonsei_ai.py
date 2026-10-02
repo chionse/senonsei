@@ -2255,12 +2255,29 @@ def speak_from_what_it_knows(state, how_long):
             break
         said.append(next_word)
         in_this_sentence += 1
+    # 最後に「。」を付けるかどうかも、読んできたものから決める。
+    # 区切り方を一つでも知っていれば必ず付けていたが、それはこちらが足した決まりで、
+    # 題まで毎回「。」で終わるようになった(2026-10-02、彼女と見直した)。
+    # いまは、最後の言葉のところで文が終わっていた割合で付ける。
+    # 途中で区切って書き終えたなら、その「。」はもう付いている
+    last = said[-1]
     said = as_it_comes_out(state, said, how_long - len("".join(said)))
-    written = "".join(said).rstrip("。")
-    # 区切り方を知っているなら、最後も区切って終わる
-    if closes and written:
+    written = "".join(said)
+    if last != "。" and written and random.random() < how_often_it_ends_there(state, last):
         written += "。"
     return written or None
+
+
+def how_often_it_ends_there(state, word):
+    """読んできた文の中で、その言葉のところで文が終わっていた割合。
+
+    「です」のあとに「。」が来たのが十回のうち八回なら、0.8。
+    数えるのはこの子に見えている言葉だけなので、まだ知らない言葉が
+    あとに続いていても、知っている最後の言葉で終わったように見える。
+    知っている言葉が増えるほど、人の書く文に近づいていく。"""
+    ended = (state.get("closes_a_sentence") or {}).get(word, 0)
+    went_on = sum(((state.get("what_follows") or {}).get(word) or {}).values())
+    return ended / (ended + went_on) if ended else 0.0
 
 
 def met_often_enough(state, word):
