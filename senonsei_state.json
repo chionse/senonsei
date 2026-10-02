@@ -2421,7 +2421,6 @@
     "https://www.pinterest.com/pin/find/?url=https%3A%2F%2Fdonate.citizen.org%2Fpage%2F55690%2Fdonate%2F1",
     "https://www.linkedin.com/shareArticle?url=https%3A%2F%2Fdonate.citizen.org%2Fpage%2F55690%2Fdonate%2F1",
     "https://www.citizen.org/",
-    "https://www.tumblr.com/widgets/share/tool?canonicalUrl=https%3A%2F%2Fdonate.citizen.org%2Fpage%2F55690%2Fdonate%2F1",
     "https://www.nhk.or.jp/radio/",
     "https://www.nhk.or.jp",
     "https://edu.web.nhk/school/",
@@ -2930,7 +2929,13 @@
     "https://doma-shka.narod2.ru/provision/fazenda/fazenda-0134.htm",
     "https://www.bankreceptov.ru/provision/fazenda/fazenda-0134.shtml",
     "https://www.mshp.gov.by/ru/potato-growing-ru/view/vyraschivanie-rassady-ovoschnyx-kultur-8946/",
-    "https://be.wikiquote.org/wiki/"
+    "https://be.wikiquote.org/wiki/",
+    "https://64.media.tumblr.com",
+    "https://assets.tumblr.com/pop/src/assets/fonts/favorit/favorit-85-cf2f6136.woff2",
+    "https://assets.tumblr.com/pop/src/assets/fonts/favorit/favorit-medium-fbc7316f.woff2",
+    "https://assets.tumblr.com/pop/src/assets/fonts/favorit/favorit-regular-52013406.woff2",
+    "https://www.apple.com/wss/fonts?families=SF+Pro,v3|SF+Pro+Icons,v3",
+    "https://www.apple.com/wss/fonts?family=Myriad+Set+Pro&v=2"
   ],
   "visited": [
     "https://note.com/",
@@ -3210,7 +3215,10 @@
     "https://chionse.github.io/senonsei/shinchaku.html",
     "https://chionse.github.io/senonsei/memo.html",
     "https://chionse.github.io/senonsei/about.html",
-    "https://chionse.github.io/senonsei/profile.html"
+    "https://chionse.github.io/senonsei/profile.html",
+    "https://www.tumblr.com/widgets/share/tool?canonicalUrl=https%3A%2F%2Fdonate.citizen.org%2Fpage%2F55690%2Fdonate%2F1",
+    "https://www.tumblr.com/auth/apple?redirectTo=%2Fwidgets%2Fshare%2Ftool%3FcanonicalUrl%3Dhttps%253A%252F%252Fdonate.citizen.org%252Fpage%252F55690%252Fdonate%252F1",
+    "https://www.tumblr.com/auth/google?redirectTo=%2Fwidgets%2Fshare%2Ftool%3FcanonicalUrl%3Dhttps%253A%252F%252Fdonate.citizen.org%252Fpage%252F55690%252Fdonate%252F1"
   ],
   "notes": [
     "0日目: note ――つくる、つながる、とどける。",
@@ -3234,11 +3242,16 @@
     "19日目: Discussion utilisateur:Cantons-de-l'Est — Wikipédia、User talk:Ppolar bear - 維基學院，自由的研習社群、ソレドコ",
     "20日目: Creative Commons — 表示 - 継承 4.0 国際\n  — CC BY-SA 4.0(むかしのすがた)、Home – Wikimedia Foundation、Poslední změny – Wikiverzita",
     "21日目: [B! あとで読む] クリアファイル収納13商品を徹底比較！大量保管も美しくコレクションも叶うおすすめアイテムをオタクが紹介 - ソレドコ、Вікікнігі",
-    "22日目: 何も見られなかった"
+    "22日目: Register - Login"
   ],
   "today_walk": {
     "date": "2026-10-03",
-    "seen": []
+    "seen": [
+      "Register - Login"
+    ],
+    "brought": [
+      2
+    ]
   },
   "inner_voice": [
     "09-30 05時: 「なぜ、私はここにいるのか……」",
@@ -3427,14 +3440,14 @@
     "2026-10-03 chionse.github.io: この場所は私のサイトで、月間スタンプカードが記録されています。"
   ],
   "where_it_will_go": [
-    "ncode.syosetu.com",
-    "neocities.org",
-    "vi.wikivoyage.org",
-    "news.google.fr",
-    "githubuniverse.com",
-    "engineerteam.note.jp"
+    "foundation.wikimedia.org",
+    "schoolofopen.org",
+    "tuxfamily.org",
+    "www.artlibre.org",
+    "fi.wikiversity.org",
+    "wiki.creativecommons.org"
   ],
-  "how_many_places_left": 686,
+  "how_many_places_left": 691,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -3471,7 +3484,8 @@
     "wikimediafoundation.org": "Frequently asked questions – Wikimedia F",
     "cs.wikiversity.org": "Diskuse:Informatika pro kombinované lyce",
     "b.hatena.ne.jp": "[B! 日本語] 彼女がサークル内の男女比2:2の旅行に行くと言っているが、何も",
-    "be.wikibooks.org": "Увайсці ў сістэму — Вікікнігі"
+    "be.wikibooks.org": "Увайсці ў сістэму — Вікікнігі",
+    "www.tumblr.com": "https://accounts.google.com/v3/signin/id"
   },
   "went_home": {
     "date": "2026-10-03",
@@ -3542,7 +3556,8 @@
     "4": 6,
     "場合": 2,
     "です": 1,
-    "サイト": 1
+    "サイト": 1,
+    "すること": 1
   },
   "closes_a_sentence": {
     "など": 25,
@@ -3566,7 +3581,7 @@
     "場合": 2,
     "その": 1,
     "です": 2,
-    "すること": 1
+    "すること": 2
   },
   "visitors": {
     "comments": 0,
@@ -3596,7 +3611,8 @@
       "について",
       "など",
       "から",
-      "すること"
+      "すること",
+      "場合"
     ]
   },
   "wants_to_say": [
@@ -3994,10 +4010,10 @@
       "day": "2026-10-02"
     }
   ],
-  "understood_usually": 0.041253,
+  "understood_usually": 0.053128,
   "its_ways": {
     "pages_per_site": 11.8,
-    "pull_of_japanese": 1.0,
+    "pull_of_japanese": 0.99,
     "feeling_keen": 0.29,
     "wish_to_return": 1.0
   },
