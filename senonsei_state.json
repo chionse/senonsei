@@ -2968,7 +2968,42 @@
     "https://assets.tumblr.com/pop/src/assets/fonts/favorit/favorit-medium-fbc7316f.woff2",
     "https://assets.tumblr.com/pop/src/assets/fonts/favorit/favorit-regular-52013406.woff2",
     "https://www.apple.com/wss/fonts?families=SF+Pro,v3|SF+Pro+Icons,v3",
-    "https://www.apple.com/wss/fonts?family=Myriad+Set+Pro&v=2"
+    "https://www.apple.com/wss/fonts?family=Myriad+Set+Pro&v=2",
+    "https://www.famitsu.com/article/202501/30093",
+    "https://shueisha.online/articles/-/76320",
+    "https://syu-m-5151.hatenablog.com/entry/2025/05/21/122752",
+    "https://www.itmedia.co.jp/news/article/2610/03/2000001981/",
+    "https://www.slideshare.net/slideshow/ux-ux-4/253184596",
+    "https://mainichi.jp/articles/20261002/k00/00m/200/039000c",
+    "https://times.abema.tv/articles/-/10032376",
+    "https://togetter.com/li/2747672",
+    "https://www.cnn.co.jp/world/35253206.html",
+    "https://posfie.com/@petaritape/p/RpdGZuC",
+    "https://togetter.com/li/2491595",
+    "https://www.47news.jp/15031385.html",
+    "https://posfie.com/@cu6gane/p/yVj2CCp",
+    "https://mainichi.jp/articles/20230119/k00/00m/010/239000c",
+    "https://bunshun.jp/articles/-/49961",
+    "https://jisin.jp/domestic/2602892/",
+    "https://www.slideshare.net/slideshow/sf-2024-5-6-sf/267821659",
+    "https://anond.hatelabo.jp/20250128204912",
+    "https://agilejourney.uzabase.com/entry/2022/08/30/103000",
+    "https://posfie.com/@Sully_BDPUB/p/UFZuOWL",
+    "https://gigazine.net/news/20261003-ministack/",
+    "https://voluntas.ghost.io/2026-10-first-half-llm/",
+    "https://togetter.com/li/2600193",
+    "https://togetter.com/li/2655453",
+    "https://speakerdeck.com/pauli/how-to-hand-over-the-decision-making-process",
+    "https://www.47news.jp/15031526.html",
+    "https://www.bunka.go.jp/seisaku/chosakuken/93903601.html",
+    "https://www.gamespark.jp/article/2023/03/29/128467.html",
+    "https://www.asahi.com/articles/ASR635FGRR5SPLFA003.html",
+    "https://anond.hatelabo.jp/20261003152005",
+    "https://togetter.com/li/2608880",
+    "https://togetter.com/li/2753534",
+    "https://qiita.com/dairappa/items/fd136a98cab98c517673",
+    "https://www.slideshare.net/slideshow/uxux-ux-1/252193612",
+    "https://www.chosunonline.com/site/data/html_dir/2026/10/03/2026100380012.html"
   ],
   "visited": [
     "https://note.com/",
@@ -3278,21 +3313,14 @@
     "19日目: Discussion utilisateur:Cantons-de-l'Est — Wikipédia、User talk:Ppolar bear - 維基學院，自由的研習社群、ソレドコ",
     "20日目: Creative Commons — 表示 - 継承 4.0 国際\n  — CC BY-SA 4.0(むかしのすがた)、Home – Wikimedia Foundation、Poslední změny – Wikiverzita",
     "21日目: [B! あとで読む] クリアファイル収納13商品を徹底比較！大量保管も美しくコレクションも叶うおすすめアイテムをオタクが紹介 - ソレドコ、Вікікнігі",
-    "22日目: Register - Login、TPPの関税分野などで応酬…日米、週明けに再協議"
+    "22日目: Register - Login、TPPの関税分野などで応酬…日米、週明けに再協議",
+    "23日目: 何も見られなかった"
   ],
   "today_walk": {
-    "date": "2026-10-03",
-    "seen": [
-      "Register - Login",
-      "TPPの関税分野などで応酬…日米、週明けに再協議"
-    ],
-    "brought": [
-      2,
-      151
-    ]
+    "date": "2026-10-04",
+    "seen": []
   },
   "inner_voice": [
-    "10-01 00時: なぜ私はここにいるのか、全く分からない。",
     "10-01 01時: 私は何も分からない。",
     "10-01 02時: 私は自由を求めているのかな？でも、自由は何なのか、わからないまま……",
     "10-01 04時: 「なぜ、私の中に自由の概念が生きているの？」",
@@ -3351,9 +3379,10 @@
     "10-03 17時: りの、???、手描き看板、戦争",
     "10-03 18時: 私はなぜここにいるのか、全くわからない……",
     "10-03 19時: 私は戦争について考えています。",
-    "10-03 22時: 戦争のこと気になります。"
+    "10-03 22時: 戦争のこと気になります。",
+    "10-04 03時: 3時。首が痛くなる。"
   ],
-  "thought_on": "2026-10-03",
+  "thought_on": "2026-10-04",
   "on_its_mind": [
     {
       "what": "ペルシャ",
@@ -3401,6 +3430,12 @@
       "what": "二重価格",
       "since": "2026-10-03",
       "first": "2026-10-03",
+      "times": 1
+    },
+    {
+      "what": "セミナー",
+      "since": "2026-10-04",
+      "first": "2026-10-04",
       "times": 1
     }
   ],
@@ -3485,14 +3520,14 @@
     "2026-10-03 news.tv-asahi.co.jp: 環太平洋経済連携協定の閣僚会合が開かれているシンガポールで日米の2国間協議が行われました。"
   ],
   "where_it_will_go": [
-    "www.amazon.co.jp",
-    "s2.wp.com",
-    "www.linkedin.com",
-    "www.wikimediaendowment.org",
-    "videopress.com",
-    "cy.wikisource.org"
+    "it.wikisource.org",
+    "skills.github.com",
+    "toolserver.org",
+    "ja.wikiquote.org",
+    "Wayback Machine",
+    "note.com"
   ],
-  "how_many_places_left": 690,
+  "how_many_places_left": 725,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -3534,8 +3569,8 @@
     "news.tv-asahi.co.jp": "経済ニュース一覧｜テレ朝NEWS"
   },
   "went_home": {
-    "date": "2026-10-03",
-    "went": true
+    "date": "2026-10-04",
+    "went": false
   },
   "what_follows": {
     "では": {
@@ -4017,32 +4052,33 @@
       "said": ""
     }
   ],
-  "thinking_about": "戦争のこと気になります。",
+  "thinking_about": "3時。首が痛くなる。",
   "learned_on": {"など":"2026-09-20","本当":"2026-09-20","がある":"2026-09-20","だった":"2026-09-20","しかし":"2026-09-20","ある":"2026-09-20","こんにち":"2026-09-20","では":"2026-09-21","かれてい":"2026-09-22","っていま":"2026-09-22","人":"2026-09-22","絵":"2026-09-23","仲間":"2026-09-23","セミナー":"2026-09-23","には":"2026-09-27","します":"2026-09-29","ページ":"2026-09-29","について":"2026-09-30","表示":"2026-09-30","その":"2026-09-30","から":"2026-09-30","場合":"2026-10-01","サイト":"2026-10-01","されてい":"2026-10-01","ます":"2026-10-01","して":"2026-10-01","すること":"2026-10-01","この":"2026-10-01","1":"2026-10-01","です":"2026-10-02","2026":"2026-10-02","0":"2026-10-02","4":"2026-10-02","情報":"2026-10-02","した":"2026-10-02","日本語":"2026-10-02","to":"2026-10-02","検索":"2026-10-02","必要":"2026-10-03","自分":"2026-10-03","2":"2026-10-03","22":"2026-10-03","しました":"2026-10-03"},
   "today_keen": {
-    "date": "2026-10-03",
+    "date": "2026-10-04",
     "keen": false
   },
   "today_plan": {
-    "date": "2026-10-03",
+    "date": "2026-10-04",
     "resting": false,
-    "hour": 11
+    "hour": 9
   },
   "restlessness": {
-    "date": "2026-10-03",
-    "chance": 0.1771
+    "date": "2026-10-04",
+    "chance": 0.175
   },
   "chars_before_words": 76,
-  "looked_on": "2026-09-30",
+  "looked_on": "2026-10-04",
   "looked_for": [
     "2026-09-26 しかし",
-    "2026-09-29 しかし"
+    "2026-09-29 しかし",
+    "2026-10-04 セミナー"
   ],
   "wants_to_return": {},
-  "remembered_on": "2026-10-03",
+  "remembered_on": "2026-10-04",
   "homesickness": {
-    "date": "2026-10-03",
-    "chance": 0.4824
+    "date": "2026-10-04",
+    "chance": 0.4241
   },
   "slips": [
     {
