@@ -380,6 +380,10 @@ THINKING_AT_MOST = 80
 SAME_ENOUGH = 0.85
 # 前の思いと、並びまでこれだけ重なっていたら書き写しとみなす
 WRITTEN_AGAIN = 0.8
+# 読点で三つ以上に分かれていたら、一覧の読み上げかどうかを見る
+A_LIST_AT_LEAST = 3
+# 一覧の中に混ざっていても、言葉ひとつと見なせる長さ(「2重価格」「09」)
+A_WORD_AT_MOST = 4
 # 覚えた言葉がまだ無いあいだ、覚えかけているものをこれだけ渡す
 WORDS_NEARLY_KNOWN = 8
 # 今日その言葉に会ったかどうかを、これだけ抱えておく。
@@ -3075,12 +3079,23 @@ def be_alone(state, now):
     def copied(said):
         return any(written_again(said, one) for one in lately if one)
 
+    # 渡した一覧をそのまま並べただけのものも、思いとしては数えない
+    handed = [
+        one
+        for line in (what_it_wants_to_say(state), what_is_on_its_mind(state))
+        for one in line.split("、")
+        if one
+    ]
+
+    def not_a_thought(said):
+        return copied(said) or a_list_read_out(said, handed)
+
     said = asked()
-    if said and copied(said):
-        print("さっきとほとんど同じことを書き写していたので、考え直してもらいます")
+    if said and not_a_thought(said):
+        print("さっきと同じことの書き写しか、渡した言葉を並べただけだったので、考え直してもらいます")
         going_on = ""  # さっきの続きは渡さずに、まっさらから
         said = asked()
-        if said and copied(said):
+        if said and not_a_thought(said):
             # それでも同じなら、この時間は何も思わなかったことにする。
             # 考えかけも手放して、次の時間はまっさらから始める
             print("それでも同じだったので、この時間は何も残しません")
@@ -3365,6 +3380,35 @@ def written_again(one, another):
     if a in b or b in a:
         return True
     return difflib.SequenceMatcher(None, a, b, autojunk=False).ratio() >= WRITTEN_AGAIN
+
+
+def a_list_read_out(said, handed):
+    """渡した一覧を、思いとしてそのまま読み上げただけかどうか。
+
+    「まだ言えていないこと: りの、???、手描き看板、二重価格、09」と渡すと、
+    借りた頭が「りの、手描き看板、2重価格、09」とだけ答えることがあった。
+    一日に三度(2026-10-03、彼女と見直した)。並べただけで、思ったことではない。
+
+    読点で三つ以上に分かれていて、その半分以上が渡した言葉(か、その一部)で、
+    残りも言葉ひとつほどの短いものなら、読み上げと見なす。
+    「手描き看板、二重価格、なぜ気になるのか。」は、思ったことなので数える。"""
+    pieces = [one for one in re.split(r"[、,，\s]+", bare_line(said)) if one]
+    if len(pieces) < A_LIST_AT_LEAST:
+        return False
+    from_the_list = [
+        one for one in pieces
+        if any(one == item or (len(one) >= 2 and one in item) for item in handed)
+    ]
+    the_rest = [one for one in pieces if one not in from_the_list]
+    return len(from_the_list) * 2 >= len(pieces) and all(
+        len(one) <= A_WORD_AT_MOST for one in the_rest
+    )
+
+
+def bare_line(line):
+    """思ったことから、時刻とかぎかっこと終わりの句読点を落とす。読点は残す。"""
+    said = (line or "").split(": ", 1)[-1].strip()
+    return re.sub(r"^[「『]|[」』]$|[。.!！?？…]+$", "", said).strip()
 
 
 def much_the_same(one, another):
