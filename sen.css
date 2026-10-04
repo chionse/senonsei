@@ -23,6 +23,7 @@
 }
 
 :root {
+  --heart-color: #c2185b;
   --small-font: "PixelMplus12", "MS Gothic", monospace;
   --main-color: #0029ae;
   --bg-color: #fafaf7;
@@ -401,7 +402,7 @@ article.yomimono p {
 
 .section-title {
   font-size: 16px;
-  border-bottom: 1px solid var(--main-color);
+  border-bottom: 2px solid var(--main-color);
   padding-bottom: 0.3rem;
   margin: 2rem 0 1rem;
 }
@@ -411,9 +412,28 @@ article.yomimono p {
   padding-left: 0;
 }
 
+/* 一覧は行の間に薄い点線を引き、題の下線は指を乗せた時だけ出す。
+   下線だらけで、どれも同じ重さに見えていた(2026-10-04、彼女と決めた) */
 .recent-list li {
-  margin: 0.6rem 0;
+  margin: 0;
+  padding: 0.4rem 0;
+  border-bottom: 1px dashed var(--line-color);
   font-size: 16px;
+}
+
+.recent-list li a {
+  text-decoration: none;
+}
+
+.recent-list li a:hover {
+  text-decoration: underline;
+}
+
+/* 指で触る画面には「重ねた時だけ線が出る」が無いので、そこでは線を残す */
+@media (hover: none) {
+  .recent-list li a {
+    text-decoration: underline;
+  }
 }
 
 .recent-list .date {
@@ -1076,12 +1096,13 @@ article.yomimono p {
      下げても上げても目線が揃わない */
   font-size: inherit;
   line-height: 1;
-  color: var(--main-color);
+  /* ♡ だけは、題字の虹から取ったピンク(2026-10-04、彼女と決めた) */
+  color: var(--heart-color);
   background: none;
   border: none;
   padding: 0;
   cursor: pointer;
-  opacity: 0.6;
+  opacity: 0.85;
 }
 
 .iine button:hover:not(:disabled) {
@@ -1095,6 +1116,7 @@ article.yomimono p {
 
 /* 数の場所を先に取っておく。十万まで行っても並びが崩れないように */
 .iine .kazu {
+  color: var(--heart-color);
   display: inline-block;
   min-width: 6ch;
   white-space: nowrap;
