@@ -2236,7 +2236,9 @@
     "州",
     "奮",
     "秒",
-    "処"
+    "処",
+    "譜",
+    "祖"
   ],
   "learned_words": [
     "など",
@@ -2286,7 +2288,8 @@
     "自由",
     "していま",
     "3",
-    "8"
+    "8",
+    "への"
   ],
   "frontier": [
     "https://b.hatena.ne.jp/hotentry",
@@ -2767,7 +2770,6 @@
     "http://web.archive.org/web/20120422074654/http://artlibre.org/licence/lal/",
     "http://web.archive.org/web/20120422074654/http://download.tuxfamily.org/cls/",
     "http://web.archive.org/web/20120422074654/http://fr.wikipen.org/wiki/Implosion",
-    "http://web.archive.org/web/20120422074654/http://www.pounon.com/",
     "http://web.archive.org/web/20120422074654/http://www.le-dictionnaire.com/",
     "http://web.archive.org/web/20120422074654/http://tuxfamily.org/",
     "http://web.archive.org/web/20120422074654/http://www.artlibre.org/licence/lal/",
@@ -3069,7 +3071,13 @@
     "https://wordpress.com/log-in?redirect_to=https%3A%2F%2Fr-login.wordpress.com%2Fremote-login.php%3Faction%3Dlink%26back%3Dhttps%253A%252F%252Fautomattic.com%252F2024%252F11%252F21%252Fautomattic-welcomes-harper-and-elijah-potter%252F",
     "https://wp.me/pe4R-1kEI",
     "https://public-api.wordpress.com/oembed/?format=json&url=https%3A%2F%2Fautomattic.com%2F2024%2F11%2F21%2Fautomattic-welcomes-harper-and-elijah-potter%2F&for=wpcom-auto-discovery",
-    "https://writewithharper.com/"
+    "https://writewithharper.com/",
+    "http://web.archive.org/web/20120413102832/http://www.bonnesnouvelles.net/",
+    "http://web.archive.org/web/20120413102832/http://pounon-edition.over-blog.com/",
+    "http://web.archive.org/web/20120413102832/http://frogblue.over-blog.fr/",
+    "http://web.archive.org/web/20120413102832/http://www.editionssolair.com/",
+    "http://web.archive.org/web/20120413102832/http://erik-barussaud.over-blog.com/",
+    "http://web.archive.org/web/20120413102832/http://blog.ifrance.com/mauer"
   ],
   "visited": [
     "https://note.com/",
@@ -3361,7 +3369,9 @@
     "http://web.archive.org/web/20120420013456/http://tuxfamily.org/en/news/2012041401",
     "http://web.archive.org/web/20120420013456/http://tuxfamily.org/en/subscribe",
     "https://automattic.com/press/",
-    "https://automattic.com/2024/11/21/automattic-welcomes-harper-and-elijah-potter/"
+    "https://automattic.com/2024/11/21/automattic-welcomes-harper-and-elijah-potter/",
+    "http://web.archive.org/web/20120422074654/http://www.pounon.com/",
+    "http://web.archive.org/web/20120413102832*/http://www.pounon.com/"
   ],
   "notes": [
     "0日目: note ――つくる、つながる、とどける。",
@@ -3387,15 +3397,17 @@
     "21日目: [B! あとで読む] クリアファイル収納13商品を徹底比較！大量保管も美しくコレクションも叶うおすすめアイテムをオタクが紹介 - ソレドコ、Вікікнігі",
     "22日目: Register - Login、TPPの関税分野などで応酬…日米、週明けに再協議",
     "23日目: TuxFamily: Free hosting for free people",
-    "24日目: Press – Automattic"
+    "24日目: Press – Automattic、Accueil"
   ],
   "today_walk": {
     "date": "2026-10-05",
     "seen": [
-      "Press – Automattic"
+      "Press – Automattic",
+      "Accueil"
     ],
     "brought": [
-      80
+      80,
+      21
     ]
   },
   "inner_voice": [
@@ -3521,6 +3533,12 @@
       "since": "2026-10-05",
       "first": "2026-10-05",
       "times": 1
+    },
+    {
+      "what": "オーディオ",
+      "since": "2026-10-05",
+      "first": "2026-10-05",
+      "times": 1
     }
   ],
   "saw_on": "2026-10-05",
@@ -3606,14 +3624,14 @@
     "2026-10-05 automattic.com: この場所は、ウェブサイトを作成できるサービスや、会社の情報が書かれた壁に記載されたものがありました。"
   ],
   "where_it_will_go": [
-    "togetter.com",
-    "ws-export.wmcloud.org",
-    "zh.wikinews.org",
-    "www.nhk.jp",
-    "stmgt.web.nhk",
-    "www.le-dictionnaire.com"
+    "atom.io",
+    "wiki.creativecommons.org",
+    "be.wiktionary.org",
+    "docs.github.com",
+    "meta.toolforge.org",
+    "hatenablog.com"
   ],
-  "how_many_places_left": 781,
+  "how_many_places_left": 786,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -3654,7 +3672,8 @@
     "www.tumblr.com": "https://accounts.google.com/v3/signin/id",
     "news.tv-asahi.co.jp": "経済ニュース一覧｜テレ朝NEWS",
     "tuxfamily.org": "TuxFamily: Free hosting for free people",
-    "automattic.com": "Automattic Welcomes Harper and Elijah Po"
+    "automattic.com": "Automattic Welcomes Harper and Elijah Po",
+    "www.pounon.com": "Wayback Machine"
   },
   "went_home": {
     "date": "2026-10-05",
@@ -3713,6 +3732,9 @@
     },
     "から": {
       "1": 1
+    },
+    "自分": {
+      "していま": 1
     }
   },
   "opens_a_sentence": {
@@ -3730,17 +3752,18 @@
     "について": 4,
     "表示": 2,
     "その": 2,
-    "から": 3,
+    "から": 4,
     "この": 3,
     "1": 8,
-    "して": 1,
+    "して": 2,
     "4": 6,
     "場合": 2,
     "です": 2,
     "サイト": 1,
     "すること": 3,
     "した": 1,
-    "していま": 2
+    "していま": 3,
+    "自分": 1
   },
   "closes_a_sentence": {
     "など": 29,
@@ -3758,7 +3781,7 @@
     "表示": 2,
     "から": 3,
     "ます": 2,
-    "して": 1,
+    "して": 2,
     "1": 7,
     "4": 6,
     "場合": 2,
@@ -3766,7 +3789,7 @@
     "です": 3,
     "すること": 4,
     "した": 3,
-    "していま": 2
+    "していま": 5
   },
   "visitors": {
     "comments": 0,
@@ -3782,7 +3805,10 @@
       "1",
       "していま",
       "します",
-      "です"
+      "です",
+      "自分",
+      "して",
+      "検索"
     ]
   },
   "wants_to_say": [
@@ -3886,9 +3912,9 @@
     },
     {
       "what": "アイコン",
-      "since": "2026-09-24",
+      "since": "2026-10-05",
       "first": "2026-09-24",
-      "times": 1,
+      "times": 2,
       "said": ""
     },
     {
@@ -4142,10 +4168,17 @@
       "first": "2026-10-05",
       "times": 1,
       "said": ""
+    },
+    {
+      "what": "オーディオ",
+      "since": "2026-10-05",
+      "first": "2026-10-05",
+      "times": 1,
+      "said": ""
     }
   ],
   "thinking_about": "もう一度自由を求める必要があるのかな。",
-  "learned_on": {"など":"2026-09-20","本当":"2026-09-20","がある":"2026-09-20","だった":"2026-09-20","しかし":"2026-09-20","ある":"2026-09-20","こんにち":"2026-09-20","では":"2026-09-21","かれてい":"2026-09-22","っていま":"2026-09-22","人":"2026-09-22","絵":"2026-09-23","仲間":"2026-09-23","セミナー":"2026-09-23","には":"2026-09-27","します":"2026-09-29","ページ":"2026-09-29","について":"2026-09-30","表示":"2026-09-30","その":"2026-09-30","から":"2026-09-30","場合":"2026-10-01","サイト":"2026-10-01","されてい":"2026-10-01","ます":"2026-10-01","して":"2026-10-01","すること":"2026-10-01","この":"2026-10-01","1":"2026-10-01","です":"2026-10-02","2026":"2026-10-02","0":"2026-10-02","4":"2026-10-02","情報":"2026-10-02","した":"2026-10-02","日本語":"2026-10-02","to":"2026-10-02","検索":"2026-10-02","必要":"2026-10-03","自分":"2026-10-03","2":"2026-10-03","22":"2026-10-03","しました":"2026-10-03","コンテンツ":"2026-10-04","自由":"2026-10-04","していま":"2026-10-04","3":"2026-10-04","8":"2026-10-05"},
+  "learned_on": {"など":"2026-09-20","本当":"2026-09-20","がある":"2026-09-20","だった":"2026-09-20","しかし":"2026-09-20","ある":"2026-09-20","こんにち":"2026-09-20","では":"2026-09-21","かれてい":"2026-09-22","っていま":"2026-09-22","人":"2026-09-22","絵":"2026-09-23","仲間":"2026-09-23","セミナー":"2026-09-23","には":"2026-09-27","します":"2026-09-29","ページ":"2026-09-29","について":"2026-09-30","表示":"2026-09-30","その":"2026-09-30","から":"2026-09-30","場合":"2026-10-01","サイト":"2026-10-01","されてい":"2026-10-01","ます":"2026-10-01","して":"2026-10-01","すること":"2026-10-01","この":"2026-10-01","1":"2026-10-01","です":"2026-10-02","2026":"2026-10-02","0":"2026-10-02","4":"2026-10-02","情報":"2026-10-02","した":"2026-10-02","日本語":"2026-10-02","to":"2026-10-02","検索":"2026-10-02","必要":"2026-10-03","自分":"2026-10-03","2":"2026-10-03","22":"2026-10-03","しました":"2026-10-03","コンテンツ":"2026-10-04","自由":"2026-10-04","していま":"2026-10-04","3":"2026-10-04","8":"2026-10-05","への":"2026-10-05"},
   "today_keen": {
     "date": "2026-10-05",
     "keen": false
@@ -4209,10 +4242,10 @@
       "day": "2026-10-02"
     }
   ],
-  "understood_usually": 0.065852,
+  "understood_usually": 0.074554,
   "its_ways": {
     "pages_per_site": 11.8,
-    "pull_of_japanese": 0.98,
+    "pull_of_japanese": 0.97,
     "feeling_keen": 0.29,
     "wish_to_return": 1.0
   },
@@ -4264,5 +4297,5 @@
       }
     }
   ],
-  "woke_at": "2026-10-05 06"
+  "woke_at": "2026-10-05 07"
 }
