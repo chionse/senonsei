@@ -10,7 +10,20 @@
   font-display: swap;
 }
 
+/* 小さい字のための、12ドットで描かれた書体。
+   DotGothic16 は16ドットで描かれているので、16px と 32px の時しか点がくっきり出ない。
+   小さく縮めるとにじむので、小さい字だけこちらにする(2026-10-04、彼女と決めた)。
+   字の大きさは三段だけ。題は 32px、見出しと中身は 16px、小さい字は 12px。
+   PixelMplus12 / M+ FONT LICENSE / fonts/LICENSE-PixelMplus.txt */
+@font-face {
+  font-family: "PixelMplus12";
+  src: url("fonts/PixelMplus12-Regular.woff2") format("woff2"),
+       url("fonts/PixelMplus12-Regular.ttf") format("truetype");
+  font-display: swap;
+}
+
 :root {
+  --small-font: "PixelMplus12", "MS Gothic", monospace;
   --main-color: #0029ae;
   --bg-color: #fafaf7;
   --line-color: #ccd3e8;
@@ -100,7 +113,7 @@ body > .frame,
 
 .page-name {
   margin: 0;
-  font-size: 2.4rem;
+  font-size: 32px;
   font-weight: normal;
 }
 
@@ -109,7 +122,7 @@ body > .frame,
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.9rem;
+  font-size: 16px;
   padding-bottom: 0.4rem;
   border-bottom: 1px solid var(--line-color);
   margin-bottom: 1.5rem;
@@ -125,7 +138,7 @@ body > .frame,
 
 .memo-switch {
   margin-top: 0.6rem;
-  font-size: 0.95rem;
+  font-size: 16px;
 }
 
 .memo-switch span {
@@ -194,14 +207,18 @@ header.with-fukidashi .header-middle {
 
 .fukidashi-head {
   margin: 0 0 2px;
-  font-size: 0.72rem;
+  font-size: 12px;
+  font-family: var(--small-font);
+  -webkit-font-smoothing: none;
   opacity: 0.7;
 }
 
 /* 思いは長いこともある。紙を押し広げすぎないよう、ここだけで流す */
 .fukidashi-said {
   margin: 0;
-  font-size: 0.85rem;
+  font-size: 12px;
+  font-family: var(--small-font);
+  -webkit-font-smoothing: none;
   line-height: 1.5;
   max-height: 7.5em;
   overflow-y: auto;
@@ -209,7 +226,9 @@ header.with-fukidashi .header-middle {
 }
 
 .visitor-counter {
-  font-size: 0.8rem;
+  font-size: 12px;
+  font-family: var(--small-font);
+  -webkit-font-smoothing: none;
   opacity: 0.8;
   margin-top: 0.5rem;
 }
@@ -222,9 +241,10 @@ header.with-fukidashi .header-middle {
    昔の個人サイトのカウンターがそうだったように。
    明朝のままだと太らないので、ここだけゴシックにする */
 .count {
-  font-family: inherit;
+  /* 数だけは題名と同じ点の書体で。まわりの小さい字(12ドット)とは別にする */
+  font-family: "DotGothic16", "MS Gothic", monospace;
   font-weight: normal;
-  font-size: 1.5em;
+  font-size: 16px;
   font-variant-numeric: tabular-nums;
   color: var(--main-color);
   letter-spacing: 0.02em;
@@ -294,7 +314,7 @@ header.with-fukidashi .header-middle {
 
 h1 {
   margin: 0;
-  font-size: 2rem;
+  font-size: 32px;
   color: var(--main-color);
 }
 
@@ -340,18 +360,23 @@ article {
 
 article h2 {
   margin: 0 0 0.3rem;
-  font-size: 1.2rem;
+  font-size: 32px;
 }
 
 article .date {
-  font-size: 0.8rem;
+  font-size: 12px;
+  font-family: var(--small-font);
+  -webkit-font-smoothing: none;
   margin-bottom: 0.6rem;
   opacity: 0.8;
 }
 
 article .article-title,
 .log-view .entry .article-title {
-  font-size: 1.5rem;
+  /* 題は日時の箱の中にあるので、日時の小さい書体を受け継がないように */
+  font-family: "DotGothic16", "MS Gothic", monospace;
+  -webkit-font-smoothing: auto;
+  font-size: 32px;
   opacity: 1;
   margin-left: 1rem;
   border-bottom: 1px solid var(--main-color);
@@ -375,7 +400,7 @@ article.yomimono p {
 }
 
 .section-title {
-  font-size: 1rem;
+  font-size: 16px;
   border-bottom: 1px solid var(--main-color);
   padding-bottom: 0.3rem;
   margin: 2rem 0 1rem;
@@ -388,11 +413,13 @@ article.yomimono p {
 
 .recent-list li {
   margin: 0.6rem 0;
-  font-size: 0.95rem;
+  font-size: 16px;
 }
 
 .recent-list .date {
-  font-size: 0.8rem;
+  font-size: 12px;
+  font-family: var(--small-font);
+  -webkit-font-smoothing: none;
   opacity: 0.8;
   margin-right: 0.5rem;
 }
@@ -414,12 +441,14 @@ article.yomimono p {
 
 .comment-entry .comment-name {
   font-weight: bold;
-  font-size: 0.9rem;
+  font-size: 16px;
 }
 
 .comment-entry .comment-date {
   font-weight: normal;
-  font-size: 0.75rem;
+  font-size: 12px;
+  font-family: var(--small-font);
+  -webkit-font-smoothing: none;
   opacity: 0.7;
   margin-left: 0.6rem;
 }
@@ -428,7 +457,9 @@ article.yomimono p {
    名前の太字をそのまま受け継ぐと、日時より目立ってしまう */
 .comment-entry .iine {
   font-weight: normal;
-  font-size: 0.75rem;
+  font-size: 12px;
+  font-family: var(--small-font);
+  -webkit-font-smoothing: none;
 }
 
 .comment-entry .comment-message {
@@ -450,12 +481,14 @@ article.yomimono p {
 
 .comment-reply .comment-name {
   font-weight: bold;
-  font-size: 0.85rem;
+  font-size: 16px;
 }
 
 .comment-reply .comment-date {
   font-weight: normal;
-  font-size: 0.75rem;
+  font-size: 12px;
+  font-family: var(--small-font);
+  -webkit-font-smoothing: none;
   opacity: 0.7;
   margin-left: 0.6rem;
 }
@@ -477,7 +510,7 @@ article.yomimono p {
 .comment-form textarea,
 .comment-form button {
   font-family: inherit;
-  font-size: 0.9rem;
+  font-size: 16px;
   color: var(--main-color);
   border: 1px solid var(--line-color);
   background: var(--bg-color);
@@ -519,7 +552,7 @@ article.yomimono p {
   flex: 0 0 auto;
   border-right: 1px solid var(--line-color);
   padding-right: 0.8rem;
-  font-size: 0.85rem;
+  font-size: 16px;
   display: flex;
   gap: 0.9rem;
   align-items: flex-start;
@@ -564,7 +597,7 @@ article.yomimono p {
 }
 
 .log-view .entry-title {
-  font-size: 1.5rem;
+  font-size: 32px;
   border-bottom: 1px solid var(--main-color);
   padding-bottom: 0.2rem;
   margin: 0;
@@ -574,7 +607,9 @@ article.yomimono p {
 /* いちばん長い文字列が日時だと、いちばんどうでもいいものが
    いちばん目立つことになる。小さく、薄くしておく */
 .log-view .entry .date {
-  font-size: 0.7rem;
+  font-size: 12px;
+  font-family: var(--small-font);
+  -webkit-font-smoothing: none;
   opacity: 0.5;
   margin: 0.5rem 0 1.6rem;
 }
@@ -602,7 +637,7 @@ article.yomimono p {
 
 .keyword-list a {
   text-decoration: none;
-  font-size: 1.1rem;
+  font-size: 16px;
 }
 
 .keyword-list a:hover {
@@ -611,7 +646,7 @@ article.yomimono p {
 
 .keyword-list li.locked {
   color: #999999;
-  font-size: 1.1rem;
+  font-size: 16px;
   cursor: default;
 }
 
@@ -658,7 +693,9 @@ article.yomimono p {
   bottom: -0.8rem;
   margin-right: -0.3rem;
   text-align: right;
-  font-size: 0.8rem;
+  font-size: 12px;
+  font-family: var(--small-font);
+  -webkit-font-smoothing: none;
   color: var(--main-color);
   opacity: 0.55;
   pointer-events: none;
@@ -678,7 +715,7 @@ article.yomimono p {
 }
 
 .memo-back {
-  font-size: 0.9rem;
+  font-size: 16px;
   white-space: nowrap;
 }
 
@@ -687,14 +724,16 @@ article.yomimono p {
 }
 
 .memo-word {
-  font-size: 1.3rem;
+  font-size: 32px;
   text-align: center;
   margin-bottom: 1.5rem;
 }
 
 /* いつ足して、いつ書き直したか。見出しの下に小さく */
 .memo-when {
-  font-size: 0.62rem;
+  font-size: 12px;
+  font-family: var(--small-font);
+  -webkit-font-smoothing: none;
   line-height: 1.4;
   white-space: nowrap;
   /* 本文と同じ濃さ。小さい字なので、薄めると読めなくなる */
@@ -705,7 +744,7 @@ article.yomimono p {
 }
 
 .memo-body {
-  font-size: 0.92rem;
+  font-size: 16px;
   line-height: 1.9;
   white-space: pre-wrap;
   /* 枠まで文字を詰めず、左右に少し余白を持たせる */
@@ -750,7 +789,7 @@ article.yomimono p {
 .page-turn {
   text-align: center;
   margin-top: 1.6rem;
-  font-size: 0.95rem;
+  font-size: 16px;
 }
 
 .page-turn span {
@@ -770,7 +809,9 @@ article.yomimono p {
 }
 
 .keyword-count {
-  font-size: 0.85rem;
+  font-size: 12px;
+  font-family: var(--small-font);
+  -webkit-font-smoothing: none;
   opacity: 0.8;
   margin-bottom: 1rem;
   text-align: center;
@@ -832,7 +873,7 @@ article.yomimono p {
   border-bottom: none;
   padding-bottom: 0;
   margin-bottom: 1rem;
-  font-size: 0.85rem;
+  font-size: 16px;
 }
 
 /* 左の欄。本文を二つの欄で挟む。線は内側に向ける */
@@ -848,7 +889,7 @@ article.yomimono p {
 }
 
 .side-title {
-  font-size: 0.85rem;
+  font-size: 16px;
   border-bottom: 1px solid var(--line-color);
   padding-bottom: 0.3rem;
   margin-bottom: 0.6rem;
@@ -865,7 +906,7 @@ article.yomimono p {
 
 .side-nav a,
 .side-nav .here {
-  font-size: 0.9rem;
+  font-size: 16px;
   margin: 0;
 }
 
@@ -874,7 +915,9 @@ article.yomimono p {
 }
 
 .side-fact {
-  font-size: 0.8rem;
+  font-size: 12px;
+  font-family: var(--small-font);
+  -webkit-font-smoothing: none;
   margin: 0.25rem 0;
 }
 
@@ -893,7 +936,9 @@ article.yomimono p {
 }
 
 .side-word {
-  font-size: 0.95rem;
+  font-size: 12px;
+  font-family: var(--small-font);
+  -webkit-font-smoothing: none;
   margin: 0.2rem 0;
 }
 
@@ -908,7 +953,7 @@ article.yomimono p {
   margin-top: 2.5rem;
   padding-top: 0.8rem;
   border-top: 1px solid var(--line-color);
-  font-size: 0.85rem;
+  font-size: 16px;
 }
 
 .step-next {
@@ -934,7 +979,9 @@ article.yomimono p {
 }
 
 .koma-head {
-  font-size: 0.65rem;
+  font-size: 12px;
+  font-family: var(--small-font);
+  -webkit-font-smoothing: none;
   opacity: 0.55;
   text-align: center;
   margin-bottom: 0.2rem;
@@ -945,7 +992,9 @@ article.yomimono p {
   flex-direction: column;
   align-items: center;
   gap: 0.1rem;
-  font-size: 0.6rem;
+  font-size: 12px;
+  font-family: var(--small-font);
+  -webkit-font-smoothing: none;
   line-height: 1.1;
   padding: 0.2rem 0;
   opacity: 0.45;
@@ -953,7 +1002,9 @@ article.yomimono p {
 
 .koma i {
   font-style: normal;
-  font-size: 0.7rem;
+  font-size: 12px;
+  font-family: var(--small-font);
+  -webkit-font-smoothing: none;
   line-height: 1;
   min-height: 0.7rem;
 }
@@ -976,21 +1027,27 @@ article.yomimono p {
 }
 
 .koma-note {
-  font-size: 0.7rem;
+  font-size: 12px;
+  font-family: var(--small-font);
+  -webkit-font-smoothing: none;
   opacity: 0.6;
   margin: 0.5rem 0 0;
 }
 
 /* この先の育ち。今いる段階だけがはっきり出る */
 .dan {
-  font-size: 0.75rem;
+  font-size: 12px;
+  font-family: var(--small-font);
+  -webkit-font-smoothing: none;
   margin: 0.25rem 0;
   opacity: 0.4;
 }
 
 .dan.here {
   opacity: 1;
-  font-size: 0.85rem;
+  font-size: 12px;
+  font-family: var(--small-font);
+  -webkit-font-smoothing: none;
 }
 
 .dan.here::before {
