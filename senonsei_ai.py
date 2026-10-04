@@ -4384,6 +4384,16 @@ def run_today():
     today = now.date().isoformat()
     state = load_state()
 
+    # この時間にもう起きていたら、何もせずに寝直す。
+    # GitHub は混んでいると決まった時間の起こしを飛ばすので、一時間に三度
+    # 起こしてもらうようにした(2026-10-04、彼女と決めた)。届いた最初の一度だけ起きる
+    woke = f"{now:%Y-%m-%d %H}"
+    if state.get("woke_at") == woke:
+        print(f"{now:%H}時はもう起きていたので、寝直します")
+        return
+    state["woke_at"] = woke
+    save_state(state)
+
     # きのう書くつもりだったのに、書きそびれていたら、今のうちに書く。
     # 今日の予定を決めると、きのうの予定は上書きされて分からなくなるので先に
     makes_up_for_yesterday(state, now)
