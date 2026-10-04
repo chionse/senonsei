@@ -19,7 +19,9 @@ import math
 import os
 import random
 import re
+import shutil
 import struct
+import subprocess
 import time
 import traceback
 import urllib.parse
@@ -1634,6 +1636,72 @@ def read_up_to(response, limit, seconds=READING_AT_MOST):
     return b"".join(chunks)
 
 
+# 今のサイトの多くは、届いた紙には「あとで中身を組み立てて」という指示しか無く、
+# 閲覧機が組み立てて初めて中身が出る。この子の読み方では空っぽに見えていた。
+# 空っぽに見えた時だけ、画面の無い閲覧機を借りて組み立ててから読む
+# (2026-10-04、彼女と決めた)。
+#
+# 閲覧機はこの子の外にある部品で、いつか無くなるか、動かなくなる。
+# 見つからない時や、こけた時は、今までどおり空っぽのまま次へ行く。
+# 散歩はそれで止まらない
+BROWSERS = ("google-chrome", "google-chrome-stable", "chromium", "chromium-browser", "chrome")
+# これより字が少なく、<script> があるページを「組み立て待ち」と見なす
+LOOKS_EMPTY = 200
+# 一度の起き上がりで閲覧機を借りるのは、これだけ。組み立てるには時間がかかる
+BROWSER_TIMES = 3
+BROWSER_WAITS = 45  # 秒
+BROWSER_USED = [0]
+
+
+def a_browser():
+    """借りられる閲覧機。無ければ None。"""
+    for name in BROWSERS:
+        found = shutil.which(name)
+        if found:
+            return found
+    return None
+
+
+def look_with_a_browser(url):
+    """閲覧機に組み立ててもらったページを受け取る。借りられなければ None。"""
+    if BROWSER_USED[0] >= BROWSER_TIMES:
+        return None
+    browser = a_browser()
+    if not browser:
+        return None
+    BROWSER_USED[0] += 1
+    asked = [
+        browser, "--headless=new", "--disable-gpu", "--no-first-run",
+        "--no-default-browser-check", "--mute-audio", "--hide-scrollbars",
+        f"--user-agent={USER_AGENT}", "--virtual-time-budget=8000",
+    ]
+    # 管理者のまま動かすと、閲覧機は囲いを外さないと立ち上がらない
+    if hasattr(os, "geteuid") and os.geteuid() == 0:
+        asked.append("--no-sandbox")
+    try:
+        done = subprocess.run(
+            asked + ["--dump-dom", url],
+            capture_output=True,
+            timeout=BROWSER_WAITS,
+        )
+    except Exception as error:
+        print(f"閲覧機を借りられませんでした({str(error)[:60]})")
+        return None
+    html = done.stdout[:400000].decode("utf-8", errors="ignore")
+    if done.returncode != 0 or not html.strip():
+        return None
+    print("空っぽに見えたので、閲覧機に組み立ててもらって読みました")
+    return html
+
+
+def seems_unbuilt(html):
+    """届いた紙が、組み立て待ちのまま空っぽに見えるか。"""
+    if not re.search(r"<script\b", html, re.IGNORECASE):
+        return False
+    shown = " ".join(TAG.sub(" ", SCRIPT_OR_STYLE.sub(" ", html)).split())
+    return len(unescape(shown)) < LOOKS_EMPTY
+
+
 def open_page(url):
     """ページを開いて、そこにある文章と、そこから伸びているリンクを受け取る。"""
     request = urllib.request.Request(as_openable(url), headers={"User-Agent": USER_AGENT})
@@ -1645,6 +1713,12 @@ def open_page(url):
         final_url = response.geturl()
 
     html = read_as_japanese(raw, content_type)
+    # 昔の姿(web.archive.org)は、その頃の紙がそのまま残っているので借りない
+    from_the_past = urllib.parse.urlparse(final_url).netloc.lower().endswith("archive.org")
+    if "html" in content_type and not from_the_past and seems_unbuilt(html):
+        built = look_with_a_browser(final_url)
+        if built:
+            html = built
 
     found = TITLE_TAG.search(html)
     # 題にも &amp; や &#064; が入っている。ほどかないと、
