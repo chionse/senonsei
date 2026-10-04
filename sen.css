@@ -436,32 +436,6 @@ article.yomimono p {
   }
 }
 
-/* 今日のブログは白いカードに。題が上、日時と♡が下 */
-article.today {
-  background: #ffffff;
-  border: 1px solid var(--line-color);
-  padding: 18px 20px;
-}
-
-article.today .article-title {
-  display: block;
-  margin-left: 0;
-  border-bottom: none;
-  padding-bottom: 0;
-}
-
-article.today .date {
-  opacity: 1;
-  display: flex;
-  gap: 0.8rem;
-  align-items: center;
-  margin: 0.4rem 0 0;
-}
-
-article.today p {
-  margin-top: 0.8rem;
-}
-
 .recent-list .date {
   font-size: 12px;
   font-family: var(--small-font);

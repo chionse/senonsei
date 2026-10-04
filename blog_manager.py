@@ -1901,10 +1901,8 @@ def generate_index_html(articles, state=None, news=None):
         wrote_today = ordered[0]["date"] == today_in_japan().isoformat()
         if wrote_today:
             latest = ordered[0]
-            # 題が先に目に入るように、題を上に、日時と♡を下に置く(2026-10-04、彼女と決めた)
-            latest_html = f"""<article class="today">
-    <div class="article-title">{latest['title']}</div>
-    <div class="date">{latest['date']} {latest.get('time', '')}{iine_html(latest['date'])}</div>
+            latest_html = f"""<article>
+    <div class="date">{latest['date']} {latest.get('time', '')}<span class="article-title">{latest['title']}</span>{iine_html(latest['date'])}</div>
     <p>{latest['content']}</p>
   </article>"""
         elif plan.get("date") == today_in_japan().isoformat() and plan.get("resting"):
