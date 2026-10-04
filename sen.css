@@ -401,7 +401,7 @@ article.yomimono p {
 
 .section-title {
   font-size: 16px;
-  border-bottom: 1px solid var(--main-color);
+  border-bottom: 2px solid var(--main-color);
   padding-bottom: 0.3rem;
   margin: 2rem 0 1rem;
 }
@@ -411,9 +411,46 @@ article.yomimono p {
   padding-left: 0;
 }
 
+/* 一覧は行の間に薄い点線を引き、題の下線は指を乗せた時だけ出す。
+   下線だらけで、どれも同じ重さに見えていた(2026-10-04、彼女と決めた) */
 .recent-list li {
-  margin: 0.6rem 0;
+  margin: 0;
+  padding: 0.4rem 0;
+  border-bottom: 1px dashed var(--line-color);
   font-size: 16px;
+}
+
+.recent-list li a {
+  text-decoration: none;
+}
+
+.recent-list li a:hover {
+  text-decoration: underline;
+}
+
+/* 今日のブログは白いカードに。題が上、日時と♡が下 */
+article.today {
+  background: #ffffff;
+  border: 1px solid var(--line-color);
+  padding: 18px 20px;
+}
+
+article.today .article-title {
+  display: block;
+  margin-left: 0;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+article.today .date {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  margin: 0.4rem 0 0;
+}
+
+article.today p {
+  margin-top: 0.8rem;
 }
 
 .recent-list .date {
