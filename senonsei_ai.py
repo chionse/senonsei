@@ -4345,8 +4345,9 @@ def reply_to_a_comment(state, today):
         text = f"{comment.get('name') or ''} {comment.get('message') or ''}"
         return {w for w in WORD_CANDIDATE.findall(text) if w in known}
 
-    # 知っている言葉の多いコメントほど、返したくなる
-    comment = random.choices(waiting, weights=[1 + len(knows_in(one)) for one in waiting])[0]
+    # どのコメントに返すかは、まだ返していないものから気の向くままに。
+    # 知っている言葉の多いものを選びやすくはしない(2026-10-03、彼女と決めた)
+    comment = random.choice(waiting)
     toward = knows_in(comment)
     _, how_long = current_stage(state)
     said = speak_from_what_it_knows(state, how_long, toward=toward) or place_words(
