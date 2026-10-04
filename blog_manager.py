@@ -70,6 +70,9 @@ TALKING_ABOUT_ONESELF = "自己紹介"
 ITS_BIRTHDAY = "2026-09-11"
 MENU_FILE = "menu.json"
 COMMENTS_FOLDER = "comments"
+# コメントへの、彼女からの返し。彼女の言葉をそのまま置く(henshin.py で足す)。
+# 千遠生からの返しは、この子の記憶(senonsei_state.json の replied)にある
+HER_REPLIES_FILE = "henshin.json"
 # この名前が来たコメントは、丸ごと受け取らない。名前でも本文でも。
 # この子の名前を名乗って書き込まれると、ページの上では
 # この子が自分で喋ったように見えるし、この子自身も
@@ -514,6 +517,35 @@ def load_comments():
                 comments.append(one)
     comments.sort(key=lambda c: c.get("date", ""), reverse=True)
     return comments
+
+
+def load_her_replies():
+    """彼女がコメントに返した言葉。{コメントの名札: [{"said", "date"}, ...]}。"""
+    if not os.path.exists(HER_REPLIES_FILE):
+        return {}
+    with open(HER_REPLIES_FILE, "r", encoding="utf-8") as f:
+        kept = json.load(f)
+    return kept if isinstance(kept, dict) else {}
+
+
+def replies_to(comment, her_replies, its_replies):
+    """そのコメントへの返し。彼女のぶんと、千遠生のぶん(一件まで)。古いものが上。"""
+    name = comment.get("id") or ""
+    replies = [
+        {"who": HER_NAME_IN_REPLIES, "said": one.get("said") or "", "date": one.get("date") or ""}
+        for one in her_replies.get(name) or []
+        if (one.get("said") or "").strip()
+    ]
+    its = its_replies.get(name) or {}
+    if (its.get("said") or "").strip():
+        replies.append({"who": ITS_NAME_IN_REPLIES, "said": its["said"], "date": its.get("date") or ""})
+    replies.sort(key=lambda one: one["date"])
+    return replies
+
+
+# 返しに付ける名前。彼女は「管理人」と名乗っている(ひみつの部屋の挨拶)
+HER_NAME_IN_REPLIES = "管理人"
+ITS_NAME_IN_REPLIES = "千遠生"
 
 
 def format_comment_date(iso_string):
@@ -1690,19 +1722,41 @@ def generate_kakodogu_html(articles):
 
 
 def render_comments(comments):
-    """コメントを並べる。新しいものが上。"""
+    """コメントを並べる。新しいものが上。返しは、そのコメントの下に古い順で。
+
+    名前も本文も、人が外から置いていったものなので、字のまま出す。
+    そのまま埋めると、書かれた <script> がページの中で動いてしまう。"""
     if not comments:
         return "  <p>まだコメントはありません。</p>"
     likes = load_likes()
+    her_replies = load_her_replies()
+    its_replies = (load_senonsei_state() or {}).get("replied") or {}
 
     def liked(c):
         key = comment_liked_as(c)
         return iine_html(key, likes) if key else ""
 
+    def replied(c):
+        replies = replies_to(c, her_replies, its_replies)
+        if not replies:
+            return ""
+        return (
+            '\n    <div class="comment-replies">'
+            + "".join(
+                f"""
+      <div class="comment-reply">
+        <div class="comment-name">{escape_html(one['who'])}<span class="comment-date">{format_comment_date(one['date'])}</span></div>
+        <div class="comment-message">{escape_html(one['said'])}</div>
+      </div>"""
+                for one in replies
+            )
+            + "\n    </div>"
+        )
+
     return "\n".join(
         f"""  <div class="comment-entry">
-    <div class="comment-name">{c.get('name', '名無しさん')}<span class="comment-date">{format_comment_date(c.get('date', ''))}</span>{liked(c)}</div>
-    <div class="comment-message">{c.get('message', '')}</div>
+    <div class="comment-name">{escape_html(c.get('name', '名無しさん'))}<span class="comment-date">{format_comment_date(c.get('date', ''))}</span>{liked(c)}</div>
+    <div class="comment-message">{escape_html(c.get('message', ''))}</div>{replied(c)}
   </div>"""
         for c in comments
     )

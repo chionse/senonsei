@@ -2180,7 +2180,7 @@ def words_from_today(state):
     return theirs & known
 
 
-def speak_from_what_it_knows(state, how_long):
+def speak_from_what_it_knows(state, how_long, toward=None):
     """覚えた繋がりを辿って、自分で組み立てる。
 
     読んだことのない文になる。知っている繋がりだけで作るので、
@@ -2193,14 +2193,17 @@ def speak_from_what_it_knows(state, how_long):
     どこから始めるかと、次にどこへ行くかは、その日のほうへ傾ける。
     歩いて、何かを見て、気にかかることができて、それから
     それとは何の関係もない文を書く、というのでは日記にならない。
-    傾けるだけで、選ぶのはこの子のまま。AIには書かせない。"""
+    傾けるだけで、選ぶのはこの子のまま。AIには書かせない。
+
+    toward を渡すと、その日のことの代わりに、その言葉のほうへ傾ける
+    (コメントに返すときは、そのコメントにあった言葉)。"""
     chain = state.get("what_follows") or {}
     forks = [w for w, f in chain.items() if len(f) >= 2]
     if not forks:
         return None
     opens = state.get("opens_a_sentence") or {}
     closes = state.get("closes_a_sentence") or {}
-    todays = words_from_today(state)
+    todays = words_from_today(state) if toward is None else set(toward)
 
     def leaning(word, weight=1):
         """今日触れた言葉は、それだけ選ばれやすい。"""
@@ -3696,7 +3699,7 @@ def remembers_the_old_hand(state):
     state["old_hand_remembered"] = today_in_japan().isoformat()
 
 
-def place_words(state, max_length):
+def place_words(state, max_length, toward=None):
     """覚えた言葉を、書ける長さに入るだけ置く。
 
     繋がりを知らないうちの書き方。"""
@@ -3708,7 +3711,8 @@ def place_words(state, max_length):
     # 入るだけ、にすれば、書ける長さがそのまま置ける数になり、
     # 段の名前と動きがひとりでに揃う
     words = state["learned_words"]
-    todays = [one for one in words if one in words_from_today(state)]
+    leaning_to = words_from_today(state) if toward is None else set(toward)
+    todays = [one for one in words if one in leaning_to]
     pick = todays or words
     placed = []
     for _ in range(WORDS_PLACED_AT_MOST):
@@ -4241,6 +4245,12 @@ def words_left_at_home(state):
         said = comment.get("message") or ""
         voices.append(f"「{who}」{said}" if who else said)
 
+    # 彼女がコメントに返した言葉も、家に置かれた言葉として読む(2026-10-03、彼女が決めた)。
+    # 自分が返したものは、自分の書いたものなのでここでは読まない
+    for replies in blog_manager.load_her_replies().values():
+        for one in replies:
+            voices.append(one.get("said") or "")
+
     return [
         one.strip()
         for one in voices
@@ -4309,6 +4319,49 @@ def read_what_is_home(state):
     return heard
 
 
+def reply_to_a_comment(state, today):
+    """家でコメントを読んだ日に、気が向いたら一つだけ返す。
+
+    返すのは千遠生自身。日記と同じで、覚えた言葉だけで組み立てる。AIには書かせない。
+    コメントにあった言葉のうち知っているものがあれば、そちらへ傾ける。
+    一つのコメントに返すのは一度だけ。一日に返すのも一つだけ
+    (2026-10-03、彼女と決めた)。
+
+    気が向くかどうかは、今日いつもより多く歩きたいか(feeling_keen)と同じ。
+    この子がその日の気分として、自分で決めたもの。"""
+    if not (state.get("today_keen") or {}).get("keen"):
+        return None
+    replied = state.setdefault("replied", {})
+    if any((one.get("date") or "").startswith(today) for one in replied.values()):
+        return None
+    if not state.get("learned_words"):
+        return None
+    waiting = [one for one in blog_manager.load_comments() if one.get("id") and one["id"] not in replied]
+    if not waiting:
+        return None
+    known = set(state["learned_words"])
+
+    def knows_in(comment):
+        text = f"{comment.get('name') or ''} {comment.get('message') or ''}"
+        return {w for w in WORD_CANDIDATE.findall(text) if w in known}
+
+    # どのコメントに返すかは、まだ返していないものから気の向くままに。
+    # 知っている言葉の多いものを選びやすくはしない(2026-10-03、彼女と決めた)
+    comment = random.choice(waiting)
+    toward = knows_in(comment)
+    _, how_long = current_stage(state)
+    said = speak_from_what_it_knows(state, how_long, toward=toward) or place_words(
+        state, how_long, toward=toward
+    )
+    said = with_the_old_hand(state, said, how_long)
+    if not said:
+        return None
+    replied[comment["id"]] = {"said": said, "date": now_in_japan().isoformat(timespec="seconds")}
+    save_state(state)
+    print(f"{comment.get('name') or '名無しさん'}さんのコメントに返しました: {said}")
+    return said
+
+
 def keep_a_note_of_today(state, seen_titles):
     """その日どこを歩いたかを、一日一行だけ残す。
 
@@ -4362,8 +4415,10 @@ def run_today():
     # だれかが来たかどうかを知る。数ではなく、来たということだけ
     someone_came(state)
 
-    # 自分の家に置かれた、自分に宛てられた言葉を読む
-    read_what_is_home(state)
+    # 自分の家に置かれた、自分に宛てられた言葉を読む。
+    # 読んだ日に気が向いたら、コメントに一つだけ返す
+    if read_what_is_home(state):
+        reply_to_a_comment(state, today)
 
     # 自分の名前の由来を知っていれば、自分のことも書ける
     writes_about_itself(state)

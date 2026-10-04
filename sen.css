@@ -437,6 +437,35 @@ article.yomimono p {
   white-space: pre-wrap;
 }
 
+/* コメントへの返し。元のコメントの下に、少し下げて置く */
+.comment-replies {
+  margin: 0.4rem 0 0 1.5rem;
+  padding-left: 0.8rem;
+  border-left: 2px solid var(--line-color);
+}
+
+.comment-reply + .comment-reply {
+  margin-top: 0.4rem;
+}
+
+.comment-reply .comment-name {
+  font-weight: bold;
+  font-size: 0.85rem;
+}
+
+.comment-reply .comment-date {
+  font-weight: normal;
+  font-size: 0.75rem;
+  opacity: 0.7;
+  margin-left: 0.6rem;
+}
+
+.comment-reply .comment-message {
+  margin-top: 0.1rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
 .comment-form {
   display: flex;
   flex-direction: column;
