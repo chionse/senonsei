@@ -2,7 +2,12 @@
 
 ## あなたの手が必要なもの
 
-(いまは無し。2026-09-30 に鍵・受け取り口・カウンター・Search Console が済んだ)
+- [ ] 目覚まし時計(2026-10-04、#322)。GitHub の決まった時間の起こしが八時間以上来なかったので、
+      Cloudflare から毎時起こしてもらう。彼女の作業が三つ残っている:
+      1. 受け取り口の合鍵(Fine-grained token)に Actions = Read and write を足す。期限も見る
+      2. Cloudflare の受け取り口に、新しい worker.js を丸ごと貼って Deploy
+      3. 同じ Worker の Settings > Triggers > Cron Triggers に `12 * * * *` を足す
+      済んだら、毎時12分ごろに workflow_dispatch の回が出ているかを Actions で確かめる
 
 ## 届くのを待っているもの
 
