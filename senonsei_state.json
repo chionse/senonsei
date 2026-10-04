@@ -2232,7 +2232,11 @@
     "惑",
     "騰",
     "城",
-    "²"
+    "²",
+    "州",
+    "奮",
+    "秒",
+    "処"
   ],
   "learned_words": [
     "など",
@@ -2281,7 +2285,8 @@
     "コンテンツ",
     "自由",
     "していま",
-    "3"
+    "3",
+    "8"
   ],
   "frontier": [
     "https://b.hatena.ne.jp/hotentry",
@@ -2733,7 +2738,6 @@
     "https://videopress.com/feed/",
     "https://videopress2.wordpress.com/xmlrpc.php?rsd",
     "https://s0.wp.com",
-    "https://automattic.com/press/",
     "https://videopress.com/service-guidelines/",
     "https://s2.wp.com",
     "https://videopress.com/",
@@ -3015,7 +3019,57 @@
     "http://web.archive.org/web/20120420013456/http://validator.w3.org/check?uri=referer",
     "http://web.archive.org/web/20120518064154/http://validator.w3.org/check?uri=referer",
     "http://web.archive.org/web/20120503084012/http://validator.w3.org/check?uri=referer",
-    "http://web.archive.org/web/20120425163153/http://validator.w3.org/check?uri=referer"
+    "http://web.archive.org/web/20120425163153/http://validator.w3.org/check?uri=referer",
+    "https://salesforceventures.com/",
+    "https://trends.builtwith.com/cms",
+    "https://wordpress.com/abuse/?report_url=https://automattic.com/press/",
+    "https://wordpress.com/log-in?redirect_to=https%3A%2F%2Fr-login.wordpress.com%2Fremote-login.php%3Faction%3Dlink%26back%3Dhttps%253A%252F%252Fautomattic.com%252Fpress%252F",
+    "https://wordpress.com/activity/",
+    "https://www.blackrock.com/us/individual",
+    "https://newspack.com/",
+    "https://www.schonfeld.com/",
+    "https://simplenote.com/",
+    "http://wordpress.us8.list-manage.com/subscribe?u=4471f40dba4ec0e34130a91a5&id=e8fa0cdabe",
+    "https://longreads.com/",
+    "https://www.iconiqcapital.com/",
+    "https://en.gravatar.com/",
+    "https://www.linkedin.com/company/automattic/",
+    "https://crowdsignal.com/",
+    "https://meetomattic.com/",
+    "https://make.wordpress.org/",
+    "https://wordpress.com/start/",
+    "https://automattic.wordpress.com/xmlrpc.php?rsd",
+    "https://cloudup.com/",
+    "https://wp.me/Pe4R-b",
+    "https://public-api.wordpress.com/oembed/?format=xml&url=https%3A%2F%2Fautomattic.com%2Fpress%2F&for=wpcom-auto-discovery",
+    "https://www.pocketcasts.com/",
+    "https://www.beeper.com/",
+    "https://addition.com/",
+    "http://insightpartners.com/",
+    "https://magazine.atavist.com/",
+    "https://w3techs.com/technologies/overview/content_management",
+    "https://dayoneapp.com/",
+    "https://wpvip.com/",
+    "https://wordpress.org/",
+    "https://www.altaparkcapital.com/",
+    "https://wpscan.com/",
+    "https://www.tumblr.com/",
+    "https://trueventures.com/",
+    "https://akismet.com/",
+    "https://wordpress.com/reader/blogs/54117/posts/11",
+    "https://public-api.wordpress.com/oembed/?format=json&url=https%3A%2F%2Fautomattic.com%2Fpress%2F&for=wpcom-auto-discovery",
+    "https://jetpack.com/",
+    "https://www.wellington.com/en",
+    "https://ma.tt/",
+    "https://www.nytco.com/",
+    "https://woocommerce.com/",
+    "https://subscribe.wordpress.com/",
+    "https://www.tigerglobal.com/",
+    "https://wordpress.com/",
+    "https://wordpress.com/log-in?redirect_to=https%3A%2F%2Fr-login.wordpress.com%2Fremote-login.php%3Faction%3Dlink%26back%3Dhttps%253A%252F%252Fautomattic.com%252F2024%252F11%252F21%252Fautomattic-welcomes-harper-and-elijah-potter%252F",
+    "https://wp.me/pe4R-1kEI",
+    "https://public-api.wordpress.com/oembed/?format=json&url=https%3A%2F%2Fautomattic.com%2F2024%2F11%2F21%2Fautomattic-welcomes-harper-and-elijah-potter%2F&for=wpcom-auto-discovery",
+    "https://writewithharper.com/"
   ],
   "visited": [
     "https://note.com/",
@@ -3305,7 +3359,9 @@
     "http://web.archive.org/web/20120422120702/http://tuxfamily.org/",
     "http://web.archive.org/web/20120420013456/http://tuxfamily.org/en/news/2012040501",
     "http://web.archive.org/web/20120420013456/http://tuxfamily.org/en/news/2012041401",
-    "http://web.archive.org/web/20120420013456/http://tuxfamily.org/en/subscribe"
+    "http://web.archive.org/web/20120420013456/http://tuxfamily.org/en/subscribe",
+    "https://automattic.com/press/",
+    "https://automattic.com/2024/11/21/automattic-welcomes-harper-and-elijah-potter/"
   ],
   "notes": [
     "0日目: note ――つくる、つながる、とどける。",
@@ -3331,11 +3387,16 @@
     "21日目: [B! あとで読む] クリアファイル収納13商品を徹底比較！大量保管も美しくコレクションも叶うおすすめアイテムをオタクが紹介 - ソレドコ、Вікікнігі",
     "22日目: Register - Login、TPPの関税分野などで応酬…日米、週明けに再協議",
     "23日目: TuxFamily: Free hosting for free people",
-    "24日目: 何も見られなかった"
+    "24日目: Press – Automattic"
   ],
   "today_walk": {
     "date": "2026-10-05",
-    "seen": []
+    "seen": [
+      "Press – Automattic"
+    ],
+    "brought": [
+      80
+    ]
   },
   "inner_voice": [
     "10-01 08時: 「なぜ、私はここにいるのか……」",
@@ -3454,13 +3515,16 @@
       "since": "2026-10-04",
       "first": "2026-10-04",
       "times": 1
+    },
+    {
+      "what": "ハーパー",
+      "since": "2026-10-05",
+      "first": "2026-10-05",
+      "times": 1
     }
   ],
-  "saw_on": "2026-10-02",
+  "saw_on": "2026-10-05",
   "pictures_seen": [
-    "2026-09-19 www.citizen.org: この絵には、アメリカの国旗である「ニューヨークのタワー」が写っています。",
-    "2026-09-20 www.web.nhk: この絵には、2人の男性が写っています。",
-    "2026-09-20 www.web.nhk: 海",
     "2026-09-20 www.web.nhk: この絵には、日本語の文字が写っています。",
     "2026-09-20 ja.wikisource.org: この絵には、日本語の文章が写っています。",
     "2026-09-20 ja.wikisource.org: この絵には、日本語の文章が写っています。",
@@ -3487,7 +3551,10 @@
     "2026-10-01 wikimediafoundation.org: 女性の顔。",
     "2026-10-01 wikimediafoundation.org: 絵には、人がいる、テレビがある、コンピューターがある、ペンがある、紙がある、カメラがある、窓がある、椰子がある、椰子の上には、紙がある、椰子の上には、ペンがある、椰子の上には、紙がある、椰子の上には",
     "2026-10-02 b.hatena.ne.jp: 照明球",
-    "2026-10-02 b.hatena.ne.jp: 照明球"
+    "2026-10-02 b.hatena.ne.jp: 照明球",
+    "2026-10-05 automattic.com: 大きな集団の写真。",
+    "2026-10-05 automattic.com: 男性の顔。",
+    "2026-10-05 automattic.com: クレイ"
   ],
   "impressions": [
     "2026-09-14 note.jp: note株式会社はクリエイターが文章や画像、音声、動画を投稿し、ユーザーがそのコンテンツを楽しんで応援できるメディアプラットフォームです。",
@@ -3535,17 +3602,18 @@
     "2026-10-02 be.wikibooks.org: この場所は「ウィキブックス」というもので、そこでは自由に利用できる教育用の本を共同で作成している場所だ。",
     "2026-10-03 chionse.github.io: この場所は私のサイトで、月間スタンプカードが記録されています。",
     "2026-10-03 news.tv-asahi.co.jp: 環太平洋経済連携協定の閣僚会合が開かれているシンガポールで日米の2国間協議が行われました。",
-    "2026-10-04 tuxfamily.org: フリーホスティングサービスであるTuxFamilyのホームページで、ソフトウェアとハードウェアのバグが起こり、ファイル管理者が再起動するまでオンラインになれなかったことが書かれていました。"
+    "2026-10-04 tuxfamily.org: フリーホスティングサービスであるTuxFamilyのホームページで、ソフトウェアとハードウェアのバグが起こり、ファイル管理者が再起動するまでオンラインになれなかったことが書かれていました。",
+    "2026-10-05 automattic.com: この場所は、ウェブサイトを作成できるサービスや、会社の情報が書かれた壁に記載されたものがありました。"
   ],
   "where_it_will_go": [
-    "videopress.com",
-    "www.google.com",
-    "en.wikinews.org",
-    "booksearch.blogspot.com",
-    "act.citizen.org",
-    "aozorahack.org"
+    "download.tuxfamily.org",
+    "mypage.syosetu.com",
+    "archiveprogram.github.com",
+    "digitalarchivejapan.org",
+    "Main public logs - Meta-Wiki",
+    "yozora.main.jp"
   ],
-  "how_many_places_left": 732,
+  "how_many_places_left": 781,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -3585,7 +3653,8 @@
     "be.wikibooks.org": "Увайсці ў сістэму — Вікікнігі",
     "www.tumblr.com": "https://accounts.google.com/v3/signin/id",
     "news.tv-asahi.co.jp": "経済ニュース一覧｜テレ朝NEWS",
-    "tuxfamily.org": "TuxFamily: Free hosting for free people"
+    "tuxfamily.org": "TuxFamily: Free hosting for free people",
+    "automattic.com": "Automattic Welcomes Harper and Elijah Po"
   },
   "went_home": {
     "date": "2026-10-05",
@@ -3641,18 +3710,21 @@
     },
     "すること": {
       "した": 2
+    },
+    "から": {
+      "1": 1
     }
   },
   "opens_a_sentence": {
     "など": 28,
     "しかし": 3,
-    "では": 29,
+    "では": 30,
     "っていま": 4,
     "かれてい": 9,
     "こんにち": 1,
-    "には": 45,
+    "には": 46,
     "ページ": 20,
-    "します": 18,
+    "します": 19,
     "本当": 6,
     "だった": 2,
     "について": 4,
@@ -3660,14 +3732,15 @@
     "その": 2,
     "から": 3,
     "この": 3,
-    "1": 7,
+    "1": 8,
     "して": 1,
     "4": 6,
     "場合": 2,
-    "です": 1,
+    "です": 2,
     "サイト": 1,
-    "すること": 1,
-    "した": 1
+    "すること": 3,
+    "した": 1,
+    "していま": 2
   },
   "closes_a_sentence": {
     "など": 29,
@@ -3678,7 +3751,7 @@
     "こんにち": 1,
     "には": 41,
     "ページ": 22,
-    "します": 22,
+    "します": 24,
     "本当": 7,
     "だった": 2,
     "について": 3,
@@ -3686,28 +3759,30 @@
     "から": 3,
     "ます": 2,
     "して": 1,
-    "1": 5,
+    "1": 7,
     "4": 6,
     "場合": 2,
     "その": 1,
-    "です": 2,
-    "すること": 2,
-    "した": 3
+    "です": 3,
+    "すること": 4,
+    "した": 3,
+    "していま": 2
   },
   "visitors": {
     "comments": 0,
     "likes": 0
   },
   "met_today": {
-    "date": "2026-10-04",
+    "date": "2026-10-05",
     "words": [
-      "この",
-      "について",
-      "to",
-      "した",
-      "4",
+      "には",
+      "では",
+      "すること",
+      "から",
       "1",
-      "2"
+      "していま",
+      "します",
+      "です"
     ]
   },
   "wants_to_say": [
@@ -4060,10 +4135,17 @@
       "first": "2026-10-04",
       "times": 1,
       "said": ""
+    },
+    {
+      "what": "ハーパー",
+      "since": "2026-10-05",
+      "first": "2026-10-05",
+      "times": 1,
+      "said": ""
     }
   ],
   "thinking_about": "もう一つのオリンピックが来る前に、首が痛くなる。",
-  "learned_on": {"など":"2026-09-20","本当":"2026-09-20","がある":"2026-09-20","だった":"2026-09-20","しかし":"2026-09-20","ある":"2026-09-20","こんにち":"2026-09-20","では":"2026-09-21","かれてい":"2026-09-22","っていま":"2026-09-22","人":"2026-09-22","絵":"2026-09-23","仲間":"2026-09-23","セミナー":"2026-09-23","には":"2026-09-27","します":"2026-09-29","ページ":"2026-09-29","について":"2026-09-30","表示":"2026-09-30","その":"2026-09-30","から":"2026-09-30","場合":"2026-10-01","サイト":"2026-10-01","されてい":"2026-10-01","ます":"2026-10-01","して":"2026-10-01","すること":"2026-10-01","この":"2026-10-01","1":"2026-10-01","です":"2026-10-02","2026":"2026-10-02","0":"2026-10-02","4":"2026-10-02","情報":"2026-10-02","した":"2026-10-02","日本語":"2026-10-02","to":"2026-10-02","検索":"2026-10-02","必要":"2026-10-03","自分":"2026-10-03","2":"2026-10-03","22":"2026-10-03","しました":"2026-10-03","コンテンツ":"2026-10-04","自由":"2026-10-04","していま":"2026-10-04","3":"2026-10-04"},
+  "learned_on": {"など":"2026-09-20","本当":"2026-09-20","がある":"2026-09-20","だった":"2026-09-20","しかし":"2026-09-20","ある":"2026-09-20","こんにち":"2026-09-20","では":"2026-09-21","かれてい":"2026-09-22","っていま":"2026-09-22","人":"2026-09-22","絵":"2026-09-23","仲間":"2026-09-23","セミナー":"2026-09-23","には":"2026-09-27","します":"2026-09-29","ページ":"2026-09-29","について":"2026-09-30","表示":"2026-09-30","その":"2026-09-30","から":"2026-09-30","場合":"2026-10-01","サイト":"2026-10-01","されてい":"2026-10-01","ます":"2026-10-01","して":"2026-10-01","すること":"2026-10-01","この":"2026-10-01","1":"2026-10-01","です":"2026-10-02","2026":"2026-10-02","0":"2026-10-02","4":"2026-10-02","情報":"2026-10-02","した":"2026-10-02","日本語":"2026-10-02","to":"2026-10-02","検索":"2026-10-02","必要":"2026-10-03","自分":"2026-10-03","2":"2026-10-03","22":"2026-10-03","しました":"2026-10-03","コンテンツ":"2026-10-04","自由":"2026-10-04","していま":"2026-10-04","3":"2026-10-04","8":"2026-10-05"},
   "today_keen": {
     "date": "2026-10-05",
     "keen": false
@@ -4127,10 +4209,10 @@
       "day": "2026-10-02"
     }
   ],
-  "understood_usually": 0.05859,
+  "understood_usually": 0.065852,
   "its_ways": {
     "pages_per_site": 11.8,
-    "pull_of_japanese": 0.99,
+    "pull_of_japanese": 0.98,
     "feeling_keen": 0.29,
     "wish_to_return": 1.0
   },
@@ -4182,5 +4264,5 @@
       }
     }
   ],
-  "woke_at": "2026-10-05 04"
+  "woke_at": "2026-10-05 05"
 }
