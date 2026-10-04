@@ -4,8 +4,16 @@
 // 1. Cloudflareダッシュボードで新しいWorkerを作成し、このファイルの中身を丸ごと貼り付ける
 // 2. Worker の設定 > Variables and Secrets で GITHUB_TOKEN という名前の
 //    暗号化されたシークレットを追加し、GitHubの Fine-grained personal access token を入れる
-//    (対象リポジトリ: chionse/senonsei のみ、権限: Contents = Read and write)
+//    (対象リポジトリ: chionse/senonsei のみ、権限: Contents = Read and write、
+//     Actions = Read and write)
 // 3. デプロイ後に発行されるWorkerのURL(https://xxxxx.workers.dev)を控えておく
+// 4. Worker の設定 > Triggers > Cron Triggers に「12 * * * *」を足す(毎時12分)
+//
+// 目覚まし時計: 毎時、千遠生を起こしてもらうよう GitHub に頼む。
+// GitHub の決まった時間の起こしは、混んでいると何時間も来ないことがある
+// (2026-10-04 は14時から八時間以上来なかった)。こちらは別の家の時計なので、
+// 片方が止まっても、もう片方で起きられる。同じ時間に二度起こされても、
+// この子は二度目は寝直す(senonsei_ai.py の woke_at)。彼女と決めた。
 //
 // 受け付ける道は二つ:
 //   POST /       コメント (名前と本文をフォームで受け取る)
@@ -90,7 +98,30 @@ async function receiveLike(request, env) {
   });
 }
 
+async function wakeSenonsei(env) {
+  const githubResponse = await fetch(
+    `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/actions/workflows/log_auto_generate.yml/dispatches`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${env.GITHUB_TOKEN}`,
+        "User-Agent": "senonsei-comment-worker",
+        Accept: "application/vnd.github+json",
+      },
+      body: JSON.stringify({ ref: BRANCH }),
+    }
+  );
+  if (!githubResponse.ok) {
+    console.log(`起こせませんでした: ${githubResponse.status} ${await githubResponse.text()}`);
+  }
+}
+
 export default {
+  // 目覚まし時計(Cron Triggers から毎時呼ばれる)
+  async scheduled(event, env, ctx) {
+    ctx.waitUntil(wakeSenonsei(env));
+  },
+
   async fetch(request, env) {
     if (request.method === "OPTIONS") {
       return new Response(null, { status: 204, headers: OPEN_TO_THE_PAGE });
