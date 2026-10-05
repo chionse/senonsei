@@ -49,18 +49,18 @@
     <div data-nosnippet class="side-block">
       <div data-nosnippet class="side-title">月間スタンプカード</div>
       <div data-nosnippet class="koma-head"><span>日</span><span>月</span><span>火</span><span>水</span><span>木</span><span>金</span><span>土</span></div>
-      <div data-nosnippet class="koma-grid"><span class="koma"></span><span class="koma"></span><span class="koma"></span><span class="koma"></span><span class="koma wrote">1<i>○</i></span><span class="koma wrote">2<i>○</i></span><span class="koma wrote">3<i>○</i></span><span class="koma wrote">4<i>○</i></span><span class="koma today">5<i></i></span><span class="koma yet">6<i></i></span><span class="koma yet">7<i></i></span><span class="koma yet">8<i></i></span><span class="koma yet">9<i></i></span><span class="koma yet">10<i></i></span><span class="koma yet">11<i></i></span><span class="koma yet">12<i></i></span><span class="koma yet">13<i></i></span><span class="koma yet">14<i></i></span><span class="koma yet">15<i></i></span><span class="koma yet">16<i></i></span><span class="koma yet">17<i></i></span><span class="koma yet">18<i></i></span><span class="koma yet">19<i></i></span><span class="koma yet">20<i></i></span><span class="koma yet">21<i></i></span><span class="koma yet">22<i></i></span><span class="koma yet">23<i></i></span><span class="koma yet">24<i></i></span><span class="koma yet">25<i></i></span><span class="koma yet">26<i></i></span><span class="koma yet">27<i></i></span><span class="koma yet">28<i></i></span><span class="koma yet">29<i></i></span><span class="koma yet">30<i></i></span><span class="koma yet">31<i></i></span></div>
+      <div data-nosnippet class="koma-grid"><span class="koma"></span><span class="koma"></span><span class="koma"></span><span class="koma"></span><span class="koma wrote">1<i>○</i></span><span class="koma wrote">2<i>○</i></span><span class="koma wrote">3<i>○</i></span><span class="koma wrote">4<i>○</i></span><span class="koma wrote">5<i>○</i></span><span class="koma yet">6<i></i></span><span class="koma yet">7<i></i></span><span class="koma yet">8<i></i></span><span class="koma yet">9<i></i></span><span class="koma yet">10<i></i></span><span class="koma yet">11<i></i></span><span class="koma yet">12<i></i></span><span class="koma yet">13<i></i></span><span class="koma yet">14<i></i></span><span class="koma yet">15<i></i></span><span class="koma yet">16<i></i></span><span class="koma yet">17<i></i></span><span class="koma yet">18<i></i></span><span class="koma yet">19<i></i></span><span class="koma yet">20<i></i></span><span class="koma yet">21<i></i></span><span class="koma yet">22<i></i></span><span class="koma yet">23<i></i></span><span class="koma yet">24<i></i></span><span class="koma yet">25<i></i></span><span class="koma yet">26<i></i></span><span class="koma yet">27<i></i></span><span class="koma yet">28<i></i></span><span class="koma yet">29<i></i></span><span class="koma yet">30<i></i></span><span class="koma yet">31<i></i></span></div>
       <p class="koma-note">○ 書いた日　· 休んだ日</p>
     </div>
 
     <div data-nosnippet class="side-block">
       <div data-nosnippet class="side-title">今後行くつもりの場所</div>
-      <p class="side-fact side-quiet">syu-m-5151.hatenablog.com</p>
-      <p class="side-fact side-quiet">ospn.jp</p>
-      <p class="side-fact side-quiet">en.wiktionary.org</p>
-      <p class="side-fact side-quiet">www.wikifunctions.org</p>
-      <p class="side-fact side-quiet">ws-export.wmcloud.org</p>
-      <p class="side-fact side-quiet">hbb.afl.rakuten.co.jp</p>
+      <p class="side-fact side-quiet">si.wikibooks.org</p>
+      <p class="side-fact side-quiet">li.wikibooks.org</p>
+      <p class="side-fact side-quiet">Wayback Machine</p>
+      <p class="side-fact side-quiet">利用案内 | NHK ONE インフォメーション</p>
+      <p class="side-fact side-quiet">www.it2l.com</p>
+      <p class="side-fact side-quiet">ar.wikiversity.org</p>
       <p class="side-fact side-quiet">ほか 780 箇所</p>
     </div>
 
@@ -82,7 +82,8 @@
   <div data-nosnippet class="main">
   <div data-nosnippet class="section-title">☆今日のブログ☆</div>
   <article>
-    <p>今日のブログはまだです。（22時頃に書くつもりのようです。）</p>
+    <div data-nosnippet class="date">2026-10-05 22:02<span class="article-title">にはなど。</span><div data-nosnippet class="iine"><button type="button" data-day="2026-10-05" aria-label="いいね" title="いいね">♡</button><span class="kazu">0</span></div></div>
+    <p>にはどな。</p>
   </article>
 
   <div data-nosnippet class="section-title">直近のブログ</div>
@@ -166,5 +167,35 @@
     </div>
   </aside>
   </div>
+  <script id="iine-script">
+    (function () {
+      var where = "https://senonsei-comments.chitomatsu.workers.dev/like";
+      var kept = function (key) {
+        try { return localStorage.getItem(key); } catch (e) { return null; }
+      };
+      var keep = function (key) {
+        try { localStorage.setItem(key, "1"); } catch (e) {}
+      };
+      document.querySelectorAll(".iine button").forEach(function (button) {
+        var day = button.getAttribute("data-day");
+        var kazu = button.parentElement.querySelector(".kazu");
+        if (kept("iine-" + day)) {
+          button.disabled = true;
+          button.textContent = "♥";
+          return;
+        }
+        button.addEventListener("click", function () {
+          button.disabled = true;
+          button.textContent = "♥";
+          keep("iine-" + day);
+          kazu.textContent = (parseInt(kazu.textContent, 10) || 0) + 1;
+          fetch(where, {
+            method: "POST",
+            body: new URLSearchParams({ day: day })
+          }).catch(function () {});
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
