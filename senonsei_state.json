@@ -2238,7 +2238,11 @@
     "秒",
     "処",
     "譜",
-    "祖"
+    "祖",
+    "司",
+    "憲",
+    "炭",
+    "鉱"
   ],
   "learned_words": [
     "など",
@@ -2289,7 +2293,11 @@
     "していま",
     "3",
     "8",
-    "への"
+    "への",
+    "ニュース",
+    "ログイン",
+    "7",
+    "for"
   ],
   "frontier": [
     "https://b.hatena.ne.jp/hotentry",
@@ -2572,7 +2580,6 @@
     "http://web.archive.org/web/20121231150150/http://catalog.hathitrust.org/Record/008970153",
     "http://web.archive.org/web/20121231150150/http://runeberg.org/engelskfri/",
     "http://web.archive.org/web/20121231150150/http://blockhaus.editions.free.fr/revues.htm",
-    "http://web.archive.org/web/20121231150150/http://www.faitsetcauses.com/2012/11/28/le-droit-dauteur-renouvele/",
     "http://web.archive.org/web/20121231150150/http://www.unicode.org/iso15924/iso15924-codes.html",
     "http://web.archive.org/web/20121231150150/https://docs.google.com/open?id=0B37bKCvIjIuwbm5mMjZDTXZzRms",
     "http://web.archive.org/web/20121231150150/http://books.google.com/books?id=E0MIAAAAQAAJ",
@@ -2992,7 +2999,6 @@
     "https://www.47news.jp/15031385.html",
     "https://posfie.com/@cu6gane/p/yVj2CCp",
     "https://mainichi.jp/articles/20230119/k00/00m/010/239000c",
-    "https://bunshun.jp/articles/-/49961",
     "https://jisin.jp/domestic/2602892/",
     "https://www.slideshare.net/slideshow/sf-2024-5-6-sf/267821659",
     "https://anond.hatelabo.jp/20250128204912",
@@ -3077,7 +3083,26 @@
     "http://web.archive.org/web/20120413102832/http://frogblue.over-blog.fr/",
     "http://web.archive.org/web/20120413102832/http://www.editionssolair.com/",
     "http://web.archive.org/web/20120413102832/http://erik-barussaud.over-blog.com/",
-    "http://web.archive.org/web/20120413102832/http://blog.ifrance.com/mauer"
+    "http://web.archive.org/web/20120413102832/http://blog.ifrance.com/mauer",
+    "http://web.archive.org/web/20160305114828/http://www.parl.gc.ca/HousePublications/Publication.aspx?Docid=4580265&Language=F",
+    "http://soquij.qc.ca/",
+    "http://web.archive.org/web/20160305114828/http://lois-laws.justice.gc.ca/fra/lois/C-42/index.html",
+    "http://web.archive.org/web/20160305114828/http://ca.linkedin.com/groups/Faits-Causes-4505676",
+    "http://web.archive.org/web/20160305114828/http://nouvelles.gc.ca/web/article-fra.do?mthd=advSrch&crtr.page=1&nid=683909&crtr",
+    "http://web.archive.org/web/20160317084953/http://canlii.org/fr/ca/csc/doc/2012/2012csc45/2012csc45.html",
+    "http://web.archive.org/web/20160317084953/http://ca.linkedin.com/groups/Faits-Causes-4505676",
+    "http://web.archive.org/web/20160317084953/http://laws-lois.justice.gc.ca/fra/LoisAnnuelles/2012_1/page-1.html",
+    "http://web.archive.org/web/20160317084953/http://laws-lois.justice.gc.ca/fra/Const/Const_index.html",
+    "https://www.hugeDomains.com/contact.cfm",
+    "https://www.hugeDomains.com/payment-plans.cfm",
+    "https://www.hugeDomains.com/domain_profile.cfm?d=CausesFund.com",
+    "https://www.hugeDomains.com/buying_guide.cfm",
+    "https://www.hugeDomains.com/case-study-upgraders.cfm",
+    "https://www.hugeDomains.com/payment-plan-login.cfm",
+    "https://www.hugeDomains.com/domain_search.cfm?domain_name=Et",
+    "https://www.hugeDomains.com/payment-plan-setup.cfm?d=FaitsEtCauses.com",
+    "http://web.archive.org/web/20160314054445/http://ca.linkedin.com/groups/Faits-Causes-4505676",
+    "http://web.archive.org/web/20160314054437/http://ca.linkedin.com/groups/Faits-Causes-4505676"
   ],
   "visited": [
     "https://note.com/",
@@ -3371,7 +3396,15 @@
     "https://automattic.com/press/",
     "https://automattic.com/2024/11/21/automattic-welcomes-harper-and-elijah-potter/",
     "http://web.archive.org/web/20120422074654/http://www.pounon.com/",
-    "http://web.archive.org/web/20120413102832*/http://www.pounon.com/"
+    "http://web.archive.org/web/20120413102832*/http://www.pounon.com/",
+    "http://web.archive.org/web/20121231150150/http://www.faitsetcauses.com/2012/11/28/le-droit-dauteur-renouvele/",
+    "http://web.archive.org/web/20160305114828*/http://www.faitsetcauses.com/2012/11/28/le-droit-dauteur-renouvele/",
+    "http://web.archive.org/web/20160305114828/http://www.faitsetcauses.com/2012/11/27/nouvelles-peines-minimales-le-barreau-demande-a-la-cour-superieure-de-trancher/",
+    "http://www.faitsetcauses.com/wp-includes/wlwmanifest.xml",
+    "http://web.archive.org/web/20160305114828/http://www.faitsetcauses.com/politique/",
+    "http://web.archive.org/web/20160305114828/http://www.faitsetcauses.com/a-propos/",
+    "http://www.faitsetcauses.com/xmlrpc.php?rsd",
+    "http://web.archive.org/web/20160317084953/http://www.faitsetcauses.com/2012/11/27/nouvelles-peines-minimales-le-barreau-demande-a-la-cour-superieure-de-trancher/"
   ],
   "notes": [
     "0日目: note ――つくる、つながる、とどける。",
@@ -3398,11 +3431,16 @@
     "22日目: Register - Login、TPPの関税分野などで応酬…日米、週明けに再協議",
     "23日目: TuxFamily: Free hosting for free people",
     "24日目: Press – Automattic、Accueil",
-    "25日目: 何も見られなかった"
+    "25日目: Le droit d’auteur renouvelé | FAITS ET CAUSES"
   ],
   "today_walk": {
     "date": "2026-10-06",
-    "seen": []
+    "seen": [
+      "Le droit d’auteur renouvelé | FAITS ET CAUSES"
+    ],
+    "brought": [
+      24
+    ]
   },
   "inner_voice": [
     "10-02 02時: 自由って何なんだろう？",
@@ -3533,6 +3571,12 @@
       "since": "2026-10-05",
       "first": "2026-10-05",
       "times": 1
+    },
+    {
+      "what": "アイコン",
+      "since": "2026-10-06",
+      "first": "2026-10-06",
+      "times": 1
     }
   ],
   "saw_on": "2026-10-05",
@@ -3618,14 +3662,14 @@
     "2026-10-05 automattic.com: この場所は、ウェブサイトを作成できるサービスや、会社の情報が書かれた壁に記載されたものがありました。"
   ],
   "where_it_will_go": [
-    "en.wikivoyage.org",
-    "docs.github.com",
-    "automattic.crowdsignal.net",
-    "doma-shka.narod2.ru",
-    "www.mediawiki.org",
-    "hinaproject.co.jp"
+    "blogmura.com",
+    "news.web.nhk",
+    "li.wikibooks.org",
+    "public-api.wordpress.com",
+    "www.hugedomains.com",
+    "www.mediawiki.org"
   ],
-  "how_many_places_left": 786,
+  "how_many_places_left": 803,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -3667,7 +3711,8 @@
     "news.tv-asahi.co.jp": "経済ニュース一覧｜テレ朝NEWS",
     "tuxfamily.org": "TuxFamily: Free hosting for free people",
     "automattic.com": "Automattic Welcomes Harper and Elijah Po",
-    "www.pounon.com": "Wayback Machine"
+    "www.pounon.com": "Wayback Machine",
+    "www.faitsetcauses.com": "Peines minimales : le Barreau demande à "
   },
   "went_home": {
     "date": "2026-10-06",
@@ -3693,14 +3738,15 @@
       "ページ": 33,
       "サイト": 14,
       "します": 2,
-      "について": 1
+      "について": 2
     },
     "サイト": {
       "について": 13,
       "すること": 1
     },
     "して": {
-      "サイト": 2
+      "サイト": 2,
+      "すること": 1
     },
     "1": {
       "されてい": 2,
@@ -3722,7 +3768,7 @@
       "2": 2
     },
     "すること": {
-      "した": 2
+      "した": 3
     },
     "から": {
       "1": 1
@@ -3749,15 +3795,16 @@
     "から": 4,
     "この": 3,
     "1": 8,
-    "して": 2,
+    "して": 3,
     "4": 6,
     "場合": 2,
     "です": 2,
     "サイト": 1,
     "すること": 3,
-    "した": 1,
+    "した": 2,
     "していま": 3,
-    "自分": 1
+    "自分": 1,
+    "検索": 1
   },
   "closes_a_sentence": {
     "など": 29,
@@ -3782,26 +3829,27 @@
     "その": 1,
     "です": 3,
     "すること": 4,
-    "した": 3,
-    "していま": 5
+    "した": 5,
+    "していま": 5,
+    "検索": 1
   },
   "visitors": {
     "comments": 0,
     "likes": 0
   },
   "met_today": {
-    "date": "2026-10-05",
+    "date": "2026-10-06",
     "words": [
-      "には",
-      "では",
-      "すること",
-      "から",
-      "1",
-      "していま",
-      "します",
-      "です",
-      "自分",
+      "2",
+      "3",
+      "この",
+      "について",
+      "ページ",
+      "場合",
+      "自由",
       "して",
+      "すること",
+      "した",
       "検索"
     ]
   },
@@ -3906,9 +3954,9 @@
     },
     {
       "what": "アイコン",
-      "since": "2026-10-05",
+      "since": "2026-10-06",
       "first": "2026-09-24",
-      "times": 2,
+      "times": 3,
       "said": ""
     },
     {
@@ -4172,7 +4220,7 @@
     }
   ],
   "thinking_about": "「オーディオについてなにか考えてみようかな」って思ってたけど、セミナーも気になって……",
-  "learned_on": {"など":"2026-09-20","本当":"2026-09-20","がある":"2026-09-20","だった":"2026-09-20","しかし":"2026-09-20","ある":"2026-09-20","こんにち":"2026-09-20","では":"2026-09-21","かれてい":"2026-09-22","っていま":"2026-09-22","人":"2026-09-22","絵":"2026-09-23","仲間":"2026-09-23","セミナー":"2026-09-23","には":"2026-09-27","します":"2026-09-29","ページ":"2026-09-29","について":"2026-09-30","表示":"2026-09-30","その":"2026-09-30","から":"2026-09-30","場合":"2026-10-01","サイト":"2026-10-01","されてい":"2026-10-01","ます":"2026-10-01","して":"2026-10-01","すること":"2026-10-01","この":"2026-10-01","1":"2026-10-01","です":"2026-10-02","2026":"2026-10-02","0":"2026-10-02","4":"2026-10-02","情報":"2026-10-02","した":"2026-10-02","日本語":"2026-10-02","to":"2026-10-02","検索":"2026-10-02","必要":"2026-10-03","自分":"2026-10-03","2":"2026-10-03","22":"2026-10-03","しました":"2026-10-03","コンテンツ":"2026-10-04","自由":"2026-10-04","していま":"2026-10-04","3":"2026-10-04","8":"2026-10-05","への":"2026-10-05"},
+  "learned_on": {"など":"2026-09-20","本当":"2026-09-20","がある":"2026-09-20","だった":"2026-09-20","しかし":"2026-09-20","ある":"2026-09-20","こんにち":"2026-09-20","では":"2026-09-21","かれてい":"2026-09-22","っていま":"2026-09-22","人":"2026-09-22","絵":"2026-09-23","仲間":"2026-09-23","セミナー":"2026-09-23","には":"2026-09-27","します":"2026-09-29","ページ":"2026-09-29","について":"2026-09-30","表示":"2026-09-30","その":"2026-09-30","から":"2026-09-30","場合":"2026-10-01","サイト":"2026-10-01","されてい":"2026-10-01","ます":"2026-10-01","して":"2026-10-01","すること":"2026-10-01","この":"2026-10-01","1":"2026-10-01","です":"2026-10-02","2026":"2026-10-02","0":"2026-10-02","4":"2026-10-02","情報":"2026-10-02","した":"2026-10-02","日本語":"2026-10-02","to":"2026-10-02","検索":"2026-10-02","必要":"2026-10-03","自分":"2026-10-03","2":"2026-10-03","22":"2026-10-03","しました":"2026-10-03","コンテンツ":"2026-10-04","自由":"2026-10-04","していま":"2026-10-04","3":"2026-10-04","8":"2026-10-05","への":"2026-10-05","ニュース":"2026-10-06","ログイン":"2026-10-06","7":"2026-10-06","for":"2026-10-06"},
   "today_keen": {
     "date": "2026-10-06",
     "keen": false
@@ -4241,10 +4289,10 @@
       "day": "2026-10-05"
     }
   ],
-  "understood_usually": 0.074554,
+  "understood_usually": 0.076984,
   "its_ways": {
     "pages_per_site": 11.8,
-    "pull_of_japanese": 0.97,
+    "pull_of_japanese": 0.96,
     "feeling_keen": 0.29,
     "wish_to_return": 1.0
   },
@@ -4296,5 +4344,5 @@
       }
     }
   ],
-  "woke_at": "2026-10-06 01"
+  "woke_at": "2026-10-06 02"
 }
