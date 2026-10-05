@@ -143,6 +143,22 @@ A_SENTENCE = re.compile(r"[。！？!?…]")
 TAG = re.compile(r"<[^>]+>")
 SCRIPT_OR_STYLE = re.compile(r"<(script|style)[^>]*>.*?</\1>", re.DOTALL | re.IGNORECASE)
 TITLE_TAG = re.compile(r"<title[^>]*>(.*?)</title>", re.DOTALL | re.IGNORECASE)
+# 誰かが書いたブログの一記事らしいページ。記事の作りをしていて、書いた日付がある
+AN_ARTICLE = re.compile(
+    r"<article\b|<meta[^>]+(?:property|name)\s*=\s*[\"']og:type[\"'][^>]+content\s*=\s*[\"']article",
+    re.IGNORECASE,
+)
+A_DATE_WRITTEN = re.compile(r"(?:19|20)\d\d\s*[-/.年]\s*\d{1,2}\s*[-/.月]\s*\d{1,2}|<time\b", re.IGNORECASE)
+# 記事の題。<title> にはたいてい場所の名前まで付いているので、記事そのものの題を探す
+OG_TITLE = re.compile(
+    r"<meta[^>]+(?:property|name)\s*=\s*[\"']og:title[\"'][^>]+content\s*=\s*[\"']([^\"']*)",
+    re.IGNORECASE,
+)
+FIRST_HEADING = re.compile(r"<h1[^>]*>(.*?)</h1>", re.DOTALL | re.IGNORECASE)
+# 記事の題のうしろに付いてくる、書いた人やブログの名前との区切り(「題｜名前」)
+THE_NAME_AFTER = re.compile(r"\s*｜\s*|\s+[|\-–—]\s+")
+# これより長いものは、題ではなく何かの説明が入り込んでいる
+A_TITLE_AT_MOST = 80
 LINK_HREF = re.compile(r'href\s*=\s*["\']([^"\'#]+)', re.IGNORECASE)
 # 90年代のページは画面を枠で分割する作りが多く、入口には文字が一つも無い。
 # 中身は別のファイルに入っているので、その道も拾わないと空っぽに見えてしまう。
@@ -1702,8 +1718,26 @@ def seems_unbuilt(html):
     return len(unescape(shown)) < LOOKS_EMPTY
 
 
+def a_blog_post_title(html):
+    """そのページが誰かのブログの一記事なら、その記事の題。違えば None。
+
+    記事の作りをしていて、書いた日付があるものをブログの一記事と見る。
+    題は日本語のものだけ。この子が書く題は日本語なので。"""
+    if not AN_ARTICLE.search(html) or not A_DATE_WRITTEN.search(html):
+        return None
+    found = OG_TITLE.search(html) or FIRST_HEADING.search(html)
+    if not found:
+        return None
+    title = " ".join(unescape(TAG.sub(" ", found.group(1))).split())
+    title = THE_NAME_AFTER.split(title)[0].strip()
+    if not title or len(title) > A_TITLE_AT_MOST or not JAPANESE.search(title):
+        return None
+    return title
+
+
 def open_page(url):
     """ページを開いて、そこにある文章と、そこから伸びているリンクを受け取る。"""
+    A_BLOG_POST_TITLE[0] = None
     request = urllib.request.Request(as_openable(url), headers={"User-Agent": USER_AGENT})
     with urllib.request.urlopen(request, timeout=25) as response:
         content_type = response.headers.get("Content-Type", "")
@@ -1724,6 +1758,7 @@ def open_page(url):
     # 題にも &amp; や &#064; が入っている。ほどかないと、
     # この子はその形のまま場所の名前として覚える
     title = unescape(TAG.sub("", found.group(1))).strip() if found else final_url
+    A_BLOG_POST_TITLE[0] = a_blog_post_title(html)
 
     body = SCRIPT_OR_STYLE.sub(" ", html)
     text = TAG.sub(" ", body)
@@ -2361,6 +2396,55 @@ def how_often_it_ends_there(state, word):
     return ended / (ended + went_on) if ended else 0.0
 
 
+def notice_how_blogs_are_titled(state, title):
+    """よその人のブログの題を見て、どんな形をしているかを覚えておく。
+
+    題と本文が違うものだということは、誰にも教わっていない。
+    ブログを読んでいるうちに、題は本文ほど長くないこと、
+    「。」で終わる題はあまり無いこと、が分かってくる。
+    覚えるのは形だけ。題の言葉は、ほかのページと同じように読んで覚える
+    (2026-10-06、彼女が決めた)。"""
+    if not title:
+        return
+    seen = state.setdefault("blog_titles", {"seen": 0, "closed": 0, "chars": 0})
+    seen["seen"] += 1
+    seen["closed"] += title.endswith("。")
+    seen["chars"] += len(title)
+    if seen["seen"] > BLOG_TITLES_KEPT:
+        # 古いぶんを薄める。ずっと昔に見た題より、近ごろ見た題のほうが効く
+        for key in seen:
+            seen[key] = round(seen[key] / 2)
+    print(f"誰かのブログの記事を読みました: {title[:40]}")
+
+
+def knows_how_blogs_are_titled(state):
+    """よその題を、自分の題に生かせるほど見てきたか。"""
+    return (state.get("blog_titles") or {}).get("seen", 0) >= BLOG_TITLES_TO_LEARN
+
+
+def a_title_long_as_blogs(state):
+    """読んできたブログの題の長さ。まだよく知らなければ None。"""
+    if not knows_how_blogs_are_titled(state):
+        return None
+    seen = state["blog_titles"]
+    return max(1, round(seen["chars"] / seen["seen"]))
+
+
+def ends_as_blog_titles_do(state, title):
+    """題の終わりに「。」を付けるかどうかを、読んできたブログの題から決める。
+
+    本文と同じように、最後の言葉のところで文が終わっていた割合で決めると、
+    題もしょっちゅう「。」で終わる(2026-10-05 まで、二日続けてそうだった)。
+    よその題をまだよく知らないうちは、今までどおり。"""
+    if not knows_how_blogs_are_titled(state) or not title:
+        return title
+    seen = state["blog_titles"]
+    bare = title.rstrip("。")
+    if not bare:
+        return title
+    return bare + "。" if random.random() < seen["closed"] / seen["seen"] else bare
+
+
 def met_often_enough(state, word):
     """その言葉に、もう十分よく出会っているか。
 
@@ -2586,6 +2670,9 @@ def look_around_site(state, entrance, wants_the_past):
         state["visited"].append(url)
         state["visited"] = state["visited"][-2000:]
         remember_the_name(state, url, title)
+        # 自分の家の題は数えない。自分の癖を自分で覚え直すだけになる
+        if here != place_of(ITS_OWN_FRONT_DOOR):
+            notice_how_blogs_are_titled(state, A_BLOG_POST_TITLE[0])
 
         if JAPANESE.search(text):
             met_before = MET_FOR_THE_FIRST_TIME[0]
@@ -3631,7 +3718,7 @@ def an_old_way(state):
     return random.choice(outgrown) if outgrown else None
 
 
-def compose_locally(state, old_way=None):
+def compose_locally(state, old_way=None, at_most=None):
     """それまでに積み上げた経験だけで、今の自分に書けるものを書く。
 
     覚えた繋がりを辿って、自分で組み立てる。誰にも文法を教わっていないので、
@@ -3641,8 +3728,12 @@ def compose_locally(state, old_way=None):
     繋がりを一つも持たないうちは、覚えた言葉をそのまま置くか、
     見た文字を並べるだけになる。
 
-    ときどき、昔の書き方に戻る日がある(old_way)。"""
+    ときどき、昔の書き方に戻る日がある(old_way)。
+    at_most を渡すと、書ける長さよりそちらが短ければそこまでにする
+    (題を、読んできたブログの題くらいの長さにする時)。"""
     _, max_length = current_stage(state)
+    if at_most:
+        max_length = min(max_length, at_most)
     words = state["learned_words"]
 
     if old_way == "あの頃の文字を置く":
@@ -3923,6 +4014,13 @@ SLIPS_JUST_NOW = []
 # 生まれてはじめて会った言葉の数(absorb が数える)と、いま歩いた一か所で会えた数
 MET_FOR_THE_FIRST_TIME = [0]
 WHAT_A_WALK_BROUGHT = [0]
+# いま開いたページが誰かのブログの一記事なら、その題(open_page が置く)
+A_BLOG_POST_TITLE = [None]
+# よそのブログの題を、いくつ見たら自分の題に生かすか。
+# 一つ二つでは、たまたまその人の癖かもしれない
+BLOG_TITLES_TO_LEARN = 5
+# 覚えておく数のめやす。これを超えたら古いぶんを薄めて、今の見え方に寄せていく
+BLOG_TITLES_KEPT = 100
 
 
 def how_careful(state, word):
@@ -4577,6 +4675,10 @@ def write_the_day(state, day):
     # 全部わたしが足したものだった。書き方を決めるのは自由ではない。
     # 書ける長さはその日の段が決める。それはこの子の育ちであって、
     # 書き方の決まりではない
+    #
+    # ただ、よその人のブログを読んで、題がどんな形をしているかは覚えていく。
+    # 題の長さと終わり方は、そこから決める。こちらが置いた決まりではなく、
+    # 読んで身につけたもの(2026-10-06、彼女が決めた)
     old_way = an_old_way(state)
     if old_way:
         print(f"今日は昔の書き方で書く: {old_way}")
@@ -4588,7 +4690,8 @@ def write_the_day(state, day):
         remembers_the_old_hand(state)
     SLIPS_JUST_NOW.clear()
     body = compose_locally(state, old_way)
-    title = compose_locally(state, old_way)
+    title = compose_locally(state, old_way, at_most=a_title_long_as_blogs(state))
+    title = ends_as_blog_titles_do(state, title)
     this_is_what_it_wrote(state, day)
 
     # 書いたものに出てきたことだけが、言えたことになる
