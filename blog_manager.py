@@ -1500,6 +1500,7 @@ def put_keshiki(html, pictures):
       var it = about[one] || {{}};
       if (typeof it.chiheisen === "number") root.setProperty("--kusa-horizon", String(it.chiheisen));
       if (typeof it.shita === "string") root.setProperty("--kusa-under", it.shita);
+      if (typeof it.kusa_ue === "number") root.setProperty("--kusa-top", String(it.kusa_ue));
     }})();
   </script>
 """

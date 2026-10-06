@@ -1,42 +1,52 @@
 {
   "kusa-1.webp": {
     "chiheisen": 0.61,
-    "shita": "#297103"
+    "shita": "#297103",
+    "kusa_ue": 0.58
   },
   "kusa-2.webp": {
     "chiheisen": 0.559,
-    "shita": "#226a02"
+    "shita": "#226a02",
+    "kusa_ue": 0.513
   },
   "kusa-3.webp": {
     "chiheisen": 0.669,
-    "shita": "#226904"
+    "shita": "#226904",
+    "kusa_ue": 0.611
   },
   "kusa-4.webp": {
     "chiheisen": 0.639,
-    "shita": "#266d02"
+    "shita": "#266d02",
+    "kusa_ue": 0.578
   },
   "kusa-5.webp": {
     "chiheisen": 0.651,
-    "shita": "#226905"
+    "shita": "#226905",
+    "kusa_ue": 0.584
   },
   "kusa-6.webp": {
     "chiheisen": 0.732,
-    "shita": "#236803"
+    "shita": "#236803",
+    "kusa_ue": 0.7
   },
   "kusa-7.webp": {
     "chiheisen": 0.611,
-    "shita": "#266d02"
+    "shita": "#266d02",
+    "kusa_ue": 0.579
   },
   "kusa-8.webp": {
     "chiheisen": 0.653,
-    "shita": "#2a7204"
+    "shita": "#2a7204",
+    "kusa_ue": 0.602
   },
   "kusa-9.webp": {
     "chiheisen": 0.653,
-    "shita": "#287002"
+    "shita": "#287002",
+    "kusa_ue": 0.602
   },
   "kusa-10.webp": {
     "chiheisen": 0.616,
-    "shita": "#226904"
+    "shita": "#226904",
+    "kusa_ue": 0.55
   }
 }

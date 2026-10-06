@@ -46,6 +46,9 @@
    絵は画面の横幅いっぱい、縦長の画面では高さいっぱいまで広げ、縦横の割合は変えない。
    絵ごとの地平線の高さは kusa/kusa.json にあり、ページの頭で選んだ絵に合わせる。
    画面の下に絵の切れ目が出るときは、そこまで絵を下げる。
+   草は画面の下のほうにだけ出す。草の先のいちばん高いところが、画面の下の端から
+   100px のところに来るまで絵を下げる。どんなに低い画面でも、紙が始まるところまでは
+   空だけにする(2026-10-06、彼女が決めた。絵ごとの草の先の高さも kusa.json)。
    (仮の姿。空の絵が届いたら、ここを描き直す) */
 html {
   background: var(--sky-bottom);
@@ -58,11 +61,18 @@ html::before {
   z-index: -1;
   /* 絵の高さ。横いっぱい(縦は横の 1920/1080 倍)と、画面の高さの大きいほう */
   --kusa-h: max(177.78vw, 100vh);
+  /* 草の先が出てよいところ。画面の下の端から 100px と、紙の上の端の、低いほう。
+     紙の上の端は、上の余白(56px)、ロゴの上の余白(54px)、ロゴの高さ、来訪者の数の行 */
+  --kusa-from: max(
+    calc(100vh - 100px),
+    calc(56px + 54px + min(560px, 100vw - 96px) * 456 / 1374 + 32px)
+  );
   background:
     var(--kusa, url("kusa/kusa-1.webp"))
       center max(
         calc(100vh - var(--kusa-h)),
-        calc(62vh - var(--kusa-horizon, 0.62) * var(--kusa-h))
+        calc(62vh - var(--kusa-horizon, 0.62) * var(--kusa-h)),
+        calc(var(--kusa-from) - var(--kusa-top, 0.58) * var(--kusa-h))
       ) / auto var(--kusa-h) no-repeat,
     linear-gradient(var(--sky-top), var(--sky-bottom));
 }
