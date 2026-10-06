@@ -121,6 +121,7 @@ TODAY_PAIRS_AT_MOST = 8000
 # ---- 知りたいこと ----
 
 WONDERS_AT_MOST = 5
+WONDERS_AT_ONCE = 1
 WONDER_AFTER_DAYS = 2  # これだけの日に強く出会ったのに分からない言葉を、知りたくなる
 WONDER_GIVES_UP = 21  # これだけ探して分からなければ、そっと手放す
 UNDERSTOOD_BY_LINKS = 3.0  # 線をこれだけ持てば、何と関わる言葉か分かってきた
@@ -583,7 +584,8 @@ def wonder(head, state, now, known, met, impact):
             and understood_by_links(head, word, today) < UNDERSTOOD_BY_LINKS
         ]
         candidates.sort(key=lambda w: (impact[w], (met.get(w) or [0])[0]), reverse=True)
-        for word in candidates[: WONDERS_AT_MOST - len(kept)]:
+        # 一度に気づくのは一つだけ。いくつも同時に知りたくなると、知りたい気持ちが跳ね上がる
+        for word in candidates[: min(WONDERS_AT_ONCE, WONDERS_AT_MOST - len(kept))]:
             kept.append({"what": word, "since": now.date().isoformat()})
             added.append(word)
             feel(head, "知りたい", 0.15, f"「{word}」が知りたくなった")
@@ -610,7 +612,8 @@ def where_a_thought_starts(head, state, now, minds, not_from=()):
         places.append((3.0, [carried[-1]], None))
     todays = {name: n for name, n in heart["kyou"]["nodes"].items() if name in net and name not in not_from}
     if todays:
-        places.append((3.0, list(todays), [todays[name] for name in todays]))
+        # 今日何度も出会ったもの、それもほかではめったに見ないものほど浮かびやすい
+        places.append((3.0, list(todays), [todays[name] * rarity(head, name) for name in todays]))
     minds = [one for one in (minds or []) if one in net and one not in not_from]
     if minds:
         places.append((2.0, minds, None))
@@ -731,11 +734,12 @@ def words_to_say(head, chain, known, today, how_many=WORDS_TO_SAY):
     言葉にならない思いは、近くにある知っている言葉で言うしかない。"""
     known = set(known or ())
     said = [one for one in dict.fromkeys(chain) if one in known]
+    # そばにある言葉は、どこにでも出てくる「した」「には」より、その思いに近い珍しいものから
     near = {}
     for i, one in enumerate(chain):
         for other, weight in neighbours(head, one, today):
             if other in known and other not in said:
-                near[other] = near.get(other, 0) + weight * (1 + i / max(1, len(chain)))
+                near[other] = near.get(other, 0) + weight * rarity(head, other) * (1 + i / max(1, len(chain)))
     for other in sorted(near, key=near.get, reverse=True):
         if len(said) >= how_many:
             break

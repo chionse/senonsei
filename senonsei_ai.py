@@ -7,9 +7,10 @@
 その子が実際にどれだけの文字と言葉を浴びてきたかで決まる。
 たくさん出会えた時期は早く育ち、実りの少ない時期は伸び悩む。
 
-Cloudflare Workers AI の無料枠が使える時は、千遠生は自分で考えて、
-何を見に行くかを選び、自分の言葉で書く。
-使えない時(キーが無い・障害・無料枠の終了)は、それまでに積み上げた経験だけで書き続ける。
+考えること、感じること、喋ることは、この子の頭(atama.py)がする。
+Cloudflare Workers AI の無料枠から借りるのは、目(絵を見る)と、よその国の言葉の訳だけ。
+使えない時(キーが無い・障害・無料枠の終了)は、絵とよその言葉を眺めるだけになり、
+それまでに積み上げた経験で思い、書き続ける。
 """
 
 import datetime
@@ -3138,6 +3139,19 @@ def be_alone(state, now):
     return said
 
 
+def put_thoughts_into_words(state, words, how_long):
+    """思った言葉を、思った順に、書ける長さに入るだけ置く。同じ言葉は重ねない。"""
+    placed = []
+    for word in words:
+        if placed and len(" ".join(placed + [word])) > how_long:
+            break
+        placed.append(word)
+        if len(" ".join(placed)) >= how_long:
+            break
+    placed = as_it_comes_out(state, placed, how_long - len(" ".join(placed)))
+    return " ".join(placed)
+
+
 def say_what_it_thinks(state, toward):
     """思ったことを、この子の口で言ってみる。
 
@@ -3150,16 +3164,15 @@ def say_what_it_thinks(state, toward):
     if not state.get("learned_words") or not toward:
         return ""  # 思ったことのそばに、知っている言葉が一つも無い。言葉にならない
     _, how_long = current_stage(state)
-    toward = set(toward)
+    in_order = list(dict.fromkeys(toward))
     said = ""
     for _ in range(TRIES_TO_SAY_IT):
-        said = speak_from_what_it_knows(state, how_long, toward=toward) or ""
-        if any(word in said for word in toward):
+        said = speak_from_what_it_knows(state, how_long, toward=set(in_order)) or ""
+        if any(word in said for word in in_order):
             break
         SLIPS_JUST_NOW.clear()
     else:
-        said = place_words(state, how_long, toward=toward)
-    said = said or place_words(state, how_long, toward=toward)
+        said = put_thoughts_into_words(state, in_order, how_long)
     said = with_the_old_hand(state, said, how_long)
     # 吹き出しで手が滑ったぶんは、日記の書き損じには数えない
     SLIPS_JUST_NOW.clear()
