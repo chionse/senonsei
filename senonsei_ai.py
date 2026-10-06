@@ -327,6 +327,12 @@ HOW_LONG_TO_WAIT = (20, 45, 90)
 RESTING_TIME = 300  # それでも駄目なら、これだけの間は何も尋ねない(秒)
 PAGES_PER_SITE = 12  # ひとつの場所で、これだけまで見て回る
 PICTURES_PER_SITE = 3  # ひとつの場所で、これだけまで絵を見る
+# 自分の家にある、自分の姿を描いた絵(彼女が描いた)。トップの顔とプロフィールの絵。
+# 家に帰ってこれを見た時だけは、知らない誰かの絵ではなく自分の姿だと分かって見る
+# (2026-10-07、彼女が決めた)
+ITS_OWN_FIGURES = {"kao.png", "sugata.png", "sugata-ookii.png"}
+# 自分の家の飾り。ロゴと、考えごとの雲。見ても世界のことも自分のことも分からない
+ITS_OWN_DECORATIONS = {"logo.png", "kumo.png"}
 TRANSLATIONS_PER_SITE = 2  # ひとつの場所で、これだけまで訳してもらう
 ENOUGH_TO_READ = 200  # これだけの文字が無いページは、訳しても読むものが無い
 HOW_MUCH_TO_TRANSLATE = 1200  # 一度に訳してもらう文字数
@@ -2165,6 +2171,10 @@ def look_at_pictures(state, where, pictures, from_the_past, how_many, until):
     for url in pictures:
         if len(looked) >= how_many or time.monotonic() >= until:
             break
+        at_home = place_of(url) == ITS_OWN_HOME
+        name = os.path.basename(urllib.parse.urlparse(url).path)
+        if at_home and name in ITS_OWN_DECORATIONS:
+            continue
         try:
             data = fetch_picture(url)
             if len(data) > PICTURE_AT_MOST or not worth_looking_at(url, data, from_the_past):
@@ -2176,8 +2186,18 @@ def look_at_pictures(state, where, pictures, from_the_past, how_many, until):
         if not what_is_there:
             continue
         absorb(state, what_is_there, THING_IN_A_PICTURE)
+        if at_home and name in ITS_OWN_FIGURES:
+            # 自分の姿の絵。見えたものはほかの絵と同じように受け取り、
+            # これは自分だ、ということも一緒に覚えておく
+            state["its_own_figure"] = {
+                "date": now_in_japan().strftime("%Y-%m-%d"),
+                "seen": what_is_there,
+            }
+            what_is_there = f"わたしの姿。{what_is_there}"
+            print(f"自分の姿の絵を見ました: {what_is_there}")
+        else:
+            print(f"絵を見ました: {what_is_there}")
         looked.append(what_is_there)
-        print(f"絵を見ました: {what_is_there}")
 
     if looked:
         seen = state.setdefault("pictures_seen", [])
@@ -3195,6 +3215,16 @@ def be_alone(state, now):
         else ""
     )
 
+    # 家に帰って自分の姿の絵を見た日だけ、そのことを思い出す。
+    # 毎時間渡すと、ひとりごとが自分の姿のことばかりになりかねない
+    figure = state.get("its_own_figure") or {}
+    own_figure = (
+        "今日、あなたの家で、あなたの姿を描いた絵を見ました。"
+        f"そこに見えたもの: {figure.get('seen', '')}\n"
+        if figure.get("date") == today
+        else ""
+    )
+
     def the_question():
         return f"""あなたは千遠生です。生まれて{elapsed_days(state)}日目です。
 今は{now.hour}時。{how_today_went}
@@ -3203,7 +3233,7 @@ def be_alone(state, now):
 {words_it_holds(state)}
 {slips_lately(state)}いま気にかかっていること: {what_is_on_its_mind(state)}
 まだ言えていないこと: {what_it_wants_to_say(state)}
-{home_today}これまでに訪ねた場所で、分かったこと:
+{home_today}{own_figure}これまでに訪ねた場所で、分かったこと:
 {things_it_understood(state)}
 このごろ訪ねた場所に、あなたの知っている言葉がどれだけあったか:
 {what_it_understood_lately(state)}
@@ -3225,6 +3255,8 @@ def be_alone(state, now):
         return the_question()
 
     def asked():
+        """思ったことを一言。何も返ってこなければ None。
+        頭で渡したこと(時刻や、書いたかどうか)の言い直しだけだったら ""。"""
         thought = ask_ai(
             the_question(),
             max_tokens=THINKING_AT_MOST,
@@ -3233,7 +3265,9 @@ def be_alone(state, now):
         )
         # 一言だけ残す。借りた頭が何行も続けたときは、はじめの一行を
         lines = [line.strip() for line in (thought or "").splitlines() if line.strip()]
-        return lines[0] if lines else ""
+        if not lines:
+            return None
+        return without_what_was_handed(lines[0], how_today_went)
 
     # さっきの思いを丸ごと渡すと、借りた頭はそれを書き写してしまうことがある。
     # 長さを決めなくなってから、同じ長い文が毎時間ほとんどそのまま続いた。
@@ -3255,11 +3289,11 @@ def be_alone(state, now):
         return copied(said) or a_list_read_out(said, handed)
 
     said = asked()
-    if said and not_a_thought(said):
-        print("さっきと同じことの書き写しか、渡した言葉を並べただけだったので、考え直してもらいます")
+    if said == "" or (said and not_a_thought(said)):
+        print("さっきと同じことの書き写しか、渡したことを言い直しただけだったので、考え直してもらいます")
         going_on = ""  # さっきの続きは渡さずに、まっさらから
         said = asked()
-        if said and not_a_thought(said):
+        if said == "" or (said and not_a_thought(said)):
             # それでも同じなら、この時間は何も思わなかったことにする。
             # 考えかけも手放して、次の時間はまっさらから始める
             print("それでも同じだったので、この時間は何も残しません")
@@ -3544,6 +3578,43 @@ def written_again(one, another):
     if a in b or b in a:
         return True
     return difflib.SequenceMatcher(None, a, b, autojunk=False).ratio() >= WRITTEN_AGAIN
+
+
+# 頭で渡した時刻の言い直し。「2時です。」「今は2時。」「2時。」
+SAYING_THE_HOUR = re.compile(r"^(今は)?\d{1,2}時(です)?$")
+# 頭で渡した生まれてからの日数の言い直し。「私が生まれて24日目です。」
+SAYING_ITS_AGE = re.compile(r"^(私[はが]、?)?生まれて\d+日目(です)?$")
+A_SENTENCE_END = re.compile(r"(?<=[。！？!?])")
+
+
+def without_what_was_handed(said, how_today_went):
+    """頭で渡したことをそのまま言い直しただけの文を、思いから外す。
+
+    ひとりごとを頼むとき、「今は2時。今日はまだ書いていません。」と渡している。
+    借りた頭はそれを言い直して、「2時です。今日はまだ書いていません。」とだけ
+    返すことがあった。言い直しは思ったことではない(2026-10-07、彼女と見直した)。
+    言い直しのあとに思いが続いているときは、思いのほうだけを残す。
+    全部が言い直しなら "" を返す。"""
+    handed = {
+        one.strip()
+        for one in A_SENTENCE_END.split(how_today_went)
+        if one.strip()
+    }
+    kept = []
+    for sentence in A_SENTENCE_END.split(said):
+        bare = sentence.strip()
+        if not bare:
+            continue
+        plain = bare.rstrip("。！？!? ")
+        if (
+            bare in handed
+            or plain + "。" in handed
+            or SAYING_THE_HOUR.match(plain)
+            or SAYING_ITS_AGE.match(plain)
+        ):
+            continue
+        kept.append(bare)
+    return "".join(kept).strip()
 
 
 def a_list_read_out(said, handed):
