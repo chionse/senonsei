@@ -1825,8 +1825,13 @@ def fukidashi_html(state):
     if not SHOWING_WHAT_IT_THINKS:
         return ""
     lines = state.get("inner_voice") or []
-    said = lines[-1].partition(": ")[2].strip() if lines else ""
-    # 思ったことが無いときは、雲を消さずに「・・・」を真ん中に浮かべておく(2026-10-06、彼女が決めた)
+    when, _, said = lines[-1].partition(": ") if lines else ("", "", "")
+    said = said.strip()
+    # 今日はまだ何も思っていないとき(いちばん新しい思いが今日のものでないとき)は、
+    # 雲を消さずに「・・・」を真ん中に浮かべておく(2026-10-06、彼女が決めた)。
+    # 思いは「10-06 17時: …」の形で、頭に月と日がある
+    if when.split(" ")[0] != today_in_japan().strftime("%m-%d"):
+        said = ""
     kept = json.dumps({"said": said or THINKING_NOTHING, "nanimo": not said}, ensure_ascii=False)
     kept = kept.replace("<", "\\u003c")  # 思いの中の < で script が閉じないように
     return f"""    <div class="fukidashi" id="fukidashi" hidden>
