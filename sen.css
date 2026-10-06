@@ -440,7 +440,8 @@ article.yomimono p {
 
 .section-title {
   font-size: 16px;
-  border-bottom: 2px solid var(--main-color);
+  /* 一度 2px にしたが、まわりの線を濃くしたら太すぎに見えたので 1px に戻す(2026-10-07) */
+  border-bottom: 1px solid var(--main-color);
   padding-bottom: 0.3rem;
   margin: 2rem 0 1rem;
 }
