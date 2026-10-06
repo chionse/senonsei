@@ -685,7 +685,8 @@ article.yomimono p {
   /* どの画面でも同じ五列。幅で列数が変わると、パソコンと
      スマホで別のページのように見えてしまう */
   grid-template-columns: repeat(5, 1fr);
-  gap: 0.7rem 0.8rem;
+  /* 上下は少し離す(2026-10-07、彼女が決めた) */
+  gap: 1.3rem 0.8rem;
   align-items: start;
 }
 
