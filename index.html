@@ -5,7 +5,7 @@
   <title>千遠生のサイト</title>
   <meta name="description" content="千遠生のサイト" />
   <meta name="viewport" content="width=1200" />
-  <link rel="stylesheet" href="sen.css?v=779076874" />
+  <link rel="stylesheet" href="sen.css?v=3183498764" />
   <script id="keshiki-script">
     (function () {
       var kusa = ["kusa/kusa-1.webp", "kusa/kusa-2.webp", "kusa/kusa-3.webp", "kusa/kusa-4.webp", "kusa/kusa-5.webp", "kusa/kusa-6.webp", "kusa/kusa-7.webp", "kusa/kusa-8.webp", "kusa/kusa-9.webp", "kusa/kusa-10.webp"];
@@ -42,7 +42,18 @@
       <!-- End of Statcounter Code --></span>人目の来訪者です
     </div>
     </div>
-
+    <div data-nosnippet class="fukidashi" id="fukidashi" hidden>
+      <img class="fukidashi-kao" src="images/kao.png" alt="" width="1449" height="1332">
+      <div data-nosnippet class="fukidashi-kumo"><p class="fukidashi-said" id="fukidashi-said"></p></div>
+    </div>
+    <script type="application/json" id="kangae">{"said": "自由に生きることができないな。"}</script>
+    <script>
+      (function () {
+        var kept = JSON.parse(document.getElementById("kangae").textContent);
+        document.getElementById("fukidashi-said").textContent = kept.said;
+        document.getElementById("fukidashi").hidden = false;
+      })();
+    </script>
   </header>
 
   <div data-nosnippet class="frame">
@@ -56,12 +67,12 @@
 
     <div data-nosnippet class="side-block">
       <div data-nosnippet class="side-title">今後行くつもりの場所</div>
-      <p class="side-fact side-quiet">www.nhk-cs.jp</p>
-      <p class="side-fact side-quiet">yozora.main.jp</p>
-      <p class="side-fact side-quiet">hatena.blog</p>
-      <p class="side-fact side-quiet">subscribe.wordpress.com</p>
-      <p class="side-fact side-quiet">www.blogger.com</p>
-      <p class="side-fact side-quiet">wordpress.com</p>
+      <p class="side-fact side-quiet">markets.nikkei-cnbc.co.jp</p>
+      <p class="side-fact side-quiet">Bluesky</p>
+      <p class="side-fact side-quiet">project.nikkeibp.co.jp</p>
+      <p class="side-fact side-quiet">www.google.com</p>
+      <p class="side-fact side-quiet">www.persee.fr</p>
+      <p class="side-fact side-quiet">github.githubassets.com</p>
       <p class="side-fact side-quiet">ほか 920 箇所</p>
     </div>
 
