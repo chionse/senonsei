@@ -27,7 +27,7 @@
   --small-font: "PixelMplus12", "MS Gothic", monospace;
   --main-color: #0029ae;
   --bg-color: #ffffff;
-  /* 線は濃く太めに(2026-10-07、彼女が決めた) */
+  /* 線は濃いめに(2026-10-07、彼女が決めた。太さは前のまま) */
   --line-color: #8e9ed6;
   /* トップのブログの一覧の点線だけは、前の薄い色のまま */
   --soft-line: #ccd3e8;
@@ -104,7 +104,7 @@ body {
 body > .frame,
 #memo-index > .frame {
   background-color: var(--bg-color);
-  border: 2px solid var(--paper-line);
+  border: 1px solid var(--paper-line);
   box-sizing: border-box;
 }
 
@@ -154,7 +154,7 @@ body > .frame,
   align-items: center;
   font-size: 16px;
   padding-bottom: 0.4rem;
-  border-bottom: 2px solid var(--line-color);
+  border-bottom: 1px solid var(--line-color);
   margin-bottom: 1.5rem;
 }
 
@@ -418,7 +418,7 @@ article .article-title,
   font-size: 32px;
   opacity: 1;
   margin-left: 1rem;
-  border-bottom: 2px solid var(--main-color);
+  border-bottom: 1px solid var(--main-color);
   padding-bottom: 0.1rem;
 }
 
@@ -493,7 +493,7 @@ article.yomimono p {
 }
 
 .comment-entry {
-  border-bottom: 2px solid var(--line-color);
+  border-bottom: 1px solid var(--line-color);
   padding: 0.6rem 0;
 }
 
@@ -570,7 +570,7 @@ article.yomimono p {
   font-family: inherit;
   font-size: 16px;
   color: var(--main-color);
-  border: 2px solid var(--line-color);
+  border: 1px solid var(--line-color);
   background: var(--bg-color);
   padding: 0.5rem;
 }
@@ -598,8 +598,8 @@ article.yomimono p {
   gap: 2rem;
   align-items: stretch;
   min-height: 16rem;
-  border-top: 2px solid var(--line-color);
-  border-bottom: 2px solid var(--line-color);
+  border-top: 1px solid var(--line-color);
+  border-bottom: 1px solid var(--line-color);
   padding: 1rem 0;
 }
 
@@ -608,7 +608,7 @@ article.yomimono p {
    区切りの線だけが遠くに立つ */
 .log-list {
   flex: 0 0 auto;
-  border-right: 2px solid var(--line-color);
+  border-right: 1px solid var(--line-color);
   padding-right: 0.8rem;
   font-size: 16px;
   display: flex;
@@ -656,7 +656,7 @@ article.yomimono p {
 
 .log-view .entry-title {
   font-size: 32px;
-  border-bottom: 2px solid var(--main-color);
+  border-bottom: 1px solid var(--main-color);
   padding-bottom: 0.2rem;
   margin: 0;
   width: fit-content;
@@ -732,7 +732,7 @@ article.yomimono p {
   /* 一枚だけ手前に開いている紙なので、後ろの線より少し濃くする。
      太さは1pxのまま。閲覧機は縁の太さを整数に丸めるので、
      1.5pxと書いても1pxになる */
-  border: 2px solid var(--paper-line);
+  border: 1px solid var(--paper-line);
   padding: 1rem 1.2rem 1.5rem;
   /* 動かす棒は出さない。その幅のぶん本文が狭くなってしまうので。
      続きがあることは、下の隅の印で示す */
@@ -892,7 +892,7 @@ article.yomimono p {
 }
 
 .profile-box {
-  border: 2px solid var(--line-color);
+  border: 1px solid var(--line-color);
   padding: 1rem 1.2rem;
   margin: 1.5rem 0;
 }
@@ -937,7 +937,7 @@ article.yomimono p {
      (2026-10-07、歩いた先が長い URL だった日に、本文の列が一文字幅になった) */
   min-width: 0;
   overflow-wrap: anywhere;
-  border-left: 2px solid var(--line-color);
+  border-left: 1px solid var(--line-color);
   padding-left: 1.2rem;
   text-align: left;
 }
@@ -957,7 +957,7 @@ article.yomimono p {
 /* 左の欄。本文を二つの欄で挟む。線は内側に向ける */
 .side-left {
   border-left: none;
-  border-right: 2px solid var(--line-color);
+  border-right: 1px solid var(--line-color);
   padding-left: 0;
   padding-right: 1.2rem;
 }
@@ -968,7 +968,7 @@ article.yomimono p {
 
 .side-title {
   font-size: 16px;
-  border-bottom: 2px solid var(--line-color);
+  border-bottom: 1px solid var(--line-color);
   padding-bottom: 0.3rem;
   margin-bottom: 0.6rem;
 }
@@ -1030,7 +1030,7 @@ article.yomimono p {
   gap: 1rem;
   margin-top: 2.5rem;
   padding-top: 0.8rem;
-  border-top: 2px solid var(--line-color);
+  border-top: 1px solid var(--line-color);
   font-size: 16px;
 }
 
