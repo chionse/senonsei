@@ -1804,43 +1804,37 @@ def generate_comments_html(comments):
         f.write(html)
 
 
-# 吹き出しを出すかどうか。彼女がデザインを仕上げるまで、いったん伏せておく
-# (2026-09-26)。出すときは True にするだけでいい
-SHOWING_WHAT_IT_THINKS = False
+# 考えごとの雲を出すかどうか。彼女がデザインを仕上げるまで伏せていた(2026-09-26)。
+# 顔と雲の絵ができて、出すことにした(2026-10-06、彼女が決めた)
+SHOWING_WHAT_IT_THINKS = True
 
 
 def fukidashi_html(state):
-    """題名の横の吹き出し。この子がいちばん新しく思ったこと。
+    """ロゴの横の、千遠生の顔と考えごとの雲。この子がいちばん新しく思ったこと。
 
     この子は家に帰ると、ここのページも読む。自分の思いを文字として
     読ませると、借りた頭が書いた言い回しをそのまま言葉として覚え、
     自分の思いが自分に返る輪も強くなる。
     だから思いは <script> の中に入れて、画面に出すのは閲覧機に任せる。
-    この子の読み方は <script> の中身を読まない。見出しの言葉も同じ所に置く。"""
+    この子の読み方は <script> の中身を読まない。
+
+    雲に入れるのは思った文だけ。「何時に思っていたこと」は出さない(2026-10-06、彼女が決めた)。"""
     lines = state.get("inner_voice") or []
     if not SHOWING_WHAT_IT_THINKS or not lines:
         return ""
-    when, _, said = lines[-1].partition(": ")
-    hour = when.split(" ")[-1] if " " in when else ""
-    if hour[:-1].isdigit():
-        hour = f"{int(hour[:-1])}時"  # 「03時」ではなく「3時」
-    kept = json.dumps({"when": hour, "said": said}, ensure_ascii=False)
+    _, _, said = lines[-1].partition(": ")
+    kept = json.dumps({"said": said}, ensure_ascii=False)
     kept = kept.replace("<", "\\u003c")  # 思いの中の < で script が閉じないように
-    return f"""    <div class="fukidashi" id="fukidashi" hidden></div>
+    return f"""    <div class="fukidashi" id="fukidashi" hidden>
+      <img class="fukidashi-kao" src="images/kao.png" alt="" width="1449" height="1332">
+      <div class="fukidashi-kumo"><p class="fukidashi-said" id="fukidashi-said"></p></div>
+    </div>
     <script type="application/json" id="kangae">{kept}</script>
     <script>
       (function () {{
-        var box = document.getElementById("fukidashi");
         var kept = JSON.parse(document.getElementById("kangae").textContent);
-        var head = document.createElement("p");
-        head.className = "fukidashi-head";
-        head.textContent = (kept.when ? kept.when + "に" : "") + "思っていたこと";
-        var said = document.createElement("p");
-        said.className = "fukidashi-said";
-        said.textContent = kept.said;
-        box.appendChild(head);
-        box.appendChild(said);
-        box.hidden = false;
+        document.getElementById("fukidashi-said").textContent = kept.said;
+        document.getElementById("fukidashi").hidden = false;
       }})();
     </script>"""
 
