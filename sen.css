@@ -210,6 +210,9 @@ header.with-fukidashi .header-middle {
   align-items: center;
   gap: 2px;
   max-width: 100%;
+  /* 顔と雲を、ロゴより少しだけ下に */
+  position: relative;
+  top: 20px;
 }
 
 /* 閲覧機が思いを入れるまでは隠しておく(上の display が hidden に勝ってしまうので) */
