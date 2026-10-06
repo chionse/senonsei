@@ -1536,8 +1536,15 @@ VISITOR_COUNTER = """    <div class="visitor-counter">
       referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
       <!-- End of Statcounter Code --></span>人目の来訪者です
     </div>"""
+# サイトの名前は、彼女が描いたロゴで出す(2026-10-06、彼女が決めた)。
+# 文字で読む人や検索のために、名前は alt に残す
+SITE_LOGO = (
+    '<h1 class="logo"><a href="index.html">'
+    '<img src="images/logo.png" alt="千遠生のサイト" width="1374" height="456">'
+    "</a></h1>"
+)
 SITE_HEADER = f"""<header>
-    <h1><a href="index.html">千遠生のサイト</a></h1>
+    {SITE_LOGO}
 {VISITOR_COUNTER}
   </header>"""
 FIRST_HEADER = re.compile(r"<header>(.*?)</header>", re.DOTALL)
@@ -1981,7 +1988,7 @@ def generate_index_html(articles, state=None, news=None):
 <body>
   <header class="with-fukidashi">
     <div class="header-middle">
-    <h1><a href="index.html">千遠生のサイト</a></h1>
+    {SITE_LOGO}
 {VISITOR_COUNTER}
     </div>
 {fukidashi_html(state or load_senonsei_state())}
