@@ -132,15 +132,7 @@ header.with-fukidashi .header-middle {
 
 body > .frame,
 #memo-index > .frame {
-  padding: 0 24px;
-}
-
-/* 縦の仕切りが紙の上の端から下の端まで届くよう、上下の余白は列のほうに持たせる
-   (2026-10-07、仕切りが途中で切れているのが気になると彼女が言った) */
-.frame > .main,
-.frame > .side {
-  padding-top: 24px;
-  padding-bottom: 32px;
+  padding: 24px 24px 32px;
 }
 
 /* 下の紙の、真ん中の列の頭に置くページの名前 */
