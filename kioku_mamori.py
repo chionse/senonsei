@@ -29,7 +29,9 @@ MEMORY = [
     "himitsu.json",
     "news.json",
 ]
-MEMORY_FOLDERS = ["omoi/*.json", "kotoba/*/*.json", "comments/*.json", "likes/*.json"]
+MEMORY_FOLDERS = [
+    "omoi/*.json", "kotoba/*/*.json", "atama/*.json", "atama/*/*.json", "comments/*.json", "likes/*.json",
+]
 
 
 def everything():

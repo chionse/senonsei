@@ -1,0 +1,27 @@
+name: Shiunten (dry run of the new head)
+
+# 新しい頭の試運転。この子の記憶には触らない(何もコミットしない)。
+# 試運転が済んだら、このワークフローと shiunten.py は消す
+on:
+  push:
+    branches: [claude/project-progress-update-t2tukz]
+    paths: [shiunten.py, atama.py, senonsei_ai.py, .github/workflows/shiunten.yml]
+
+permissions:
+  contents: read
+
+jobs:
+  shiunten:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.x'
+      # 封をしたメモと手紙の鍵(MEMO_KEY)は渡さない。記録は誰でも見られるので
+      - name: Dry run
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: python shiunten.py

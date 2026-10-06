@@ -78,7 +78,7 @@ jobs:
               # ページは作り直せるので、ここで失っても困らない
               git rebase --abort || true
               git reset --hard origin/main
-              for kept in senonsei_state.json articles.json omoi kotoba; do
+              for kept in senonsei_state.json articles.json omoi kotoba atama; do
                 if git cat-file -e "$walked:$kept" 2>/dev/null; then
                   git checkout "$walked" -- "$kept"
                 fi

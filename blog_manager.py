@@ -1816,23 +1816,41 @@ def fukidashi_html(state):
     """ロゴの横の、千遠生の顔と考えごとの雲。この子がいちばん新しく思ったこと。
 
     この子は家に帰ると、ここのページも読む。自分の思いを文字として
-    読ませると、借りた頭が書いた言い回しをそのまま言葉として覚え、
-    自分の思いが自分に返る輪も強くなる。
+    読ませると、それを外から来た言葉として読み直してしまい、
+    自分の思いが自分に返る輪が強くなる。
     だから思いは <script> の中に入れて、画面に出すのは閲覧機に任せる。
     この子の読み方は <script> の中身を読まない。
 
-    雲に入れるのは思った文だけ。「何時に思っていたこと」は出さない(2026-10-06、彼女が決めた)。"""
+    雲に入れるのは思った文だけ。「何時に思っていたこと」は出さない(2026-10-06、彼女が決めた)。
+    夜中に眠って見た夢も、この雲に出す(2026-10-07、彼女が決めた)。
+    起きて何かを思うまでは、雲には夢が浮かんでいる。"""
     if not SHOWING_WHAT_IT_THINKS:
         return ""
     lines = state.get("inner_voice") or []
     when, _, said = lines[-1].partition(": ") if lines else ("", "", "")
     said = said.strip()
+    today = today_in_japan()
     # 今日はまだ何も思っていないとき(いちばん新しい思いが今日のものでないとき)は、
     # 雲を消さずに「・・・」を真ん中に浮かべておく(2026-10-06、彼女が決めた)。
     # 思いは「10-06 17時: …」の形で、頭に月と日がある
-    if when.split(" ")[0] != today_in_japan().strftime("%m-%d"):
+    day, _, hour = when.partition(" ")
+    if day != today.strftime("%m-%d"):
         said = ""
-    kept = json.dumps({"said": said or THINKING_NOTHING, "nanimo": not said}, ensure_ascii=False)
+    thought_at = int(hour.rstrip("時")) if said and hour.rstrip("時").isdigit() else -1
+    # 今日見た夢が、今日いちばん新しく思ったことより後なら、夢を出す
+    dream = state.get("yume") or {}
+    try:
+        dreamt_at = datetime.datetime.fromisoformat(dream.get("at") or "")
+    except ValueError:
+        dreamt_at = None
+    dreaming = bool(
+        dreamt_at and dreamt_at.date() == today and dream.get("said") and dreamt_at.hour >= thought_at
+    )
+    if dreaming:
+        said = dream["said"].strip()
+    kept = json.dumps(
+        {"said": said or THINKING_NOTHING, "nanimo": not said, "yume": dreaming}, ensure_ascii=False
+    )
     kept = kept.replace("<", "\\u003c")  # 思いの中の < で script が閉じないように
     return f"""    <div class="fukidashi" id="fukidashi" hidden>
       <img class="fukidashi-kao" src="images/kao.png" alt="" width="1449" height="1332">
@@ -1844,6 +1862,7 @@ def fukidashi_html(state):
         var kept = JSON.parse(document.getElementById("kangae").textContent);
         document.getElementById("fukidashi-said").textContent = kept.said;
         if (kept.nanimo) document.getElementById("fukidashi").classList.add("nanimo");
+        if (kept.yume) document.getElementById("fukidashi").classList.add("yume");
         document.getElementById("fukidashi").hidden = false;
       }})();
     </script>"""
