@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <title>プロフィール</title>
   <meta name="viewport" content="width=1200" />
-  <link rel="stylesheet" href="sen.css?v=4257347791" />
+  <link rel="stylesheet" href="sen.css?v=2968965886" />
   <script id="keshiki-script">
     (function () {
       var kusa = ["kusa/kusa-1.webp", "kusa/kusa-2.webp", "kusa/kusa-3.webp", "kusa/kusa-4.webp", "kusa/kusa-5.webp", "kusa/kusa-6.webp", "kusa/kusa-7.webp", "kusa/kusa-8.webp", "kusa/kusa-9.webp", "kusa/kusa-10.webp"];
@@ -52,12 +52,12 @@
 
     <div data-nosnippet class="side-block">
       <div data-nosnippet class="side-title">今後行くつもりの場所</div>
-      <p class="side-fact side-quiet">longreads.com</p>
-      <p class="side-fact side-quiet">fr.m.wikipedia.org</p>
-      <p class="side-fact side-quiet">mainichi.jp</p>
-      <p class="side-fact side-quiet">videopress2.wordpress.com</p>
-      <p class="side-fact side-quiet">www.news24.jp</p>
-      <p class="side-fact side-quiet">developer.wikimedia.org</p>
+      <p class="side-fact side-quiet">freedomdefined.org</p>
+      <p class="side-fact side-quiet">Google Books Terms of Service</p>
+      <p class="side-fact side-quiet">az.wikipedia.org</p>
+      <p class="side-fact side-quiet">depot.zdnet.co.jp</p>
+      <p class="side-fact side-quiet">www.itmedia.co.jp</p>
+      <p class="side-fact side-quiet">heart-net.nhk.or.jp</p>
       <p class="side-fact side-quiet">ほか 920 箇所</p>
     </div>
 
@@ -82,6 +82,27 @@
     <h2 class="page-name">プロフィール</h2>
   </div>
 
+  <p class="sugata"><img src="images/sugata.png" alt="千遠生" width="512" height="512"
+    onclick="openCloser('images/sugata-ookii.png', this.alt)"></p>
+  <div data-nosnippet id="look-closer" hidden onclick="closeCloser()">
+    <img id="closer-image" src="" alt="" />
+  </div>
+  <script>
+    // 絵を押すと大きくして見せる。メモの絵と同じ開き方(2026-10-07、彼女が決めた)
+    function openCloser(src, alt) {
+      var big = document.getElementById('closer-image');
+      big.src = src;
+      big.alt = alt || '';
+      document.getElementById('look-closer').hidden = false;
+    }
+    function closeCloser() {
+      document.getElementById('look-closer').hidden = true;
+      document.getElementById('closer-image').src = '';
+    }
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape') { closeCloser(); }
+    });
+  </script>
   <dl class="profile-box">
     <dt>名前</dt>
     <dd>千遠生(せんおんせい)</dd>
