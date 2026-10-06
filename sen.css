@@ -27,9 +27,12 @@
   --small-font: "PixelMplus12", "MS Gothic", monospace;
   --main-color: #0029ae;
   --bg-color: #ffffff;
-  --line-color: #ccd3e8;
+  /* 線は濃いめに(2026-10-07、彼女が決めた。太さは前のまま) */
+  --line-color: #8e9ed6;
+  /* トップのブログの一覧の点線だけは、前の薄い色のまま */
+  --soft-line: #ccd3e8;
   /* 手前に開いている紙の縁だけ、他の線より少し濃い */
-  --paper-line: #a3b1dc;
+  --paper-line: #6c7fc6;
   /* 空。空の絵が届くまでの仮の色。
      上ほど濃く、地平線に近いほど白っぽい */
   --sky-top: #4f9fe0;
@@ -437,7 +440,8 @@ article.yomimono p {
 
 .section-title {
   font-size: 16px;
-  border-bottom: 2px solid var(--main-color);
+  /* 一度 2px にしたが、まわりの線を濃くしたら太すぎに見えたので 1px に戻す(2026-10-07) */
+  border-bottom: 1px solid var(--main-color);
   padding-bottom: 0.3rem;
   margin: 2rem 0 1rem;
 }
@@ -452,7 +456,7 @@ article.yomimono p {
 .recent-list li {
   margin: 0;
   padding: 0.4rem 0;
-  border-bottom: 1px dashed var(--line-color);
+  border-bottom: 1px dashed var(--soft-line);
   font-size: 16px;
 }
 
@@ -681,7 +685,8 @@ article.yomimono p {
   /* どの画面でも同じ五列。幅で列数が変わると、パソコンと
      スマホで別のページのように見えてしまう */
   grid-template-columns: repeat(5, 1fr);
-  gap: 0.7rem 0.8rem;
+  /* 上下は少し離す(2026-10-07、彼女が決めた) */
+  gap: 1.3rem 0.8rem;
   align-items: start;
 }
 
@@ -873,6 +878,21 @@ article.yomimono p {
 }
 
 /* プロフィール */
+/* プロフィールの絵。元の点の絵と同じ大きさ(512)で出すと、線が一本も欠けない。
+   押すと、メモの絵と同じように大きく見せる */
+.sugata {
+  margin: 0 0 1.2rem;
+  text-align: center;
+  line-height: 0;
+}
+
+.sugata img {
+  max-width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+  cursor: zoom-in;
+}
+
 .profile-box {
   border: 1px solid var(--line-color);
   padding: 1rem 1.2rem;

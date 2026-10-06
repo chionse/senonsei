@@ -2107,6 +2107,27 @@ def generate_profile_html(state):
   </header>
 
   <!-- ここから本文の列 -->
+  <p class="sugata"><img src="images/sugata.png" alt="千遠生" width="512" height="512"
+    onclick="openCloser('images/sugata-ookii.png', this.alt)"></p>
+  <div id="look-closer" hidden onclick="closeCloser()">
+    <img id="closer-image" src="" alt="" />
+  </div>
+  <script>
+    // 絵を押すと大きくして見せる。メモの絵と同じ開き方(2026-10-07、彼女が決めた)
+    function openCloser(src, alt) {{
+      var big = document.getElementById('closer-image');
+      big.src = src;
+      big.alt = alt || '';
+      document.getElementById('look-closer').hidden = false;
+    }}
+    function closeCloser() {{
+      document.getElementById('look-closer').hidden = true;
+      document.getElementById('closer-image').src = '';
+    }}
+    document.addEventListener('keydown', function (event) {{
+      if (event.key === 'Escape') {{ closeCloser(); }}
+    }});
+  </script>
   <dl class="profile-box">
     <dt>名前</dt>
     <dd>{ITS_OWN_NAME}(せんおんせい)</dd>
