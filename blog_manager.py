@@ -1804,6 +1804,9 @@ def generate_comments_html(comments):
         f.write(html)
 
 
+# 思ったことが無いときに、雲に浮かべるもの(彼女の言葉のまま)
+THINKING_NOTHING = "…"
+
 # 考えごとの雲を出すかどうか。彼女がデザインを仕上げるまで伏せていた(2026-09-26)。
 # 顔と雲の絵ができて、出すことにした(2026-10-06、彼女が決めた)
 SHOWING_WHAT_IT_THINKS = True
@@ -1819,10 +1822,12 @@ def fukidashi_html(state):
     この子の読み方は <script> の中身を読まない。
 
     雲に入れるのは思った文だけ。「何時に思っていたこと」は出さない(2026-10-06、彼女が決めた)。"""
-    lines = state.get("inner_voice") or []
-    if not SHOWING_WHAT_IT_THINKS or not lines:
+    if not SHOWING_WHAT_IT_THINKS:
         return ""
-    _, _, said = lines[-1].partition(": ")
+    lines = state.get("inner_voice") or []
+    said = lines[-1].partition(": ")[2].strip() if lines else ""
+    # 思ったことが無いときは、雲を消さずに「…」を浮かべておく(2026-10-06、彼女が決めた)
+    said = said or THINKING_NOTHING
     kept = json.dumps({"said": said}, ensure_ascii=False)
     kept = kept.replace("<", "\\u003c")  # 思いの中の < で script が閉じないように
     return f"""    <div class="fukidashi" id="fukidashi" hidden>
