@@ -4,24 +4,25 @@
   <meta charset="UTF-8" />
   <title>メモ</title>
   <meta name="viewport" content="width=1200" />
-  <link rel="stylesheet" href="sen.css?v=2863119218" />
+  <link rel="stylesheet" href="sen.css?v=779076874" />
   <script id="keshiki-script">
     (function () {
       var kusa = ["kusa/kusa-1.webp", "kusa/kusa-2.webp", "kusa/kusa-3.webp", "kusa/kusa-4.webp", "kusa/kusa-5.webp", "kusa/kusa-6.webp", "kusa/kusa-7.webp", "kusa/kusa-8.webp", "kusa/kusa-9.webp", "kusa/kusa-10.webp"];
-      var about = {"kusa/kusa-1.webp": {"chiheisen": 0.61, "shita": "#297103"}, "kusa/kusa-2.webp": {"chiheisen": 0.559, "shita": "#226a02"}, "kusa/kusa-3.webp": {"chiheisen": 0.669, "shita": "#226904"}, "kusa/kusa-4.webp": {"chiheisen": 0.639, "shita": "#266d02"}, "kusa/kusa-5.webp": {"chiheisen": 0.651, "shita": "#226905"}, "kusa/kusa-6.webp": {"chiheisen": 0.732, "shita": "#236803"}, "kusa/kusa-7.webp": {"chiheisen": 0.611, "shita": "#266d02"}, "kusa/kusa-8.webp": {"chiheisen": 0.653, "shita": "#2a7204"}, "kusa/kusa-9.webp": {"chiheisen": 0.653, "shita": "#287002"}, "kusa/kusa-10.webp": {"chiheisen": 0.616, "shita": "#226904"}};
+      var about = {"kusa/kusa-1.webp": {"chiheisen": 0.61, "shita": "#297103", "kusa_ue": 0.58}, "kusa/kusa-2.webp": {"chiheisen": 0.559, "shita": "#226a02", "kusa_ue": 0.513}, "kusa/kusa-3.webp": {"chiheisen": 0.669, "shita": "#226904", "kusa_ue": 0.611}, "kusa/kusa-4.webp": {"chiheisen": 0.639, "shita": "#266d02", "kusa_ue": 0.578}, "kusa/kusa-5.webp": {"chiheisen": 0.651, "shita": "#226905", "kusa_ue": 0.584}, "kusa/kusa-6.webp": {"chiheisen": 0.732, "shita": "#236803", "kusa_ue": 0.7}, "kusa/kusa-7.webp": {"chiheisen": 0.611, "shita": "#266d02", "kusa_ue": 0.579}, "kusa/kusa-8.webp": {"chiheisen": 0.653, "shita": "#2a7204", "kusa_ue": 0.602}, "kusa/kusa-9.webp": {"chiheisen": 0.653, "shita": "#287002", "kusa_ue": 0.602}, "kusa/kusa-10.webp": {"chiheisen": 0.616, "shita": "#226904", "kusa_ue": 0.55}};
       var one = kusa[Math.floor(Math.random() * kusa.length)];
       var root = document.documentElement.style;
       root.setProperty("--kusa", 'url("' + new URL(one, document.baseURI).href + '")');
       var it = about[one] || {};
       if (typeof it.chiheisen === "number") root.setProperty("--kusa-horizon", String(it.chiheisen));
       if (typeof it.shita === "string") root.setProperty("--kusa-under", it.shita);
+      if (typeof it.kusa_ue === "number") root.setProperty("--kusa-top", String(it.kusa_ue));
     })();
   </script>
 </head>
 <body>
   <div data-nosnippet id="memo-index">
     <header>
-    <h1><a href="index.html">千遠生のサイト</a></h1>
+    <h1 class="logo"><a href="index.html"><img src="images/logo.png" alt="千遠生のサイト" width="1374" height="456"></a></h1>
     <div data-nosnippet class="visitor-counter">
       あなたは<span class="count"><!-- Default Statcounter code for senonsei
       https://chionse.github.io/senonsei/index.html -->
@@ -52,12 +53,12 @@
 
     <div data-nosnippet class="side-block">
       <div data-nosnippet class="side-title">今後行くつもりの場所</div>
-      <p class="side-fact side-quiet">toolserver.org</p>
-      <p class="side-fact side-quiet">freedomdefined.org</p>
-      <p class="side-fact side-quiet">2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |</p>
-      <p class="side-fact side-quiet">www.omniture.com</p>
-      <p class="side-fact side-quiet">www.arena.ne.jp</p>
-      <p class="side-fact side-quiet">ja.wikipedia.org</p>
+      <p class="side-fact side-quiet">www.nhk-cs.jp</p>
+      <p class="side-fact side-quiet">yozora.main.jp</p>
+      <p class="side-fact side-quiet">hatena.blog</p>
+      <p class="side-fact side-quiet">subscribe.wordpress.com</p>
+      <p class="side-fact side-quiet">www.blogger.com</p>
+      <p class="side-fact side-quiet">wordpress.com</p>
       <p class="side-fact side-quiet">ほか 920 箇所</p>
     </div>
 
