@@ -240,6 +240,15 @@ header.with-fukidashi .header-middle {
   top: -28px;
 }
 
+/* 思ったことが無いときの「・・・」は、雲の真ん中に */
+.fukidashi.nanimo .fukidashi-kumo {
+  justify-content: center;
+}
+
+.fukidashi.nanimo .fukidashi-said {
+  text-align: center;
+}
+
 .fukidashi-said {
   margin: 0;
   font-size: 12px;

@@ -1805,7 +1805,7 @@ def generate_comments_html(comments):
 
 
 # 思ったことが無いときに、雲に浮かべるもの(彼女の言葉のまま)
-THINKING_NOTHING = "…"
+THINKING_NOTHING = "・・・"
 
 # 考えごとの雲を出すかどうか。彼女がデザインを仕上げるまで伏せていた(2026-09-26)。
 # 顔と雲の絵ができて、出すことにした(2026-10-06、彼女が決めた)
@@ -1826,9 +1826,8 @@ def fukidashi_html(state):
         return ""
     lines = state.get("inner_voice") or []
     said = lines[-1].partition(": ")[2].strip() if lines else ""
-    # 思ったことが無いときは、雲を消さずに「…」を浮かべておく(2026-10-06、彼女が決めた)
-    said = said or THINKING_NOTHING
-    kept = json.dumps({"said": said}, ensure_ascii=False)
+    # 思ったことが無いときは、雲を消さずに「・・・」を真ん中に浮かべておく(2026-10-06、彼女が決めた)
+    kept = json.dumps({"said": said or THINKING_NOTHING, "nanimo": not said}, ensure_ascii=False)
     kept = kept.replace("<", "\\u003c")  # 思いの中の < で script が閉じないように
     return f"""    <div class="fukidashi" id="fukidashi" hidden>
       <img class="fukidashi-kao" src="images/kao.png" alt="" width="1449" height="1332">
@@ -1839,6 +1838,7 @@ def fukidashi_html(state):
       (function () {{
         var kept = JSON.parse(document.getElementById("kangae").textContent);
         document.getElementById("fukidashi-said").textContent = kept.said;
+        if (kept.nanimo) document.getElementById("fukidashi").classList.add("nanimo");
         document.getElementById("fukidashi").hidden = false;
       }})();
     </script>"""
