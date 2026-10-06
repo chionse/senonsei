@@ -83,22 +83,38 @@ body {
   line-height: 1.6;
 }
 
-/* 紙は二枚。上の一枚にサイトの名前(トップでは来訪者の数も)、
-   下の一枚に、そのページの名前と三列。二枚の間から景色が見える。
+/* 紙は一枚。そのページの名前と三列を載せる。
+   サイトの名前は紙に載せず、彼女の描いたロゴを空に浮かべる
+   (2026-10-06、彼女と決めた。それまでは上にもう一枚紙があった)。
+   ロゴの白い雲が、そのまま空の雲に見える。
    メモのページだけは一覧が一枚内側(#memo-index)に入っている */
-body > header,
 body > .frame,
-#memo-index > header,
 #memo-index > .frame {
   background-color: var(--bg-color);
   border: 1px solid var(--paper-line);
   box-sizing: border-box;
 }
 
+/* ロゴは少し下げて、紙に寄せる。上には空を広く残す */
 body > header,
 #memo-index > header {
-  padding: 14px 24px 16px;
-  margin-bottom: 24px;
+  padding: 54px 24px 0;
+  margin-bottom: 0;
+}
+
+/* 横 560px。狭い画面では、両脇の空きを残して縮む */
+h1.logo {
+  margin: 0;
+  line-height: 0;
+}
+
+h1.logo img {
+  width: min(560px, calc(100vw - 96px));
+  height: auto;
+}
+
+header.with-fukidashi .header-middle {
+  min-width: 0;
 }
 
 body > .frame,
