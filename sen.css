@@ -450,15 +450,17 @@ article.yomimono p {
 
 /* 読みものの題は、列が細いので 32px だと大きすぎた。24px にする(2026-10-08、彼女が選んだ)。
    点の書体が少しにじむのは承知の上 */
-article.yomimono .article-title {
+/* 読みものの題は、過去のブログと同じく上に一行で置き、日付はその下に小さく薄く。
+   列が細いので題は 24px、下線は引かない。題と本文のあいだは一行ぶんほど空ける(2026-10-08、彼女が決めた) */
+article.yomimono .yomimono-title {
+  font-family: "DotGothic16", "MS Gothic", monospace;
   font-size: 24px;
-  /* 読みものの題には下線を引かない(2026-10-08、彼女が決めた) */
-  border-bottom: none;
+  line-height: 1.4;
 }
 
-/* 題のすぐ下から本文が始まって詰まって見えたので、一行ぶんほど空ける(2026-10-08、彼女が選んだ) */
 article.yomimono .date {
-  margin-bottom: 2rem;
+  opacity: 0.5;
+  margin: 0.5rem 0 2rem;
 }
 
 .section-title {
