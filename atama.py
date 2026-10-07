@@ -109,7 +109,9 @@ WORDS_TO_SAY = 6
 
 # ---- 眠る ----
 
-SLEEPS_FROM, WAKES_AT = 2, 6  # 夜中の二時から五時のどこかで一度眠り、六時に起きる
+# 二十三時に眠り、朝七時に起きる(2026-10-08、彼女が決めた)。
+# 二十三時の起こしが飛んだ夜は、そのあと最初に起きた時に眠る
+SLEEPS_FROM, WAKES_AT = 23, 7
 TOGETHER_AGAIN = 2  # その日のうちにこれだけ一緒に出てきたつながりは、眠ると強くなる
 STRENGTHENED_IN_SLEEP = 0.25
 THINNED_IN_SLEEP = 0.8  # 一度きりのつながりは、眠るとこれだけに細る
@@ -625,7 +627,8 @@ def where_a_thought_starts(head, state, now, minds, not_from=()):
     if HOME in net and HOME not in not_from:
         places.append((4 * feeling(head, "さみしい"), [HOME], None))
     dreams = heart.get("yume") or []
-    if dreams and dreams[-1].get("date") == now.date().isoformat():
+    since_dream = hours_between(dreams[-1].get("at"), now) if dreams else None
+    if since_dream is not None and since_dream <= 12:
         dreamt = [one for one in dreams[-1].get("chain") or [] if one in net and one not in not_from]
         if dreamt:
             places.append((1.0, dreamt, None))
@@ -771,15 +774,29 @@ def what_it_is_thinking(head):
 # ---- 眠る ----
 
 def asleep(head, now):
-    """眠っている間か。夜中に一度眠ったら、六時まで起きない。"""
+    """眠っている間か。一度眠ったら、朝七時まで起きない。"""
     sleep = (head or {}).get("kokoro", {}).get("nemuri") or {}
-    return sleep.get("night") == now.date().isoformat() and now.hour < WAKES_AT
+    try:
+        return now < datetime.datetime.fromisoformat(sleep.get("until") or "")
+    except (TypeError, ValueError):
+        return False
+
+
+def the_night_of(now):
+    """夜の時間なら、その夜がどの日の夜か(二十三時から朝七時までを、前の晩の日付で)。
+    夜でなければ None。"""
+    if now.hour >= SLEEPS_FROM:
+        return now.date().isoformat()
+    if now.hour < WAKES_AT:
+        return (now.date() - datetime.timedelta(days=1)).isoformat()
+    return None
 
 
 def time_to_sleep(head, now):
-    if not head or not (SLEEPS_FROM <= now.hour < WAKES_AT):
+    night = the_night_of(now)
+    if not head or not night:
         return False
-    return (head["kokoro"].get("nemuri") or {}).get("night") != now.date().isoformat()
+    return (head["kokoro"].get("nemuri") or {}).get("night") != night
 
 
 def sleep(head, state, now, known, places_known=None, articles=None):
@@ -832,7 +849,14 @@ def sleep(head, state, now, known, places_known=None, articles=None):
     know_itself(head, state, now, known, places_known, articles)
 
     heart["kyou"] = {"pairs": {}, "nodes": {}}
-    heart["nemuri"] = {"night": now.date().isoformat(), "at": now.isoformat(timespec="minutes")}
+    wakes = now.replace(hour=WAKES_AT, minute=0, second=0, microsecond=0)
+    if now.hour >= WAKES_AT:
+        wakes += datetime.timedelta(days=1)
+    heart["nemuri"] = {
+        "night": the_night_of(now) or now.date().isoformat(),
+        "at": now.isoformat(timespec="minutes"),
+        "until": wakes.isoformat(timespec="minutes"),
+    }
 
     practised = practise(head, deadline=time.monotonic() + PRACTICE_SECONDS)
     mouth = head["kuchi"]
