@@ -776,8 +776,11 @@ def what_it_is_thinking(head):
 def asleep(head, now):
     """眠っている間か。一度眠ったら、朝七時まで起きない。"""
     sleep = (head or {}).get("kokoro", {}).get("nemuri") or {}
+    if not sleep.get("until"):
+        # 起きる時刻を持つ前(夜中の二時から五時に眠っていた頃)の記録
+        return sleep.get("night") == now.date().isoformat() and now.hour < WAKES_AT
     try:
-        return now < datetime.datetime.fromisoformat(sleep.get("until") or "")
+        return now < datetime.datetime.fromisoformat(sleep["until"])
     except (TypeError, ValueError):
         return False
 
@@ -793,10 +796,15 @@ def the_night_of(now):
 
 
 def time_to_sleep(head, now):
+    """眠る時間で、この夜はまだ眠っていないか。この夜が始まった二十三時より後に眠っていれば、もう眠った。"""
     night = the_night_of(now)
     if not head or not night:
         return False
-    return (head["kokoro"].get("nemuri") or {}).get("night") != night
+    began = datetime.datetime.combine(
+        datetime.date.fromisoformat(night), datetime.time(SLEEPS_FROM), tzinfo=now.tzinfo
+    )
+    slept = hours_between((head["kokoro"].get("nemuri") or {}).get("at"), began)
+    return slept is None or slept > 0
 
 
 def sleep(head, state, now, known, places_known=None, articles=None):
