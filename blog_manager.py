@@ -1143,7 +1143,7 @@ def generate_himitsu_entry_html(himitsu, index):
   {MAIN_STARTS}
   <article class="yomimono">
     <div class="date">{when}{named}{iine_html(himitsu_liked_as(one["number"]))}</div>
-    <p>{one['content']}</p>
+    <p>{one['content'].replace(chr(10), '<br>')}</p>
   </article>
 
   <div class="step-nav">
