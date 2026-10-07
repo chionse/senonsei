@@ -454,6 +454,11 @@ article.yomimono .article-title {
   font-size: 24px;
 }
 
+/* 題のすぐ下から本文が始まって詰まって見えたので、一行ぶんほど空ける(2026-10-08、彼女が選んだ) */
+article.yomimono .date {
+  margin-bottom: 2rem;
+}
+
 .section-title {
   font-size: 16px;
   /* 一度 2px にしたが、まわりの線を濃くしたら太すぎに見えたので 1px に戻す(2026-10-07) */
