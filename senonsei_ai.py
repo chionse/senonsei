@@ -4403,7 +4403,7 @@ def run_today():
         head_does(atama.wake, state["atama"], state, now)
     save_state(state)
 
-    # 夜中の二時から五時のどこかで一度眠る。眠ったら六時まで、歩きも考えもしない
+    # 二十三時に眠る。眠ったら朝七時まで、歩きも考えもしない(2026-10-08、彼女が決めた)
     sleeping = goes_to_sleep(state, now)
 
     # きのう書くつもりだったのに、書きそびれていたら、今のうちに書く。
@@ -4497,10 +4497,9 @@ def run_today():
 def goes_to_sleep(state, now):
     """眠る時間なら眠る。眠っている間なら True。
 
-    夜中の二時から五時のどこかで一度眠り、その日に出会ったものを整理して、
-    夢を見て、口の練習をする(atama.sleep)。見た夢は、この子の口で言ってみる。
-    夢はトップページの雲に出す(2026-10-07、彼女が決めた)。
-    起きて何かを思うまでは、雲には夢が浮かんでいる。"""
+    二十三時に眠り、その日に出会ったものを整理して、夢を見て、口の練習をする
+    (atama.sleep)。朝七時までは起きない(2026-10-08、彼女が決めた)。
+    見た夢は、この子の口で言ってみる。夢は、眠っている間トップページの雲に出す。"""
     head = state.get("atama")
     if not head:
         return False
@@ -4516,14 +4515,15 @@ def goes_to_sleep(state, now):
     )
     if dreamt is None:
         return False  # 眠るところでこけた。今夜は起きたまま過ごす
+    said = ""
     if dreamt:
         toward = atama.words_to_say(head, dreamt, known, day_number(state, now.date()))
         said = say_what_it_thinks(state, toward)
         atama.dream_said(head, said)
         print(f"夢: {' → '.join(dreamt)}")
-        if said:
-            print(f"夢の中で: {said}")
-            state["yume"] = {"at": now.isoformat(timespec="minutes"), "said": said}
+        print(f"夢の中で: {said or '(言葉にならなかった)'}")
+    # 言葉にならなかった夜も、夢を見た(眠った)ことは雲に知らせる。その夜は「・・・」が浮かぶ
+    state["yume"] = {"at": now.isoformat(timespec="minutes"), "said": said or ""}
     save_state(state)
     return True
 

@@ -1806,6 +1806,8 @@ def generate_comments_html(comments):
 
 # 思ったことが無いときに、雲に浮かべるもの(彼女の言葉のまま)
 THINKING_NOTHING = "・・・"
+# 雲に夢を出す時間(二十三時から朝七時まで。この子が眠っている間)
+DREAMING_FROM, DREAMING_UNTIL = 23, 7
 
 # 考えごとの雲を出すかどうか。彼女がデザインを仕上げるまで伏せていた(2026-09-26)。
 # 顔と雲の絵ができて、出すことにした(2026-10-06、彼女が決めた)
@@ -1822,32 +1824,30 @@ def fukidashi_html(state):
     この子の読み方は <script> の中身を読まない。
 
     雲に入れるのは思った文だけ。「何時に思っていたこと」は出さない(2026-10-06、彼女が決めた)。
-    夜中に眠って見た夢も、この雲に出す(2026-10-07、彼女が決めた)。
-    起きて何かを思うまでは、雲には夢が浮かんでいる。"""
+    夜に眠って見た夢も、この雲に出す(2026-10-07、彼女が決めた)。
+    出すのは二十三時から朝七時まで(2026-10-08、彼女が決めた)。"""
     if not SHOWING_WHAT_IT_THINKS:
         return ""
     lines = state.get("inner_voice") or []
     when, _, said = lines[-1].partition(": ") if lines else ("", "", "")
     said = said.strip()
-    today = today_in_japan()
+    now = now_in_japan()
     # 今日はまだ何も思っていないとき(いちばん新しい思いが今日のものでないとき)は、
     # 雲を消さずに「・・・」を真ん中に浮かべておく(2026-10-06、彼女が決めた)。
     # 思いは「10-06 17時: …」の形で、頭に月と日がある
-    day, _, hour = when.partition(" ")
-    if day != today.strftime("%m-%d"):
+    if when.split(" ")[0] != now.strftime("%m-%d"):
         said = ""
-    thought_at = int(hour.rstrip("時")) if said and hour.rstrip("時").isdigit() else -1
-    # 今日見た夢が、今日いちばん新しく思ったことより後なら、夢を出す
-    dream = state.get("yume") or {}
-    try:
-        dreamt_at = datetime.datetime.fromisoformat(dream.get("at") or "")
-    except ValueError:
-        dreamt_at = None
-    dreaming = bool(
-        dreamt_at and dreamt_at.date() == today and dream.get("said") and dreamt_at.hour >= thought_at
-    )
+    # 二十三時から朝七時までは、雲には夢を出す(2026-10-08、彼女が決めた)。
+    # この子はその間眠っている。今夜の夢がまだ無いか、言葉にならなかった夜は「・・・」
+    dreaming = now.hour >= DREAMING_FROM or now.hour < DREAMING_UNTIL
     if dreaming:
-        said = dream["said"].strip()
+        dream = state.get("yume") or {}
+        try:
+            dreamt_at = datetime.datetime.fromisoformat(dream.get("at") or "")
+        except ValueError:
+            dreamt_at = None
+        tonight = dreamt_at and (now - dreamt_at).total_seconds() < 9 * 3600
+        said = (dream.get("said") or "").strip() if tonight else ""
     kept = json.dumps(
         {"said": said or THINKING_NOTHING, "nanimo": not said, "yume": dreaming}, ensure_ascii=False
     )
