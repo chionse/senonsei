@@ -420,6 +420,22 @@ article .date {
   opacity: 0.8;
 }
 
+/* 今日のブログは、題 → ♡ → 日付の順に並べる。題を押すと過去のブログのその日へ。
+   下線は普段は出さず、指を乗せた時だけ(2026-10-08、彼女が決めた) */
+article .today-head .article-title {
+  margin-left: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+article .today-head .article-title:hover {
+  text-decoration: underline;
+}
+
+article .today-head .today-when {
+  margin-left: 0.9rem;
+}
+
 /* ひみつの部屋は、題を左に、♡と日付は右の端に小さく、横一列に並べる(2026-10-08、彼女が決めた) */
 article .article-head {
   display: flex;
