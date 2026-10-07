@@ -2209,7 +2209,28 @@ def regenerate_pages(articles):
     page_heads_on_pages(every_page)
     iine_on_pages(EVERY_PAGE + tuple(all_himitsu_pages(himitsu)))
     keshiki_on_pages(every_page)
+    icons_on_pages(every_page)
     out_of_search_snippets(every_page)
+
+
+# ホーム画面とタブに出す絵(2026-10-07、彼女が描いた。いちばん外の白い枠を外して6倍にしたもの)
+SITE_ICON = (
+    '<link rel="icon" type="image/png" href="images/icon.png">\n'
+    '<link rel="apple-touch-icon" href="images/icon.png">\n'
+)
+
+
+def icons_on_pages(pages):
+    """どのページにも、ホーム画面とタブに出す絵を添える。"""
+    for page in pages:
+        if not os.path.exists(page):
+            continue
+        with open(page, "r", encoding="utf-8") as f:
+            made = f.read()
+        if 'rel="apple-touch-icon"' in made or "</head>" not in made:
+            continue
+        with open(page, "w", encoding="utf-8") as f:
+            f.write(made.replace("</head>", SITE_ICON + "</head>", 1))
 
 
 # 検索に出た時の説明に、ページの中の文を使わせない印。
