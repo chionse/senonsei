@@ -464,7 +464,12 @@ article .article-head .article-title {
 }
 
 article .article-head .iine {
-  margin: 0 0.9rem 0 0;
+  margin: 0 1.2rem 0 0;
+}
+
+/* 今日のブログと同じく、数のうしろの取り置きはしない */
+article .article-head .iine .kazu {
+  min-width: 0;
 }
 
 article .article-title,
