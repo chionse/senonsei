@@ -1119,7 +1119,7 @@ def generate_himitsu_entry_html(himitsu, index):
                 f'{label}　{himitsu_title(entry)}</a>')
 
     # 番号は題が無くても出す。何話目かは、題とは別に要る
-    # 題を上に一行で置き、日付と♡はその下に小さく。過去のブログと同じ形(2026-10-08、彼女と決めた)
+    # 題を先に置き、日付と♡はその右に小さく、横一列に並べる(2026-10-08、彼女と決めた)
     named = f'{one["number"]}' + (f'　{one["title"]}' if one.get("title") else "")
     when = one.get("date", "")
     html = f"""<!DOCTYPE html>
@@ -1139,8 +1139,7 @@ def generate_himitsu_entry_html(himitsu, index):
 
   {MAIN_STARTS}
   <article class="yomimono">
-    <div class="yomimono-title">{named}</div>
-    <div class="date">{when}{iine_html(himitsu_liked_as(one["number"]))}</div>
+    <div class="yomimono-head"><span class="yomimono-title">{named}</span><span class="date">{when}{iine_html(himitsu_liked_as(one["number"]))}</span></div>
     <p>{one['content'].replace(chr(10), '<br>')}</p>
   </article>
 
