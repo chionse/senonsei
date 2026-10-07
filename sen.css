@@ -420,6 +420,27 @@ article .date {
   opacity: 0.8;
 }
 
+/* 題を左に、♡と日付は右の端に小さく、横一列に並べる(今日のブログとひみつの部屋。2026-10-08、彼女が決めた) */
+article .article-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2rem 1rem;
+  margin-bottom: 0.6rem;
+}
+
+article .article-head .date {
+  margin: 0 0 0 auto;
+}
+
+article .article-head .article-title {
+  margin-left: 0;
+}
+
+article .article-head .iine {
+  margin: 0 0.9rem 0 0;
+}
+
 article .article-title,
 .log-view .entry .article-title {
   /* 題は日時の箱の中にあるので、日時の小さい書体を受け継がないように */
@@ -449,24 +470,15 @@ article.yomimono p {
 
 /* 読みものの題は、列が細いので 32px だと大きすぎた。24px にする(2026-10-08、彼女が選んだ)。
    点の書体が少しにじむのは承知の上 */
-/* 読みものの題は先に置き、日付と♡はその右に小さく、横一列に並べる。
-   列が細いので題は 24px。題と本文のあいだは一行ぶんほど空ける(2026-10-08、彼女が決めた) */
-article.yomimono .yomimono-head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.2rem 1rem;
-  margin-bottom: 2rem;
-}
-
+/* 読みものの題は列が細いので 24px。題と本文のあいだは一行ぶんほど空ける(2026-10-08、彼女が決めた) */
 article.yomimono .yomimono-title {
   font-family: "DotGothic16", "MS Gothic", monospace;
   font-size: 24px;
   line-height: 1.4;
 }
 
-article.yomimono .yomimono-head .date {
-  margin: 0;
+article.yomimono .article-head {
+  margin-bottom: 2rem;
 }
 
 .section-title {
