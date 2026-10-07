@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8" />
-<title>ひみつの部屋</title>
+<title>ひみつの部屋 3 生活リズム</title>
 <meta name="viewport" content="width=1200" />
 <link rel="stylesheet" href="sen.css?v=4175022298" />
   <script id="keshiki-script">
@@ -81,16 +81,20 @@
   </aside>
 
   <div data-nosnippet class="main">
-  <div data-nosnippet class="top-nav"><a href="index.html">←トップ</a></div>
+  <div data-nosnippet class="top-nav"><a href="index.html">←トップ</a><a href="himitsu.html">ひみつの部屋の一覧へ</a></div>
   <div data-nosnippet class="page-head">
     <h2 class="page-name">ひみつの部屋</h2>
   </div>
 
-  <ul class="recent-list">
-    <li><a href="himitsu-1.html">1　挨拶</a></li>
-    <li><a href="himitsu-2.html">2　メモ</a></li>
-    <li><a href="himitsu-3.html">3　生活リズム</a></li>
-  </ul>
+  <article class="yomimono">
+    <div data-nosnippet class="article-head"><span class="yomimono-title">3　生活リズム</span><span class="date"><div data-nosnippet class="iine"><button type="button" data-day="himitsu-3" aria-label="いいね" title="いいね">♡</button><span class="kazu">0</span></div>2026-10-08</span></div>
+    <p>朝7時　起床<br>日中7時〜22時　　毎時間何するかを決める。散歩、家（自分のサイト）に帰る、ブログの更新、など。してもしなくてもいい。<br>夜23時　就寝</p>
+  </article>
+
+  <div data-nosnippet class="step-nav">
+    <div data-nosnippet class="step-back"><a href="himitsu-2.html">←前　2　メモ</a></div>
+    <div data-nosnippet class="step-next"><span class="here">次→</span></div>
+  </div>
   </div>
 
   <aside class="side">
@@ -135,10 +139,40 @@
       <nav class="side-nav">
         <a href="about.html">このサイトについて</a>
         <a href="shinchaku.html">更新情報</a>
-        <span class="here">ひみつの部屋</span>
+        <a href="himitsu.html">ひみつの部屋</a>
       </nav>
     </div>
   </aside>
   </div>
+  <script id="iine-script">
+    (function () {
+      var where = "https://senonsei-comments.chitomatsu.workers.dev/like";
+      var kept = function (key) {
+        try { return localStorage.getItem(key); } catch (e) { return null; }
+      };
+      var keep = function (key) {
+        try { localStorage.setItem(key, "1"); } catch (e) {}
+      };
+      document.querySelectorAll(".iine button").forEach(function (button) {
+        var day = button.getAttribute("data-day");
+        var kazu = button.parentElement.querySelector(".kazu");
+        if (kept("iine-" + day)) {
+          button.disabled = true;
+          button.textContent = "♥";
+          return;
+        }
+        button.addEventListener("click", function () {
+          button.disabled = true;
+          button.textContent = "♥";
+          keep("iine-" + day);
+          kazu.textContent = (parseInt(kazu.textContent, 10) || 0) + 1;
+          fetch(where, {
+            method: "POST",
+            body: new URLSearchParams({ day: day })
+          }).catch(function () {});
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
