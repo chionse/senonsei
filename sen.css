@@ -452,6 +452,8 @@ article.yomimono p {
    点の書体が少しにじむのは承知の上 */
 article.yomimono .article-title {
   font-size: 24px;
+  /* 読みものの題には下線を引かない(2026-10-08、彼女が決めた) */
+  border-bottom: none;
 }
 
 /* 題のすぐ下から本文が始まって詰まって見えたので、一行ぶんほど空ける(2026-10-08、彼女が選んだ) */
