@@ -1930,7 +1930,7 @@ def generate_index_html(articles, state=None, news=None):
         if wrote_today:
             latest = ordered[0]
             latest_html = f"""<article>
-    <div class="article-head"><span class="article-title">{latest['title']}</span><span class="date">{iine_html(latest['date'])}{latest['date']} {latest.get('time', '')}</span></div>
+    <div class="date">{latest['date']} {latest.get('time', '')}<span class="article-title">{latest['title']}</span>{iine_html(latest['date'])}</div>
     <p>{latest['content']}</p>
   </article>"""
         elif plan.get("date") == today_in_japan().isoformat() and plan.get("resting"):
