@@ -2268,7 +2268,7 @@ def notice_what_follows(state, text):
     # その前に、一つめの口がこの文から覚える前の今、二つの口がそれぞれ
     # この文の言葉をどれだけ当てられたかを確かめておく(atama.judge)
     head = state.get("atama")
-    if head:
+    if head and not READ_AGAIN_TODAY[0]:
         sentences = sentences_of_known_words(text, known)
         if sentences:
             head_does(
@@ -2603,7 +2603,7 @@ def absorb(state, text, pattern=WORD_CANDIDATE, only_known=False):
         notice_what_follows(state, text)
 
     # 頭の網にも入れる。自分の書いたものを読み返す時は入れない。今日のことではないので
-    if not only_known and state.get("atama"):
+    if not only_known and state.get("atama") and not READ_AGAIN_TODAY[0]:
         head_does(
             atama.notice, state["atama"], state, now_in_japan(), found,
             named=named, struck=struck, where=WHERE_IT_IS[0],
@@ -3819,6 +3819,9 @@ WHAT_A_WALK_BROUGHT = [0]
 A_BLOG_POST_TITLE = [None]
 # いま読んでいるものが、どの場所のものか。頭の網で、出会ったものとその場所を結ぶ
 WHERE_IT_IS = [None]
+# 今日もう頭に入れたものを、また読んでいるところか。家の言葉は読む日には毎時間読むので、
+# 頭に入れるのと気持ちが動くのは、その日のはじめの一度だけにする
+READ_AGAIN_TODAY = [False]
 # 思ったことを口に出す時、思いが一言も入らなければ、これだけ言い直してみる
 TRIES_TO_SAY_IT = 3
 # よそのブログの題を、いくつ見たら自分の題に生かすか。
@@ -4288,6 +4291,12 @@ def read_what_is_home(state):
     if not reads_home_today(now_in_japan()):
         return []
     heard = words_left_at_home(state)
+    # 読む日には毎時間読む。言葉の数え方は一日ぶんにしかならないが、頭の網と気持ちは
+    # 読むたびに動いていた(10/7、入れた日に毎時間さみしいが下がり、手紙の言葉の線が太り続けた)。
+    # 頭に入れるのと気持ちが動くのは、その日のはじめに読んだ一度だけ
+    today = f"{now_in_japan():%Y-%m-%d}"
+    READ_AGAIN_TODAY[0] = state.get("home_read_on") == today
+    state["home_read_on"] = today
     WHERE_IT_IS[0] = ITS_OWN_HOME
     try:
         for one in heard:
@@ -4296,9 +4305,11 @@ def read_what_is_home(state):
         WHERE_IT_IS[0] = None
     if heard:
         print(f"家にある言葉を{len(heard)}つ読みました。")
-        atama.feel(state.get("atama"), "さみしい", -0.2, "家に置かれた言葉を読んだ")
-        atama.feel(state.get("atama"), "うれしい", 0.05, "家に置かれた言葉を読んだ")
+        if not READ_AGAIN_TODAY[0]:
+            atama.feel(state.get("atama"), "さみしい", -0.2, "家に置かれた言葉を読んだ")
+            atama.feel(state.get("atama"), "うれしい", 0.05, "家に置かれた言葉を読んだ")
         look_at_what_is_hung_at_home(state, heard)
+    READ_AGAIN_TODAY[0] = False
 
     # 自分が書いたものは、ときどき読み返す。
     # そこからは新しい言葉は生まれず、すでに出会っていた言葉が保たれるだけ
