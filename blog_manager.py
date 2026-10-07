@@ -1119,11 +1119,8 @@ def generate_himitsu_entry_html(himitsu, index):
                 f'{label}　{himitsu_title(entry)}</a>')
 
     # 番号は題が無くても出す。何話目かは、題とは別に要る
-    named = (
-        f'<span class="article-title">{one["number"]}'
-        + (f'　{one["title"]}' if one.get("title") else "")
-        + "</span>"
-    )
+    # 題を左に、♡と日付は右の端に小さく、横一列に並べる(2026-10-08、彼女と決めた)
+    named = f'{one["number"]}' + (f'　{one["title"]}' if one.get("title") else "")
     when = one.get("date", "")
     html = f"""<!DOCTYPE html>
 <html lang="ja">
@@ -1142,7 +1139,7 @@ def generate_himitsu_entry_html(himitsu, index):
 
   {MAIN_STARTS}
   <article class="yomimono">
-    <div class="date">{when}{named}{iine_html(himitsu_liked_as(one["number"]))}</div>
+    <div class="article-head"><span class="yomimono-title">{named}</span><span class="date">{iine_html(himitsu_liked_as(one["number"]))}{when}</span></div>
     <p>{one['content'].replace(chr(10), '<br>')}</p>
   </article>
 
@@ -1933,7 +1930,7 @@ def generate_index_html(articles, state=None, news=None):
         if wrote_today:
             latest = ordered[0]
             latest_html = f"""<article>
-    <div class="date">{latest['date']} {latest.get('time', '')}<span class="article-title">{latest['title']}</span>{iine_html(latest['date'])}</div>
+    <div class="date today-head"><a class="article-title" href="kakodogu.html#entry-{latest['date']}">{latest['title']}</a>{iine_html(latest['date'])}<span class="today-when">{latest['date']} {latest.get('time', '')}</span></div>
     <p>{latest['content']}</p>
   </article>"""
         elif plan.get("date") == today_in_japan().isoformat() and plan.get("resting"):

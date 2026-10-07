@@ -420,6 +420,58 @@ article .date {
   opacity: 0.8;
 }
 
+/* 今日のブログは、題 → ♡ → 日付の順に並べる。題を押すと過去のブログのその日へ。
+   下線は普段は出さず、指を乗せた時だけ(2026-10-08、彼女が決めた) */
+article .today-head .article-title {
+  margin-left: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+article .today-head .article-title:hover {
+  text-decoration: underline;
+}
+
+article .today-head .iine {
+  margin-left: 1.2rem;
+}
+
+/* 数のうしろに取ってある空き(十万まで並びが崩れないように)を、ここでは取らない。
+   取ると「0」のうしろが五ケタぶん空いて、日付が遠くに見えた */
+article .today-head .iine .kazu {
+  min-width: 0;
+}
+
+article .today-head .today-when {
+  margin-left: 1.2rem;
+}
+
+/* ひみつの部屋は、題を左に、♡と日付は右の端に小さく、横一列に並べる(2026-10-08、彼女が決めた) */
+article .article-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2rem 1rem;
+  margin-bottom: 0.6rem;
+}
+
+article .article-head .date {
+  margin: 0 0 0 auto;
+}
+
+article .article-head .article-title {
+  margin-left: 0;
+}
+
+article .article-head .iine {
+  margin: 0 1.2rem 0 0;
+}
+
+/* 今日のブログと同じく、数のうしろの取り置きはしない */
+article .article-head .iine .kazu {
+  min-width: 0;
+}
+
 article .article-title,
 .log-view .entry .article-title {
   /* 題は日時の箱の中にあるので、日時の小さい書体を受け継がないように */
@@ -428,8 +480,7 @@ article .article-title,
   font-size: 32px;
   opacity: 1;
   margin-left: 1rem;
-  border-bottom: 1px solid var(--main-color);
-  padding-bottom: 0.1rem;
+  /* ブログの題にも下線は引かない(2026-10-08、彼女が決めた) */
 }
 
 article p {
@@ -450,8 +501,15 @@ article.yomimono p {
 
 /* 読みものの題は、列が細いので 32px だと大きすぎた。24px にする(2026-10-08、彼女が選んだ)。
    点の書体が少しにじむのは承知の上 */
-article.yomimono .article-title {
+/* 読みものの題は列が細いので 24px。題と本文のあいだは一行ぶんほど空ける(2026-10-08、彼女が決めた) */
+article.yomimono .yomimono-title {
+  font-family: "DotGothic16", "MS Gothic", monospace;
   font-size: 24px;
+  line-height: 1.4;
+}
+
+article.yomimono .article-head {
+  margin-bottom: 2rem;
 }
 
 .section-title {
@@ -673,8 +731,7 @@ article.yomimono .article-title {
 
 .log-view .entry-title {
   font-size: 32px;
-  border-bottom: 1px solid var(--main-color);
-  padding-bottom: 0.2rem;
+  /* 下線は引かない(2026-10-08、彼女が決めた) */
   margin: 0;
   width: fit-content;
 }
