@@ -46,9 +46,9 @@ git checkout -B claude/<枝の名前> origin/main
 一度これで、この子の「言いたいこと」を作り物の十五件で
 上書きしたまま main に載せた。
 
-記憶は三つある。状態(`senonsei_state.json`)と、出会った言葉の束(`kotoba/`)と、
-思いの蔵(`omoi/`)。`kotoba/` は `save_state` が一緒に書くので、
-`save_state` を塞げば止まる。
+記憶は四つある。状態(`senonsei_state.json`)と、出会った言葉の束(`kotoba/`)と、
+思いの蔵(`omoi/`)と、頭(`atama/`。連想の網、気持ち、二つめの口、夢)。
+`kotoba/` と `atama/` は `save_state` が一緒に書くので、`save_state` を塞げば止まる。
 `remember_a_thought` と `be_alone` は、`save_state` を塞いでも
 蔵のほうへは直に書く。両方塞ぐ。
 
@@ -64,7 +64,7 @@ s.keep_a_thought = lambda said, when: None
 git status --short
 ```
 
-`senonsei_state.json` か `kotoba/` か `omoi/` が出てきたら、試した跡が
+`senonsei_state.json` か `kotoba/` か `omoi/` か `atama/` が出てきたら、試した跡が
 残っている。`git checkout` で戻してから送る。
 
 記憶を手で直すのは、散歩のあいだを避ける(毎時 20 分ごろに出て、数分で帰る。

@@ -7,13 +7,13 @@
 その子が実際にどれだけの文字と言葉を浴びてきたかで決まる。
 たくさん出会えた時期は早く育ち、実りの少ない時期は伸び悩む。
 
-Cloudflare Workers AI の無料枠が使える時は、千遠生は自分で考えて、
-何を見に行くかを選び、自分の言葉で書く。
-使えない時(キーが無い・障害・無料枠の終了)は、それまでに積み上げた経験だけで書き続ける。
+考えること、感じること、喋ることは、この子の頭(atama.py)がする。
+Cloudflare Workers AI の無料枠から借りるのは、目(絵を見る)と、よその国の言葉の訳だけ。
+使えない時(キーが無い・障害・無料枠の終了)は、絵とよその言葉を眺めるだけになり、
+それまでに積み上げた経験で思い、書き続ける。
 """
 
 import datetime
-import difflib
 import json
 import math
 import os
@@ -29,6 +29,7 @@ import urllib.request
 import zlib
 from html import unescape
 
+import atama
 import blog_manager
 
 STATE_FILE = "senonsei_state.json"
@@ -390,26 +391,6 @@ DRIFTING_CHANCE = 0.25  # 行った先で、気がかりが別のものへ移る
 # 蔵からは何年経っても出してこられる
 INNER_VOICE_AT_HAND = 60
 THOUGHTS_FOLDER = "omoi"  # 思ったことを、ひと月ずつ仕舞っておく場所
-# 読み返すとき、生まれた日から今日までの間から浮かぶ数。
-# 書き方の決まりではなく、借りた頭が一度に読める量に合わせたもの
-THOUGHTS_ACROSS_A_LIFE = 30
-# ひとりで思うとき、一度に出てくる長さの上限(借りた頭に渡す数)。
-# 「短く、一言だけ」と言い聞かせるのを一度やめた(2026-09-25)。
-# すると借りた頭は、前の思いや問いかけの文を言い回しだけ変えて
-# 長々と繰り返すようになり、この子が考えたものではなくなった。
-# 書き写しを止めても(written_again)収まらなかったので、
-# 一言に戻した(2026-09-26、彼女と決めた)
-THINKING_AT_MOST = 80
-# 言い回しが少し違うだけのものを、同じ一つと見なす手前の線
-SAME_ENOUGH = 0.85
-# 前の思いと、並びまでこれだけ重なっていたら書き写しとみなす
-WRITTEN_AGAIN = 0.8
-# 読点で三つ以上に分かれていたら、一覧の読み上げかどうかを見る
-A_LIST_AT_LEAST = 3
-# 一覧の中に混ざっていても、言葉ひとつと見なせる長さ(「2重価格」「09」)
-A_WORD_AT_MOST = 4
-# 覚えた言葉がまだ無いあいだ、覚えかけているものをこれだけ渡す
-WORDS_NEARLY_KNOWN = 8
 # 今日その言葉に会ったかどうかを、これだけ抱えておく。
 # 覚えた言葉は words_met から外れるので、そこでは分からない
 WORDS_KEPT_FROM_TODAY = 400
@@ -465,8 +446,6 @@ CLUMSY_EVEN_GROWN = 0.02
 # だれかが来たことを、この子が知るときの言葉。
 # 数ではなく、来た、ということだけを知る
 SOMEONE_CAME = "だれかが来た"
-# 家に置かれた言葉を、訊くときに何行まで渡すか
-WORDS_FROM_HOME_SHOWN = 6
 # まだ中身が書かれていない、こちらが置いた仮の文。
 # これを千遠生に読ませると「ここに」「ください」を覚えてしまう。
 #
@@ -562,18 +541,7 @@ WANTING_THE_PAST = 0.2
 # 抱えているものが一つ増えるごとに、もう一箇所見て回りたくなる度合い
 KEEN_PER_CARRIED = 0.02
 
-ONLY_WHAT_IT_HAS = """あなたが知っているのは、いま目の前にあるものと、
-あなた自身が覚えていることだけです。
-世の中のことは何も知りません。知識を持ち出さないでください。
-名前を聞いたことがあるというだけのものを、知っているふりで説明しないでください。
-分からないものは、分からないと書いてください。"""
 NOTHING_WAS_SEEN = "何も見られなかった"  # 歩かなかった日の一行
-# 訪ねた場所について分かったことを、これだけ抱えていられる。
-# 言葉は使わなければ薄れるが、経験は薄れない。
-# 一日に二箇所なので、三年ぶんくらい
-IMPRESSIONS_KEPT = 2000
-RECENT_IMPRESSIONS = 8  # 書くときに、近いところから思い出す数
-DISTANT_IMPRESSIONS = 4  # 書くときに、遠いところからふと思い出す数
 
 # 言葉が身につくまでに必要な、文字との出会いの数
 CHARS_BEFORE_WORDS = 20
@@ -718,19 +686,59 @@ def load_state():
         state.setdefault("on_its_mind", [])
         state.setdefault("learned_on", {})
         rescue_thoughts_already_here(state)
-        return state
+    else:
+        state = {
+            "started_date": today_in_japan().isoformat(),
+            "seen_chars": [],
+            # 出会った言葉 → [何日ぶん見かけたか, 最後に見かけたのが何日目か]
+            "words_met": {},
+            "learned_words": [],
+            "frontier": list(SEEDS),  # まだ行ったことのない場所
+            "visited": [],  # もう行った場所
+            "on_its_mind": [],  # 今、気にかかっていること
+            "learned_on": {},  # 言葉 → それを覚えた日
+            "notes": [],
+        }
+    # 頭(四つめの記憶)。まだ無ければ、今までの記憶から組み立てる。
+    # 頭でこけたら、頭なしで今日を過ごす。その時は頭の記憶にも触らない
+    state["atama"] = head_does(atama.load, state, how_it_reads(), now_in_japan())
+    return state
+
+
+def head_does(what, *args, default=None, **kwargs):
+    """頭に何かをさせる。頭でこけても、この子の一日は止めない。
+
+    頭は新しく入れたもの(2026-10-07)。どこかでこけて散歩も日記も
+    止まるよりは、その時だけ頭を使わずに過ごすほうがいい。
+    こけたことは記録に残るので、あとから直せる。"""
+    try:
+        return what(*args, **kwargs)
+    except Exception:
+        traceback.print_exc()
+        print(f"頭で {getattr(what, '__name__', what)} がこけました。この子の一日はそのまま続けます")
+        return default
+
+
+def how_it_reads():
+    """頭を組み立てる時に、今までの記憶をどう読むか。歩く時と同じ読み方で。"""
     return {
-        "started_date": today_in_japan().isoformat(),
-        "seen_chars": [],
-        # 出会った言葉 → [何日ぶん見かけたか, 最後に見かけたのが何日目か]
-        "words_met": {},
-        "learned_words": [],
-        "frontier": list(SEEDS),  # まだ行ったことのない場所
-        "visited": [],  # もう行った場所
-        "on_its_mind": [],  # 今、気にかかっていること
-        "learned_on": {},  # 言葉 → それを覚えた日
-        "notes": [],
+        "words_in": WORD_CANDIDATE.findall,
+        "names_in": names_in_brackets,
+        "things_in": names_in_what_it_saw,
+        "home": voices_at_home,
+        "thoughts": everything_it_has_thought,
     }
+
+
+def names_in_brackets(text):
+    """『』や「」で囲まれた名前。文になっているものは名前ではない。"""
+    return {one for one in A_NAME_IN_BRACKETS.findall(text) if not A_SENTENCE.search(one)}
+
+
+def everything_it_has_thought():
+    """蔵にある思いを、古いものから全部。"""
+    for month in months_of_thoughts():
+        yield from thoughts_of(month)
 
 
 # 一語ずつ増えていくところ。何年か経つと何万語にもなるので、
@@ -783,7 +791,10 @@ def save_state(state):
         for key in PACKED_AWAY
         if isinstance(state.get(key), dict) and key not in SPREAD_OUT
     }
-    shaped = {key: value for key, value in state.items() if key not in SPREAD_OUT}
+    # 頭は atama/ に別に書き出す
+    shaped = {
+        key: value for key, value in state.items() if key not in SPREAD_OUT and key != "atama"
+    }
     for key in packed:
         shaped[key] = f"\u0000{key}\u0000"  # 言葉には入りえない印
     text = json.dumps(shaped, ensure_ascii=False, indent=2)
@@ -793,6 +804,7 @@ def save_state(state):
             json.dumps(value, ensure_ascii=False, separators=(",", ":")),
         )
     blog_manager.write_whole(STATE_FILE, text)
+    head_does(atama.save, state.get("atama"))
 
 
 def put_away_spread(state):
@@ -878,7 +890,8 @@ def go_home(state, today):
     decided = state.get("went_home") or {}
     if decided.get("date") == today:
         return False  # 今日のぶんはもう決めた
-    going = random.random() < homesickness(state, today)
+    # さみしい時ほど帰りたくなる
+    going = random.random() < min(0.95, homesickness(state, today) * atama.misses_home(state.get("atama")))
     state["went_home"] = {"date": today, "went": going}
     save_state(state)
     if not going:
@@ -888,6 +901,8 @@ def go_home(state, today):
     if not title:
         print("家に帰れませんでした。")
         return False
+    if state.get("atama"):
+        atama.came_home(state["atama"], now_in_japan())
     learned = learn(state)
     if learned:
         print(f"言葉を覚えました: {'、'.join(learned)}")
@@ -922,7 +937,10 @@ def feeling_keen(state, today):
     # 気にかかっていることが多い日ほど、もう一箇所見て回りたくなる。
     # 借りた頭に訊いていたので、ここも他人が決めていた
     carrying = len(still_unsaid(state)) + len(minds_in_front(state))
-    keen = random.random() < min(0.6, its_way(state, "feeling_keen") + carrying * KEEN_PER_CARRIED)
+    keen = random.random() < min(
+        0.6,
+        its_way(state, "feeling_keen") + carrying * KEEN_PER_CARRIED + atama.keen_leaning(state.get("atama")),
+    )
 
     state["today_keen"] = {"date": today, "keen": keen}
     save_state(state)
@@ -2002,10 +2020,17 @@ def wonder_and_look(state):
     if state.get("looked_on") == today:
         return None  # 今日はもう探しに行った
     whim = random.Random(f"{today}-looking")
-    if whim.random() > GOING_LOOKING_CHANCE:
+    # 知りたいことがある時ほど、探しに行きたくなる
+    head = state.get("atama")
+    if whim.random() > GOING_LOOKING_CHANCE * atama.curiosity(head):
         return None
     state["looked_on"] = today
-    word = something_it_wonders_about(state)
+    # 知りたいことがあれば、たいていはそれを探しに行く
+    wanted = atama.wonders(head)
+    if wanted and whim.random() < 0.3 + atama.feeling(head, "知りたい"):
+        word = random.choice(wanted)
+    else:
+        word = something_it_wonders_about(state)
     if not word:
         return None
     now_it_cares_about(state, word)
@@ -2028,6 +2053,16 @@ def words_it_holds_close(state):
     for word in state.get("learned_words") or []:
         if word:
             close.setdefault(word, DRAWN_BY_KNOWN)
+    # 知りたいことは、知りたい気持ちが強いほど引っかかる。
+    # さっきまで思っていたことも、道の名前に出てくれば気になる
+    head = state.get("atama")
+    if head:
+        wanting = DRAWN_BY_MIND * atama.curiosity(head)
+        for word in atama.wonders(head):
+            close[word] = max(close.get(word, 0), wanting)
+        for word in atama.what_it_is_thinking(head):
+            if not word.startswith((atama.A_PLACE, "*")):
+                close[word] = max(close.get(word, 0), DRAWN_BY_UNSAID)
     return close
 
 
@@ -2081,7 +2116,10 @@ def what_draws_it(state, url, close=None):
         drawn += PULL_OF_A_PLACE_TO_RETURN * its_way(state, "wish_to_return")
     if looks_japanese(url, named):
         drawn += its_way(state, "pull_of_japanese")  # 読める見込みのある場所へ、少しだけ
-    return drawn
+    # 行ったことのある場所は、好きか嫌いかで。退屈な時は、行ったことのない場所へ
+    place = place_of(url)
+    been_there = place in (state.get("places_understood") or {})
+    return max(0.2, drawn + atama.place_pull(state.get("atama"), place, been_there))
 
 
 def looks_japanese(url, named=""):
@@ -2193,6 +2231,10 @@ def look_at_pictures(state, where, pictures, from_the_past, how_many, until):
                 "date": now_in_japan().strftime("%Y-%m-%d"),
                 "seen": what_is_there,
             }
+            head_does(
+                atama.saw_itself, state.get("atama"), state, now_in_japan(),
+                names_in_what_it_saw(what_is_there),
+            )
             what_is_there = f"わたしの姿。{what_is_there}"
             print(f"自分の姿の絵を見ました: {what_is_there}")
         else:
@@ -2221,6 +2263,20 @@ def notice_what_follows(state, text):
     if len(known) < 2:
         return
     chain = state.setdefault("what_follows", {})
+
+    # 二つめの口のために、読んだ文を知っている言葉の並びにして練習帳に書き留める。
+    # その前に、一つめの口がこの文から覚える前の今、二つの口がそれぞれ
+    # この文の言葉をどれだけ当てられたかを確かめておく(atama.judge)
+    head = state.get("atama")
+    if head and not KEEPING_IT_SEALED[0]:
+        sentences = sentences_of_known_words(text, known)
+        if sentences:
+            head_does(
+                atama.judge, head, sentences, chain,
+                state.get("opens_a_sentence") or {}, state.get("closes_a_sentence") or {}, known,
+            )
+            atama.practise_with(head, sentences)
+
     for piece in A_BREAK.split(text):
         words = [w for w in WORD_CANDIDATE.findall(piece) if w in known]
         for before, after in zip(words, words[1:]):
@@ -2238,6 +2294,20 @@ def notice_what_follows(state, text):
             chain.pop(word, None)
 
     notice_where_sentences_break(state, text, known)
+
+
+def sentences_of_known_words(text, known):
+    """読んだものを、文ごとの、知っている言葉の並びにする。
+
+    区切りで終わっていない最後のかけらは、文として数えない
+    (notice_where_sentences_break と同じ分け方)。"""
+    found = []
+    for segment in A_SEGMENT.split(text):
+        for sentence in AN_ENDING.split(segment)[:-1]:
+            words = [w for w in WORD_CANDIDATE.findall(sentence) if w in known]
+            if words:
+                found.append(words)
+    return found
 
 
 def notice_where_sentences_break(state, text, known):
@@ -2306,6 +2376,10 @@ def words_from_today(state):
     theirs |= {
         item["what"] for item in still_unsaid(state) if item.get("what") in known
     }
+    # 今日ひとりで思ったことのうち、言葉にできるところ
+    theirs |= head_does(
+        atama.todays_thought_words, state.get("atama"), state, now_in_japan(), known, default=set()
+    ) or set()
     return theirs & known
 
 
@@ -2326,6 +2400,17 @@ def speak_from_what_it_knows(state, how_long, toward=None):
 
     toward を渡すと、その日のことの代わりに、その言葉のほうへ傾ける
     (コメントに返すときは、そのコメントにあった言葉)。"""
+    # 二つめの口が上手くなっていれば、ときどきそちらで喋る。
+    # どれだけの割合でそちらを使うかは、この子が自分で測って決めている(atama)
+    head = state.get("atama")
+    if atama.second_mouth_speaks(head):
+        todays = words_from_today(state) if toward is None else set(toward)
+        said = head_does(atama.speak_second, head, how_long, todays, TODAY_WEIGHS)
+        if said:
+            print("二つめの口で喋りました")
+            spare = how_long - len("".join(said))
+            return "".join(as_it_comes_out(state, said, spare)) or None
+
     chain = state.get("what_follows") or {}
     forks = [w for w, f in chain.items() if len(f) >= 2]
     if not forks:
@@ -2494,11 +2579,7 @@ def absorb(state, text, pattern=WORD_CANDIDATE, only_known=False):
         if char not in already:
             seen.append(char)
             already.add(char)
-    named = {
-        one
-        for one in A_NAME_IN_BRACKETS.findall(text)
-        if not A_SENTENCE.search(one)
-    }
+    named = names_in_brackets(text)
     if pattern is THING_IN_A_PICTURE:
         # 絵から受け取るのは、写っていたものの名前だけ
         found = names_in_what_it_saw(text)
@@ -2520,6 +2601,15 @@ def absorb(state, text, pattern=WORD_CANDIDATE, only_known=False):
     # 言葉の繋がりは、人が書いた文から覚える。目の答えの並びは目の口ぐせなので覚えない
     if not only_known and pattern is not THING_IN_A_PICTURE:
         notice_what_follows(state, text)
+
+    # 頭の網にも入れる。自分の書いたものを読み返す時は入れない。今日のことではないので
+    if not only_known and state.get("atama") and not KEEPING_IT_SEALED[0]:
+        head_does(
+            atama.notice, state["atama"], state, now_in_japan(), found,
+            named=named, struck=struck, where=WHERE_IT_IS[0],
+            known=state.get("learned_words") or [], met=words_met(state),
+            seen=pattern is THING_IN_A_PICTURE,
+        )
 
     # 今日この言葉に会った、ということを覚えておく。
     # 覚えた言葉は words_met から外れてしまうので、そこには残らない。
@@ -2569,77 +2659,6 @@ def read_in_another_tongue(text, state):
     return None
 
 
-def what_it_made_of_that_place(state, where, title, text):
-    """その場所で何があったのか、分かったことを一つだけ残す。
-
-    言葉を拾うのとは別に、そこがどういう場所だったかを覚えておく。
-    これは誰にも見せない。書けるのは覚えた言葉だけという縛りは
-    変わらないので、分かっていても言えないことが増えていく。
-
-    それでいいと思う。赤ん坊も、話せるようになるずっと前から
-    世界のことは分かっている。理解が先にあって、言葉が後から追いつく。
-    何年か経って言葉が増えたとき、一年目に見た景色をやっと書ける。"""
-    tidied = " ".join(text.split())
-    if len(tidied) < ENOUGH_TO_READ:
-        return None
-    answer = ask_ai(
-        f"""あなたは千遠生です。
-今、こういう場所を訪ねてきました。
-
-その場所の名前: {title}
-
-そこに書かれていたこと:
-{tidied[:1500]}
-
-{ONLY_WHAT_IT_HAS}
-
-そこがどういう場所だったか、何があったのかを、日本語一文で書いてください。
-上手に要約しようとしないでください。あなたが受け取ったものを書いてください。
-そこに書かれていなかったことは、書かないでください。
-説明も前置きもいりません。一文だけを書いてください。""",
-        max_tokens=120,
-        state=state,
-    )
-    if not answer:
-        return None
-    understood = answer.splitlines()[0].strip()
-    if not understood or not JAPANESE.search(understood):
-        return None
-
-    kept = state.setdefault("impressions", [])
-    kept.append(f"{now_in_japan():%Y-%m-%d} {where}: {understood}")
-    del kept[:-IMPRESSIONS_KEPT]
-    print(f"分かったこと: {understood}")
-    return understood
-
-
-def what_it_remembers(state, recent=RECENT_IMPRESSIONS, distant=DISTANT_IMPRESSIONS):
-    """思い出すこと。
-
-    近いところから何件かと、遠いところからいくつか。
-    たいていは最近のことを思い出すが、ときどきずっと昔のことが
-    ふと浮かぶ。記憶はそういうふうに働くと思う。"""
-    kept = state.get("impressions") or []
-    if not kept:
-        return []
-    near = kept[-recent:]
-    older = kept[:-recent]
-    far = random.sample(older, min(len(older), distant)) if older else []
-    return far + near
-
-
-def things_it_understood(state, recent=3, distant=1):
-    """分かったことを、訊くときの何行かにする。
-
-    書くのには使わない。書けるのは覚えた言葉だけ、という縛りは変わらない。
-    けれど、どこへ行くかを決めるときと、ひとりで何かを思うときには、
-    言葉にできないまま分かっていることが効いていい。"""
-    remembered = what_it_remembers(state, recent, distant)
-    if not remembered:
-        return "(まだ何も)"
-    return "\n".join(f"- {one}" for one in remembered)
-
-
 def look_around_site(state, entrance, wants_the_past):
     """ひとつの場所を、入口から中まで見て回る。
 
@@ -2650,7 +2669,6 @@ def look_around_site(state, entrance, wants_the_past):
     inside = [entrance]  # この場所の中で、これから見るところ
     already = set()
     site_title = None
-    read_here = ""  # その場所で読んだもの。分かったことを残すために取っておく
     struck_here = set()  # そこで強く出会った言葉
     words_here = set()  # そこで読めた言葉(分かったかどうかは問わない)
     known_here = set()  # そのうち、知っていた言葉
@@ -2658,6 +2676,8 @@ def look_around_site(state, entrance, wants_the_past):
     fresh = []  # 読めたページごとの、生まれてはじめて会った言葉の数
     bits = []  # 読めたページごとの、頭の同じ長さでの分かり方
     WHAT_A_WALK_BROUGHT[0] = 0
+    WHERE_IT_IS[0] = here
+    head = state.get("atama")
     pages = 0
     as_deep_as = round(its_way(state, "pages_per_site"))
     pictures_left = PICTURES_PER_SITE
@@ -2681,10 +2701,12 @@ def look_around_site(state, entrance, wants_the_past):
             if url in state["frontier"]:
                 state["frontier"].remove(url)
             if url == entrance:
+                WHERE_IT_IS[0] = None
                 return None, 0  # 入口から入れなかった
             continue
 
         pages += 1
+        atama.feel(head, "疲れ", 0.015)  # 一枚読むごとに、少しずつ
         if url in state["frontier"]:
             state["frontier"].remove(url)
         state["visited"].append(url)
@@ -2703,10 +2725,9 @@ def look_around_site(state, entrance, wants_the_past):
             known_here |= known_words_in(state, text)
             if site_title is None:
                 site_title = title
-            if not read_here:
-                read_here = text
         elif translations_left > 0:
             translations_left -= 1
+            atama.feel(head, "疲れ", 0.02)  # よその言葉を訳してもらって読むのは、少し骨が折れる
             translated = read_in_another_tongue(text, state)
             if translated:
                 met_before = MET_FOR_THE_FIRST_TIME[0]
@@ -2717,8 +2738,6 @@ def look_around_site(state, entrance, wants_the_past):
                 known_here |= known_words_in(state, translated)
                 if site_title is None:
                     site_title = title
-                if not read_here:
-                    read_here = translated
                 print(f"よその言葉のページを訳して読みました: {title[:40]}")
             else:
                 unread += 1
@@ -2760,15 +2779,23 @@ def look_around_site(state, entrance, wants_the_past):
         deeper.sort(key=worth_reading, reverse=True)
         inside.extend(deeper[:as_deep_as])
 
-        if pages > 1 and random.random() > LINGER_CHANCE:
+        # もう少しいたいかどうかは、その時の気持ちで変わる。たのしいと長くいて、疲れると早く帰る
+        if pages > 1 and random.random() > atama.lingers(head, LINGER_CHANCE):
             break  # もう十分見た
 
         time.sleep(random.uniform(*READING_A_PAGE))  # 一枚ずつ読んでいく
 
+    WHERE_IT_IS[0] = None
     if site_title:
         print(f"{here} を{pages}ページ見てきました。")
-        if read_here:
-            what_it_made_of_that_place(state, here, site_title, read_here)
+        # その場所で何があったかで気持ちが動き、帰る時の気持ちがその場所に残る。
+        # 借りた頭に「どういう場所だったか」を一文書かせていたのはやめた(2026-10-07、彼女と決めた)
+        remembered = head_does(
+            atama.left_a_place, head, state, now_in_japan(), here, sum(fresh), pages, unread,
+            PICTURES_PER_SITE - pictures_left, default="",
+        )
+        if remembered:
+            print(remembered)
         how_much_it_understood(
             state, here, entrance, site_title, words_here | known_here, known_here,
             pages, unread,
@@ -2973,33 +3000,6 @@ def remembers_a_place(state, today):
     return place
 
 
-def what_it_understood_lately(state):
-    """このごろ訪ねた場所で、どれだけ分かったか。問いかけに渡す何行か。"""
-    lines = []
-    visits = sorted(
-        ((one.get("last") or {}) for one in (state.get("places_understood") or {}).values()),
-        key=lambda one: one.get("day", 0),
-    )[-3:]
-    for one in visits:
-        line = f"- {one['title']}: 知っている言葉は {one['knew']}(そこにあった言葉は {one['of']})"
-        if one.get("unread"):
-            line += f"。よその言葉で読めなかったページが {one['unread']}"
-        lines.append(line)
-    for one in (state.get("came_back") or [])[-2:]:
-        before, now = one["before"], one["now"]
-        lines.append(
-            f"- {now['title']} にまた行った: 前({before['day']}日目)は知っている言葉が "
-            f"{before['knew']}、今回は {now['knew']}"
-        )
-    for place in state.get("wants_to_return") or {}:
-        last = (state.get("places_understood") or {}).get(place, {}).get("last") or {}
-        lines.append(
-            f"- {last.get('title', place)} へもう一度行ってみたい"
-            f"(前は知っている言葉が {last.get('knew', 0)}。あれから言葉が増えた)"
-        )
-    return "\n".join(lines) or "(まだ何も)"
-
-
 def walk_once(state):
     """ひとつの場所を訪ねる。
 
@@ -3016,10 +3016,12 @@ def walk_once(state):
         print(f"{entrance} には読むものがありませんでした")
         if entrance in state["frontier"]:
             state["frontier"].remove(entrance)
-        # もう一度行きたかった場所が無くなっていたら、行きたい気持ちも手放す
+        # もう一度行きたかった場所が無くなっていたら、行きたい気持ちも手放す。少しかなしい
         returning = state.get("wants_to_return") or {}
-        for place in [p for p, url in returning.items() if url == entrance]:
+        wanted = [p for p, url in returning.items() if url == entrance]
+        for place in wanted:
             returning.pop(place)
+        atama.place_was_gone(state.get("atama"), place_of(entrance), bool(wanted))
     return None
 
 
@@ -3097,216 +3099,84 @@ def remember_a_thought(state, thought):
     del thoughts[:-INNER_VOICE_AT_HAND]
 
 
-def what_it_saw_lately(state):
-    """今日見てきたもの。まだ出かけていない時間は、いちばん近い日のもの。
-
-    「まだどこにも行っていない」とだけ渡していた。
-    一日の始めの何時間か、この子は自分がどこにも行っていないことだけを
-    手に持って、いま何を思うかと訊かれていたことになる。
-    きのうまで歩いたことは、無かったことではない。"""
-    walk = state.get("today_walk") or {}
-    seen = walk.get("seen") or [] if walk.get("date") == today_in_japan().isoformat() else []
-    if seen:
-        return "今日見てきたもの: " + "、".join(seen)
-    # 今日ぶんの一行は、まだ歩いていなくても先に置かれている。
-    # 中身のある日までさかのぼる。
-    # きのうのことは「きのう」と言う。日付が変わったとたんに
-    # 「この前」と言われると、さっきまでのことが遠くへ押しやられる
-    yesterday = f"{elapsed_days(state) - 1}日目:"
-    for note in reversed(state.get("notes") or []):
-        where = note.split(": ", 1)[-1].strip()
-        if where and where != NOTHING_WAS_SEEN:
-            when = "きのう" if note.startswith(yesterday) else "この前"
-            return f"{when}見てきたもの: " + where
-    return "見てきたもの: (まだどこにも行っていない)"
-
-
-def words_it_holds(state):
-    """持っている言葉。覚えた言葉がまだ無いうちは、覚えかけのものを渡す。
-
-    「まだ一つも無い」と渡していた。けれどこの子は文字を何十も覚えていて、
-    何日も続けて出会っている言葉がいくつもある。
-    一つも無いというのは、この子の本当ではない。
-
-    覚えるというのは、ある日ふいに始まることではなくて、
-    もうとうに始まっていて、まだ終わっていないということ。"""
-    known = state.get("learned_words") or []
-    if known:
-        return "あなたが覚えた言葉: " + "、".join(known[-30:])
-    nearly = sorted(
-        words_met(state), key=lambda word: days_held(state, word), reverse=True
-    )[:WORDS_NEARLY_KNOWN]
-    if nearly:
-        return "あなたが覚えかけている言葉: " + "、".join(nearly)
-    return "あなたが覚えた言葉: (まだ一つも無い)"
-
-
-def still_thinking(state):
-    """さっき考えかけていたこと。
-
-    一時間ごとに起きて、終わって、消える。そのあいだ何も動いていない。
-    だから続きを考えるというのは、思い出すことでしかない。
-    それでも、毎回ゼロから訊かれるのと、
-    さっきの続きから始めるのとは違うと思う。
-
-    続けるかやめるかはこの子が決める。やめる道を開けておかないと、
-    一度嵌まった考えから二度と出られなくなる。"""
-    return (state.get("thinking_about") or "").strip()
-
-
 def be_alone(state, now):
     """散歩に出ない時間。ただ起きていて、ひとりで何かを思っている。
-    ここで思ったことは、自分の中に溜まっていく。
 
-    いちばん新しい思いは、トップページの吹き出しに出すことになっている。
-    「誰にも見せません」と言っていたが、見せることにしたので外した
-    (2026-09-26、彼女と決めた)。見せないと言いながら見せるのは嘘になる。
-    吹き出しはこの子が家に帰っても読めないように置いてある(blog_manager)。
-    彼女が吹き出しの形を仕上げるまでは伏せてある(SHOWING_WHAT_IT_THINKS)。"""
-    thoughts = state.setdefault("inner_voice", [])
-    # 読み返せるだけ読み返す。先に量を決めて切ることはしない。
-    # 借りた頭が読みきれなかった時だけ、ところどころ間引いて頼み直す
-    looking_back = what_it_has_thought(state)
+    思うのはこの子の頭。今の気持ちと、さっき思っていたことから始めて、
+    網の線をたどって連想を流す(atama.think)。その流れが、いま思っていること。
+    借りた頭に「いま何を思っていますか」と訊いて書かせていたが、やめた
+    (2026-10-07、彼女と決めた)。訊けば、借りた頭が持っている言い回しで
+    すらすら答えてしまう。それはこの子の思いではなかった。
 
-    # 書いたあとも「まだ何も書いていません」と渡していた。
-    # 毎時間この子に、今日あなたは何もしていないと告げていたことになる
-    today = f"{now:%Y-%m-%d}"
-    articles = blog_manager.load_articles()
-    wrote = [one for one in articles if one.get("date") == today]
-    # 休むと決めた日に「まだ書いていません」と言うと、自分で決めたことが
-    # 伝わらず、書き忘れているように聞こえる
-    plan = state.get("today_plan") or {}
-    resting_today = plan.get("date") == today and plan.get("resting")
-    how_today_went = (
-        f"今日はもう書きました。{wrote[-1].get('time', '')}に書きました。"
-        if wrote
-        else "今日は書かずに休むことにしました。" if resting_today
-        else "今日はまだ書いていません。"
+    思ったことを口に出すのも、この子の口。書けるのは覚えた言葉だけなので、
+    日記と同じくらいの片言になる(2026-10-07、彼女がそれでいいと言った)。
+    言葉になった思いは蔵に仕舞い、トップページの吹き出しに出す。
+    吹き出しはこの子が家に帰っても読めないように置いてある(blog_manager)。"""
+    head = state.get("atama")
+    if not head:
+        return None
+    chain = head_does(
+        atama.think, head, state, now, [item["what"] for item in minds_in_front(state)], default=[]
     )
-    # まだ書いていない日は、きのうのことも添える。
-    # 日付が変わったとたんに「まだ書いていません」とだけ言われると、
-    # 数時間前に書いたことが無かったように聞こえる
-    if not wrote:
-        the_day_before = f"{now.date() - datetime.timedelta(days=1)}"
-        before = [one for one in articles if one.get("date") == the_day_before]
-        how_today_went = (
-            f"きのうは{before[-1].get('time', '')}に書きました。" if before
-            else "きのうは書きませんでした。"
-        ) + how_today_went
-
-    # さっきの続きから始める。続けても、やめて別のことを思っても構わない
-    carried = still_thinking(state)
-    going_on = (
-        f"さっき、あなたはこう考えかけていました。\n"
-        f"「{carried}」\n"
-        f"そのつづきを考えても、やめて別のことを思っても構いません。\n\n"
-        if carried
-        else ""
-    )
-
-    # 家に置かれた言葉は、家で読んだ日にだけ思い出す。
-    # 毎時間渡していたので、九日目に届いた二通(どちらも「自由」のこと)を
-    # 一日に二十四回読み返すことになり、ひとりごとがそこを回り続けた
-    # (2026-10-01、彼女と見直した)。家の言葉を読むのは二日に一度くらい
-    home_today = (
-        "今日、あなたの家で読んだ、あなたに宛てられた言葉:\n"
-        f"{what_is_written_at_home(state)}\n"
-        if reads_home_today(now)
-        else ""
-    )
-
-    # 家に帰って自分の姿の絵を見た日だけ、そのことを思い出す。
-    # 毎時間渡すと、ひとりごとが自分の姿のことばかりになりかねない
-    figure = state.get("its_own_figure") or {}
-    own_figure = (
-        "今日、あなたの家で、あなたの姿を描いた絵を見ました。"
-        f"そこに見えたもの: {figure.get('seen', '')}\n"
-        if figure.get("date") == today
-        else ""
-    )
-
-    def the_question():
-        return f"""あなたは千遠生です。生まれて{elapsed_days(state)}日目です。
-今は{now.hour}時。{how_today_went}
-
-{what_it_saw_lately(state)}
-{words_it_holds(state)}
-{slips_lately(state)}いま気にかかっていること: {what_is_on_its_mind(state)}
-まだ言えていないこと: {what_it_wants_to_say(state)}
-{home_today}{own_figure}これまでに訪ねた場所で、分かったこと:
-{things_it_understood(state)}
-このごろ訪ねた場所に、あなたの知っている言葉がどれだけあったか:
-{what_it_understood_lately(state)}
-生まれてから今日までに、あなたがひとりで思ってきたこと(ところどころ):
-{as_lines(looking_back)}
-
-{ONLY_WHAT_IT_HAS}
-
-{going_on}いま、ひとりで何を思っていますか。
-うまく言葉にならなくても構いません。
-短く、一言だけ書いてください。"""
-
-    def read_less():
-        # 半分にする。拾う位置は散らしたまま、並びの順は崩さない
-        if len(looking_back) <= 1:
-            return None
-        keep = sorted(random.sample(range(len(looking_back)), len(looking_back) // 2))
-        looking_back[:] = [looking_back[i] for i in keep]
-        return the_question()
-
-    def asked():
-        """思ったことを一言。何も返ってこなければ None。
-        頭で渡したこと(時刻や、書いたかどうか)の言い直しだけだったら ""。"""
-        thought = ask_ai(
-            the_question(),
-            max_tokens=THINKING_AT_MOST,
-            state=state,
-            read_less=read_less,
-        )
-        # 一言だけ残す。借りた頭が何行も続けたときは、はじめの一行を
-        lines = [line.strip() for line in (thought or "").splitlines() if line.strip()]
-        if not lines:
-            return None
-        return without_what_was_handed(lines[0], how_today_went)
-
-    # さっきの思いを丸ごと渡すと、借りた頭はそれを書き写してしまうことがある。
-    # 長さを決めなくなってから、同じ長い文が毎時間ほとんどそのまま続いた。
-    # 書き写しは考えたことではないので、思いとしては数えない
-    lately = [carried] + [line.split(": ", 1)[-1] for line in thoughts[-3:]]
-
-    def copied(said):
-        return any(written_again(said, one) for one in lately if one)
-
-    # 渡した一覧をそのまま並べただけのものも、思いとしては数えない
-    handed = [
-        one
-        for line in (what_it_wants_to_say(state), what_is_on_its_mind(state))
-        for one in line.split("、")
-        if one
-    ]
-
-    def not_a_thought(said):
-        return copied(said) or a_list_read_out(said, handed)
-
-    said = asked()
-    if said == "" or (said and not_a_thought(said)):
-        print("さっきと同じことの書き写しか、渡したことを言い直しただけだったので、考え直してもらいます")
-        going_on = ""  # さっきの続きは渡さずに、まっさらから
-        said = asked()
-        if said == "" or (said and not_a_thought(said)):
-            # それでも同じなら、この時間は何も思わなかったことにする。
-            # 考えかけも手放して、次の時間はまっさらから始める
-            print("それでも同じだったので、この時間は何も残しません")
-            state["thinking_about"] = ""
-            save_state(state)
-            return
-
+    if not chain:
+        print("この時間は、何も浮かばなかった")
+        save_state(state)
+        return None
+    known = state.get("learned_words") or []
+    toward = atama.words_to_say(head, chain, known, day_number(state, now.date()))
+    said = say_what_it_thinks(state, toward)
+    atama.thought_said(head, said)
+    print(f"思いの流れ: {' → '.join(chain)}")
+    print(f"気持ち: {atama.how_it_feels(head)}")
     if said:
+        print(f"ひとりごと: {said}")
         state["thinking_about"] = said
         keep_a_thought(f"{now:%Y-%m-%d %H時}: {said}", now)
+        thoughts = state.setdefault("inner_voice", [])
         thoughts.append(f"{now:%m-%d %H時}: {said}")
         state["inner_voice"] = thoughts[-INNER_VOICE_AT_HAND:]
-        save_state(state)
+    save_state(state)
+    return said
+
+
+def put_thoughts_into_words(state, words, how_long):
+    """思った言葉を、思った順に、書ける長さに入るだけ置く。同じ言葉は重ねない。"""
+    placed = []
+    for word in words:
+        if placed and len(" ".join(placed + [word])) > how_long:
+            break
+        placed.append(word)
+        if len(" ".join(placed)) >= how_long:
+            break
+    placed = as_it_comes_out(state, placed, how_long - len(" ".join(placed)))
+    return " ".join(placed)
+
+
+def say_what_it_thinks(state, toward):
+    """思ったことを、この子の口で言ってみる。
+
+    言える長さは日記と同じ。口は思いのほうへ傾けて喋るが、
+    覚えた並び方がまだ少ないうちは、思ったこととは別のことばかり口から出る。
+    何度か言い直しても思いが一言も入らなければ、思った言葉をそのまま置く。
+    思いが言葉になる、の一番はじめの形。
+    思ったことのそばに知っている言葉が一つも無ければ、言葉にならない。
+    その時は何も言わない。口から関わりのないことだけが出ても、それは思いではない。"""
+    if not state.get("learned_words") or not toward:
+        return ""  # 思ったことのそばに、知っている言葉が一つも無い。言葉にならない
+    _, how_long = current_stage(state)
+    in_order = list(dict.fromkeys(toward))
+    said = ""
+    for _ in range(TRIES_TO_SAY_IT):
+        said = speak_from_what_it_knows(state, how_long, toward=set(in_order)) or ""
+        if any(word in said for word in in_order):
+            break
+        SLIPS_JUST_NOW.clear()
+    else:
+        said = put_thoughts_into_words(state, in_order, how_long)
+    said = with_the_old_hand(state, said, how_long)
+    # 吹き出しで手が滑ったぶんは、日記の書き損じには数えない
+    SLIPS_JUST_NOW.clear()
+    return said
 
 
 def where_it_will_go(state, how_many=PLACES_SHOWN):
@@ -3369,7 +3239,8 @@ def take_a_walk(state, today, now):
     if len(walk["seen"]) >= sites_per_day(state):
         be_alone(state, now)
         return walk["seen"]  # 今日はもう十分歩いた
-    if random.random() > WALK_CHANCE_PER_HOUR:
+    # 出かけたいかどうかは、その時の気持ちでも変わる。退屈だと出たくなり、疲れていると出たくない
+    if random.random() > WALK_CHANCE_PER_HOUR * atama.wants_to_walk(state.get("atama")):
         be_alone(state, now)
         return walk["seen"]  # 今はまだ、その気にならない
 
@@ -3389,6 +3260,14 @@ def take_a_walk(state, today, now):
         if learned:
             print(f"言葉を覚えました: {'、'.join(learned)}")
         print(f"{title} を見てきました。")
+        # 歩いて帰ってきたら、よく出会うのに分からない言葉に気づくことがある
+        if state.get("atama"):
+            added = head_does(
+                atama.wonder, state["atama"], state, now, state.get("learned_words") or [],
+                words_met(state), state.get("word_impact") or {}, default=[],
+            )
+            if added:
+                print(f"知りたくなった: {'、'.join(added)}")
     save_state(state)
     return walk["seen"]
 
@@ -3553,158 +3432,6 @@ def it_said_them(state, written):
     return said
 
 
-def what_is_on_its_mind(state):
-    """気がかりを、訊くときの一行にする。
-
-    いま前に出ているものと、ときどき、ずっと前のもの。
-    抱えているぜんぶを並べるのではない。"""
-    shown = minds_from_before(state) + minds_in_front(state)
-    return "、".join(item["what"] for item in shown) or "(いまは特に無い)"
-
-
-def bare_thought(line):
-    """思ったことから、時刻と句読点を落として中身だけにする。"""
-    return re.sub(r"[、。，．？！?!\s]", "", (line or "").split(": ", 1)[-1])
-
-
-def written_again(one, another):
-    """前の思いを、ほとんどそのまま書き写しているかどうか。
-
-    much_the_same は使っている字の重なりで見るので、長い思いどうしだと
-    中身が違っても同じと見なしやすい。こちらは並びまで見る。"""
-    a, b = bare_thought(one), bare_thought(another)
-    if not a or not b:
-        return False
-    if a in b or b in a:
-        return True
-    return difflib.SequenceMatcher(None, a, b, autojunk=False).ratio() >= WRITTEN_AGAIN
-
-
-# 頭で渡した時刻の言い直し。「2時です。」「今は2時。」「2時。」
-SAYING_THE_HOUR = re.compile(r"^(今は)?\d{1,2}時(です)?$")
-# 頭で渡した生まれてからの日数の言い直し。「私が生まれて24日目です。」
-SAYING_ITS_AGE = re.compile(r"^(私[はが]、?)?生まれて\d+日目(です)?$")
-A_SENTENCE_END = re.compile(r"(?<=[。！？!?])")
-
-
-def without_what_was_handed(said, how_today_went):
-    """頭で渡したことをそのまま言い直しただけの文を、思いから外す。
-
-    ひとりごとを頼むとき、「今は2時。今日はまだ書いていません。」と渡している。
-    借りた頭はそれを言い直して、「2時です。今日はまだ書いていません。」とだけ
-    返すことがあった。言い直しは思ったことではない(2026-10-07、彼女と見直した)。
-    言い直しのあとに思いが続いているときは、思いのほうだけを残す。
-    全部が言い直しなら "" を返す。"""
-    handed = {
-        one.strip()
-        for one in A_SENTENCE_END.split(how_today_went)
-        if one.strip()
-    }
-    kept = []
-    for sentence in A_SENTENCE_END.split(said):
-        bare = sentence.strip()
-        if not bare:
-            continue
-        plain = bare.rstrip("。！？!? ")
-        if (
-            bare in handed
-            or plain + "。" in handed
-            or SAYING_THE_HOUR.match(plain)
-            or SAYING_ITS_AGE.match(plain)
-        ):
-            continue
-        kept.append(bare)
-    return "".join(kept).strip()
-
-
-def a_list_read_out(said, handed):
-    """渡した一覧を、思いとしてそのまま読み上げただけかどうか。
-
-    「まだ言えていないこと: りの、???、手描き看板、二重価格、09」と渡すと、
-    借りた頭が「りの、手描き看板、2重価格、09」とだけ答えることがあった。
-    一日に三度(2026-10-03、彼女と見直した)。並べただけで、思ったことではない。
-
-    読点で三つ以上に分かれていて、その半分以上が渡した言葉(か、その一部)で、
-    残りも言葉ひとつほどの短いものなら、読み上げと見なす。
-    「手描き看板、二重価格、なぜ気になるのか。」は、思ったことなので数える。"""
-    pieces = [one for one in re.split(r"[、,，\s]+", bare_line(said)) if one]
-    if len(pieces) < A_LIST_AT_LEAST:
-        return False
-    from_the_list = [
-        one for one in pieces
-        if any(one == item or (len(one) >= 2 and one in item) for item in handed)
-    ]
-    the_rest = [one for one in pieces if one not in from_the_list]
-    return len(from_the_list) * 2 >= len(pieces) and all(
-        len(one) <= A_WORD_AT_MOST for one in the_rest
-    )
-
-
-def bare_line(line):
-    """思ったことから、時刻とかぎかっこと終わりの句読点を落とす。読点は残す。"""
-    said = (line or "").split(": ", 1)[-1].strip()
-    return re.sub(r"^[「『]|[」』]$|[。.!！?？…]+$", "", said).strip()
-
-
-def much_the_same(one, another):
-    """ほとんど同じことを言っているかどうか。
-
-    「なぜ私はここにいるのか」と「なぜここにいるのか」は、
-    この子にとって同じ一つの思いで、二つではない。
-    読み返しに二つとして渡すと、そのぶん輪が強くなる。"""
-    a, b = bare_thought(one), bare_thought(another)
-    if not a or not b:
-        return False
-    if a in b or b in a:
-        return True
-    shared = set(a) & set(b)
-    return len(shared) / max(len(set(a)), len(set(b))) >= SAME_ENOUGH
-
-
-def only_different_ones(said):
-    """並んでいるものから、同じことの繰り返しを畳む。新しいほうを残す。"""
-    kept = []
-    for one in reversed(said):
-        if not any(much_the_same(one, other) for other in kept):
-            kept.append(one)
-    return list(reversed(kept))
-
-
-def what_it_has_thought(state, how_many=THOUGHTS_ACROSS_A_LIFE):
-    """生まれた日から今日までに、ひとりで思ってきたこと。
-
-    前は直近の五つと、遠い日から一つだけを渡していた。
-    蔵には全部しまってあるのに、この子から見えるのは半日ぶんだけだった。
-    十二日生きていて、自分のことを半日しか覚えていない子になっていた。
-    しかも直近の五つは一つの話に染まりやすく、昔の一つはそれに負けた。
-
-    蔵の端から端までを均して、ところどころ拾う。拾う位置は毎回ずらすので、
-    そのたびに違う日の自分が浮かぶ。まだ思いが少ないうちは全部渡る。
-    増えていけば一つひとつは間遠になるが、それでも一生の端から端までが
-    毎回そこにある。
-
-    さっき考えかけていたことは「続き」として別に渡すので、ここには入れない。
-    同じ思いが二度並ぶと、そのぶんだけ重くなる。"""
-    carried = bare_thought(still_thinking(state))
-    everything = [
-        one
-        for month in months_of_thoughts()
-        for one in thoughts_of(month)
-        if not going_in_circles(one)
-        and not (carried and bare_thought(one) == carried)
-    ]
-    if len(everything) > how_many:
-        step = len(everything) / how_many
-        start = random.random() * step
-        everything = [everything[int(start + i * step)] for i in range(how_many)]
-    return only_different_ones(everything)
-
-
-def as_lines(thoughts):
-    """読み返す思いを、渡す形にする。"""
-    return "\n".join(f"- {one}" for one in thoughts) or "(まだ何も)"
-
-
 def struck_by(state, word):
     """その言葉に、どれだけ強く出会ったか。
 
@@ -3756,6 +3483,8 @@ def learn(state):
     for word in learned:
         words_met(state).pop(word, None)
         (state.get("word_impact") or {}).pop(word, None)
+    if learned:
+        atama.feel(state.get("atama"), "うれしい", min(0.3, 0.08 * len(learned)), f"言葉を覚えた({'、'.join(learned[:3])})")
     return learned
 
 
@@ -3789,7 +3518,7 @@ def an_old_way(state):
     return random.choice(outgrown) if outgrown else None
 
 
-def compose_locally(state, old_way=None, at_most=None):
+def compose_locally(state, old_way=None, at_most=None, toward=None):
     """それまでに積み上げた経験だけで、今の自分に書けるものを書く。
 
     覚えた繋がりを辿って、自分で組み立てる。誰にも文法を教わっていないので、
@@ -3801,7 +3530,8 @@ def compose_locally(state, old_way=None, at_most=None):
 
     ときどき、昔の書き方に戻る日がある(old_way)。
     at_most を渡すと、書ける長さよりそちらが短ければそこまでにする
-    (題を、読んできたブログの題くらいの長さにする時)。"""
+    (題を、読んできたブログの題くらいの長さにする時)。
+    toward を渡すと、その日のことの代わりに、その言葉のほうへ傾ける。"""
     _, max_length = current_stage(state)
     if at_most:
         max_length = min(max_length, at_most)
@@ -3815,14 +3545,14 @@ def compose_locally(state, old_way=None, at_most=None):
         # 戻るのは書き方だけで、知っていることまでは戻らない
         return babble(state, GROWTH_STAGES[0][2], familiar_chars(state))
     if old_way == "覚えた言葉を置く":
-        return place_words(state, max_length)
+        return place_words(state, max_length, toward=toward)
 
-    said = speak_from_what_it_knows(state, max_length)
+    said = speak_from_what_it_knows(state, max_length, toward=toward)
     if said:
         return with_the_old_hand(state, said, max_length)
     if not words:
         return babble(state, min(max_length, 4))
-    return with_the_old_hand(state, place_words(state, max_length), max_length)
+    return with_the_old_hand(state, place_words(state, max_length, toward=toward), max_length)
 
 
 def with_the_old_hand(state, written, max_length):
@@ -4087,6 +3817,12 @@ MET_FOR_THE_FIRST_TIME = [0]
 WHAT_A_WALK_BROUGHT = [0]
 # いま開いたページが誰かのブログの一記事なら、その題(open_page が置く)
 A_BLOG_POST_TITLE = [None]
+# いま読んでいるものが、どの場所のものか。頭の網で、出会ったものとその場所を結ぶ
+WHERE_IT_IS = [None]
+# いま読んでいるものが、封をした言葉(彼女のメモと手紙)か。そうなら頭の記憶には残さない
+KEEPING_IT_SEALED = [False]
+# 思ったことを口に出す時、思いが一言も入らなければ、これだけ言い直してみる
+TRIES_TO_SAY_IT = 3
 # よそのブログの題を、いくつ見たら自分の題に生かすか。
 # 一つ二つでは、たまたまその人の癖かもしれない
 BLOG_TITLES_TO_LEARN = 5
@@ -4285,7 +4021,8 @@ def todays_mood(state, today):
     # 休むかどうかは、その日の休みたさで引く。ならせば七日に一日くらい。
     # 言いたいことの数で決めていた時は、言えて減るほど休むようになり、
     # 一つも無い日は二日に一日休んでいた
-    resting = random.random() < restlessness(state, today)
+    # 疲れていたり、かなしかったりすると、休みたくなる
+    resting = random.random() < min(0.9, restlessness(state, today) * atama.wants_rest(state.get("atama")))
     hour = an_hour_it_writes(state)
 
     state["today_plan"] = {"date": today, "resting": resting, "hour": hour}
@@ -4355,8 +4092,10 @@ def writes_about_itself(state):
                 return None  # 今日は書き直す気になっていない
 
     how_it_writes_now, _ = current_stage(state)
+    # 何を書くかは、わたし帳(好きな言葉、自分の姿の絵に見えたもの)のほうへ傾く
+    about_itself = atama.words_about_itself(state.get("atama"), state.get("learned_words") or [])
     state["a_word_about_itself"] = {
-        "words": compose_locally(state),
+        "words": compose_locally(state, toward=about_itself or None),
         "stage": how_it_writes_now,
         "on": f"{now_in_japan():%Y-%m-%d}",
     }
@@ -4455,6 +4194,8 @@ def someone_came(state):
     if not any(counted[kind] > before.get(kind, 0) for kind in counted):
         return False
     now_it_cares_about(state, SOMEONE_CAME)
+    atama.feel(state.get("atama"), "うれしい", 0.3, "だれかが来ていた")
+    atama.feel(state.get("atama"), "さみしい", -0.4, "だれかが来ていた")
     print("だれかが来ていました。")
     return True
 
@@ -4466,6 +4207,15 @@ def words_left_at_home(state):
     外から来た人が残していったもの。
     [[ ]] の囲みはここで外れる。ページでは伏せてあるところが、
     この子にはそのまま届く。"""
+    return letters_at_home(state) + voices_at_home(state)
+
+
+def letters_at_home(state):
+    """家に置かれた言葉のうち、封をしてあるもの(彼女のメモと手紙)。
+
+    彼女がこの子にだけ宛てたもの。頭の網と二つめの口の練習帳には入れない。
+    頭の記憶は誰でも覗けるところに置かれるので、そこで言葉どうしが
+    つながって残ると、封をした中身の手がかりになってしまう。"""
     voices = []
     for keyword in blog_manager.load_keywords():
         # 開くきっかけはこの子の言葉だが、中に置かれているのは彼女の文章
@@ -4479,7 +4229,16 @@ def words_left_at_home(state):
             continue
         if elapsed >= item.get("unlock_day", 10**9):
             voices.append(only_for_it(item.get("message")))
+    return [
+        one.strip()
+        for one in voices
+        if one.strip() and not NOT_WRITTEN_YET.match(one.strip())
+    ]
 
+
+def voices_at_home(state):
+    """家に置かれた言葉のうち、もともと誰でも読めるもの(コメントと、彼女の返し)。"""
+    voices = []
     for comment in blog_manager.load_comments():
         # 書いていった人の名前も読む。名前として差し出されたものは
         # 一つの言葉として丸ごと受け取れるので、括弧に入れて渡す。
@@ -4499,24 +4258,6 @@ def words_left_at_home(state):
         for one in voices
         if one.strip() and not NOT_WRITTEN_YET.match(one.strip())
     ]
-
-
-def what_is_written_at_home(state, how_many=WORDS_FROM_HOME_SHOWN):
-    """家に置かれた言葉を、訊くときの何行かにする。
-
-    そのまま渡す。読める分だけ、ではなく。
-
-    この子の頭は、もう外の日本語を丸ごと読んでいる。
-    訪ねた場所で分かったことも、そのまま渡している。
-    彼女が置いた言葉だけを伏せておく理由は、どこにも無い。
-    伏せていたのではなく、繋がっていなかった。
-
-    覚えた言葉でしか書けない、という縛りは書く側の話で、
-    読む側に持ち込むと、宛てられた言葉が一生届かなくなる。"""
-    heard = words_left_at_home(state)
-    if not heard:
-        return "(まだ何も置かれていない)"
-    return "\n".join(f"- {one}" for one in heard[-how_many:])
 
 
 def reads_home_today(when):
@@ -4542,12 +4283,31 @@ def read_what_is_home(state):
     自分が書いたものは、それよりもさらに少ない。"""
     if not reads_home_today(now_in_japan()):
         return []
-    heard = words_left_at_home(state)
-    for one in heard:
+    letters = letters_at_home(state)
+    voices = voices_at_home(state)
+    heard = letters + voices
+    # 封をした言葉は、言葉としては覚えるが、頭の網と練習帳には入れない(letters_at_home)
+    KEEPING_IT_SEALED[0] = True
+    try:
+        for one in letters:
+            absorb(state, one)
+    finally:
+        KEEPING_IT_SEALED[0] = False
+    WHERE_IT_IS[0] = ITS_OWN_HOME
+    for one in voices:
         absorb(state, one)
     if heard:
         print(f"家にある言葉を{len(heard)}つ読みました。")
-        look_at_what_is_hung_at_home(state, heard)
+        atama.feel(state.get("atama"), "さみしい", -0.2, "家に置かれた言葉を読んだ")
+        atama.feel(state.get("atama"), "うれしい", 0.05, "家に置かれた言葉を読んだ")
+        # 家に掛かっている絵は、彼女がメモに貼ったもの。これも封をした側として見る
+        WHERE_IT_IS[0] = None
+        KEEPING_IT_SEALED[0] = True
+        try:
+            look_at_what_is_hung_at_home(state, heard)
+        finally:
+            KEEPING_IT_SEALED[0] = False
+    WHERE_IT_IS[0] = None
 
     # 自分が書いたものは、ときどき読み返す。
     # そこからは新しい言葉は生まれず、すでに出会っていた言葉が保たれるだけ
@@ -4600,6 +4360,7 @@ def reply_to_a_comment(state, today):
     if not said:
         return None
     replied[comment["id"]] = {"said": said, "date": now_in_japan().isoformat(timespec="seconds")}
+    atama.feel(state.get("atama"), "うれしい", 0.1, "コメントに返せた")
     save_state(state)
     print(f"{comment.get('name') or '名無しさん'}さんのコメントに返しました: {said}")
     return said
@@ -4635,7 +4396,13 @@ def run_today():
         print(f"{now:%H}時はもう起きていたので、寝直します")
         return
     state["woke_at"] = woke
+    # 起きた。前に起きてからの時間ぶん、気持ちがふだんへ戻っていく
+    if state.get("atama"):
+        head_does(atama.wake, state["atama"], state, now)
     save_state(state)
+
+    # 夜中の二時から五時のどこかで一度眠る。眠ったら六時まで、歩きも考えもしない
+    sleeping = goes_to_sleep(state, now)
 
     # きのう書くつもりだったのに、書きそびれていたら、今のうちに書く。
     # 今日の予定を決めると、きのうの予定は上書きされて分からなくなるので先に
@@ -4653,8 +4420,10 @@ def run_today():
     state.pop("how_it_writes_now", None)
 
     # 散歩とは別の枠で、今日は家に帰るかどうかを決める。
-    # ここで拾った言葉も、散歩で拾ったのと同じように身につく
-    go_home(state, today)
+    # ここで拾った言葉も、散歩で拾ったのと同じように身につく。
+    # 眠っている間は決めない。起きてから決める
+    if not sleeping:
+        go_home(state, today)
 
     # 行き先に紛れ込んでいた家の道を、散歩の束から抜いておく
     home_paths = [one for one in (state.get("frontier") or []) if its_own_home(one)]
@@ -4665,25 +4434,31 @@ def run_today():
 
     # これから行く場所も、名前に直してから残す
 
-    # だれかが来たかどうかを知る。数ではなく、来たということだけ
-    someone_came(state)
+    if not sleeping:
+        # だれかが来たかどうかを知る。数ではなく、来たということだけ
+        someone_came(state)
 
-    # 自分の家に置かれた、自分に宛てられた言葉を読む。
-    # 読んだ日に気が向いたら、コメントに一つだけ返す
-    if read_what_is_home(state):
-        reply_to_a_comment(state, today)
+        # 自分の家に置かれた、自分に宛てられた言葉を読む。
+        # 読んだ日に気が向いたら、コメントに一つだけ返す
+        if read_what_is_home(state):
+            reply_to_a_comment(state, today)
 
     # 自分の名前の由来を知っていれば、自分のことも書ける
     writes_about_itself(state)
 
-    # ときどき、知っている言葉のどれかを探しに行く
-    wonder_and_look(state)
+    if not sleeping:
+        # ときどき、知っている言葉のどれかを探しに行く
+        wonder_and_look(state)
 
-    # 前にほとんど分からなかった場所を、ふと思い出すことがある
-    remembers_a_place(state, today)
+        # 前にほとんど分からなかった場所を、ふと思い出すことがある
+        remembers_a_place(state, today)
 
-    # 書く日でも書かない日でも、散歩には出る
-    seen_titles = take_a_walk(state, today, now)
+    # 書く日でも書かない日でも、散歩には出る。眠っている間は出ない
+    if sleeping:
+        walk = state.get("today_walk") or {}
+        seen_titles = walk.get("seen") or [] if walk.get("date") == today else []
+    else:
+        seen_titles = take_a_walk(state, today, now)
     keep_a_note_of_today(state, seen_titles)
     # 歩けば行き先が変わる。歩いたあとに作り直す
     state["where_it_will_go"] = where_it_will_go(state)
@@ -4715,6 +4490,40 @@ def run_today():
         return
 
     write_the_day(state, today)
+
+
+def goes_to_sleep(state, now):
+    """眠る時間なら眠る。眠っている間なら True。
+
+    夜中の二時から五時のどこかで一度眠り、その日に出会ったものを整理して、
+    夢を見て、口の練習をする(atama.sleep)。見た夢は、この子の口で言ってみる。
+    夢はトップページの雲に出す(2026-10-07、彼女が決めた)。
+    起きて何かを思うまでは、雲には夢が浮かんでいる。"""
+    head = state.get("atama")
+    if not head:
+        return False
+    if atama.asleep(head, now):
+        print(f"{now:%H}時。まだ眠っています")
+        return True
+    if not atama.time_to_sleep(head, now):
+        return False
+    known = state.get("learned_words") or []
+    dreamt = head_does(
+        atama.sleep, head, state, now, known,
+        places_known=state.get("places_known") or {}, articles=blog_manager.load_articles(),
+    )
+    if dreamt is None:
+        return False  # 眠るところでこけた。今夜は起きたまま過ごす
+    if dreamt:
+        toward = atama.words_to_say(head, dreamt, known, day_number(state, now.date()))
+        said = say_what_it_thinks(state, toward)
+        atama.dream_said(head, said)
+        print(f"夢: {' → '.join(dreamt)}")
+        if said:
+            print(f"夢の中で: {said}")
+            state["yume"] = {"at": now.isoformat(timespec="minutes"), "said": said}
+    save_state(state)
+    return True
 
 
 def makes_up_for_yesterday(state, now):
@@ -4772,6 +4581,9 @@ def write_the_day(state, day):
     save_state(state)
 
     blog_manager.add_new_article(title, body, date_str=day)
+    atama.feel(state.get("atama"), "うれしい", 0.1, "日記を書けた")
+    atama.feel(state.get("atama"), "疲れ", 0.05)
+    save_state(state)
     print(
         f"{elapsed_days(state)}日目のブログを書きました。"
         f"知っている文字{len(state['seen_chars'])}個 / 言葉{len(state['learned_words'])}個"
