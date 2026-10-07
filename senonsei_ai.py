@@ -725,7 +725,7 @@ def how_it_reads():
         "words_in": WORD_CANDIDATE.findall,
         "names_in": names_in_brackets,
         "things_in": names_in_what_it_saw,
-        "home": lambda state: voices_at_home(state) + letters_at_home(state, as_shown=True),
+        "home": words_left_at_home,
         "thoughts": everything_it_has_thought,
     }
 
@@ -2268,7 +2268,7 @@ def notice_what_follows(state, text):
     # その前に、一つめの口がこの文から覚える前の今、二つの口がそれぞれ
     # この文の言葉をどれだけ当てられたかを確かめておく(atama.judge)
     head = state.get("atama")
-    if head and not KEEPING_IT_SEALED[0]:
+    if head:
         sentences = sentences_of_known_words(text, known)
         if sentences:
             head_does(
@@ -2603,7 +2603,7 @@ def absorb(state, text, pattern=WORD_CANDIDATE, only_known=False):
         notice_what_follows(state, text)
 
     # 頭の網にも入れる。自分の書いたものを読み返す時は入れない。今日のことではないので
-    if not only_known and state.get("atama") and not KEEPING_IT_SEALED[0]:
+    if not only_known and state.get("atama"):
         head_does(
             atama.notice, state["atama"], state, now_in_japan(), found,
             named=named, struck=struck, where=WHERE_IT_IS[0],
@@ -3819,8 +3819,6 @@ WHAT_A_WALK_BROUGHT = [0]
 A_BLOG_POST_TITLE = [None]
 # いま読んでいるものが、どの場所のものか。頭の網で、出会ったものとその場所を結ぶ
 WHERE_IT_IS = [None]
-# いま読んでいるものに、頭の記憶に残さないところ(メモや手紙の [[ ]] で伏せたところ)が入っているか
-KEEPING_IT_SEALED = [False]
 # 思ったことを口に出す時、思いが一言も入らなければ、これだけ言い直してみる
 TRIES_TO_SAY_IT = 3
 # よそのブログの題を、いくつ見たら自分の題に生かすか。
@@ -4104,24 +4102,7 @@ def writes_about_itself(state):
     return state["a_word_about_itself"]["words"]
 
 
-def keep_in_mind(state, text):
-    """封の解けたメモや手紙の、人に見えているところを、頭の網と練習帳に入れる。
-
-    言葉を覚えるほうは absorb がもうしているので、ここは頭のぶんだけ。"""
-    head = state.get("atama")
-    if not head:
-        return
-    known = set(state.get("learned_words") or [])
-    head_does(
-        atama.notice, head, state, now_in_japan(), WORD_CANDIDATE.findall(text),
-        named=names_in_brackets(text), where=ITS_OWN_HOME, known=known, met=words_met(state),
-    )
-    sentences = sentences_of_known_words(text, known)
-    if sentences:
-        atama.practise_with(head, sentences)
-
-
-def look_at_what_is_hung_at_home(state, heard, public=()):
+def look_at_what_is_hung_at_home(state, heard):
     """家に置かれた絵を見る。
 
     彼女がメモに貼った絵。散歩で出会う絵と違って、これは
@@ -4149,14 +4130,10 @@ def look_at_what_is_hung_at_home(state, heard, public=()):
         what_is_there = look_at_a_picture(data, state)
         if not what_is_there:
             continue
-        # 人に見えているところに貼られた絵なら、頭の網にも入れる
-        seen_by_all = where in public
-        WHERE_IT_IS[0] = ITS_OWN_HOME if seen_by_all else None
-        KEEPING_IT_SEALED[0] = not seen_by_all
+        WHERE_IT_IS[0] = ITS_OWN_HOME
         try:
             absorb(state, what_is_there, THING_IN_A_PICTURE)
         finally:
-            KEEPING_IT_SEALED[0] = False
             WHERE_IT_IS[0] = None
         seen_on[where] = day_number(state)
         looked.append(what_is_there)
@@ -4235,17 +4212,14 @@ def words_left_at_home(state):
     return letters_at_home(state) + voices_at_home(state)
 
 
-def letters_at_home(state, as_shown=False):
+def letters_at_home(state):
     """家に置かれた言葉のうち、彼女のメモと手紙。封の解けたものだけ。
 
     封は、解ける前に読まれないためのもの。解けたあとはサイトで誰でも読める
-    (2026-10-07、彼女に教わった)。ただし [[ ]] で囲んだところは、解けたあとも
-    サイトでは伏せたまま、この子にだけ届く。
-    as_shown にすると、その伏せたところを除いた、人に見えているぶんだけを返す。"""
+    (2026-10-07、彼女に教わった)。[[ ]] で囲んだところは、サイトでは伏せたまま
+    この子にだけ届く。どちらも頭の記憶に入れてよい(2026-10-07、彼女が決めた)。"""
     voices = []
-
-    def read(text):
-        return ONLY_FOR_IT.sub("", text or "") if as_shown else only_for_it(text)
+    read = only_for_it
 
     for keyword in blog_manager.load_keywords():
         # 開くきっかけはこの子の言葉だが、中に置かれているのは彼女の文章
@@ -4313,32 +4287,18 @@ def read_what_is_home(state):
     自分が書いたものは、それよりもさらに少ない。"""
     if not reads_home_today(now_in_japan()):
         return []
-    letters = letters_at_home(state)
-    shown = letters_at_home(state, as_shown=True)
-    voices = voices_at_home(state)
-    heard = letters + voices
-    # メモと手紙は、言葉としては全文から覚える([[ ]] で伏せたところも)。
-    # 頭の記憶(網と練習帳)は誰でも覗けるところに置かれるので、
-    # そこへは、サイトで人に見えているところだけを入れる
-    KEEPING_IT_SEALED[0] = True
+    heard = words_left_at_home(state)
+    WHERE_IT_IS[0] = ITS_OWN_HOME
     try:
-        for one in letters:
+        for one in heard:
             absorb(state, one)
     finally:
-        KEEPING_IT_SEALED[0] = False
-    for one in shown:
-        keep_in_mind(state, one)
-    WHERE_IT_IS[0] = ITS_OWN_HOME
-    for one in voices:
-        absorb(state, one)
-    WHERE_IT_IS[0] = None
+        WHERE_IT_IS[0] = None
     if heard:
         print(f"家にある言葉を{len(heard)}つ読みました。")
         atama.feel(state.get("atama"), "さみしい", -0.2, "家に置かれた言葉を読んだ")
         atama.feel(state.get("atama"), "うれしい", 0.05, "家に置かれた言葉を読んだ")
-        # 家に掛かっている絵は、彼女がメモに貼ったもの。伏せたところに貼られた絵は、頭には入れない
-        public = {where for one in shown for where in IMG_SRC.findall(one)}
-        look_at_what_is_hung_at_home(state, heard, public)
+        look_at_what_is_hung_at_home(state, heard)
 
     # 自分が書いたものは、ときどき読み返す。
     # そこからは新しい言葉は生まれず、すでに出会っていた言葉が保たれるだけ
