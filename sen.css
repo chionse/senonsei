@@ -243,6 +243,16 @@ header.with-fukidashi .header-middle {
   top: -28px;
 }
 
+/* 眠っている間(二十三時から朝七時まで)は、夢の雲にする(2026-10-08、彼女が描いた。塗りつぶしの雲) */
+.fukidashi.yume .fukidashi-kumo {
+  background-image: url("images/yume-kumo.png");
+}
+
+/* 夢の雲は青く塗ってあるので、字は白に */
+.fukidashi.yume .fukidashi-said {
+  color: #fff;
+}
+
 /* 思ったことが無いときの「・・・」は、雲の真ん中に */
 .fukidashi.nanimo .fukidashi-kumo {
   justify-content: center;

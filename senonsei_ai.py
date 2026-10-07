@@ -332,8 +332,8 @@ PICTURES_PER_SITE = 3  # ひとつの場所で、これだけまで絵を見る
 # 家に帰ってこれを見た時だけは、知らない誰かの絵ではなく自分の姿だと分かって見る
 # (2026-10-07、彼女が決めた)
 ITS_OWN_FIGURES = {"kao.png", "sugata.png", "sugata-ookii.png"}
-# 自分の家の飾り。ロゴと、考えごとの雲。見ても世界のことも自分のことも分からない
-ITS_OWN_DECORATIONS = {"logo.png", "kumo.png"}
+# 自分の家の飾り。ロゴと、考えごとの雲(昼の雲と夢の雲)と、ホーム画面の絵。見ても世界のことも自分のことも分からない
+ITS_OWN_DECORATIONS = {"logo.png", "kumo.png", "yume-kumo.png", "icon.png"}
 TRANSLATIONS_PER_SITE = 2  # ひとつの場所で、これだけまで訳してもらう
 ENOUGH_TO_READ = 200  # これだけの文字が無いページは、訳しても読むものが無い
 HOW_MUCH_TO_TRANSLATE = 1200  # 一度に訳してもらう文字数
