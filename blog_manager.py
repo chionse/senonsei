@@ -2213,10 +2213,14 @@ def regenerate_pages(articles):
     out_of_search_snippets(every_page)
 
 
-# ホーム画面とタブに出す絵(2026-10-07、彼女が描いた。いちばん外の白い枠を外して6倍にしたもの)
+# ホーム画面とタブに出す絵(2026-10-07、彼女が描いた。いちばん外の白い枠を外して6倍にしたもの)。
+# ホーム画面で絵の下に出る名前は「千遠生のサイト」(2026-10-07、彼女が決めた)。
+# どのページから置いても同じ名前になるように、ページの題とは別に書いておく
 SITE_ICON = (
     '<link rel="icon" type="image/png" href="images/icon.png">\n'
     '<link rel="apple-touch-icon" href="images/icon.png">\n'
+    '<meta name="apple-mobile-web-app-title" content="千遠生のサイト">\n'
+    '<meta name="application-name" content="千遠生のサイト">\n'
 )
 
 
