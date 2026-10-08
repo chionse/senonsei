@@ -1634,15 +1634,34 @@ VISITOR_COUNTER = r"""    <div class="visitor-counter">
               }, 800 + k * 450);
             });
           }
+          // 窓は画面に合わせて大きくする。広い画面ほど大きく、二倍まで。
+          // 背の低い画面では、入りきるように小さくする
+          var fit = function () {
+            var screen = document.documentElement;
+            var grow = Math.min(
+              2,
+              screen.clientWidth * 0.86 / kami.offsetWidth,
+              screen.clientHeight * 0.8 / kami.offsetHeight
+            );
+            kami.style.scale = String(Math.max(0.5, grow).toFixed(3));
+          };
           var onKey = function (e) { if (e.key === "Escape") close(); };
           var close = function () {
             if (mado.parentNode) mado.parentNode.removeChild(mado);
             document.removeEventListener("keydown", onKey);
+            window.removeEventListener("resize", fit);
           };
           shut.addEventListener("click", close);
           mado.addEventListener("click", function (e) { if (e.target === mado) close(); });
           document.addEventListener("keydown", onKey);
-          var open = function () { document.body.appendChild(mado); mado.focus(); };
+          var open = function () {
+            document.body.appendChild(mado);
+            fit();
+            window.addEventListener("resize", fit);
+            // 点の字が届くと窓の幅が変わるので、届いたら測り直す
+            if (document.fonts) document.fonts.ready.then(fit);
+            mado.focus();
+          };
           if (document.readyState === "loading") {
             document.addEventListener("DOMContentLoaded", open);
           } else {
