@@ -308,6 +308,13 @@ def lingers(head, usually):
     return max(0.5, min(0.95, usually + 0.15 * (feeling(head, "たのしい") - 0.2) - 0.3 * max(0.0, feeling(head, "疲れ") - 0.15)))
 
 
+def boredom(head):
+    """運まかせに、知らないところへ飛び込みたい気持ち。退屈なほど強い。"""
+    if not head:
+        return 1.0
+    return max(0.5, min(2.5, 1 + 3 * (feeling(head, "たいくつ") - 0.2)))
+
+
 def curiosity(head):
     """何かを探しに行きたい気持ち。"""
     if not head:

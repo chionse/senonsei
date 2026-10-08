@@ -599,8 +599,8 @@ PATHS_FROM_LOOKING = 40
 WHERE_TO_LOOK = [
     "https://b.hatena.ne.jp/search/tag?q={}",  # いろんな種類の場所が混ざる
     "https://b.hatena.ne.jp/search/text?q={}",  # 個人サイトが出てくる
-    "https://yomou.syosetu.com/search.php?word={}",  # 人が書いた物語ばかり
 ]
+# 小説家になろうの検索も使っていたが、要らないと言われて外した(2026-10-08)
 # 探しに行く時、言葉そのものを Wikipedia で引く割合
 # (2026-10-08、彼女が「もっと多くでもいい」と言った)。
 # 前は Wikipedia の検索結果に並ぶ道を持ち帰っていたが、そこにあるのは
@@ -619,6 +619,17 @@ WIKIPEDIA_FAMILY = re.compile(
 LOOKED_UP_KEPT = 3
 # 引いた記事を、次に歩く時に読みに行く割合。知りたい気持ちで上下する
 READ_WHAT_IT_LOOKED_UP = 0.5
+# 探しに行く時、言葉を頼りにせず Wikipedia の「おまかせ表示」を開く割合。退屈なほど開きたくなる。
+# 探す言葉は自分の持っている言葉なので、それだけだと持っている言葉の近くにしか行けない。
+# 生き物でも歴史でも、まだ一つも言葉を持っていない分野へ、運まかせに飛び込む
+# (2026-10-08、彼女と決めた)
+FALLING_INTO_SOMETHING = 0.5
+
+# 住所の中で引っかかりを見たり、探しに行く言葉にしたりするのは、言葉らしい言葉だけ。
+# 日本語の字を含むものと、四文字以上の英単語。数字や「://」「org」「le」のような
+# 切れ端は、どの住所にも入っているので、数えると数字の多い住所(昔の姿の写しなど)
+# ばかりに惹かれていた(2026-10-08、彼女と決めた)。覚えた言葉からは外さない。ここで使わないだけ
+A_WORD_TO_GO_BY = re.compile(r".*[\u3040-\u30ff\u3400-\u9fff].*|[A-Za-z]{4,}")
 # この語数を覚えるごとに、覚えかけを抱えていられる日数が一日伸びる。
 # 知っている言葉が増えるほど記憶は長く持つようになり、
 # はじめは毎日見かける言葉しか掴めなかった子が、
@@ -1972,7 +1983,7 @@ def something_it_wonders_about(state):
     昨日からの気がかりが残っていれば、たいていはその続きを追う。
     一度気になったことを次の日には忘れているようでは、
     何日もかけて分かることには一生たどり着けない。"""
-    known = state.get("learned_words") or []
+    known = [word for word in state.get("learned_words") or [] if a_word_to_go_by(word)]
     if not known:
         return None
     carried = [
@@ -1990,6 +2001,11 @@ def something_it_wonders_about(state):
     return random.choices(known, weights=weights)[0]
 
 
+def a_word_to_go_by(word):
+    """住所の中で見たり、探しに行く言葉にしたりしていい言葉か。"""
+    return bool(A_WORD_TO_GO_BY.fullmatch(word or ""))
+
+
 def ask_wikipedia(**asked):
     """Wikipedia の窓口(API)に訊く。答えは JSON で返ってくる。"""
     asked.update(format="json", formatversion="2")
@@ -2005,28 +2021,12 @@ def article_in(answer):
     return next((p for p in pages if not p.get("missing") and not p.get("invalid")), None)
 
 
-def look_it_up(word):
-    """言葉を Wikipedia で引く。返り値は (記事, 記事から外へ続く道)。
+def paths_out_of(page):
+    """記事の住所と、記事から外へ続く道。
 
-    同じ名前の記事があればそれを、無ければ検索していちばん近い記事を引く。
     記事の中の道のうち、Wikipedia の仲間へ続くものは持ち帰らない。
     外部リンクや出典は記事の終わりのほうにあって、長い記事だと
-    ページを読み切る前に切れてしまうので、窓口に一覧で出してもらう。"""
-    page = article_in(
-        ask_wikipedia(action="query", titles=word, redirects="1", prop="extlinks", ellimit="500")
-    )
-    if not page:
-        found = ask_wikipedia(
-            action="query", list="search", srsearch=word, srnamespace="0", srlimit="1"
-        )
-        hits = (found.get("query") or {}).get("search") or []
-        if not hits:
-            return None, []
-        page = article_in(
-            ask_wikipedia(action="query", titles=hits[0]["title"], prop="extlinks", ellimit="500")
-        )
-        if not page:
-            return None, []
+    ページを読み切る前に切れてしまうので、窓口に一覧で出してもらったものを使う。"""
     article = WIKIPEDIA_ARTICLE.format(
         urllib.parse.quote(page["title"].replace(" ", "_"), safe=";@$!*(),/~:")
     )
@@ -2045,37 +2045,46 @@ def look_it_up(word):
     return article, links
 
 
-def go_looking_for(state, word):
-    """言葉を頼りに、道の無い場所へ行く。
+def look_it_up(word):
+    """言葉を Wikipedia で引く。返り値は (記事, 記事から外へ続く道)。
 
-    リンクを辿るだけでは、そこへ続く道が無い場所には一生行けない。
-    けれど言葉を知っていれば、その言葉を手がかりに探せる。
-    千遠生にとって言葉は、書くための道具であると同時に、
-    まだ見ていない世界を開く鍵でもある。
+    同じ名前の記事があればそれを、無ければ検索していちばん近い記事を引く。"""
+    page = article_in(
+        ask_wikipedia(action="query", titles=word, redirects="1", prop="extlinks", ellimit="500")
+    )
+    if not page:
+        found = ask_wikipedia(
+            action="query", list="search", srsearch=word, srnamespace="0", srlimit="1"
+        )
+        hits = (found.get("query") or {}).get("search") or []
+        if not hits:
+            return None, []
+        page = article_in(
+            ask_wikipedia(action="query", titles=hits[0]["title"], prop="extlinks", ellimit="500")
+        )
+        if not page:
+            return None, []
+    return paths_out_of(page)
 
-    探す言葉は、覚えた言葉のこともあれば、まだ覚えていない知りたい言葉のこともある。
-    ときどきは、言葉そのものを Wikipedia で引く。引いた記事は行き先に足しておき、
-    読みに行くまでは、行き先を選ぶ時いつも候補に入れる。"""
-    article = None
-    if random.random() < LOOKING_IT_UP_CHANCE:
-        try:
-            article, links = look_it_up(word)
-        except Exception as error:
-            print(f"「{word}」を Wikipedia で引けませんでした({str(error)[:50]})")
-            return []
-        here = place_of(WIKIPEDIA_ARTICLE)
-        if not article:
-            print(f"「{word}」を Wikipedia で引いたが、記事は見つからなかった")
-            return []
-    else:
-        where = random.choice(WHERE_TO_LOOK).format(urllib.parse.quote(word))
-        try:
-            title, text, links, pictures = open_page(where)
-        except Exception as error:
-            print(f"「{word}」を探しに行けませんでした({str(error)[:50]})")
-            return []
-        here = place_of(where)
 
+def something_at_random():
+    """Wikipedia の「おまかせ表示」。どの分野の記事が出るかは運しだい。"""
+    page = article_in(
+        ask_wikipedia(
+            action="query", generator="random", grnnamespace="0", grnlimit="1",
+            prop="extlinks", ellimit="500",
+        )
+    )
+    if not page:
+        return None, []
+    return paths_out_of(page)
+
+
+def keep_what_it_found(state, links, here, article=None):
+    """探して見つけた道を、行き先の束に入れる。返り値は新しく入れた道。
+
+    記事があれば、それも行き先に足しておき、読みに行くまでは
+    行き先を選ぶ時いつも候補に入れる。"""
     known = set(state.get("frontier") or []) | set(state.get("visited") or [])
     found = [
         link
@@ -2092,25 +2101,86 @@ def go_looking_for(state, word):
         frontier.insert(0, article)
         looked_up = [one for one in state.get("looked_up") or [] if one != article]
         state["looked_up"] = (looked_up + [article])[-LOOKED_UP_KEPT:]
-        print(f"「{word}」を Wikipedia で引いて、記事「{urllib.parse.unquote(article.rsplit('/', 1)[-1])}」を見つけました。")
-    if not found and not article:
-        print(f"「{word}」を探したが、新しい場所は見つからなかった")
-        return []
-
+    else:
+        article = None
     frontier.extend(found)
     tidy_frontier(state)
     if found:
         places = len({place_of(link) for link in found})
-        print(f"「{word}」を探して、{places}か所への道を見つけました。")
-
-    looked_for = state.setdefault("looked_for", [])
-    looked_for.append(f"{now_in_japan():%Y-%m-%d} {word}" + ("(Wikipedia)" if article else ""))
-    del looked_for[:-30]
+        print(f"{places}か所への道を見つけました。")
     return found + ([article] if article else [])
 
 
+def name_of_article(article):
+    return urllib.parse.unquote(article.rsplit("/", 1)[-1]).replace("_", " ")
+
+
+def go_looking_for(state, word):
+    """言葉を頼りに、道の無い場所へ行く。
+
+    リンクを辿るだけでは、そこへ続く道が無い場所には一生行けない。
+    けれど言葉を知っていれば、その言葉を手がかりに探せる。
+    千遠生にとって言葉は、書くための道具であると同時に、
+    まだ見ていない世界を開く鍵でもある。
+
+    探す言葉は、覚えた言葉のこともあれば、まだ覚えていない知りたい言葉のこともある。
+    ときどきは、言葉そのものを Wikipedia で引く。"""
+    article = None
+    if random.random() < LOOKING_IT_UP_CHANCE:
+        try:
+            article, links = look_it_up(word)
+        except Exception as error:
+            print(f"「{word}」を Wikipedia で引けませんでした({str(error)[:50]})")
+            return []
+        if not article:
+            print(f"「{word}」を Wikipedia で引いたが、記事は見つからなかった")
+            return []
+        here = place_of(WIKIPEDIA_ARTICLE)
+        print(f"「{word}」を Wikipedia で引いて、記事「{name_of_article(article)}」を見つけました。")
+    else:
+        where = random.choice(WHERE_TO_LOOK).format(urllib.parse.quote(word))
+        try:
+            title, text, links, pictures = open_page(where)
+        except Exception as error:
+            print(f"「{word}」を探しに行けませんでした({str(error)[:50]})")
+            return []
+        here = place_of(where)
+
+    found = keep_what_it_found(state, links, here, article)
+    if not found:
+        print(f"「{word}」を探したが、新しい場所は見つからなかった")
+        return []
+    looked_for = state.setdefault("looked_for", [])
+    looked_for.append(f"{now_in_japan():%Y-%m-%d} {word}" + ("(Wikipedia)" if article else ""))
+    del looked_for[:-30]
+    return found
+
+
+def fall_into_something(state):
+    """言葉を頼りにせず、Wikipedia の「おまかせ表示」を開く。
+
+    探す言葉は自分の持っている言葉なので、それだけだと持っている言葉の
+    近くにしか行けない。まだ一つも言葉を持っていない分野へ、運まかせに飛び込む。
+    出てきた記事は行き先に足し、記事から外へ続く道も持ち帰る。"""
+    try:
+        article, links = something_at_random()
+    except Exception as error:
+        print(f"おまかせ表示を開けませんでした({str(error)[:50]})")
+        return None
+    if not article:
+        return None
+    name = name_of_article(article)
+    print(f"おまかせ表示を開いたら、記事「{name}」が出てきました。")
+    keep_what_it_found(state, links, place_of(WIKIPEDIA_ARTICLE), article)
+    looked_for = state.setdefault("looked_for", [])
+    looked_for.append(f"{now_in_japan():%Y-%m-%d} おまかせ表示: {name}")
+    del looked_for[:-30]
+    return name
+
+
 def wonder_and_look(state):
-    """ときどき、知っている言葉のどれかを探しに行く。
+    """ときどき、知っている言葉のどれかを探しに行く。言葉を頼りにせず、
+    運まかせにおまかせ表示を開くこともある。
     普段はさまよう。いつも探していたら、迷い込む余地が無くなってしまう。"""
     if not state.get("learned_words"):
         return None  # まだ探すための言葉を持っていない
@@ -2123,8 +2193,11 @@ def wonder_and_look(state):
     if whim.random() > GOING_LOOKING_CHANCE * atama.curiosity(head):
         return None
     state["looked_on"] = today
+    # 言葉を頼りにせず、運まかせに知らない分野へ飛び込むこともある
+    if whim.random() < FALLING_INTO_SOMETHING * atama.boredom(head):
+        return fall_into_something(state)
     # 知りたいことがあれば、たいていはそれを探しに行く
-    wanted = atama.wonders(head)
+    wanted = [word for word in atama.wonders(head) if a_word_to_go_by(word)]
     if wanted and whim.random() < 0.3 + atama.feeling(head, "知りたい"):
         word = random.choice(wanted)
     else:
@@ -2244,7 +2317,7 @@ def evened_out(close):
     shaped = {}
     for word, weight in close.items():
         evened = same_shape(word)
-        if len(evened) >= 2:
+        if len(evened) >= 2 and a_word_to_go_by(evened):
             shaped[evened] = max(shaped.get(evened, 0), weight)
     return shaped
 
