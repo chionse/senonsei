@@ -282,9 +282,8 @@ header.with-fukidashi .header-middle {
   margin-top: 0.5rem;
 }
 
-/* 数えた数だけは、太く、虹色にぎらつかせる。
-   昔の個人サイトのカウンターがそうだったように。
-   明朝のままだと太らないので、ここだけゴシックにする */
+/* 数えた数だけは、虹色にぎらつかせる。
+   昔の個人サイトのカウンターがそうだったように */
 .count {
   /* 数だけは題名と同じ点の書体で。まわりの小さい字(12ドット)とは別にする */
   font-family: "DotGothic16", "MS Gothic", monospace;
@@ -298,7 +297,8 @@ header.with-fukidashi .header-middle {
 
 @supports (-webkit-background-clip: text) or (background-clip: text) {
   .count {
-    /* 上に白い光の帯、下に虹。二枚重ねて、別々の速さで流す */
+    /* 上に白い光の帯、下にロゴと同じ六色の虹。境目はロゴのようにくっきり。
+       流すのは位置だけで、色そのものは変えない(2026-10-08、彼女が選んだ) */
     background-image:
       linear-gradient(
         100deg,
@@ -307,17 +307,20 @@ header.with-fukidashi .header-middle {
         rgba(255, 255, 255, 0) 55%
       ),
       linear-gradient(
-        100deg,
-        #ff0040, #ff8a00, #ffe600, #00e05a, #00d0ff, #2b4bff, #c400ff, #ff0040
+        90deg,
+        #f0ff00 0 16.67%,
+        #69ff00 16.67% 33.33%,
+        #00ffd7 33.33% 50%,
+        #0a00ff 50% 66.67%,
+        #8300ff 66.67% 83.33%,
+        #ff00b6 83.33% 100%
       );
     background-size: 220% 100%, 220% 100%;
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
     -webkit-text-fill-color: transparent;
-    animation:
-      gleam 2.6s linear infinite,
-      shimmer 5s linear infinite;
+    animation: gleam 2.6s linear infinite;
   }
 }
 
@@ -326,13 +329,8 @@ header.with-fukidashi .header-middle {
   to { background-position: 220% 0, 220% 0; }
 }
 
-@keyframes shimmer {
-  from { filter: hue-rotate(0deg) saturate(1.5); }
-  to { filter: hue-rotate(360deg) saturate(1.5); }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .count { animation: none; filter: saturate(1.5); }
+  .count { animation: none; }
 }
 
 h1 {
