@@ -351,6 +351,10 @@ header.with-fukidashi .header-middle {
   overflow-x: hidden;
   overflow-y: auto;
   background: rgba(0, 26, 128, 0.45);
+  /* スマホの閲覧機が字を勝手に大きくすると、彼女が区切った行が途中で折れる。
+     大きさは窓のほうで画面に合わせるので、ここでは字を触らせない */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 /* 開いた時は窓そのものに目を向ける。そこに囲みは出さない */
