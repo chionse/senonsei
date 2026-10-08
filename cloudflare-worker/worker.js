@@ -113,8 +113,8 @@ async function receiveLike(request, env) {
 // 同じつなぎ口(同じ Wi-Fi など)から一日に数えるのは RAIHO_A_DAY 人まで。
 // 家族や友だちが同じ Wi-Fi から来ても、そのくらいまではちゃんと数える。
 const RAIHO_A_DAY = 10;
-// StatCounter から移る時の数。その時の数から続ける
-const RAIHO_STARTS_AT = 0;
+// 数え始めの数。StatCounter から移る時に、彼女が決めた(2026-10-08)
+const RAIHO_STARTS_AT = 3;
 // 見回りの機械は数えない。何も覚えずに来るので、来るたびに初めての人になってしまう
 const NOT_A_PERSON =
   /bot|crawl|spider|slurp|archiver|facebookexternalhit|headless|lighthouse|preview|curl|wget|python/i;
