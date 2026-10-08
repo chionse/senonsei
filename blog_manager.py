@@ -1575,37 +1575,65 @@ VISITOR_COUNTER = r"""    <div class="visitor-counter">
         var showKiriban = function (n) {
           var said = kiriban(n);
           if (!said) return;
-          var mado = made("div", "kiriban-mado");
+          // 777 … は大当たり。後ろで虹の光が回り、番号がスロットのように回って止まる
+          var nana = /^7+$/.test(String(n));
+          var still = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+          var mado = made("div", nana ? "kiriban-mado nana" : "kiriban-mado");
           mado.setAttribute("role", "dialog");
           mado.setAttribute("aria-modal", "true");
           mado.setAttribute("aria-label", "キリ番");
           mado.tabIndex = -1;
           var fubuki = made("div", "kiriban-fubuki");
           fubuki.setAttribute("aria-hidden", "true");
-          for (var i = 0; i < 48; i++) {
-            var hira = made("i");
+          for (var i = 0; i < (nana ? 96 : 48); i++) {
+            var mark = nana && i % 3 === 0 ? (i % 2 ? "♥" : "★") : "";
+            var hira = made("i", mark ? "moji" : "", mark);
             var falls = 2.6 + Math.random() * 2.2;
             hira.style.left = (Math.random() * 100).toFixed(1) + "%";
-            hira.style.background = niji[i % niji.length];
+            hira.style[mark ? "color" : "background"] = niji[i % niji.length];
             hira.style.animationDuration = falls.toFixed(2) + "s";
             hira.style.animationDelay = "-" + (Math.random() * falls).toFixed(2) + "s";
             fubuki.appendChild(hira);
           }
           var kami = made("div", "kiriban-kami");
-          for (var j = 0; j < 4; j++) {
+          for (var j = 0; j < (nana ? 8 : 4); j++) {
             var hoshi = made("span", "kiriban-hoshi", "★");
             hoshi.setAttribute("aria-hidden", "true");
             kami.appendChild(hoshi);
           }
           var kazu = made("p");
-          kazu.appendChild(made("span", "count", String(n)));
+          var number = made("span", "count", String(n));
+          kazu.appendChild(number);
           kami.appendChild(kazu);
           kami.appendChild(made("p", "kiriban-kotoba", said));
           var shut = made("button", "", "閉じる");
           shut.type = "button";
           kami.appendChild(shut);
+          if (nana) {
+            var kosen = made("div", "kiriban-kosen");
+            kosen.setAttribute("aria-hidden", "true");
+            mado.appendChild(kosen);
+          }
           mado.appendChild(fubuki);
           mado.appendChild(kami);
+          if (nana && !still) {
+            var digits = String(n).split("");
+            var stopped = 0;
+            var spin = setInterval(function () {
+              number.textContent = digits.map(function (d, k) {
+                return k < stopped ? d : String(Math.floor(Math.random() * 10));
+              }).join("");
+            }, 60);
+            digits.forEach(function (d, k) {
+              setTimeout(function () {
+                stopped = k + 1;
+                if (stopped < digits.length) return;
+                clearInterval(spin);
+                number.textContent = String(n);
+                kami.className += " atari";
+              }, 800 + k * 450);
+            });
+          }
           var onKey = function (e) { if (e.key === "Escape") close(); };
           var close = function () {
             if (mado.parentNode) mado.parentNode.removeChild(mado);
