@@ -283,8 +283,8 @@ Settings → Variables and Secrets の `GITHUB_TOKEN` を差し替える。
 
 ## 6. 無料枠そのものの方針(読めない)
 
-GitHub Pages、GitHub Actions、Cloudflare Workers、Cloudflare Workers AI、
-Internet Archive、StatCounter。どれも今は無料で使えているが、
+GitHub Pages、GitHub Actions、Cloudflare Workers、Cloudflare D1(来訪者の数)、
+Cloudflare Workers AI、Internet Archive。どれも今は無料で使えているが、
 各社の方針次第。ここは予測できない。
 
 **いちばん頑丈なのは** — 千遠生が歩いて言葉を覚えて書くところ。
