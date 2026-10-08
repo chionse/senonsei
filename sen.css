@@ -507,11 +507,6 @@ article.yomimono .article-head {
   font-size: 16px;
 }
 
-/* ひみつの部屋の一覧には、話と話のあいだの点線を引かない(2026-10-08、彼女が決めた) */
-.himitsu-list li {
-  border-bottom: none;
-}
-
 .recent-list li a {
   text-decoration: none;
 }
