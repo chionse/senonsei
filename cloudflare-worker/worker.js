@@ -8,6 +8,9 @@
 //     Actions = Read and write)
 // 3. デプロイ後に発行されるWorkerのURL(https://xxxxx.workers.dev)を控えておく
 // 4. Worker の設定 > Triggers > Cron Triggers に「12 * * * *」を足す(毎時12分)
+// 5. 来訪者の数を置く箱: Storage & Databases > D1 で新しいデータベースを作り、
+//    Worker の設定 > Bindings で D1 database として RAIHO という名前でつなぐ。
+//    中の表は、最初に数える時にこの Worker が自分で作る
 //
 // 目覚まし時計: 毎時、千遠生を起こしてもらうよう GitHub に頼む。
 // GitHub の決まった時間の起こしは、混んでいると何時間も来ないことがある
@@ -15,12 +18,14 @@
 // 片方が止まっても、もう片方で起きられる。同じ時間に二度起こされても、
 // この子は二度目は寝直す(senonsei_ai.py の woke_at)。彼女と決めた。
 //
-// 受け付ける道は二つ:
+// 受け付ける道は四つ:
 //   POST /       コメント (名前と本文をフォームで受け取る)
 //   POST /like   いいね   (day= に宛先を一つ。形は三つだけ通す)
 //                  ブログ         2026-09-11
 //                  ひみつの部屋   himitsu-1
 //                  コメント       comment-entry-1758000000000
+//   GET  /raiho  来訪者の数を見る
+//   POST /raiho  初めて来た人を一人数えて、数を返す
 
 const REPO_OWNER = "chionse";
 const REPO_NAME = "senonsei";
@@ -44,7 +49,7 @@ async function markOf(who, day) {
 
 const OPEN_TO_THE_PAGE = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type",
 };
 
@@ -98,6 +103,94 @@ async function receiveLike(request, env) {
   });
 }
 
+// 来訪者の数(2026-10-08、彼女と決めた)。
+// 数えるのは、その人が初めて来た時の一度だけ。何度来ても、更新しても増えない。
+// 一度数えた人かどうかは、来た人の閲覧機のほうが覚えている(blog_manager.py の
+// VISITOR_COUNTER)。ここには誰が来たかを残さない。持つのは数と、下の上限のための
+// その日だけの短い印だけ。印は次の日に消す。
+//
+// 閲覧機の記録を消すと、また初めての人として来る。それを悪戯に使われないよう、
+// 同じつなぎ口(同じ Wi-Fi など)から一日に数えるのは RAIHO_A_DAY 人まで。
+// 家族や友だちが同じ Wi-Fi から来ても、そのくらいまではちゃんと数える。
+const RAIHO_A_DAY = 10;
+// StatCounter から移る時の数。その時の数から続ける
+const RAIHO_STARTS_AT = 0;
+// 見回りの機械は数えない。何も覚えずに来るので、来るたびに初めての人になってしまう
+const NOT_A_PERSON =
+  /bot|crawl|spider|slurp|archiver|facebookexternalhit|headless|lighthouse|preview|curl|wget|python/i;
+
+let raihoReady = null;
+function prepareRaiho(db) {
+  if (!raihoReady) {
+    raihoReady = db
+      .batch([
+        db.prepare("CREATE TABLE IF NOT EXISTS raiho (name TEXT PRIMARY KEY, n INTEGER NOT NULL)"),
+        db.prepare("INSERT OR IGNORE INTO raiho (name, n) VALUES ('kazu', ?1)").bind(RAIHO_STARTS_AT),
+        db.prepare(
+          "CREATE TABLE IF NOT EXISTS kita " +
+            "(mark TEXT NOT NULL, day TEXT NOT NULL, n INTEGER NOT NULL, PRIMARY KEY (mark, day))"
+        ),
+      ])
+      .catch((err) => {
+        raihoReady = null;
+        throw err;
+      });
+  }
+  return raihoReady;
+}
+
+function todayInJapan() {
+  return new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
+}
+
+async function receiveRaiho(request, env) {
+  const db = env.RAIHO;
+  if (!db) {
+    return new Response("数を置く箱が、まだつながっていません。", {
+      status: 503,
+      headers: OPEN_TO_THE_PAGE,
+    });
+  }
+  try {
+    await prepareRaiho(db);
+    let counted = false;
+    const person = !NOT_A_PERSON.test(request.headers.get("User-Agent") || "");
+    if (request.method === "POST" && person) {
+      const day = todayInJapan();
+      const who = request.headers.get("CF-Connecting-IP") || "";
+      const mark = await markOf(who, `raiho:${day}`);
+      const came = await db
+        .prepare(
+          "INSERT INTO kita (mark, day, n) VALUES (?1, ?2, 1) " +
+            "ON CONFLICT (mark, day) DO UPDATE SET n = n + 1 WHERE n < ?3"
+        )
+        .bind(mark, day, RAIHO_A_DAY)
+        .run();
+      counted = came.meta.changes > 0;
+      if (counted) {
+        await db.batch([
+          db.prepare("UPDATE raiho SET n = n + 1 WHERE name = 'kazu'"),
+          db.prepare("DELETE FROM kita WHERE day < ?1").bind(day),
+        ]);
+      }
+    }
+    const row = await db.prepare("SELECT n FROM raiho WHERE name = 'kazu'").first();
+    return new Response(JSON.stringify({ kazu: row ? row.n : 0, counted }), {
+      status: 200,
+      headers: {
+        ...OPEN_TO_THE_PAGE,
+        "Content-Type": "application/json; charset=utf-8",
+        "Cache-Control": "no-store",
+      },
+    });
+  } catch (err) {
+    return new Response(`数えられませんでした: ${err}`, {
+      status: 502,
+      headers: OPEN_TO_THE_PAGE,
+    });
+  }
+}
+
 async function wakeSenonsei(env) {
   const githubResponse = await fetch(
     `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/actions/workflows/log_auto_generate.yml/dispatches`,
@@ -126,11 +219,15 @@ export default {
     if (request.method === "OPTIONS") {
       return new Response(null, { status: 204, headers: OPEN_TO_THE_PAGE });
     }
+    const path = new URL(request.url).pathname.replace(/\/+$/, "");
+    if (path.endsWith("/raiho") && (request.method === "GET" || request.method === "POST")) {
+      return receiveRaiho(request, env);
+    }
     if (request.method !== "POST") {
       return new Response("Method Not Allowed", { status: 405 });
     }
 
-    if (new URL(request.url).pathname.replace(/\/+$/, "").endsWith("/like")) {
+    if (path.endsWith("/like")) {
       return receiveLike(request, env);
     }
 
