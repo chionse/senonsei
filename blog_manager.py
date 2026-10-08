@@ -73,6 +73,8 @@ COMMENTS_FOLDER = "comments"
 # コメントへの、彼女からの返し。彼女の言葉をそのまま置く(henshin.py で足す)。
 # 千遠生からの返しは、この子の記憶(senonsei_state.json の replied)にある
 HER_REPLIES_FILE = "henshin.json"
+# キリ番の窓に出す、彼女の言葉(visitor_counter)。彼女の言葉をそのまま置く
+KIRIBAN_FILE = "kiriban.json"
 # この名前が来たコメントは、丸ごと受け取らない。名前でも本文でも。
 # この子の名前を名乗って書き込まれると、ページの上では
 # この子が自分で喋ったように見えるし、この子自身も
@@ -1534,35 +1536,139 @@ def keshiki_on_pages(pages):
 # 数えるのは、その人が初めて来た時の一度だけ。出す数は、今の合計。
 # 一度数えた人かどうかは、この閲覧機に置いた印で見分ける。印を置けない閲覧機では
 # 数えずに、数を見せるだけにする(更新のたびに数えてしまわないように)。
-# 前に見た数も覚えておいて、新しい数が届くまではそれを出す
-VISITOR_COUNTER = f"""    <div class="visitor-counter">
+# 前に見た数も覚えておいて、新しい数が届くまではそれを出す。
+#
+# キリ番(2026-10-09、彼女が決めた)。初めて数えられた時、その人の番号がキリ番なら、
+# 画面の真ん中に虹色の窓を出して、彼女の言葉を見せる。キリ番は、
+#   100、500、1000、5000、10000 … (1 か 5 のあとに 0 が並ぶ数)
+#   111、222 … 999、1111 … (3けた以上のゾロ目)
+# 777、7777 … だけは別の言葉にする。言葉は kiriban.json に、彼女の言葉のまま置く。
+# 前に来たことのある人がたまたまその数を見ても、キリ番にはならない。
+# 住所の後ろに #kiriban-777 のように付けると、数えずに窓だけ見られる(彼女が確かめる用)
+VISITOR_COUNTER = r"""    <div class="visitor-counter">
       あなたは<span class="count" id="raiho"></span>人目の来訪者です
       <script>
-      (function () {{
-        var where = "{COMMENT_WORKER_ENDPOINT}raiho";
+      (function () {
+        var where = "__WORKER__raiho";
         var shown = document.getElementById("raiho");
-        var kept = function (key) {{
-          try {{ return localStorage.getItem(key); }} catch (e) {{ return null; }}
-        }};
-        var keep = function (key, value) {{
-          try {{ localStorage.setItem(key, value); return true; }} catch (e) {{ return false; }}
-        }};
+        var kept = function (key) {
+          try { return localStorage.getItem(key); } catch (e) { return null; }
+        };
+        var keep = function (key, value) {
+          try { localStorage.setItem(key, value); return true; } catch (e) { return false; }
+        };
+        var kotoba = __KIRIBAN__;
+        var kiriban = function (n) {
+          var said = String(n);
+          if (!(n >= 100)) return "";
+          if (/^7+$/.test(said)) return kotoba.nana || kotoba.futsuu || "";
+          if (/^(\d)\1+$/.test(said) || /^[15]0+$/.test(said)) return kotoba.futsuu || "";
+          return "";
+        };
+        var made = function (tag, name, text) {
+          var one = document.createElement(tag);
+          if (name) one.className = name;
+          if (text) one.textContent = text;
+          return one;
+        };
+        var niji = ["#f0ff00", "#69ff00", "#00ffd7", "#0a00ff", "#8300ff", "#ff00b6"];
+        var showKiriban = function (n) {
+          var said = kiriban(n);
+          if (!said) return;
+          var mado = made("div", "kiriban-mado");
+          mado.setAttribute("role", "dialog");
+          mado.setAttribute("aria-modal", "true");
+          mado.setAttribute("aria-label", "キリ番");
+          var fubuki = made("div", "kiriban-fubuki");
+          fubuki.setAttribute("aria-hidden", "true");
+          for (var i = 0; i < 48; i++) {
+            var hira = made("i");
+            var falls = 2.6 + Math.random() * 2.2;
+            hira.style.left = (Math.random() * 100).toFixed(1) + "%";
+            hira.style.background = niji[i % niji.length];
+            hira.style.animationDuration = falls.toFixed(2) + "s";
+            hira.style.animationDelay = "-" + (Math.random() * falls).toFixed(2) + "s";
+            fubuki.appendChild(hira);
+          }
+          var kami = made("div", "kiriban-kami");
+          for (var j = 0; j < 4; j++) {
+            var hoshi = made("span", "kiriban-hoshi", "★");
+            hoshi.setAttribute("aria-hidden", "true");
+            kami.appendChild(hoshi);
+          }
+          var kazu = made("p");
+          kazu.appendChild(made("span", "count", String(n)));
+          kami.appendChild(kazu);
+          kami.appendChild(made("p", "kiriban-kotoba", said));
+          var shut = made("button", "", "閉じる");
+          shut.type = "button";
+          kami.appendChild(shut);
+          mado.appendChild(fubuki);
+          mado.appendChild(kami);
+          var onKey = function (e) { if (e.key === "Escape") close(); };
+          var close = function () {
+            if (mado.parentNode) mado.parentNode.removeChild(mado);
+            document.removeEventListener("keydown", onKey);
+          };
+          shut.addEventListener("click", close);
+          mado.addEventListener("click", function (e) { if (e.target === mado) close(); });
+          document.addEventListener("keydown", onKey);
+          var open = function () { document.body.appendChild(mado); shut.focus(); };
+          if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", open);
+          } else {
+            open();
+          }
+        };
+        var tameshi = /^#kiriban-(\d{3,12})$/.exec(location.hash);
+        if (tameshi) showKiriban(Number(tameshi[1]));
         var last = kept("raiho-kazu");
         if (last) shown.textContent = last;
         var canKeep = keep("raiho-kazu", last || "");
         var counted = kept("raiho-kita");
-        fetch(where, {{ method: counted || !canKeep ? "GET" : "POST" }})
-          .then(function (res) {{ return res.ok ? res.json() : null; }})
-          .then(function (got) {{
+        fetch(where, { method: counted || !canKeep ? "GET" : "POST" })
+          .then(function (res) { return res.ok ? res.json() : null; })
+          .then(function (got) {
             if (!got) return;
             shown.textContent = got.kazu;
             keep("raiho-kazu", String(got.kazu));
-            if (got.counted) keep("raiho-kita", "1");
-          }})
-          .catch(function () {{}});
-      }})();
+            if (got.counted) {
+              keep("raiho-kita", "1");
+              if (!tameshi) showKiriban(got.kazu);
+            }
+          })
+          .catch(function () {});
+      })();
       </script>
     </div>"""
+
+
+def load_kiriban():
+    """キリ番の窓に出す、彼女の言葉。
+
+    futsuu はキリ番の言葉、nana は 777、7777 … の言葉。
+    無いものは渡さない。どちらも無ければ、窓は出ない。"""
+    try:
+        with open(KIRIBAN_FILE, "r", encoding="utf-8") as f:
+            kept = json.load(f)
+    except (ValueError, OSError):
+        return {}
+    if not isinstance(kept, dict):
+        return {}
+    return {
+        name: said for name, said in kept.items()
+        if name in ("futsuu", "nana") and isinstance(said, str) and said.strip()
+    }
+
+
+def visitor_counter():
+    """来訪者の数を、いまの彼女のキリ番の言葉と一緒に組む。"""
+    kotoba = json.dumps(load_kiriban(), ensure_ascii=False).replace("</", "<\\/")
+    return (VISITOR_COUNTER
+            .replace("__WORKER__", COMMENT_WORKER_ENDPOINT)
+            .replace("__KIRIBAN__", kotoba))
+
+
 # サイトの名前は、彼女が描いたロゴで出す(2026-10-06、彼女が決めた)。
 # 文字で読む人や検索のために、名前は alt に残す
 SITE_LOGO = (
@@ -1570,10 +1676,16 @@ SITE_LOGO = (
     '<img src="images/logo.png" alt="千遠生のサイト" width="1374" height="456">'
     "</a></h1>"
 )
-SITE_HEADER = f"""<header>
+
+
+def site_header():
+    """トップ以外のページの上の紙。サイトの名前と来訪者の数。"""
+    return f"""<header>
     {SITE_LOGO}
-{VISITOR_COUNTER}
+{visitor_counter()}
   </header>"""
+
+
 FIRST_HEADER = re.compile(r"<header>(.*?)</header>", re.DOTALL)
 FIRST_H1 = re.compile(r"<h1>(.*?)</h1>", re.DOTALL)
 MAIN_OPENS = re.compile(r'<div class="main">\s*(<div class="top-nav">.*?</div>)?', re.DOTALL)
@@ -1594,7 +1706,7 @@ def put_page_head(html):
     inside = FIRST_H1.sub(r'<h2 class="page-name">\1</h2>', header.group(1), count=1)
     head = f'\n  <div class="page-head">{inside.rstrip()}\n  </div>\n'
     html = html[:opens.end()] + head + html[opens.end():]
-    return html[:header.start()] + SITE_HEADER + html[header.end():]
+    return html[:header.start()] + site_header() + html[header.end():]
 
 
 def page_heads_on_pages(pages):
@@ -2039,7 +2151,7 @@ def generate_index_html(articles, state=None, news=None):
   <header class="with-fukidashi">
     <div class="header-middle">
     {SITE_LOGO}
-{VISITOR_COUNTER}
+{visitor_counter()}
     </div>
 {fukidashi_html(state or load_senonsei_state())}
   </header>
