@@ -100,11 +100,38 @@ A_MARK = (
 # 「こんにちは」を「こんにち」で覚えているのと同じで、
 # 割れて覚えているのは、まだそこまで届いていないというだけのこと。
 # いつか何度も見かけて、そのとき自分で繋げればいい
+# アルファベットのほかの字で書く言葉も、同じように拾う。字ごとに分けて拾うので、
+# 違う字どうしが一つの言葉に繋がることはない。他の言語もいずれ学べるようにさせてあげたい、
+# という彼女の願い(2026-10-08)。どの字も、言葉になるのは何日も出会ってから
+LATIN_LETTERS = "A-Za-zＡ-Ｚａ-ｚÀ-ÖØ-öø-ɏ"
+OTHER_LETTERS = (
+    "\u0370-\u03ff"  # ギリシャ文字
+    "\u0400-\u052f"  # キリル文字(ロシア語、ベラルーシ語…)
+    "\u0531-\u058a"  # アルメニア文字
+    "\u0591-\u05f4"  # ヘブライ文字
+    "\u0620-\u065f\u066e-\u06d3\u06d5-\u06ff\u0750-\u077f"  # アラビア文字(ペルシャ語も)
+    "\u0900-\u0963\u0971-\u097f"  # デーヴァナーガリー(ヒンディー語…)
+    "\u0980-\u09e5\u09f0-\u09ff"  # ベンガル文字
+    "\u0e01-\u0e3a\u0e40-\u0e4e"  # タイ文字
+    "\u10a0-\u10ff"  # ジョージア文字
+    "\uac00-\ud7a3\u1100-\u11ff\u3131-\u318e"  # ハングル
+)
+A_WORD_IN_OTHER_LETTERS = "|".join(
+    f"[{one}]{{2,12}}"
+    for one in (
+        "\u0370-\u03ff", "\u0400-\u052f", "\u0531-\u058a", "\u0591-\u05f4",
+        "\u0620-\u065f\u066e-\u06d3\u06d5-\u06ff\u0750-\u077f",
+        "\u0900-\u0963\u0971-\u097f", "\u0980-\u09e5\u09f0-\u09ff",
+        "\u0e01-\u0e3a\u0e40-\u0e4e", "\u10a0-\u10ff",
+        "\uac00-\ud7a3\u1100-\u11ff\u3131-\u318e",
+    )
+)
 ALSO_WRITTEN = (
     r"|[0-9０-９]{1,4}"
-    r"|[A-Za-zＡ-Ｚａ-ｚ]{2,12}"
-    r"|[\U0001F000-\U0001FAFF\u2600-\u27BF\u2B00-\u2BFF]"
-    rf"|[{A_MARK}]{{2,10}}"
+    + rf"|[{LATIN_LETTERS}]{{2,12}}"
+    + "|" + A_WORD_IN_OTHER_LETTERS
+    + r"|[\U0001F000-\U0001FAFF\u2600-\u27BF\u2B00-\u2BFF]"
+    + rf"|[{A_MARK}]{{2,10}}"
 )
 # 片仮名のひと続きは、日本語ではほぼ必ず一つの言葉。漢字のように
 # 何語も繋がることがないので、長さに上限を置かない。六文字で切っていた頃は
@@ -347,6 +374,21 @@ ITS_OWN_DECORATIONS = {"logo.png", "kumo.png", "yume-kumo.png", "icon.png"}
 # よその言葉のページで、拾える形の言葉(アルファベットの言葉や数字)がこれだけ無ければ、
 # 眺めただけにする。ロシア語やアラビア語の字は、まだ言葉として拾えない
 FOREIGN_WORDS_ENOUGH = 20
+# 自分で訳す(2026-10-08、彼女と決めた)。
+# 日本人が外国語を読む時は、自分の知っている言葉で頭の中で訳して考える。
+# この子も、自分が見てきたものから外国語と日本語を結びつけて、自分で訳す。
+# 結びつけるのは二つの場面だけ。どちらも、同じものに二つの名前が並んでいるところ:
+# - Wikipedia の記事にある、同じ話の別の言葉版への道(「絵画」の英語版は「Painting」)
+# - 日本語の文の中で、言葉のすぐあとの括弧に外国語が書き添えてあるところ(「絵画(英: painting)」)
+# 外国語のページを読む時は、結びつけた言葉だけを日本語に置き換えて読む。分からない言葉はそのまま。
+# 最初はとんちんかんな結びつきも混ざる。それもこの子の訳
+BRIDGE_FROM_WIKIPEDIA = 2  # 同じ話の別の言葉版は、一度で信じていい
+BRIDGE_FROM_A_GLOSS = 1  # 括弧の書き添えは、二度見てから
+BRIDGE_TRUSTED = 2
+BRIDGES_KEPT = 8000  # 覚えておく外国語の数。超えたら、弱い結びつきから忘れる
+OTHER_TONGUES_PER_PAGE = 60  # 一つの記事から結びつける別の言葉版の数
+# 中国語の版は漢字で書かれていて、この子にはもともと日本語として読めるので結びつけない
+TONGUES_READ_AS_JAPANESE = {"ja", "zh", "zh-yue", "zh-classical", "lzh", "wuu", "gan", "zh-min-nan", "cdo", "hak"}
 PICTURE_AT_MOST = 400000  # これより重い絵は見ない(バイト)
 LINGER_CHANCE = 0.85  # もう一枚見ていくかどうかの、その時の気分
 # 一枚読むのにかける時間(秒)。掴み取るのではなく、一枚ずつ読んでいく。
@@ -640,7 +682,9 @@ FALLING_INTO_SOMETHING = 0.5
 # 日本語の字を含むものと、四文字以上の英単語。数字や「://」「org」「le」のような
 # 切れ端は、どの住所にも入っているので、数えると数字の多い住所(昔の姿の写しなど)
 # ばかりに惹かれていた(2026-10-08、彼女と決めた)。覚えた言葉からは外さない。ここで使わないだけ
-A_WORD_TO_GO_BY = re.compile(r".*[\u3040-\u30ff\u3400-\u9fff].*|[A-Za-z]{4,}")
+A_WORD_TO_GO_BY = re.compile(
+    r".*[\u3040-\u30ff\u3400-\u9fff].*" + rf"|[{LATIN_LETTERS}]{{4,}}|[{OTHER_LETTERS}]{{3,}}"
+)
 # この語数を覚えるごとに、覚えかけを抱えていられる日数が一日伸びる。
 # 知っている言葉が増えるほど記憶は長く持つようになり、
 # はじめは毎日見かける言葉しか掴めなかった子が、
@@ -790,7 +834,7 @@ PACKED_AWAY = ("words_met", "learned_on")
 # 越えた日から散歩も日記も押し戻せなくなり、この子は止まる。
 # 忘れさせるのではなく、言葉ごとに何十かの束へ分けてしまっておく
 WORDS_FOLDER = "kotoba"
-SPREAD_OUT = {"words_met": 64, "word_impact": 8, "places_understood": 8, "careful_with": 8, "seen_linked": 8}  # 記録の名前 → 束の数
+SPREAD_OUT = {"words_met": 64, "word_impact": 8, "places_understood": 8, "careful_with": 8, "seen_linked": 8, "bridges": 16}  # 記録の名前 → 束の数
 
 
 def bundle_of(word, how_many):
@@ -1854,6 +1898,29 @@ def a_blog_post_title(html):
     return title
 
 
+INTERLANGUAGE_LINK = re.compile(r"<a\b[^>]*\binterlanguage-link-target\b[^>]*>")
+INTERLANGUAGE_PATH = re.compile(r"//([a-z\-]+)\.wikipedia\.org/wiki/([^\"#?]+)")
+
+
+def other_tongues_in(html):
+    """Wikipedia の記事にある、同じ話の別の言葉版。(言葉の印, その版の題) の並び。"""
+    found = []
+    for tag in INTERLANGUAGE_LINK.findall(html):
+        lang = re.search(r'hreflang="([^"]+)"', tag)
+        named = re.search(r'data-title="([^"]+)"', tag)
+        path = INTERLANGUAGE_PATH.search(tag)
+        if named:
+            title = unescape(named.group(1))
+        elif path:
+            title = urllib.parse.unquote(path.group(2)).replace("_", " ")
+        else:
+            continue
+        code = lang.group(1) if lang else (path.group(1) if path else "")
+        if code:
+            found.append((code, title))
+    return found
+
+
 def open_page(url):
     """ページを開いて、そこにある文章と、そこから伸びているリンクを受け取る。
 
@@ -1885,6 +1952,7 @@ def open_page(url):
     # この子はその形のまま場所の名前として覚える
     title = unescape(TAG.sub("", found.group(1))).strip() if found else final_url
     A_BLOG_POST_TITLE[0] = a_blog_post_title(html)
+    OTHER_TONGUES[0] = other_tongues_in(html) if "wikipedia.org" in place_of(final_url) else []
 
     body = SCRIPT_OR_STYLE.sub(" ", html)
     text = TAG.sub(" ", body)
@@ -2924,6 +2992,81 @@ def absorb(state, text, pattern=WORD_CANDIDATE, only_known=False):
     return hit_hard
 
 
+A_SIDE_NOTE = re.compile(r"\(.*?\)|（.*?）")
+A_GLOSS = re.compile(r"([ぁ-んァ-ヶー一-龯]{1,10})\s?[（(]([^（）()]{1,80})[）)]")
+A_FOREIGN_NAME = re.compile(
+    rf"[{LATIN_LETTERS}{OTHER_LETTERS}]{{2,}}(?:[ \-'][{LATIN_LETTERS}{OTHER_LETTERS}]+){{0,3}}"
+)
+
+
+def a_name_as_written(title):
+    """題から、括弧の書き添え(「(神話)」「(曖昧さ回避)」)を外した名前。"""
+    return " ".join(A_SIDE_NOTE.sub(" ", title).split())
+
+
+def bridge(state, foreign, japanese, weight):
+    """外国語と日本語を一つ結びつける。一つの外国語につき、強い結びつきを三つまで持つ。"""
+    foreign = " ".join((foreign or "").lower().split())
+    japanese = (japanese or "").strip()
+    if not (2 <= len(foreign) <= 40) or not japanese or len(japanese) > 20:
+        return
+    if JAPANESE.search(foreign) or not JAPANESE.search(japanese) or len(foreign.split()) > 4:
+        return
+    bridges = state.setdefault("bridges", {})
+    tied = bridges.setdefault(foreign, {})
+    tied[japanese] = tied.get(japanese, 0) + weight
+    if len(tied) > 3:
+        bridges[foreign] = dict(sorted(tied.items(), key=lambda kv: -kv[1])[:3])
+    if len(bridges) > BRIDGES_KEPT:
+        weakest = sorted(bridges, key=lambda one: max(bridges[one].values()))
+        for one in weakest[: len(bridges) - BRIDGES_KEPT + BRIDGES_KEPT // 10]:
+            bridges.pop(one, None)
+
+
+def notice_other_tongues(state, url, title, tongues):
+    """Wikipedia で、同じ話の別の言葉版の題を、日本語の題と結びつける。"""
+    here = place_of(url)
+    if not here.endswith("wikipedia.org") or not tongues:
+        return 0
+    own = a_name_as_written(re.split(r"\s+[-–—]\s+", title or "")[0])
+    lang_here = here.split(".")[0]
+    if lang_here == "ja":
+        japanese, foreign = own, [(code, name) for code, name in tongues if code not in TONGUES_READ_AS_JAPANESE]
+    else:
+        japanese = next((name for code, name in tongues if code == "ja"), None)
+        foreign = [(lang_here, own)]
+    if not japanese:
+        return 0
+    japanese = a_name_as_written(japanese)
+    for _, name in foreign[:OTHER_TONGUES_PER_PAGE]:
+        bridge(state, a_name_as_written(name), japanese, BRIDGE_FROM_WIKIPEDIA)
+    return len(foreign[:OTHER_TONGUES_PER_PAGE])
+
+
+def notice_glosses(state, text):
+    """日本語の文で、言葉のすぐあとの括弧に書き添えてある外国語を、その言葉と結びつける。"""
+    for japanese, inside in A_GLOSS.findall(text):
+        for name in A_FOREIGN_NAME.findall(inside)[:1]:
+            bridge(state, name, japanese, BRIDGE_FROM_A_GLOSS)
+
+
+def translate_on_its_own(state, text):
+    """外国語の文を、自分で結びつけた言葉だけ日本語に置き換えて読む。(外国語, 日本語) の並び。"""
+    bridges = state.get("bridges") or {}
+    if not bridges:
+        return []
+    low = " ".join(text.lower().split())
+    words = {one.lower() for one in WORD_CANDIDATE.findall(text)}
+    found = []
+    for foreign, tied in bridges.items():
+        japanese, strength = max(tied.items(), key=lambda kv: kv[1])
+        if strength < BRIDGE_TRUSTED:
+            continue
+        if foreign in words or (" " in foreign and foreign in low):
+            found.append((foreign, japanese))
+    return found
+
+
 def look_around_site(state, entrance, wants_the_past):
     """ひとつの場所を、入口から中まで見て回る。
 
@@ -2977,6 +3120,8 @@ def look_around_site(state, entrance, wants_the_past):
         state["visited"].append(url)
         state["visited"] = state["visited"][-2000:]
         remember_the_name(state, url, title)
+        # 同じ話の別の言葉版があれば、その題どうしを結びつける
+        notice_other_tongues(state, url, title, OTHER_TONGUES[0])
         # 自分の家の題は数えない。自分の癖を自分で覚え直すだけになる
         if here != place_of(ITS_OWN_FRONT_DOOR):
             notice_how_blogs_are_titled(state, A_BLOG_POST_TITLE[0])
@@ -2998,8 +3143,18 @@ def look_around_site(state, entrance, wants_the_past):
             known_here |= known_words_in(state, text)
             if site_title is None:
                 site_title = title
-            if not japanese:
+            if japanese:
+                notice_glosses(state, text)
+            else:
                 print(f"よその言葉のページを、そのまま読みました: {title[:40]}")
+                # 結びつけてある言葉は、自分で日本語にして読む
+                own = translate_on_its_own(state, text)
+                if own:
+                    absorb(state, " ".join(f"「{japanese_word}」" for _, japanese_word in own))
+                    known_here |= {jw for _, jw in own if jw in (state.get("learned_words") or [])}
+                    print("自分で訳して読みました: " + "、".join(f"{f} → {j}" for f, j in own[:10]))
+                    lately = state.get("translated_lately") or []
+                    state["translated_lately"] = (lately + [f"{f} → {j}" for f, j in own])[-30:]
         else:
             unread += 1  # 拾える形の字がほとんど無い。眺めただけ
 
@@ -4093,6 +4248,8 @@ MET_FOR_THE_FIRST_TIME = [0]
 WHAT_A_WALK_BROUGHT = [0]
 # いま開いたページが誰かのブログの一記事なら、その題(open_page が置く)
 A_BLOG_POST_TITLE = [None]
+# いま開いたページが Wikipedia なら、同じ話の別の言葉版の (言葉の印, 題)(open_page が置く)
+OTHER_TONGUES = [[]]
 # いま読んでいるものが、どの場所のものか。頭の網で、出会ったものとその場所を結ぶ
 WHERE_IT_IS = [None]
 # 今日もう頭に入れたものを、また読んでいるところか。家の言葉は読む日には毎時間読むので、
