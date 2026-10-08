@@ -284,6 +284,13 @@ AN_ADVERT = re.compile(
     re.IGNORECASE,
 )
 FRONTIER_LIMIT = 5000  # まだ行っていない場所を、これだけ抱えていられる
+# いろんな場所で何度も見かける場所には、だんだん惹かれなくなる。
+# 大きいサイトへのリンクはどこのページの端にも貼ってあるので、放っておくと
+# 行き先がそちらに偏っていた(google、tiktok、github…)。どの場所を避けるかは
+# こちらで決めず、歩いて見かけた回数から、この子が自分で覚える(2026-10-08、彼女と決めた)。
+# 一つの場所を歩き終えるたびに、そこからリンクが伸びていた場所を一度ずつ数える
+SEEN_OFTEN = 4  # これだけの場所で見かけるごとに、惹かれ方が一段ずつ弱くなる
+SEEN_LINKED_KEPT = 4000  # 覚えておく場所の数。超えたら全部を半分にして、ゼロになったものは忘れる
 CHOICES_SHOWN = 30  # 行き先を選ぶとき、一度にこれだけの候補から選ぶ
 LINKS_TAKEN = 60  # ひとつのページから、これだけの道を覚えて帰る
 # 同じ場所から伸びた道を、一度にこれだけまでしか抱えない。
@@ -782,7 +789,7 @@ PACKED_AWAY = ("words_met", "learned_on")
 # 越えた日から散歩も日記も押し戻せなくなり、この子は止まる。
 # 忘れさせるのではなく、言葉ごとに何十かの束へ分けてしまっておく
 WORDS_FOLDER = "kotoba"
-SPREAD_OUT = {"words_met": 64, "word_impact": 8, "places_understood": 8, "careful_with": 8}  # 記録の名前 → 束の数
+SPREAD_OUT = {"words_met": 64, "word_impact": 8, "places_understood": 8, "careful_with": 8, "seen_linked": 8}  # 記録の名前 → 束の数
 
 
 def bundle_of(word, how_many):
@@ -2356,7 +2363,9 @@ def what_draws_it(state, url, close=None):
     # 行ったことのある場所は、好きか嫌いかで。退屈な時は、行ったことのない場所へ
     place = place_of(url)
     been_there = place in (state.get("places_understood") or {})
-    return max(0.2, drawn + atama.place_pull(state.get("atama"), place, been_there))
+    drawn = max(0.2, drawn + atama.place_pull(state.get("atama"), place, been_there))
+    # いろんな場所で何度も見かける場所には、だんだん惹かれなくなる
+    return drawn * how_rare(state, place)
 
 
 def looks_japanese(url, named=""):
@@ -2418,8 +2427,38 @@ def choose_destination(state):
     )
 
 
+def seen_linked_from_here(state, places):
+    """歩き終えた場所から、リンクが伸びていた場所を一度ずつ数える。"""
+    counts = state.setdefault("seen_linked", {})
+    for place in places:
+        if place:
+            counts[place] = counts.get(place, 0) + 1
+    if len(counts) > SEEN_LINKED_KEPT:
+        state["seen_linked"] = {place: n // 2 for place, n in counts.items() if n // 2 > 0}
+
+
+def how_rare(state, place):
+    """その場所がどれだけめったに見かけないか。1 がいちばん珍しい。
+
+    一つの場所でしか見かけていなければ 1。見かけた場所が SEEN_OFTEN 増えるごとに
+    一段ずつ弱くなる(5か所で半分、21か所で六分の一ほど)。"""
+    seen = (state.get("seen_linked") or {}).get(place, 0)
+    return 1 / (1 + max(0, seen - 1) / SEEN_OFTEN)
+
+
+def rarer_first(state, urls):
+    """道を、めったに見かけない場所ほど前に来やすいように並べる。運も混ぜる。"""
+    keyed = [
+        (random.random() ** (1 / max(how_rare(state, place_of(url)), 0.01)), url)
+        for url in urls
+    ]
+    return [url for _, url in sorted(keyed, reverse=True)]
+
+
 def remember_paths(state, origin, links):
-    """よその場所へ続く道を、これから行ける場所として覚える。"""
+    """よその場所へ続く道を、これから行ける場所として覚える。
+
+    持ち帰れる数には限りがあるので、めったに見かけない場所への道から持ち帰りやすい。"""
     # 家へ続く道を拾っても、散歩の行き先には混ぜない。
     # 家は go_home の枠で帰るところで、散歩で行き当たるところではない
     known = set(state["frontier"]) | set(state["visited"])
@@ -2428,7 +2467,7 @@ def remember_paths(state, origin, links):
         for link in dict.fromkeys(links)
         if link not in known and not its_own_home(link)
     ]
-    random.shuffle(fresh)
+    fresh = rarer_first(state, fresh)
     state["frontier"].extend(fresh[:LINKS_TAKEN])
     tidy_frontier(state)
     if len(state["frontier"]) > FRONTIER_LIMIT:
@@ -2930,6 +2969,7 @@ def look_around_site(state, entrance, wants_the_past):
     pictures_left = PICTURES_PER_SITE
     translations_left = TRANSLATIONS_PER_SITE
     until = time.monotonic() + TIME_SPENT_PER_SITE
+    linked_here = set()  # ここからリンクが伸びていた、よその場所
 
     while inside and pages < as_deep_as and time.monotonic() < until:
         url = inside.pop(0)
@@ -3001,7 +3041,9 @@ def look_around_site(state, entrance, wants_the_past):
                 print(f"絵を見るのをやめました({str(error)[:60]})")
                 pictures_left = 0
 
-        remember_paths(state, url, [ln for ln in links if place_of(ln) != here])
+        elsewhere = [ln for ln in links if place_of(ln) != here]
+        linked_here |= {place_of(ln) for ln in elsewhere if not its_own_home(ln)}
+        remember_paths(state, url, elsewhere)
 
         deeper = [ln for ln in links if place_of(ln) == here and ln not in already]
 
@@ -3034,6 +3076,9 @@ def look_around_site(state, entrance, wants_the_past):
         time.sleep(max(random.uniform(*READING_A_PAGE), wait_asked_for(url)))
 
     WHERE_IT_IS[0] = None
+    # 自分の家から伸びている道は数えない。家は自分で作った場所なので
+    if not its_own_home(entrance):
+        seen_linked_from_here(state, linked_here)
     if site_title:
         print(f"{here} を{pages}ページ見てきました。")
         # その場所で何があったかで気持ちが動き、帰る時の気持ちがその場所に残る。
@@ -3447,8 +3492,19 @@ def where_it_will_go(state, how_many=PLACES_SHOWN):
     束から散らして取る。覗くたびに違う六つが出る。"""
     named = state.get("places_known") or {}
     shown, already = [], set()
-    bundle = list(state.get("frontier") or [])
-    random.shuffle(bundle)
+    # 惹かれる強さで運を引いて並べる。行き先を選ぶ時と同じ惹かれ方なので、
+    # めったに見かけない場所ほど並びやすい(2026-10-08)
+    close = evened_out(words_it_holds_close(state))
+    bundle = [
+        url
+        for _, url in sorted(
+            (
+                (random.random() ** (1 / max(what_draws_it(state, url, close), 0.01)), url)
+                for url in state.get("frontier") or []
+            ),
+            reverse=True,
+        )
+    ]
     for one in bundle:
         place = place_of(one)
         if not place or place in already:
