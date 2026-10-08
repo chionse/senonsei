@@ -1516,23 +1516,41 @@ def keshiki_on_pages(pages):
             f.write(put_keshiki(made, pictures))
 
 
-# 来訪者の数(StatCounter)。どのページの上の紙にも置く
-VISITOR_COUNTER = """    <div class="visitor-counter">
-      あなたは<span class="count"><!-- Default Statcounter code for senonsei
-      https://chionse.github.io/senonsei/index.html -->
-      <script type="text/javascript">
-      var sc_project=13354593;
-      var sc_invisible=0;
-      var sc_security="4b65a54b";
-      var scJsHost = "https://";
-      document.write("<sc"+"ript type='text/javascript' src='" + scJsHost+
-      "statcounter.com/counter/counter.js'></"+"script>");
+# 来訪者の数。どのページの上の紙にも置く。
+# 数えるのは Cloudflare の Worker(cloudflare-worker/worker.js の receiveRaiho)。
+# 前は StatCounter に数えてもらっていたが、更新するたびに数が増えたので、
+# 自分たちで数える形にした(2026-10-08、彼女と決めた)。
+# 数えるのは、その人が初めて来た時の一度だけ。出す数は、今の合計。
+# 一度数えた人かどうかは、この閲覧機に置いた印で見分ける。印を置けない閲覧機では
+# 数えずに、数を見せるだけにする(更新のたびに数えてしまわないように)。
+# 前に見た数も覚えておいて、新しい数が届くまではそれを出す
+VISITOR_COUNTER = f"""    <div class="visitor-counter">
+      あなたは<span class="count" id="raiho"></span>人目の来訪者です
+      <script>
+      (function () {{
+        var where = "{COMMENT_WORKER_ENDPOINT}raiho";
+        var shown = document.getElementById("raiho");
+        var kept = function (key) {{
+          try {{ return localStorage.getItem(key); }} catch (e) {{ return null; }}
+        }};
+        var keep = function (key, value) {{
+          try {{ localStorage.setItem(key, value); return true; }} catch (e) {{ return false; }}
+        }};
+        var last = kept("raiho-kazu");
+        if (last) shown.textContent = last;
+        var canKeep = keep("raiho-kazu", last || "");
+        var counted = kept("raiho-kita");
+        fetch(where, {{ method: counted || !canKeep ? "GET" : "POST" }})
+          .then(function (res) {{ return res.ok ? res.json() : null; }})
+          .then(function (got) {{
+            if (!got) return;
+            shown.textContent = got.kazu;
+            keep("raiho-kazu", String(got.kazu));
+            if (got.counted) keep("raiho-kita", "1");
+          }})
+          .catch(function () {{}});
+      }})();
       </script>
-      <noscript><div class="statcounter"><a title="web stats"
-      href="https://statcounter.com/" target="_blank"><img class="statcounter"
-      src="https://c.statcounter.com/13354593/0/4b65a54b/0/" alt="web stats"
-      referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
-      <!-- End of Statcounter Code --></span>人目の来訪者です
     </div>"""
 # サイトの名前は、彼女が描いたロゴで出す(2026-10-06、彼女が決めた)。
 # 文字で読む人や検索のために、名前は alt に残す

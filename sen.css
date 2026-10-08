@@ -282,10 +282,6 @@ header.with-fukidashi .header-middle {
   margin-top: 0.5rem;
 }
 
-.visitor-counter img {
-  vertical-align: middle;
-}
-
 /* 数えた数だけは、太く、虹色にぎらつかせる。
    昔の個人サイトのカウンターがそうだったように。
    明朝のままだと太らないので、ここだけゴシックにする */
@@ -317,33 +313,11 @@ header.with-fukidashi .header-middle {
     background-size: 220% 100%, 220% 100%;
     -webkit-background-clip: text;
     background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
     animation:
       gleam 2.6s linear infinite,
       shimmer 5s linear infinite;
-  }
-
-  /* StatCounterは数字をリンクや span で包み、色を直接書き込んでくる。
-     直接書かれた色はこちらの指定より強いので、!important で押し返す。
-     それでも向こうが !important で書いてくると負けるので、
-     文字を塗る色(text-fill-color)のほうも透かしておく。こちらは向こうが触らない。
-     ここが透けないと、下に敷いた虹が出てこない(2026-09-30、数字が黒いままだった) */
-  .count,
-  .count * {
-    -webkit-text-fill-color: transparent !important;
-  }
-
-  .count,
-  .count *,
-  .count a,
-  .count a:link,
-  .count a:visited,
-  .count a:hover,
-  .count a font {
-    color: transparent !important;
-    text-decoration: none !important;
-    font-size: inherit !important;
-    font-family: inherit !important;
-    font-weight: inherit !important;
   }
 }
 
