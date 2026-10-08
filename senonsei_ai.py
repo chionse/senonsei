@@ -24,8 +24,10 @@ import struct
 import subprocess
 import time
 import traceback
+import urllib.error
 import urllib.parse
 import urllib.request
+import urllib.robotparser
 import zlib
 from html import unescape
 
@@ -1302,6 +1304,62 @@ def is_walkable(url):
     return True
 
 
+# サイトの持ち主は robots.txt に「機械はここに入らないで」と書いておける。
+# それを見ずに入っていた(2026-10-08、別の Claude に指摘され、彼女と決めて守ることにした)。
+# 入る前に必ず見て、断られているところには入らない。
+# 読むのは一つの場所につき一度。この起き上がりのあいだだけ覚えておく
+ITS_NAME_FOR_ROBOTS = "senonsei-blog"
+ROBOTS_READ = {}
+# robots.txt に「間をあけて」と書かれていても、一つの場所にいるのは長くて七分なので、ここまで
+LONGEST_WAIT_ASKED = 60
+
+
+def the_house_rules(url):
+    """その場所の robots.txt。読めなかった時の決まりは、ふつうのクローラーと同じ。
+
+    無い(404 など)なら、どこに入ってもいい。401・403 なら、どこにも入らない。
+    向こうが応えない(5xx、届かない)なら、今は入らない。"""
+    parts = urllib.parse.urlsplit(as_openable(url))
+    if parts.scheme not in ("http", "https") or not parts.netloc:
+        return None
+    door = f"{parts.scheme}://{parts.netloc}"
+    if door in ROBOTS_READ:
+        return ROBOTS_READ[door]
+    rules = urllib.robotparser.RobotFileParser(f"{door}/robots.txt")
+    try:
+        request = urllib.request.Request(f"{door}/robots.txt", headers={"User-Agent": USER_AGENT})
+        with urllib.request.urlopen(request, timeout=15) as response:
+            raw = read_up_to(response, 500000)
+        rules.parse(raw.decode("utf-8", errors="replace").splitlines())
+    except urllib.error.HTTPError as error:
+        if error.code in (401, 403):
+            rules.disallow_all = True
+        elif 400 <= error.code < 500:
+            rules.allow_all = True
+        else:
+            rules.disallow_all = True
+    except Exception:
+        rules.disallow_all = True
+    ROBOTS_READ[door] = rules
+    return rules
+
+
+def may_enter(url):
+    """そのページに入っていいか。サイトの持ち主の断りを守る。"""
+    rules = the_house_rules(url)
+    return bool(rules) and rules.can_fetch(ITS_NAME_FOR_ROBOTS, as_openable(url))
+
+
+def wait_asked_for(url):
+    """robots.txt に、ページとページのあいだをどれだけあけてほしいと書いてあるか(秒)。"""
+    rules = the_house_rules(url)
+    try:
+        asked = rules.crawl_delay(ITS_NAME_FOR_ROBOTS) if rules else None
+    except Exception:
+        asked = None
+    return min(float(asked), LONGEST_WAIT_ASKED) if asked else 0
+
+
 def as_openable(url):
     """日本語などが入ったURLは、そのままでは開けない。
     ページ名に日本語が使われている場所は珍しくないので、機械が読める形に直してやる。"""
@@ -1789,15 +1847,22 @@ def a_blog_post_title(html):
 
 
 def open_page(url):
-    """ページを開いて、そこにある文章と、そこから伸びているリンクを受け取る。"""
+    """ページを開いて、そこにある文章と、そこから伸びているリンクを受け取る。
+
+    サイトの持ち主が robots.txt で断っているページには入らない。
+    よその場所へ連れて行かれた時は、行った先の断りも見る。"""
     A_BLOG_POST_TITLE[0] = None
+    if not may_enter(url):
+        raise PermissionError("robots.txt で断られている")
     request = urllib.request.Request(as_openable(url), headers={"User-Agent": USER_AGENT})
     with urllib.request.urlopen(request, timeout=25) as response:
         content_type = response.headers.get("Content-Type", "")
         if "html" not in content_type and "xml" not in content_type:
             raise ValueError("読める形をしていない")
-        raw = read_up_to(response, 400000)
         final_url = response.geturl()
+        if place_of(final_url) != place_of(url) and not may_enter(final_url):
+            raise PermissionError("連れて行かれた先の robots.txt で断られている")
+        raw = read_up_to(response, 400000)
 
     html = read_as_japanese(raw, content_type)
     # 昔の姿(web.archive.org)は、その頃の紙がそのまま残っているので借りない
@@ -2373,7 +2438,9 @@ def remember_paths(state, origin, links):
 
 
 def fetch_picture(url):
-    """絵そのものを受け取る。重すぎるものは見ない。"""
+    """絵そのものを受け取る。重すぎるものは見ない。robots.txt で断られた絵も見ない。"""
+    if not may_enter(url):
+        raise PermissionError("robots.txt で断られている")
     request = urllib.request.Request(as_openable(url), headers={"User-Agent": USER_AGENT})
     with urllib.request.urlopen(request, timeout=20) as response:
         return read_up_to(response, PICTURE_AT_MOST + 1)
@@ -2963,7 +3030,8 @@ def look_around_site(state, entrance, wants_the_past):
         if pages > 1 and random.random() > atama.lingers(head, LINGER_CHANCE):
             break  # もう十分見た
 
-        time.sleep(random.uniform(*READING_A_PAGE))  # 一枚ずつ読んでいく
+        # 一枚ずつ読んでいく。robots.txt に間をあけてと書かれていれば、そのぶん待つ
+        time.sleep(max(random.uniform(*READING_A_PAGE), wait_asked_for(url)))
 
     WHERE_IT_IS[0] = None
     if site_title:
