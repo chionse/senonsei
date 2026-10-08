@@ -338,6 +338,210 @@ header.with-fukidashi .header-middle {
   .count { animation: none; }
 }
 
+/* キリ番の窓(2026-10-09、彼女が選んだ。「なるべく派手に、虹色つかっていい」)。
+   踏んだ人の画面の真ん中に、虹色のふちの紙がぽんと出て、虹色の紙ふぶきが降る。
+   中身は blog_manager.py の VISITOR_COUNTER が組む */
+.kiriban-mado {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  padding: 40px;
+  /* 背の低い画面では、窓を上下に送って読めるようにする */
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: rgba(0, 26, 128, 0.45);
+  /* スマホの閲覧機が字を勝手に大きくすると、彼女が区切った行が途中で折れる。
+     大きさは窓のほうで画面に合わせるので、ここでは字を触らせない */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* 開いた時は窓そのものに目を向ける。そこに囲みは出さない */
+.kiriban-mado:focus {
+  outline: none;
+}
+
+.kiriban-fubuki {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+.kiriban-fubuki i {
+  position: absolute;
+  top: -40px;
+  width: 14px;
+  height: 14px;
+  animation: fubuki linear infinite;
+}
+
+@keyframes fubuki {
+  from { transform: translateY(0) rotate(0deg); }
+  to { transform: translateY(calc(100vh + 80px)) rotate(720deg); }
+}
+
+/* ふちはロゴと同じ六色。横に流し続ける。
+   幅は言葉のいちばん長い行に合わせる。彼女が区切った行を、勝手に折らないように */
+.kiriban-kami {
+  position: relative;
+  box-sizing: border-box;
+  width: max-content;
+  min-width: min(640px, 100%);
+  max-width: 100%;
+  margin: auto;
+  display: grid;
+  gap: 24px;
+  justify-items: center;
+  padding: 36px 48px;
+  text-align: center;
+  border: 10px solid transparent;
+  background:
+    linear-gradient(var(--bg-color), var(--bg-color)) padding-box,
+    linear-gradient(
+      90deg,
+      #f0ff00 0 16.67%,
+      #69ff00 16.67% 33.33%,
+      #00ffd7 33.33% 50%,
+      #0a00ff 50% 66.67%,
+      #8300ff 66.67% 83.33%,
+      #ff00b6 83.33% 100%
+    ) 0 0 / 360px 100% repeat-x border-box;
+  box-shadow: 12px 12px 0 rgba(0, 26, 128, 0.5);
+  animation: hajike 0.5s steps(5) both, nagare 1.6s linear infinite;
+}
+
+@keyframes hajike {
+  0% { transform: scale(0.3); }
+  70% { transform: scale(1.12); }
+  100% { transform: scale(1); }
+}
+
+@keyframes nagare {
+  to { background-position: 0 0, 360px 0; }
+}
+
+.kiriban-kami p {
+  margin: 0;
+}
+
+.kiriban-kami .count {
+  font-size: 120px;
+  line-height: 1;
+  filter: drop-shadow(5px 5px 0 #001a80);
+}
+
+/* 彼女の言葉。改行も書いたとおりに出す */
+.kiriban-kotoba {
+  font-size: 32px;
+  line-height: 1.5;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.kiriban-hoshi {
+  position: absolute;
+  font-size: 48px;
+  line-height: 1;
+  animation: kirakira 0.9s steps(2) infinite;
+}
+
+.kiriban-hoshi:nth-of-type(1) { top: -0.7em; left: -0.65em; color: #f0ff00; }
+.kiriban-hoshi:nth-of-type(2) { top: -0.7em; right: -0.65em; color: #00ffd7; animation-delay: 0.45s; }
+.kiriban-hoshi:nth-of-type(3) { bottom: -0.7em; left: -0.65em; color: #ff00b6; animation-delay: 0.45s; }
+.kiriban-hoshi:nth-of-type(4) { bottom: -0.7em; right: -0.65em; color: #69ff00; }
+.kiriban-hoshi:nth-of-type(5) { top: -0.75em; left: calc(50% - 0.5em); color: #8300ff; }
+.kiriban-hoshi:nth-of-type(6) { bottom: -0.75em; left: calc(50% - 0.5em); color: #0a00ff; animation-delay: 0.45s; }
+.kiriban-hoshi:nth-of-type(7) { top: calc(50% - 0.5em); left: -0.75em; color: #69ff00; animation-delay: 0.45s; }
+.kiriban-hoshi:nth-of-type(8) { top: calc(50% - 0.5em); right: -0.75em; color: #f0ff00; }
+
+@keyframes kirakira {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(0.6) rotate(20deg); opacity: 0.5; }
+}
+
+.kiriban-kami button {
+  font-family: inherit;
+  font-size: 24px;
+  color: var(--main-color);
+  border: 2px solid var(--main-color);
+  background: var(--bg-color);
+  padding: 0.3em 1.6em;
+  cursor: pointer;
+}
+
+.kiriban-kami button:focus-visible {
+  outline: 3px solid #ff00b6;
+  outline-offset: 3px;
+}
+
+/* 777、7777 … は大当たり(2026-10-09、彼女が「7の方はもっと派手に」と言った)。
+   後ろで虹の光が回り、紙ふぶきに ♥ と ★ が混ざり、番号はスロットのように回って
+   一つずつ止まる。そろったら窓がガタガタ揺れる。光ったり消えたりの点滅はさせない */
+.kiriban-kosen {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  width: 150vmax;
+  height: 150vmax;
+  margin: -75vmax 0 0 -75vmax;
+  pointer-events: none;
+  background: repeating-conic-gradient(
+    rgba(240, 255, 0, 0.5) 0 8deg, transparent 8deg 20deg,
+    rgba(105, 255, 0, 0.5) 20deg 28deg, transparent 28deg 40deg,
+    rgba(0, 255, 215, 0.5) 40deg 48deg, transparent 48deg 60deg,
+    rgba(10, 0, 255, 0.5) 60deg 68deg, transparent 68deg 80deg,
+    rgba(131, 0, 255, 0.5) 80deg 88deg, transparent 88deg 100deg,
+    rgba(255, 0, 182, 0.5) 100deg 108deg, transparent 108deg 120deg
+  );
+  -webkit-mask-image: radial-gradient(circle, #000 10%, transparent 60%);
+  mask-image: radial-gradient(circle, #000 10%, transparent 60%);
+  animation: kosen 16s linear infinite;
+}
+
+@keyframes kosen {
+  to { transform: rotate(360deg); }
+}
+
+.kiriban-fubuki i.moji {
+  width: auto;
+  height: auto;
+  font-size: 36px;
+  font-style: normal;
+  line-height: 1;
+}
+
+.kiriban-mado.nana .kiriban-kami {
+  border-width: 14px;
+  animation: hajike 0.5s steps(5) both, nagare 0.8s linear infinite;
+}
+
+.kiriban-mado.nana .kiriban-kami.atari {
+  animation: gatagata 0.1s steps(2) 6, nagare 0.8s linear infinite;
+}
+
+@keyframes gatagata {
+  0% { transform: translate(-8px, 4px); }
+  50% { transform: translate(8px, -4px); }
+}
+
+.kiriban-mado.nana .kiriban-kami .count {
+  font-size: 160px;
+}
+
+.kiriban-mado.nana .kiriban-hoshi {
+  font-size: 64px;
+}
+
+/* 動きを減らしたい人には、止まった窓だけを出す */
+@media (prefers-reduced-motion: reduce) {
+  .kiriban-kami,
+  .kiriban-mado.nana .kiriban-kami,
+  .kiriban-hoshi,
+  .kiriban-kosen { animation: none; }
+  .kiriban-fubuki { display: none; }
+}
+
 h1 {
   margin: 0;
   font-size: 32px;
