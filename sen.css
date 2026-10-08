@@ -418,7 +418,8 @@ article .today-head .today-when {
   margin-left: 1.2rem;
 }
 
-/* ひみつの部屋は、題を左に、♡と日付は右の端に小さく、横一列に並べる(2026-10-08、彼女が決めた) */
+/* ひみつの部屋は、題を左に、♡は右の端に小さく、横一列に並べる(2026-10-08、彼女が決めた)。
+   日付は出さないことにした(同じ日、彼女が決めた) */
 article .article-head {
   display: flex;
   flex-wrap: wrap;
@@ -436,7 +437,7 @@ article .article-head .article-title {
 }
 
 article .article-head .iine {
-  margin: 0 1.2rem 0 0;
+  margin: 0;
 }
 
 /* 今日のブログと同じく、数のうしろの取り置きはしない */
@@ -504,6 +505,11 @@ article.yomimono .article-head {
   padding: 0.4rem 0;
   border-bottom: 1px dashed var(--soft-line);
   font-size: 16px;
+}
+
+/* ひみつの部屋の一覧には、話と話のあいだの点線を引かない(2026-10-08、彼女が決めた) */
+.himitsu-list li {
+  border-bottom: none;
 }
 
 .recent-list li a {
