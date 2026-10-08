@@ -424,8 +424,9 @@ THE_OLD_HAND_FAINTEST = 0.02
 THE_OLD_HAND_AT_MOST = blog_manager.GROWTH_STAGES[0][2]
 # あの頃の手癖から外れて、あの頃に知っていたほかの文字が出る割合
 THE_OLD_HAND_WANDERS = 0.15
-# きのう書きそびれた分を、今日の何時までなら書くか
-MAKING_UP_UNTIL = 3
+# 日記を書くのは、起きている昼のうち(彼女が書いた生活リズムの「日中8時〜22時」)。
+# 0時から23時のどれでも選べたので、二十日に一度くらい眠っている間に書いていた
+WRITING_HOURS = range(8, 23)
 # 覚えた言葉の覚え具合。覚えてからの日数と、ブログに書いた回数で深まっていく。
 # この日数で、覚えたての崩れやすさが三分の二ほどになる
 SETTLES_IN_DAYS = 10
@@ -4129,13 +4130,14 @@ def an_hour_it_writes(state):
         if when.isdigit() and 0 <= int(when) <= 23:
             hours.append(int(when))
     if not hours:
-        return random.randint(0, 23)
+        return random.choice(WRITING_HOURS)
     # 書いた時刻の前後一時間にも、少しだけ寄る
     leaning = [1] * 24
     for one in hours:
         for near, weight in ((one, 4), ((one - 1) % 24, 2), ((one + 1) % 24, 2)):
             leaning[near] += weight
-    return random.choices(range(24), weights=leaning)[0]
+    # 選ぶのは起きている昼のうちから
+    return random.choices(WRITING_HOURS, weights=[leaning[h] for h in WRITING_HOURS])[0]
 
 
 def restlessness(state, today):
@@ -4585,10 +4587,6 @@ def run_today():
     # 二十三時に眠る。眠ったら朝七時まで、歩きも考えもしない(2026-10-08、彼女が決めた)
     sleeping = goes_to_sleep(state, now)
 
-    # きのう書くつもりだったのに、書きそびれていたら、今のうちに書く。
-    # 今日の予定を決めると、きのうの予定は上書きされて分からなくなるので先に
-    makes_up_for_yesterday(state, now)
-
     # 今日をどう過ごすかを、いちばん先に決める。
     # 散歩で尋ねすぎて休むことになっても、自分で決める力だけは守られるように
     resting, hour = todays_mood(state, today)
@@ -4666,6 +4664,11 @@ def run_today():
     if resting:
         print(f"{today} は書かない日にしました。")
         return
+    # 眠っている間は書かない。書く時刻に起こしてもらえず書きそびれた日は、
+    # そのまま書かない日になる。次の日に取り返すこともしない(2026-10-08、彼女が決めた)
+    if sleeping:
+        print(f"{today} は書きそびれたまま眠りました。")
+        return
     if now.hour < hour:
         print(f"{today} は{hour}時ごろに書くつもりです。(今は{now.hour}時)")
         return
@@ -4705,25 +4708,6 @@ def goes_to_sleep(state, now):
     state["yume"] = {"at": now.isoformat(timespec="minutes"), "said": said or ""}
     save_state(state)
     return True
-
-
-def makes_up_for_yesterday(state, now):
-    """きのうの分を書きそびれていたら、夜が明けるまでのうちに書く。
-
-    書く時刻を決めても、その時刻に起こしてもらえないことがある
-    (定時の起動は遅れたり抜けたりする)。二十三時と決めた日は
-    機会が一度しかなく、それを逃すと休むつもりのない日が空いていた。
-    休むと決めていた日は、そのまま休みにしておく。"""
-    plan = state.get("today_plan") or {}
-    yesterday = (now.date() - datetime.timedelta(days=1)).isoformat()
-    if plan.get("date") != yesterday or plan.get("resting"):
-        return
-    if now.hour >= MAKING_UP_UNTIL:
-        return
-    if any(one.get("date") == yesterday for one in blog_manager.load_articles()):
-        return
-    print(f"{yesterday} の分を書きそびれていたので、今書きます")
-    write_the_day(state, yesterday)
 
 
 def write_the_day(state, day):
