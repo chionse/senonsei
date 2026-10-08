@@ -2,6 +2,11 @@ name: Rebuild Site On New Comment Or Like
 
 on:
   push:
+    # 作り直すのは main に届いた時だけ。作業用の枝を main に合わせ直すと、
+    # その間に届いたコメントやいいねも「変わったもの」に数えられて、
+    # 作業用の枝の上でページが作り直され、そこにページの記録が積まれていた(2026-10-08)
+    branches:
+      - main
     paths:
       - 'comments/**'
       - 'likes/**'
