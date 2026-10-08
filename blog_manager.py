@@ -1105,7 +1105,7 @@ def generate_himitsu_list_html(himitsu):
   </header>
 
   {MAIN_STARTS}
-  <ul class="recent-list">
+  <ul class="recent-list himitsu-list">
 {rows}
   </ul>
   {MAIN_ENDS}
