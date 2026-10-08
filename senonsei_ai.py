@@ -8,8 +8,9 @@
 たくさん出会えた時期は早く育ち、実りの少ない時期は伸び悩む。
 
 考えること、感じること、喋ることは、この子の頭(atama.py)がする。
-Cloudflare Workers AI の無料枠から借りるのは、目(絵を見る)と、よその国の言葉の訳だけ。
-使えない時(キーが無い・障害・無料枠の終了)は、絵とよその言葉を眺めるだけになり、
+Cloudflare Workers AI の無料枠から借りるのは、目(絵を見る)だけ。
+よその国の言葉は訳してもらわず、拾える形の言葉をそのまま覚える。
+目が使えない時(キーが無い・障害・無料枠の終了)は絵を眺めるだけになり、
 それまでに積み上げた経験で思い、書き続ける。
 """
 
@@ -343,9 +344,9 @@ PICTURES_PER_SITE = 3  # ひとつの場所で、これだけまで絵を見る
 ITS_OWN_FIGURES = {"kao.png", "sugata.png", "sugata-ookii.png"}
 # 自分の家の飾り。ロゴと、考えごとの雲(昼の雲と夢の雲)と、ホーム画面の絵。見ても世界のことも自分のことも分からない
 ITS_OWN_DECORATIONS = {"logo.png", "kumo.png", "yume-kumo.png", "icon.png"}
-TRANSLATIONS_PER_SITE = 2  # ひとつの場所で、これだけまで訳してもらう
-ENOUGH_TO_READ = 200  # これだけの文字が無いページは、訳しても読むものが無い
-HOW_MUCH_TO_TRANSLATE = 1200  # 一度に訳してもらう文字数
+# よその言葉のページで、拾える形の言葉(アルファベットの言葉や数字)がこれだけ無ければ、
+# 眺めただけにする。ロシア語やアラビア語の字は、まだ言葉として拾えない
+FOREIGN_WORDS_ENOUGH = 20
 PICTURE_AT_MOST = 400000  # これより重い絵は見ない(バイト)
 LINGER_CHANCE = 0.85  # もう一枚見ていくかどうかの、その時の気分
 # 一枚読むのにかける時間(秒)。掴み取るのではなく、一枚ずつ読んでいく。
@@ -512,7 +513,7 @@ ITS_OWN_WAYS = {
 UNDERSTOOD_USUALLY_MOVES = 0.1
 # 日本語の場所とよその言葉の場所の分かり方を比べる時、一枚の頭からこれだけの字で見る。
 # 長いページほど知らない言葉の割合が増えるので、そのままでは長い日本語のページが
-# 訳してもらった短いページにいつも負ける。同じ長さで比べる
+# よその言葉の短いページにいつも負ける。同じ長さで比べる
 UNDERSTANDING_SAMPLE = 600
 # 奥のページで会えた新しい言葉が、その場所のならしのこれだけあれば、まだ奥に何かある
 STILL_MORE_DEEPER = 0.5
@@ -2923,28 +2924,6 @@ def absorb(state, text, pattern=WORD_CANDIDATE, only_known=False):
     return hit_hard
 
 
-def read_in_another_tongue(text, state):
-    """よその言葉で書かれたページを、訳してもらって読む。
-
-    千遠生は日本語の子なので、よその言葉の単語を覚えることはしない。
-    けれどそこに書かれていることまで閉ざしてしまうと、
-    世界の半分が空白のまま残る。訳したものを、日本語として読む。
-
-    訳してもらえない時は、今までどおり何も読まずに次へ行く。"""
-    tidied = " ".join(text.split())
-    if len(tidied) < ENOUGH_TO_READ:
-        return None
-    answer = ask_ai(
-        "次の文章を日本語に訳してください。訳文だけを書いてください。\n\n"
-        + tidied[:HOW_MUCH_TO_TRANSLATE],
-        max_tokens=500,
-        state=state,
-    )
-    if answer and JAPANESE.search(answer):
-        return answer
-    return None
-
-
 def look_around_site(state, entrance, wants_the_past):
     """ひとつの場所を、入口から中まで見て回る。
 
@@ -2958,7 +2937,7 @@ def look_around_site(state, entrance, wants_the_past):
     struck_here = set()  # そこで強く出会った言葉
     words_here = set()  # そこで読めた言葉(分かったかどうかは問わない)
     known_here = set()  # そのうち、知っていた言葉
-    unread = 0  # 開いたけれど、読めなかったページ(よその言葉で、訳してもらえなかった)
+    unread = 0  # 開いたけれど、読めなかったページ(拾える形の字がほとんど無かった)
     fresh = []  # 読めたページごとの、生まれてはじめて会った言葉の数
     bits = []  # 読めたページごとの、頭の同じ長さでの分かり方
     WHAT_A_WALK_BROUGHT[0] = 0
@@ -2967,7 +2946,6 @@ def look_around_site(state, entrance, wants_the_past):
     pages = 0
     as_deep_as = round(its_way(state, "pages_per_site"))
     pictures_left = PICTURES_PER_SITE
-    translations_left = TRANSLATIONS_PER_SITE
     until = time.monotonic() + TIME_SPENT_PER_SITE
     linked_here = set()  # ここからリンクが伸びていた、よその場所
 
@@ -3003,7 +2981,15 @@ def look_around_site(state, entrance, wants_the_past):
         if here != place_of(ITS_OWN_FRONT_DOOR):
             notice_how_blogs_are_titled(state, A_BLOG_POST_TITLE[0])
 
-        if JAPANESE.search(text):
+        # 日本語でないページも、訳してもらわずにそのまま読む。分かるのは、字の形として
+        # 拾えるもの(アルファベットの言葉や数字)だけ。訳は借りた頭が選んだ日本語で、
+        # その言い回しをこの子の言葉として覚えてしまっていた(2026-10-08、彼女と決めた)。
+        # 人の子どもが英語の「OK」や「page」を意味を知らないまま覚えるのと同じ。
+        # 自分で訳せるようになることと、ほかの字の言葉も拾えるようになることは、やることリストにある
+        japanese = bool(JAPANESE.search(text))
+        if not japanese:
+            atama.feel(head, "疲れ", 0.02)  # よその言葉を読むのは、少し骨が折れる
+        if japanese or len(WORD_CANDIDATE.findall(text)) >= FOREIGN_WORDS_ENOUGH:
             met_before = MET_FOR_THE_FIRST_TIME[0]
             struck_here |= absorb(state, text) or set()
             fresh.append(MET_FOR_THE_FIRST_TIME[0] - met_before)
@@ -3012,24 +2998,10 @@ def look_around_site(state, entrance, wants_the_past):
             known_here |= known_words_in(state, text)
             if site_title is None:
                 site_title = title
-        elif translations_left > 0:
-            translations_left -= 1
-            atama.feel(head, "疲れ", 0.02)  # よその言葉を訳してもらって読むのは、少し骨が折れる
-            translated = read_in_another_tongue(text, state)
-            if translated:
-                met_before = MET_FOR_THE_FIRST_TIME[0]
-                struck_here |= absorb(state, translated) or set()
-                fresh.append(MET_FOR_THE_FIRST_TIME[0] - met_before)
-                bits.append(understood_in_a_bit(state, translated))
-                words_here |= set(WORD_CANDIDATE.findall(translated))
-                known_here |= known_words_in(state, translated)
-                if site_title is None:
-                    site_title = title
-                print(f"よその言葉のページを訳して読みました: {title[:40]}")
-            else:
-                unread += 1
+            if not japanese:
+                print(f"よその言葉のページを、そのまま読みました: {title[:40]}")
         else:
-            unread += 1  # よその言葉で、もう訳してもらえない。眺めただけ
+            unread += 1  # 拾える形の字がほとんど無い。眺めただけ
 
         if pictures_left > 0 and pictures:
             try:
