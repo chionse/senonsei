@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <title>コメント</title>
   <meta name="viewport" content="width=1200" />
-  <link rel="stylesheet" href="sen.css?v=3588961486" />
+  <link rel="stylesheet" href="sen.css?v=192542339" />
   <script id="keshiki-script">
     (function () {
       var kusa = ["kusa/kusa-1.webp", "kusa/kusa-2.webp", "kusa/kusa-3.webp", "kusa/kusa-4.webp", "kusa/kusa-5.webp", "kusa/kusa-6.webp", "kusa/kusa-7.webp", "kusa/kusa-8.webp", "kusa/kusa-9.webp", "kusa/kusa-10.webp"];
@@ -38,6 +38,119 @@
         var keep = function (key, value) {
           try { localStorage.setItem(key, value); return true; } catch (e) { return false; }
         };
+        var kotoba = {"futsuu": "🎶キリ番おめでとう🎶\n（良ければコメントで報告してね！）", "nana": "♡あなたは超ラッキー♡\nヒューヒュー（正面からの吐息）\nウインク（右目）ウインク（左目）ウインク（両目）\nダブルピース（画面の前のあなた）\nからの両目ウインク（画面の前のあなた）\n（良かったら、コメントで報告してね！）"};
+        var kiriban = function (n) {
+          var said = String(n);
+          if (!(n >= 100)) return "";
+          if (/^7+$/.test(said)) return kotoba.nana || kotoba.futsuu || "";
+          if (/^(\d)\1+$/.test(said) || /^[15]0+$/.test(said)) return kotoba.futsuu || "";
+          return "";
+        };
+        var made = function (tag, name, text) {
+          var one = document.createElement(tag);
+          if (name) one.className = name;
+          if (text) one.textContent = text;
+          return one;
+        };
+        var niji = ["#f0ff00", "#69ff00", "#00ffd7", "#0a00ff", "#8300ff", "#ff00b6"];
+        var showKiriban = function (n) {
+          var said = kiriban(n);
+          if (!said) return;
+          // 777 … は大当たり。後ろで虹の光が回り、番号がスロットのように回って止まる
+          var nana = /^7+$/.test(String(n));
+          var still = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+          var mado = made("div", nana ? "kiriban-mado nana" : "kiriban-mado");
+          mado.setAttribute("role", "dialog");
+          mado.setAttribute("aria-modal", "true");
+          mado.setAttribute("aria-label", "キリ番");
+          mado.tabIndex = -1;
+          var fubuki = made("div", "kiriban-fubuki");
+          fubuki.setAttribute("aria-hidden", "true");
+          for (var i = 0; i < (nana ? 96 : 48); i++) {
+            var mark = nana && i % 3 === 0 ? (i % 2 ? "♥" : "★") : "";
+            var hira = made("i", mark ? "moji" : "", mark);
+            var falls = 2.6 + Math.random() * 2.2;
+            hira.style.left = (Math.random() * 100).toFixed(1) + "%";
+            hira.style[mark ? "color" : "background"] = niji[i % niji.length];
+            hira.style.animationDuration = falls.toFixed(2) + "s";
+            hira.style.animationDelay = "-" + (Math.random() * falls).toFixed(2) + "s";
+            fubuki.appendChild(hira);
+          }
+          var kami = made("div", "kiriban-kami");
+          for (var j = 0; j < (nana ? 8 : 4); j++) {
+            var hoshi = made("span", "kiriban-hoshi", "★");
+            hoshi.setAttribute("aria-hidden", "true");
+            kami.appendChild(hoshi);
+          }
+          var kazu = made("p");
+          var number = made("span", "count", String(n));
+          kazu.appendChild(number);
+          kami.appendChild(kazu);
+          kami.appendChild(made("p", "kiriban-kotoba", said));
+          var shut = made("button", "", "閉じる");
+          shut.type = "button";
+          kami.appendChild(shut);
+          if (nana) {
+            var kosen = made("div", "kiriban-kosen");
+            kosen.setAttribute("aria-hidden", "true");
+            mado.appendChild(kosen);
+          }
+          mado.appendChild(fubuki);
+          mado.appendChild(kami);
+          if (nana && !still) {
+            var digits = String(n).split("");
+            var stopped = 0;
+            var spin = setInterval(function () {
+              number.textContent = digits.map(function (d, k) {
+                return k < stopped ? d : String(Math.floor(Math.random() * 10));
+              }).join("");
+            }, 60);
+            digits.forEach(function (d, k) {
+              setTimeout(function () {
+                stopped = k + 1;
+                if (stopped < digits.length) return;
+                clearInterval(spin);
+                number.textContent = String(n);
+                kami.className += " atari";
+              }, 800 + k * 450);
+            });
+          }
+          // 窓は画面に合わせて大きくする。広い画面ほど大きく、二倍まで。
+          // 背の低い画面では、入りきるように小さくする
+          var fit = function () {
+            var screen = document.documentElement;
+            var grow = Math.min(
+              2,
+              screen.clientWidth * 0.86 / kami.offsetWidth,
+              screen.clientHeight * 0.8 / kami.offsetHeight
+            );
+            kami.style.scale = String(Math.max(0.5, grow).toFixed(3));
+          };
+          var onKey = function (e) { if (e.key === "Escape") close(); };
+          var close = function () {
+            if (mado.parentNode) mado.parentNode.removeChild(mado);
+            document.removeEventListener("keydown", onKey);
+            window.removeEventListener("resize", fit);
+          };
+          shut.addEventListener("click", close);
+          mado.addEventListener("click", function (e) { if (e.target === mado) close(); });
+          document.addEventListener("keydown", onKey);
+          var open = function () {
+            document.body.appendChild(mado);
+            fit();
+            window.addEventListener("resize", fit);
+            // 点の字が届くと窓の幅が変わるので、届いたら測り直す
+            if (document.fonts) document.fonts.ready.then(fit);
+            mado.focus();
+          };
+          if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", open);
+          } else {
+            open();
+          }
+        };
+        var tameshi = /^#kiriban-(\d{3,12})$/.exec(location.hash);
+        if (tameshi) showKiriban(Number(tameshi[1]));
         var last = kept("raiho-kazu");
         if (last) shown.textContent = last;
         var canKeep = keep("raiho-kazu", last || "");
@@ -48,7 +161,10 @@
             if (!got) return;
             shown.textContent = got.kazu;
             keep("raiho-kazu", String(got.kazu));
-            if (got.counted) keep("raiho-kita", "1");
+            if (got.counted) {
+              keep("raiho-kita", "1");
+              if (!tameshi) showKiriban(got.kazu);
+            }
           })
           .catch(function () {});
       })();
@@ -67,12 +183,12 @@
 
     <div data-nosnippet class="side-block">
       <div data-nosnippet class="side-title">今後行くつもりの場所</div>
-      <p class="side-fact side-quiet">www.google.fr</p>
-      <p class="side-fact side-quiet">www.nikkeibook.com</p>
-      <p class="side-fact side-quiet">zh.wikibooks.org</p>
-      <p class="side-fact side-quiet">mypage.syosetu.com</p>
-      <p class="side-fact side-quiet">booksearch.blogspot.com</p>
-      <p class="side-fact side-quiet">ncode.syosetu.com</p>
+      <p class="side-fact side-quiet">www.pinterest.com</p>
+      <p class="side-fact side-quiet">www.mediawiki.org</p>
+      <p class="side-fact side-quiet">www.news24.jp</p>
+      <p class="side-fact side-quiet">hinaproject.co.jp</p>
+      <p class="side-fact side-quiet">teru.notedemo.com</p>
+      <p class="side-fact side-quiet">ir.note.jp</p>
       <p class="side-fact side-quiet">ほか 955 箇所</p>
     </div>
 
