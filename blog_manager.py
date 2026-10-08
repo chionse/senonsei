@@ -1028,7 +1028,9 @@ def load_himitsu():
     更新情報と違って日付では分けない。一つの話で一つのページ。
 
     番号は置いた時に振る。あとから並べ替えても消しても、
-    一度付いた番号は動かさない。外から貼られた道が切れないように。"""
+    一度付いた番号は動かさない。外から貼られた道が切れないように。
+    ♡も番号に付いているので、並べ替えても話と一緒に動く。
+    人に見せる「何話目か」は、番号ではなく並び順で数える(himitsu_shown_as)。"""
     if not os.path.exists(HIMITSU_FILE):
         return []
     try:
@@ -1048,9 +1050,17 @@ def himitsu_page_name(number):
     return f"{HIMITSU_PAGE[: -len('.html')]}-{number}.html"
 
 
-def himitsu_title(one):
-    """一覧に並べる時の見出し。番号を頭に付ける。題が無ければ本文の頭を借りる。"""
-    return f'{one["number"]}　{news_title(one)}'
+def himitsu_shown_as(himitsu, one):
+    """人に見せる「何話目か」。並び順で、1から数える。
+
+    並べ替えた時に、置いた時の番号(1, 3, 5, 6, 2, 4)のまま
+    見せると読む人が迷うので(2026-10-08、彼女が並べ替えた)。"""
+    return himitsu.index(one) + 1
+
+
+def himitsu_title(one, shown_as):
+    """一覧に並べる時の見出し。何話目かを頭に付ける。題が無ければ本文の頭を借りる。"""
+    return f'{shown_as}　{news_title(one)}'
 
 
 def all_himitsu_pages(himitsu):
@@ -1076,7 +1086,7 @@ def generate_himitsu_list_html(himitsu):
     どの話があるかを選ぶところなので。"""
     rows = "\n".join(
         f'    <li><a href="{himitsu_page_name(one["number"])}">'
-        f'{himitsu_title(one)}</a></li>'
+        f'{himitsu_title(one, himitsu_shown_as(himitsu, one))}</a></li>'
         for one in himitsu
     )
     html = f"""<!DOCTYPE html>
@@ -1116,17 +1126,18 @@ def generate_himitsu_entry_html(himitsu, index):
         if not entry:
             return f'<span class="here">{label}</span>'
         return (f'<a href="{himitsu_page_name(entry["number"])}">'
-                f'{label}　{himitsu_title(entry)}</a>')
+                f'{label}　{himitsu_title(entry, himitsu_shown_as(himitsu, entry))}</a>')
 
-    # 番号は題が無くても出す。何話目かは、題とは別に要る
-    # 題を左に、♡と日付は右の端に小さく、横一列に並べる(2026-10-08、彼女と決めた)
-    named = f'{one["number"]}' + (f'　{one["title"]}' if one.get("title") else "")
-    when = one.get("date", "")
+    # 何話目かは題が無くても出す。何話目かは、題とは別に要る
+    # 題を左に、♡は右の端に小さく、横一列に並べる(2026-10-08、彼女と決めた)。
+    # 日付は出さない。いつ書いたかではなく、読む順に並べてあるので(2026-10-08、彼女が決めた)
+    shown_as = index + 1
+    named = f'{shown_as}' + (f'　{one["title"]}' if one.get("title") else "")
     html = f"""<!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8" />
-<title>ひみつの部屋 {one["number"]} {one.get('title') or ''}</title>
+<title>ひみつの部屋 {shown_as} {one.get('title') or ''}</title>
 <meta name="viewport" content="width=1200" />
 <link rel="stylesheet" href="{styled()}" />
 </head>
@@ -1139,7 +1150,7 @@ def generate_himitsu_entry_html(himitsu, index):
 
   {MAIN_STARTS}
   <article class="yomimono">
-    <div class="article-head"><span class="yomimono-title">{named}</span><span class="date">{iine_html(himitsu_liked_as(one["number"]))}{when}</span></div>
+    <div class="article-head"><span class="yomimono-title">{named}</span><span class="date">{iine_html(himitsu_liked_as(one["number"]))}</span></div>
     <p>{one['content'].replace(chr(10), '<br>')}</p>
   </article>
 
