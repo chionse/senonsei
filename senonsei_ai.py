@@ -414,6 +414,9 @@ OTHER_TONGUES_PER_PAGE = 60  # 一つの記事から結びつける別の言葉�
 # どの言葉に先に興味を持つかは、この子が出会ってきたもので決まる。こちらで順番は決めない
 FOREIGN_INTEREST_BEGINS = 12000  # 「この先の育ち方」の「はがきの隅くらい」と同じ数
 FOREIGN_HARDER = 10  # 興味の無いうちは、覚えるまでにこれだけ倍の日がかかる
+# 興味が育ちきっても、日本語への興味は超えない(2026-10-08、彼女が決めた)。
+# よその言葉は、いちばん興味のある時でも、日本語の倍の日がかかる
+FOREIGN_AT_BEST = 2
 INTEREST_GROWS_A_DAY = 1 / 200  # その字の言葉に出会った日ごとに、興味がこれだけ育つ(二百日で育ちきる)
 INTEREST_TO_CARE = 0.3  # 興味がこれだけ育った字の言葉は、強く出会い、思い、自分で訳して読む
 TONGUES_READ_AS_JAPANESE = {"ja", "zh", "zh-yue", "zh-classical", "lzh", "wuu", "gan", "zh-min-nan", "cdo", "hak"}
@@ -3965,7 +3968,8 @@ def days_needed_for(state, word):
     # よその言葉は、興味が育つまでぐんと覚えにくい
     script = script_of(word)
     if script is not None:
-        needed = round(needed * (1 + (FOREIGN_HARDER - 1) * (1 - interest_in(state, script))))
+        harder = FOREIGN_AT_BEST + (FOREIGN_HARDER - FOREIGN_AT_BEST) * (1 - interest_in(state, script))
+        needed = round(needed * harder)
     return needed
 
 
