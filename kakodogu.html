@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <title>過去のブログ</title>
 <meta name="viewport" content="width=1200" />
-<link rel="stylesheet" href="sen.css?v=4175022298" />
+<link rel="stylesheet" href="sen.css?v=2354123566" />
   <script id="keshiki-script">
     (function () {
       var kusa = ["kusa/kusa-1.webp", "kusa/kusa-2.webp", "kusa/kusa-3.webp", "kusa/kusa-4.webp", "kusa/kusa-5.webp", "kusa/kusa-6.webp", "kusa/kusa-7.webp", "kusa/kusa-8.webp", "kusa/kusa-9.webp", "kusa/kusa-10.webp"];
@@ -27,21 +27,32 @@
   <header>
     <h1 class="logo"><a href="index.html"><img src="images/logo.png" alt="千遠生のサイト" width="1374" height="456"></a></h1>
     <div data-nosnippet class="visitor-counter">
-      あなたは<span class="count"><!-- Default Statcounter code for senonsei
-      https://chionse.github.io/senonsei/index.html -->
-      <script type="text/javascript">
-      var sc_project=13354593;
-      var sc_invisible=0;
-      var sc_security="4b65a54b";
-      var scJsHost = "https://";
-      document.write("<sc"+"ript type='text/javascript' src='" + scJsHost+
-      "statcounter.com/counter/counter.js'></"+"script>");
+      あなたは<span class="count" id="raiho"></span>人目の来訪者です
+      <script>
+      (function () {
+        var where = "https://senonsei-comments.chitomatsu.workers.dev/raiho";
+        var shown = document.getElementById("raiho");
+        var kept = function (key) {
+          try { return localStorage.getItem(key); } catch (e) { return null; }
+        };
+        var keep = function (key, value) {
+          try { localStorage.setItem(key, value); return true; } catch (e) { return false; }
+        };
+        var last = kept("raiho-kazu");
+        if (last) shown.textContent = last;
+        var canKeep = keep("raiho-kazu", last || "");
+        var counted = kept("raiho-kita");
+        fetch(where, { method: counted || !canKeep ? "GET" : "POST" })
+          .then(function (res) { return res.ok ? res.json() : null; })
+          .then(function (got) {
+            if (!got) return;
+            shown.textContent = got.kazu;
+            keep("raiho-kazu", String(got.kazu));
+            if (got.counted) keep("raiho-kita", "1");
+          })
+          .catch(function () {});
+      })();
       </script>
-      <noscript><div data-nosnippet class="statcounter"><a title="web stats"
-      href="https://statcounter.com/" target="_blank"><img class="statcounter"
-      src="https://c.statcounter.com/13354593/0/4b65a54b/0/" alt="web stats"
-      referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
-      <!-- End of Statcounter Code --></span>人目の来訪者です
     </div>
   </header>
 
@@ -56,12 +67,12 @@
 
     <div data-nosnippet class="side-block">
       <div data-nosnippet class="side-title">今後行くつもりの場所</div>
-      <p class="side-fact side-quiet">www.wikifunctions.org</p>
-      <p class="side-fact side-quiet">githubuniverse.com</p>
-      <p class="side-fact side-quiet">de.wikiversity.org</p>
-      <p class="side-fact side-quiet">stats.wikimedia.org</p>
-      <p class="side-fact side-quiet">usercss.blog.st-hatena.com</p>
-      <p class="side-fact side-quiet">nwp.nikkei.com</p>
+      <p class="side-fact side-quiet">wpvip.com</p>
+      <p class="side-fact side-quiet">Main public logs - Meta-Wiki</p>
+      <p class="side-fact side-quiet">en.wiktionary.org</p>
+      <p class="side-fact side-quiet">www.ft.com</p>
+      <p class="side-fact side-quiet">projects.tuxfamily.org</p>
+      <p class="side-fact side-quiet">www.nikkei.co.jp</p>
       <p class="side-fact side-quiet">ほか 955 箇所</p>
     </div>
 
