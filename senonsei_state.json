@@ -4378,11 +4378,11 @@
   ],
   "where_it_will_go": [
     "www.google.fr",
-    "atom.io",
-    "www.wikimedia.org",
-    "ja.wikipedia.org",
-    "resources.github.com",
-    "www.tiktok.com"
+    "www.nikkeibook.com",
+    "zh.wikibooks.org",
+    "mypage.syosetu.com",
+    "booksearch.blogspot.com",
+    "ncode.syosetu.com"
   ],
   "how_many_places_left": 961,
   "places_known": {
@@ -5617,7 +5617,7 @@
       }
     }
   ],
-  "woke_at": "2026-10-09 00",
+  "woke_at": "2026-10-09 01",
   "blog_titles": {
     "seen": 15,
     "closed": 0,
