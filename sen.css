@@ -274,9 +274,10 @@ header.with-fukidashi .header-middle {
   overflow-wrap: anywhere;
 }
 
+/* 小さい字(12)では気付かれにくかったので、中身と同じ 16 の字にした
+   (2026-10-09、彼女が決めた) */
 .visitor-counter {
-  font-size: 12px;
-  font-family: var(--small-font);
+  font-size: 16px;
   -webkit-font-smoothing: none;
   opacity: 0.8;
   margin-top: 0.5rem;
@@ -285,7 +286,7 @@ header.with-fukidashi .header-middle {
 /* 数えた数だけは、虹色にぎらつかせる。
    昔の個人サイトのカウンターがそうだったように */
 .count {
-  /* 数だけは題名と同じ点の書体で。まわりの小さい字(12ドット)とは別にする。
+  /* 数だけは題名と同じ点の書体で。まわりの字とは別にする。
      16では小さくて気付かれにくかったので、24にした(2026-10-09、彼女が選んだ) */
   font-family: "DotGothic16", "MS Gothic", monospace;
   font-weight: normal;
