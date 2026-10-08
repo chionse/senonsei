@@ -126,6 +126,23 @@ A_WORD_IN_OTHER_LETTERS = "|".join(
         "\uac00-\ud7a3\u1100-\u11ff\u3131-\u318e",
     )
 )
+# 字ごとの名前。どの字の言葉か(script_of)と、字ごとの興味に使う
+SCRIPT_LETTERS = {
+    "latin": LATIN_LETTERS,
+    "greek": "\u0370-\u03ff",
+    "cyrillic": "\u0400-\u052f",
+    "armenian": "\u0531-\u058a",
+    "hebrew": "\u0591-\u05f4",
+    "arabic": "\u0620-\u065f\u066e-\u06d3\u06d5-\u06ff\u0750-\u077f",
+    "devanagari": "\u0900-\u0963\u0971-\u097f",
+    "bengali": "\u0980-\u09e5\u09f0-\u09ff",
+    "thai": "\u0e01-\u0e3a\u0e40-\u0e4e",
+    "georgian": "\u10a0-\u10ff",
+    "hangul": "\uac00-\ud7a3\u1100-\u11ff\u3131-\u318e",
+}
+A_WORD_IN_SCRIPT = {
+    name: re.compile(rf"[{letters}]+(?:[ \-'][{letters}]+)*") for name, letters in SCRIPT_LETTERS.items()
+}
 ALSO_WRITTEN = (
     r"|[0-9０-９]{1,4}"
     + rf"|[{LATIN_LETTERS}]{{2,12}}"
@@ -388,6 +405,17 @@ BRIDGE_TRUSTED = 2
 BRIDGES_KEPT = 8000  # 覚えておく外国語の数。超えたら、弱い結びつきから忘れる
 OTHER_TONGUES_PER_PAGE = 60  # 一つの記事から結びつける別の言葉版の数
 # 中国語の版は漢字で書かれていて、この子にはもともと日本語として読めるので結びつけない
+# よその言葉への興味(2026-10-08、彼女と決めた)。はじめは日本語に集中する。
+# 日本語の言葉が FOREIGN_INTEREST_BEGINS 個身につくまでは、よその言葉はぐんと覚えにくい。
+# 出会ったことは数えておくが、強く出会ったことにはならず、気がかりにも言いたいことにもならず、
+# 頭の網にも入らず、自分で訳すこともしない。
+# 身についたら、字ごとに興味が少しずつ育つ。その字の言葉に出会った日ごとに育つので、
+# よく見かける字(英語のアルファベットなど)ほど早く、めったに見ない字ほど遅い。
+# どの言葉に先に興味を持つかは、この子が出会ってきたもので決まる。こちらで順番は決めない
+FOREIGN_INTEREST_BEGINS = 12000  # 「この先の育ち方」の「はがきの隅くらい」と同じ数
+FOREIGN_HARDER = 10  # 興味の無いうちは、覚えるまでにこれだけ倍の日がかかる
+INTEREST_GROWS_A_DAY = 1 / 200  # その字の言葉に出会った日ごとに、興味がこれだけ育つ(二百日で育ちきる)
+INTEREST_TO_CARE = 0.3  # 興味がこれだけ育った字の言葉は、強く出会い、思い、自分で訳して読む
 TONGUES_READ_AS_JAPANESE = {"ja", "zh", "zh-yue", "zh-classical", "lzh", "wuu", "gan", "zh-min-nan", "cdo", "hak"}
 PICTURE_AT_MOST = 400000  # これより重い絵は見ない(バイト)
 LINGER_CHANCE = 0.85  # もう一枚見ていくかどうかの、その時の気分
@@ -2952,6 +2980,8 @@ def absorb(state, text, pattern=WORD_CANDIDATE, only_known=False):
         struck |= {w for w, n in counted.items() if n >= TIMES_TO_STRIKE}
         if pattern is THING_IN_A_PICTURE:
             struck |= set(found)
+    # 興味の育っていない字の言葉は、強く出会ったことにならない
+    struck = {word for word in struck if cares_for(state, word)}
 
     # 言葉の繋がりは、人が書いた文から覚える。目の答えの並びは目の口ぐせなので覚えない
     if not only_known and pattern is not THING_IN_A_PICTURE:
@@ -2960,7 +2990,8 @@ def absorb(state, text, pattern=WORD_CANDIDATE, only_known=False):
     # 頭の網にも入れる。自分の書いたものを読み返す時は入れない。今日のことではないので
     if not only_known and state.get("atama") and not READ_AGAIN_TODAY[0]:
         head_does(
-            atama.notice, state["atama"], state, now_in_japan(), found,
+            atama.notice, state["atama"], state, now_in_japan(),
+            [word for word in found if cares_for(state, word)],
             named=named, struck=struck, where=WHERE_IT_IS[0],
             known=state.get("learned_words") or [], met=words_met(state),
             seen=pattern is THING_IN_A_PICTURE,
@@ -2971,6 +3002,7 @@ def absorb(state, text, pattern=WORD_CANDIDATE, only_known=False):
     # 自分の書いたものを読み返す時は数えない。今日のことではないので
     if not only_known:
         keep_todays_words(state, found)
+        interest_grows(state, found)
 
     impact = state.setdefault("word_impact", {})
     met = words_met(state)
@@ -3060,7 +3092,7 @@ def translate_on_its_own(state, text):
     found = []
     for foreign, tied in bridges.items():
         japanese, strength = max(tied.items(), key=lambda kv: kv[1])
-        if strength < BRIDGE_TRUSTED:
+        if strength < BRIDGE_TRUSTED or not cares_for(state, foreign):
             continue
         if foreign in words or (" " in foreign and foreign in low):
             found.append((foreign, japanese))
@@ -3874,6 +3906,54 @@ def struck_by(state, word):
     return (state.get("word_impact") or {}).get(word, 0) * STRUCK_IS_WORTH
 
 
+JAPANESE_KNOWN = [0, None, -1]  # 数えた数、どの記憶の、何語の時に数えたか
+
+
+def japanese_words_known(state):
+    """身についた言葉のうち、日本語の字で書かれたものの数。"""
+    learned = state.get("learned_words") or []
+    if JAPANESE_KNOWN[1] != id(learned) or JAPANESE_KNOWN[2] != len(learned):
+        JAPANESE_KNOWN[0] = sum(1 for word in learned if JAPANESE.search(word))
+        JAPANESE_KNOWN[1], JAPANESE_KNOWN[2] = id(learned), len(learned)
+    return JAPANESE_KNOWN[0]
+
+
+def script_of(word):
+    """よその字で書かれた言葉なら、その字の名前。日本語・数字・記号なら None。"""
+    if not word or JAPANESE.search(word):
+        return None
+    for name, shape in A_WORD_IN_SCRIPT.items():
+        if shape.fullmatch(word):
+            return name
+    return None
+
+
+def interest_in(state, script):
+    """その字の言葉への興味。0 から 1。日本語が身につくまでは 0。"""
+    if japanese_words_known(state) < FOREIGN_INTEREST_BEGINS:
+        return 0.0
+    return min(1.0, (state.get("foreign_interest") or {}).get(script, 0.0))
+
+
+def cares_for(state, word):
+    """その言葉を、今のこの子が気にかけるか。日本語はいつも。よその言葉は興味が育ってから。"""
+    script = script_of(word)
+    return script is None or interest_in(state, script) >= INTEREST_TO_CARE
+
+
+def interest_grows(state, words):
+    """出会った言葉の字ごとに、その日のぶんだけ興味が育つ。日本語が身についてから。"""
+    if japanese_words_known(state) < FOREIGN_INTEREST_BEGINS:
+        return
+    today = day_number(state)
+    grown_on = state.setdefault("foreign_interest_on", {})
+    interest = state.setdefault("foreign_interest", {})
+    for script in {script_of(word) for word in words} - {None}:
+        if grown_on.get(script) != today:
+            grown_on[script] = today
+            interest[script] = min(1.0, round(interest.get(script, 0.0) + INTEREST_GROWS_A_DAY, 4))
+
+
 def days_needed_for(state, word):
     """その言葉を覚えるまでに、あと何日ぶん必要か。
 
@@ -3881,7 +3961,12 @@ def days_needed_for(state, word):
     一年に一度しか出会わなくても、そのたび深く刻まれるなら、
     いつかはその子のものになる。"""
     strikes = min(STRIKES_THAT_COUNT, (state.get("word_impact") or {}).get(word, 0))
-    return max(FEWEST_DAYS_TO_LEARN, DAYS_BEFORE_LEARNING - strikes * A_STRIKE_SHORTENS)
+    needed = max(FEWEST_DAYS_TO_LEARN, DAYS_BEFORE_LEARNING - strikes * A_STRIKE_SHORTENS)
+    # よその言葉は、興味が育つまでぐんと覚えにくい
+    script = script_of(word)
+    if script is not None:
+        needed = round(needed * (1 + (FOREIGN_HARDER - 1) * (1 - interest_in(state, script))))
+    return needed
 
 
 def learn(state):
