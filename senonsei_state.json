@@ -4282,6 +4282,12 @@
       "since": "2026-10-08",
       "first": "2026-10-08",
       "times": 1
+    },
+    {
+      "what": "だれかが来た",
+      "since": "2026-10-08",
+      "first": "2026-10-08",
+      "times": 1
     }
   ],
   "saw_on": "2026-10-08",
@@ -4370,12 +4376,12 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "s0.wp.com",
     "ang.wikiquote.org",
-    "news.web.nhk",
-    "www.softbank.co.jp",
-    "gl.wikisource.org",
-    "ja.wiktionary.org"
+    "www.ft.com",
+    "zh.wikiquote.org",
+    "pageviews.toolforge.org",
+    "act.citizen.org",
+    "www.wikifunctions.org"
   ],
   "how_many_places_left": 961,
   "places_known": {
@@ -4957,7 +4963,7 @@
   },
   "visitors": {
     "comments": 0,
-    "likes": 0
+    "likes": 2
   },
   "met_today": {
     "date": "2026-10-08",
@@ -5610,7 +5616,7 @@
       }
     }
   ],
-  "woke_at": "2026-10-08 20",
+  "woke_at": "2026-10-08 21",
   "blog_titles": {
     "seen": 15,
     "closed": 0,
