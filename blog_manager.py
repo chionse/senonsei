@@ -1579,6 +1579,7 @@ VISITOR_COUNTER = r"""    <div class="visitor-counter">
           mado.setAttribute("role", "dialog");
           mado.setAttribute("aria-modal", "true");
           mado.setAttribute("aria-label", "キリ番");
+          mado.tabIndex = -1;
           var fubuki = made("div", "kiriban-fubuki");
           fubuki.setAttribute("aria-hidden", "true");
           for (var i = 0; i < 48; i++) {
@@ -1613,7 +1614,7 @@ VISITOR_COUNTER = r"""    <div class="visitor-counter">
           shut.addEventListener("click", close);
           mado.addEventListener("click", function (e) { if (e.target === mado) close(); });
           document.addEventListener("keydown", onKey);
-          var open = function () { document.body.appendChild(mado); shut.focus(); };
+          var open = function () { document.body.appendChild(mado); mado.focus(); };
           if (document.readyState === "loading") {
             document.addEventListener("DOMContentLoaded", open);
           } else {

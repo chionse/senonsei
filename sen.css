@@ -346,14 +346,20 @@ header.with-fukidashi .header-middle {
   inset: 0;
   z-index: 50;
   display: grid;
-  place-items: center;
   padding: 40px;
-  overflow: hidden;
+  /* 背の低い画面では、窓を上下に送って読めるようにする */
+  overflow-x: hidden;
+  overflow-y: auto;
   background: rgba(0, 26, 128, 0.45);
 }
 
+/* 開いた時は窓そのものに目を向ける。そこに囲みは出さない */
+.kiriban-mado:focus {
+  outline: none;
+}
+
 .kiriban-fubuki {
-  position: absolute;
+  position: fixed;
   inset: 0;
   pointer-events: none;
 }
@@ -371,11 +377,15 @@ header.with-fukidashi .header-middle {
   to { transform: translateY(calc(100vh + 80px)) rotate(720deg); }
 }
 
-/* ふちはロゴと同じ六色。横に流し続ける */
+/* ふちはロゴと同じ六色。横に流し続ける。
+   幅は言葉のいちばん長い行に合わせる。彼女が区切った行を、勝手に折らないように */
 .kiriban-kami {
   position: relative;
   box-sizing: border-box;
-  width: min(760px, 100%);
+  width: max-content;
+  min-width: min(640px, 100%);
+  max-width: 100%;
+  margin: auto;
   display: grid;
   gap: 24px;
   justify-items: center;
