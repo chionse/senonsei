@@ -2841,7 +2841,6 @@
     "https://bit.ly/2O1BvSz",
     "https://web.archive.org/web/20010106195500/http://www.geocities.co.jp/",
     "https://web.archive.org/web/20001110103100/http://www1.ipss.go.jp/",
-    "https://web.archive.org/web/20001110103100/http://www.kids-space.org/",
     "https://web.archive.org/web/20001110103100/http://www.mind.ne.jp/kidsclub/",
     "https://b.hatena.ne.jp/entry/https://kakuyomu.jp/",
     "https://ch.nicovideo.jp/kakuyomu",
@@ -3754,7 +3753,19 @@
     "https://piyolog.hatenadiary.jp/entry/2026/10/08/070606",
     "https://togetter.com/li/2753247",
     "https://blog.hatenablog.com/entry/2026/05/07/120000",
-    "https://qiita.com/maeda-niku18/items/b633dda178c505461080"
+    "https://qiita.com/maeda-niku18/items/b633dda178c505461080",
+    "https://web.archive.org/web/20001109091900/http://search.kids-space.org/",
+    "https://web.archive.org/web/20001109091900/http://www.kids-space.gr.jp/m_index.html",
+    "https://web.archive.org/web/20001109091900/http://home.netscape.com/",
+    "https://web.archive.org/web/20001109091900/http://www.ks-connection.org/index.html",
+    "https://web.archive.org/web/20001109091900/http://storytrain.kids-space.org/",
+    "https://web.archive.org/web/20001109091900/http://engine.kids-space.org/cfdocs/searchKS/gallerySearch.cfm",
+    "https://web.archive.org/web/20001109091900/http://www.microsoft.com/",
+    "https://web.archive.org/web/20001109091900/http://www.ks-connection.gr.jp/m_index.html",
+    "https://web.archive.org/web/20001110124000/http://www.kids-space.gr.jp/m_index.html",
+    "https://web.archive.org/web/20001110124000/http://www.ks-connection.org/index.html",
+    "https://web.archive.org/web/20001110124000/http://www.ntt-east.co.jp/index_e.html",
+    "https://web.archive.org/web/20001110124000/http://www.ks-connection.gr.jp/m_index.html"
   ],
   "visited": [
     "https://note.com/",
@@ -4085,7 +4096,9 @@
     "http://web.archive.org/web/20220524060228/https://asia.nikkei.com/Location/East-Asia/Hong-Kong",
     "http://web.archive.org/web/20220524060228/https://asia.nikkei.com/Location/East-Asia/Japan",
     "http://web.archive.org/web/20220524060228/https://asia.nikkei.com/Politics/Oceania/Australia",
-    "https://hatenabookmark.page.link/app"
+    "https://hatenabookmark.page.link/app",
+    "https://web.archive.org/web/20001110103100/http://www.kids-space.org/",
+    "https://web.archive.org/web/20001109091900/http://www.kids-space.org/supporter/mirror.html"
   ],
   "notes": [
     "0日目: note ――つくる、つながる、とどける。",
@@ -4115,11 +4128,16 @@
     "25日目: ウクライナが大胆な作戦、ロシア兵250人あまり投降　前線背後にロボット投下、「トロイの木馬」も - CNN.co.jp、政府「関税交渉は平行線」、農業団体に説明　TPP: 日本経済新聞(むかしのすがた)",
     "26日目: https://web.archive.org/web/20040925032415/http://www.microsoft.com/japan/ie/、Z世代の「お金の使い方」最新事情　飲み会はコスパが悪い？：日経クロストレンド、酒飲みがダイエット成功のために常備したいつまみ5選｜NIKKEI STYLE",
     "27日目: JUST SYSTEM & School、Nikkei Asia\n                            - Business, Politics, Economy and Tech News & Analysis、はてなブックマーク",
-    "28日目: 何も見られなかった"
+    "28日目: Kids' Space"
   ],
   "today_walk": {
     "date": "2026-10-09",
-    "seen": []
+    "seen": [
+      "Kids' Space"
+    ],
+    "brought": [
+      104
+    ]
   },
   "inner_voice": [
     "10-05 23時: なぜ、首が痛くなるの？",
@@ -4368,14 +4386,14 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "heart-net.nhk.or.jp",
-    "de.wikiversity.org",
-    "photos.google.com",
-    "www.nhk.jp",
-    "txbiz.tv-tokyo.co.jp",
-    "hinaproject.co.jp"
+    "t.me",
+    "thumb.wikimedia.org",
+    "ar.wikiversity.org",
+    "projects.tuxfamily.org",
+    "Main public logs - Meta-Wiki",
+    "[B! 日本語] 彼女がサークル内の男女比2:2の旅行に行くと言っているが、何も"
   ],
-  "how_many_places_left": 961,
+  "how_many_places_left": 972,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -4425,7 +4443,8 @@
     "style.nikkei.com": "尿の色は病気のサイン　茶色・白・透明で注意するのは｜NIKKEI STYLE",
     "www.justsystem.co.jp": "JUST SYSTEM & School",
     "asia.nikkei.com": "Politics -\n                        Nikke",
-    "hatenabookmark.page.link": "はてなブックマーク"
+    "hatenabookmark.page.link": "はてなブックマーク",
+    "www.kids-space.org": "About Mirror"
   },
   "went_home": {
     "date": "2026-10-09",
@@ -4631,7 +4650,7 @@
       "でも": 1
     },
     "://": {
-      "org": 96,
+      "org": 100,
       "0": 4,
       "2": 6,
       "1": 3,
@@ -4641,7 +4660,7 @@
       "of": 1
     },
     "org": {
-      "://": 96
+      "://": 98
     },
     "6": {
       "7": 6,
@@ -4833,7 +4852,7 @@
     "について": 14,
     "表示": 3,
     "その": 11,
-    "から": 73,
+    "から": 74,
     "この": 28,
     "1": 44,
     "して": 7,
@@ -4858,7 +4877,7 @@
     "検索": 6,
     "ます": 4,
     "6": 3,
-    "自由": 57,
+    "自由": 59,
     "://": 3,
     "できます": 1,
     "ある": 2,
@@ -4882,7 +4901,8 @@
     "場所": 1,
     "になりま": 2,
     "新しい": 1,
-    "してくだ": 1
+    "してくだ": 1,
+    "for": 2
   },
   "closes_a_sentence": {
     "など": 39,
@@ -4898,7 +4918,7 @@
     "だった": 6,
     "について": 15,
     "表示": 2,
-    "から": 56,
+    "から": 57,
     "ます": 12,
     "して": 9,
     "1": 107,
@@ -4922,7 +4942,7 @@
     "ニュース": 6,
     "している": 16,
     "検索": 4,
-    "自由": 56,
+    "自由": 58,
     "できます": 3,
     "しました": 9,
     "コンテンツ": 2,
@@ -4951,7 +4971,8 @@
     "場所": 1,
     "サイト": 3,
     "になりま": 1,
-    "さい": 1
+    "さい": 1,
+    "for": 2
   },
   "visitors": {
     "comments": 0,
@@ -4961,7 +4982,26 @@
     "date": "2026-10-09",
     "words": [
       "自由",
-      "から"
+      "から",
+      "1",
+      "12",
+      "17",
+      "2026",
+      "09",
+      "this",
+      "The",
+      "://",
+      "org",
+      "the",
+      "by",
+      "amp",
+      "in",
+      "to",
+      "is",
+      "of",
+      "4",
+      "10",
+      "for"
     ]
   },
   "wants_to_say": [
@@ -5477,10 +5517,10 @@
       "day": "2026-10-07"
     }
   ],
-  "understood_usually": 0.157767,
+  "understood_usually": 0.19218,
   "its_ways": {
     "pages_per_site": 11.6,
-    "pull_of_japanese": 0.99,
+    "pull_of_japanese": 0.98,
     "feeling_keen": 0.31,
     "wish_to_return": 1.0
   },
@@ -5532,7 +5572,7 @@
       }
     }
   ],
-  "woke_at": "2026-10-09 10",
+  "woke_at": "2026-10-09 11",
   "blog_titles": {
     "seen": 15,
     "closed": 0,
@@ -5543,5 +5583,6 @@
   "yume": {
     "at": "2026-10-08T23:23+09:00",
     "said": "かれていう"
-  }
+  },
+  "looked_up": []
 }
