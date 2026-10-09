@@ -1542,7 +1542,10 @@ def keshiki_on_pages(pages):
 # 画面の真ん中に虹色の窓を出して、彼女の言葉を見せる。キリ番は、
 #   100、500、1000、5000、10000 … (1 か 5 のあとに 0 が並ぶ数)
 #   111、222 … 999、1111 … (3けた以上のゾロ目)
-# 777、7777 … だけは別の言葉にする。言葉は kiriban.json に、彼女の言葉のまま置く。
+#   123、1234 … 123456789 (1 から順に並ぶ数)
+#   77、777、7777 … (7 が並ぶ数。大当たり。別の言葉)
+# 前後賞(キリ番の一つ前と一つ後)も見本を作ったが、入れないことにした(2026-10-09、彼女が決めた)。
+# 言葉は kiriban.json に、彼女の言葉のまま置く。
 # 前に来たことのある人がたまたまその数を見ても、キリ番にはならない。
 # 住所の後ろに #kiriban-777 のように付けると、数えずに窓だけ見られる(彼女が確かめる用)
 VISITOR_COUNTER = r"""    <div class="visitor-counter">
@@ -1558,12 +1561,17 @@ VISITOR_COUNTER = r"""    <div class="visitor-counter">
           try { localStorage.setItem(key, value); return true; } catch (e) { return false; }
         };
         var kotoba = __KIRIBAN__;
-        var kiriban = function (n) {
+        // キリ番の種類。7 が並ぶ番号は大当たり
+        var main = function (n) {
           var said = String(n);
-          if (!(n >= 100)) return "";
-          if (/^7+$/.test(said)) return kotoba.nana || kotoba.futsuu || "";
-          if (/^(\d)\1+$/.test(said) || /^[15]0+$/.test(said)) return kotoba.futsuu || "";
+          if (/^7{2,}$/.test(said)) return "nana";
+          if (n >= 100 && (/^(\d)\1+$/.test(said) || /^[15]0+$/.test(said))) return "futsuu";
+          if (said.length >= 3 && "123456789".indexOf(said) === 0) return "futsuu";
           return "";
+        };
+        var wordsFor = function (kind) {
+          if (kind === "nana") return kotoba.nana || kotoba.futsuu || "";
+          return kotoba[kind] || "";
         };
         var made = function (tag, name, text) {
           var one = document.createElement(tag);
@@ -1573,10 +1581,11 @@ VISITOR_COUNTER = r"""    <div class="visitor-counter">
         };
         var niji = ["#f0ff00", "#69ff00", "#00ffd7", "#0a00ff", "#8300ff", "#ff00b6"];
         var showKiriban = function (n) {
-          var said = kiriban(n);
+          var kind = main(n);
+          var said = wordsFor(kind);
           if (!said) return;
           // 777 … は大当たり。後ろで虹の光が回り、番号がスロットのように回って止まる
-          var nana = /^7+$/.test(String(n));
+          var nana = kind === "nana";
           var still = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
           var mado = made("div", nana ? "kiriban-mado nana" : "kiriban-mado");
           mado.setAttribute("role", "dialog");
@@ -1668,7 +1677,7 @@ VISITOR_COUNTER = r"""    <div class="visitor-counter">
             open();
           }
         };
-        var tameshi = /^#kiriban-(\d{3,12})$/.exec(location.hash);
+        var tameshi = /^#kiriban-(\d{2,12})$/.exec(location.hash);
         if (tameshi) showKiriban(Number(tameshi[1]));
         var last = kept("raiho-kazu");
         if (last) shown.textContent = last;
@@ -1694,8 +1703,8 @@ VISITOR_COUNTER = r"""    <div class="visitor-counter">
 def load_kiriban():
     """キリ番の窓に出す、彼女の言葉。
 
-    futsuu はキリ番の言葉、nana は 777、7777 … の言葉。
-    無いものは渡さない。どちらも無ければ、窓は出ない。"""
+    futsuu はキリ番の言葉、nana は 77、777 … の言葉。
+    無いものは渡さない。無い種類の番号には、窓は出ない(nana だけは futsuu で出す)。"""
     try:
         with open(KIRIBAN_FILE, "r", encoding="utf-8") as f:
             kept = json.load(f)
