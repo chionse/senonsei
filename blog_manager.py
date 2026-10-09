@@ -1544,6 +1544,7 @@ def keshiki_on_pages(pages):
 #   111、222 … 999、1111 … (3けた以上のゾロ目)
 #   123、1234 … 123456789 (1 から順に並ぶ数)
 #   77、777、7777 … (7 が並ぶ数。大当たり。別の言葉)
+#   3939、4649、2525 (語呂合わせ。サンキュー、よろしく、ニコニコ)
 # 前後賞(キリ番の一つ前と一つ後)も見本を作ったが、入れないことにした(2026-10-09、彼女が決めた)。
 # 言葉は kiriban.json に、彼女の言葉のまま置く。
 # 前に来たことのある人がたまたまその数を見ても、キリ番にはならない。
@@ -1567,6 +1568,8 @@ VISITOR_COUNTER = r"""    <div class="visitor-counter">
           if (/^7{2,}$/.test(said)) return "nana";
           if (n >= 100 && (/^(\d)\1+$/.test(said) || /^[15]0+$/.test(said))) return "futsuu";
           if (said.length >= 3 && "123456789".indexOf(said) === 0) return "futsuu";
+          // 語呂合わせ。サンキュー、よろしく、ニコニコ
+          if (["3939", "4649", "2525"].indexOf(said) >= 0) return "futsuu";
           return "";
         };
         var wordsFor = function (kind) {
