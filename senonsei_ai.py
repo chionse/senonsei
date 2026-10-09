@@ -857,7 +857,7 @@ def everything_it_has_thought():
 
 # 一語ずつ増えていくところ。何年か経つと何万語にもなるので、
 # 一語を何行にも広げずに詰めて書く
-PACKED_AWAY = ("words_met", "learned_on")
+PACKED_AWAY = ("words_met", "learned_on", "learned_where")
 
 # 出会った言葉は一つも捨てないので、増え続ける。
 # 生まれて十四日で五十万字、一日に四万字ずつ増えていて、
@@ -3011,6 +3011,8 @@ def absorb(state, text, pattern=WORD_CANDIDATE, only_known=False):
     met = words_met(state)
     today_number = day_number(state)
     hit_hard = set()  # ここで強く出会った言葉。気がかりが移ることがある
+    # どこで会ったか(言葉の辞典のため)。自分の書いたものを読み返す時は、どこでもない
+    where = None if only_known else place_number(state, WHERE_IT_IS[0])
     for word in set(found) | named:
         # 自分が書いたものを読み返す時は、新しい言葉は生まれない。
         # 誰にも教わっていない文字列を、自分だけで言葉にすることはできない
@@ -3019,12 +3021,43 @@ def absorb(state, text, pattern=WORD_CANDIDATE, only_known=False):
         record = met.get(word)
         if record is None:
             MET_FOR_THE_FIRST_TIME[0] += 1
-        if record is None or record[1] != today_number:
-            met[word] = [(record[0] if record else 0) + 1, today_number]
-            if word in struck and not met_often_enough(state, word):
-                impact[word] = impact.get(word, 0) + 1
-                hit_hard.add(word)
+        new_day = record is None or record[1] != today_number
+        count = (record[0] if record else 0) + (1 if new_day else 0)
+        met[word] = [count, today_number] + where_it_met(record, where)
+        if new_day and word in struck and not met_often_enough(state, word):
+            impact[word] = impact.get(word, 0) + 1
+            hit_hard.add(word)
     return hit_hard
+
+
+def place_number(state, place):
+    """その場所の番号。初めての場所なら、場所の並び(basho)の後ろに足す。
+
+    言葉の辞典に「初めて会った場所」「覚えた日に会っていた場所」を出すため、
+    言葉ごとにどこで会ったかを取り始めた(2026-10-10、彼女と決めた)。
+
+    言葉ごとに場所の名前を書くと、何万語ぶん同じ名前が並んで重くなる。
+    名前は basho に一度だけ書いて、言葉の側は番号で指す。"""
+    if not place:
+        return None
+    places = state.setdefault("basho", [])
+    if PLACE_NUMBERS["of"] is not places or len(PLACE_NUMBERS["at"]) != len(places):
+        PLACE_NUMBERS["of"] = places
+        PLACE_NUMBERS["at"] = {one: number for number, one in enumerate(places)}
+    if place not in PLACE_NUMBERS["at"]:
+        PLACE_NUMBERS["at"][place] = len(places)
+        places.append(place)
+    return PLACE_NUMBERS["at"][place]
+
+
+def where_it_met(record, where):
+    """覚えかけの記録の三つめと四つめ。初めて会った場所と、いちばん最近会った場所の番号。
+
+    記録を取り始める前から会っていた言葉は、初めての場所が分からないので None のまま。
+    どちらも分からないうちは何も足さない(記録が軽いまま)。"""
+    first = record[2] if record and len(record) > 2 else (where if record is None else None)
+    last = where if where is not None else (record[3] if record and len(record) > 3 else None)
+    return [] if first is None and last is None else [first, last]
 
 
 A_SIDE_NOTE = re.compile(r"\(.*?\)|（.*?）")
@@ -3770,7 +3803,7 @@ def days_held(state, word):
     record = words_met(state).get(word)
     if not record:
         return 0
-    days, last = record
+    days, last = record[0], record[1]
     gap = max(0, day_number(state) - last)
     holds_for = how_long_it_holds(state) * max(1, days + struck_by(state, word))
     faded = days - gap // holds_for
@@ -3998,6 +4031,16 @@ def learn(state):
     remembered = state.setdefault("learned_on", {})
     for word in learned:
         remembered.setdefault(word, today)
+    # どこで会ってきた言葉かも、覚えかけの記録と一緒に消えてしまうので、先に移しておく。
+    # [初めて会った場所, 覚えた日に会っていた場所] の番号(basho の何番目か)。分からなければ None
+    where = state.setdefault("learned_where", {})
+    today_number = day_number(state)
+    for word in learned:
+        record = words_met(state).get(word) or []
+        first = record[2] if len(record) > 2 else None
+        that_day = record[3] if len(record) > 3 and record[1] == today_number else None
+        if first is not None or that_day is not None:
+            where.setdefault(word, [first, that_day])
     # 覚えた言葉はもう忘れないので、覚えかけの記録は手放してよい。
     # 何年も経つと、ここが記憶のいちばん重い場所になる
     for word in learned:
@@ -4341,6 +4384,8 @@ A_BLOG_POST_TITLE = [None]
 OTHER_TONGUES = [[]]
 # いま読んでいるものが、どの場所のものか。頭の網で、出会ったものとその場所を結ぶ
 WHERE_IT_IS = [None]
+# 場所の名前 → basho の番号。毎回 basho を端から探さないように(place_number)
+PLACE_NUMBERS = {"of": None, "at": {}}
 # 今日もう頭に入れたものを、また読んでいるところか。家の言葉は読む日には毎時間読むので、
 # 頭に入れるのと気持ちが動くのは、その日のはじめの一度だけにする
 READ_AGAIN_TODAY = [False]
