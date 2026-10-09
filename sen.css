@@ -533,55 +533,10 @@ header.with-fukidashi .header-middle {
   font-size: 64px;
 }
 
-/* 前後賞(2026-10-09、彼女が「少しがっかり感出したい」と言った)。
-   はじめはキリ番の番号が虹色で出て、一瞬あとに本当の番号へカチッと落ちる。
-   そこで窓がガクッと傾いて色が抜け、四すみの★がポロポロ落ちる。降るのは雨 */
-.kiriban-mado.zengo {
-  background: rgba(30, 40, 80, 0.5);
-}
-
-.kiriban-fubuki i.ame {
-  width: 3px;
-  height: 22px;
-  background: rgba(170, 200, 240, 0.8);
-}
-
-.kiriban-mado.zengo .kiriban-kami {
-  transition: filter 0.8s;
-}
-
-.kiriban-mado.zengo .kiriban-kami.gakkari {
-  filter: saturate(0.3);
-  animation: gakku 0.45s steps(3) forwards, nagare 4s linear infinite;
-}
-
-@keyframes gakku {
-  from { transform: translateY(0) rotate(0deg); }
-  to { transform: translateY(16px) rotate(-3deg); }
-}
-
-.kiriban-mado.zengo .kiriban-kami.gakkari .count {
-  animation: none;
-}
-
-.kiriban-mado.zengo .kiriban-kami.gakkari .kiriban-hoshi {
-  animation: porori 1.1s ease-in forwards;
-}
-
-.kiriban-mado.zengo .kiriban-kami.gakkari .kiriban-hoshi:nth-of-type(2) { animation-delay: 0.25s; }
-.kiriban-mado.zengo .kiriban-kami.gakkari .kiriban-hoshi:nth-of-type(3) { animation-delay: 0.5s; }
-.kiriban-mado.zengo .kiriban-kami.gakkari .kiriban-hoshi:nth-of-type(4) { animation-delay: 0.7s; }
-
-@keyframes porori {
-  to { transform: translateY(320px) rotate(120deg); opacity: 0; }
-}
-
 /* 動きを減らしたい人には、止まった窓だけを出す */
 @media (prefers-reduced-motion: reduce) {
   .kiriban-kami,
   .kiriban-mado.nana .kiriban-kami,
-  .kiriban-mado.zengo .kiriban-kami.gakkari,
-  .kiriban-mado.zengo .kiriban-kami.gakkari .kiriban-hoshi,
   .kiriban-hoshi,
   .kiriban-kosen { animation: none; }
   .kiriban-fubuki { display: none; }
