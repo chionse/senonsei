@@ -1542,7 +1542,10 @@ def keshiki_on_pages(pages):
 # 画面の真ん中に虹色の窓を出して、彼女の言葉を見せる。キリ番は、
 #   100、500、1000、5000、10000 … (1 か 5 のあとに 0 が並ぶ数)
 #   111、222 … 999、1111 … (3けた以上のゾロ目)
-# 777、7777 … だけは別の言葉にする。言葉は kiriban.json に、彼女の言葉のまま置く。
+#   123、1234 … 123456789 (1 から順に並ぶ数)
+#   77、777、7777 … (7 が並ぶ数。大当たり。別の言葉)
+# キリ番の一つ前と一つ後は前後賞(99 と 101 など)。少しがっかりする窓に、別の言葉。
+# 言葉は kiriban.json に、彼女の言葉のまま置く。
 # 前に来たことのある人がたまたまその数を見ても、キリ番にはならない。
 # 住所の後ろに #kiriban-777 のように付けると、数えずに窓だけ見られる(彼女が確かめる用)
 VISITOR_COUNTER = r"""    <div class="visitor-counter">
@@ -1558,12 +1561,21 @@ VISITOR_COUNTER = r"""    <div class="visitor-counter">
           try { localStorage.setItem(key, value); return true; } catch (e) { return false; }
         };
         var kotoba = __KIRIBAN__;
-        var kiriban = function (n) {
+        // 本当のキリ番。7 が並ぶ番号は大当たり
+        var main = function (n) {
           var said = String(n);
-          if (!(n >= 100)) return "";
-          if (/^7+$/.test(said)) return kotoba.nana || kotoba.futsuu || "";
-          if (/^(\d)\1+$/.test(said) || /^[15]0+$/.test(said)) return kotoba.futsuu || "";
+          if (/^7{2,}$/.test(said)) return "nana";
+          if (n >= 100 && (/^(\d)\1+$/.test(said) || /^[15]0+$/.test(said))) return "futsuu";
+          if (said.length >= 3 && "123456789".indexOf(said) === 0) return "futsuu";
           return "";
+        };
+        // キリ番の一つ前と一つ後は前後賞。惜しかった番号
+        var kindOf = function (n) {
+          return main(n) || (main(n + 1) || main(n - 1) ? "zengo" : "");
+        };
+        var wordsFor = function (kind) {
+          if (kind === "nana") return kotoba.nana || kotoba.futsuu || "";
+          return kotoba[kind] || "";
         };
         var made = function (tag, name, text) {
           var one = document.createElement(tag);
@@ -1573,24 +1585,29 @@ VISITOR_COUNTER = r"""    <div class="visitor-counter">
         };
         var niji = ["#f0ff00", "#69ff00", "#00ffd7", "#0a00ff", "#8300ff", "#ff00b6"];
         var showKiriban = function (n) {
-          var said = kiriban(n);
+          var kind = kindOf(n);
+          var said = wordsFor(kind);
           if (!said) return;
           // 777 … は大当たり。後ろで虹の光が回り、番号がスロットのように回って止まる
-          var nana = /^7+$/.test(String(n));
+          var nana = kind === "nana";
+          // 前後賞は、はじめにキリ番の番号を見せてから、本当の番号に落とす
+          var zengo = kind === "zengo";
+          var almost = zengo ? (main(n + 1) ? n + 1 : n - 1) : n;
           var still = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
-          var mado = made("div", nana ? "kiriban-mado nana" : "kiriban-mado");
+          var mado = made("div", "kiriban-mado" + (nana ? " nana" : "") + (zengo ? " zengo" : ""));
           mado.setAttribute("role", "dialog");
           mado.setAttribute("aria-modal", "true");
           mado.setAttribute("aria-label", "キリ番");
           mado.tabIndex = -1;
           var fubuki = made("div", "kiriban-fubuki");
           fubuki.setAttribute("aria-hidden", "true");
-          for (var i = 0; i < (nana ? 96 : 48); i++) {
+          for (var i = 0; i < (nana ? 96 : zengo ? 40 : 48); i++) {
             var mark = nana && i % 3 === 0 ? (i % 2 ? "♥" : "★") : "";
-            var hira = made("i", mark ? "moji" : "", mark);
-            var falls = 2.6 + Math.random() * 2.2;
+            // 前後賞に降るのは、しょんぼりした雨
+            var hira = made("i", zengo ? "ame" : mark ? "moji" : "", mark);
+            var falls = zengo ? 1.6 + Math.random() * 1.2 : 2.6 + Math.random() * 2.2;
             hira.style.left = (Math.random() * 100).toFixed(1) + "%";
-            hira.style[mark ? "color" : "background"] = niji[i % niji.length];
+            if (!zengo) hira.style[mark ? "color" : "background"] = niji[i % niji.length];
             hira.style.animationDuration = falls.toFixed(2) + "s";
             hira.style.animationDelay = "-" + (Math.random() * falls).toFixed(2) + "s";
             fubuki.appendChild(hira);
@@ -1602,7 +1619,7 @@ VISITOR_COUNTER = r"""    <div class="visitor-counter">
             kami.appendChild(hoshi);
           }
           var kazu = made("p");
-          var number = made("span", "count", String(n));
+          var number = made("span", "count", String(still ? n : almost));
           kazu.appendChild(number);
           kami.appendChild(kazu);
           kami.appendChild(made("p", "kiriban-kotoba", said));
@@ -1633,6 +1650,12 @@ VISITOR_COUNTER = r"""    <div class="visitor-counter">
                 kami.className += " atari";
               }, 800 + k * 450);
             });
+          }
+          if (zengo) {
+            setTimeout(function () {
+              number.textContent = String(n);
+              kami.className += " gakkari";
+            }, still ? 0 : 900);
           }
           // 窓は画面に合わせて大きくする。広い画面ほど大きく、二倍まで。
           // 背の低い画面では、入りきるように小さくする
@@ -1668,7 +1691,7 @@ VISITOR_COUNTER = r"""    <div class="visitor-counter">
             open();
           }
         };
-        var tameshi = /^#kiriban-(\d{3,12})$/.exec(location.hash);
+        var tameshi = /^#kiriban-(\d{2,12})$/.exec(location.hash);
         if (tameshi) showKiriban(Number(tameshi[1]));
         var last = kept("raiho-kazu");
         if (last) shown.textContent = last;
@@ -1694,8 +1717,8 @@ VISITOR_COUNTER = r"""    <div class="visitor-counter">
 def load_kiriban():
     """キリ番の窓に出す、彼女の言葉。
 
-    futsuu はキリ番の言葉、nana は 777、7777 … の言葉。
-    無いものは渡さない。どちらも無ければ、窓は出ない。"""
+    futsuu はキリ番の言葉、nana は 77、777 … の言葉、zengo は前後賞の言葉。
+    無いものは渡さない。無い種類の番号には、窓は出ない(nana だけは futsuu で出す)。"""
     try:
         with open(KIRIBAN_FILE, "r", encoding="utf-8") as f:
             kept = json.load(f)
@@ -1705,7 +1728,7 @@ def load_kiriban():
         return {}
     return {
         name: said for name, said in kept.items()
-        if name in ("futsuu", "nana") and isinstance(said, str) and said.strip()
+        if name in ("futsuu", "nana", "zengo") and isinstance(said, str) and said.strip()
     }
 
 
