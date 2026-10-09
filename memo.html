@@ -40,12 +40,19 @@
           try { localStorage.setItem(key, value); return true; } catch (e) { return false; }
         };
         var kotoba = {"futsuu": "🎶キリ番おめでとう🎶\n（良ければコメントで報告してね！）", "nana": "♡あなたは超ラッキー♡\nヒューヒュー（正面からの吐息）\nウインク（右目）ウインク（左目）ウインク（両目）\nダブルピース（画面の前のあなた）\nからの両目ウインク（画面の前のあなた）\n（良かったら、コメントで報告してね！）"};
-        var kiriban = function (n) {
+        // キリ番の種類。7 が並ぶ番号は大当たり
+        var main = function (n) {
           var said = String(n);
-          if (!(n >= 100)) return "";
-          if (/^7+$/.test(said)) return kotoba.nana || kotoba.futsuu || "";
-          if (/^(\d)\1+$/.test(said) || /^[15]0+$/.test(said)) return kotoba.futsuu || "";
+          if (/^7{2,}$/.test(said)) return "nana";
+          if (n >= 100 && (/^(\d)\1+$/.test(said) || /^[15]0+$/.test(said))) return "futsuu";
+          if (said.length >= 3 && "123456789".indexOf(said) === 0) return "futsuu";
+          // 語呂合わせ。サンキュー、よろしく、ニコニコ
+          if (["3939", "4649", "2525"].indexOf(said) >= 0) return "futsuu";
           return "";
+        };
+        var wordsFor = function (kind) {
+          if (kind === "nana") return kotoba.nana || kotoba.futsuu || "";
+          return kotoba[kind] || "";
         };
         var made = function (tag, name, text) {
           var one = document.createElement(tag);
@@ -55,10 +62,11 @@
         };
         var niji = ["#f0ff00", "#69ff00", "#00ffd7", "#0a00ff", "#8300ff", "#ff00b6"];
         var showKiriban = function (n) {
-          var said = kiriban(n);
+          var kind = main(n);
+          var said = wordsFor(kind);
           if (!said) return;
           // 777 … は大当たり。後ろで虹の光が回り、番号がスロットのように回って止まる
-          var nana = /^7+$/.test(String(n));
+          var nana = kind === "nana";
           var still = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
           var mado = made("div", nana ? "kiriban-mado nana" : "kiriban-mado");
           mado.setAttribute("role", "dialog");
@@ -150,7 +158,7 @@
             open();
           }
         };
-        var tameshi = /^#kiriban-(\d{3,12})$/.exec(location.hash);
+        var tameshi = /^#kiriban-(\d{2,12})$/.exec(location.hash);
         if (tameshi) showKiriban(Number(tameshi[1]));
         var last = kept("raiho-kazu");
         if (last) shown.textContent = last;
@@ -184,12 +192,12 @@
 
     <div data-nosnippet class="side-block">
       <div data-nosnippet class="side-title">今後行くつもりの場所</div>
-      <p class="side-fact side-quiet">commons.wikimedia.org</p>
-      <p class="side-fact side-quiet">en.wikiquote.org</p>
-      <p class="side-fact side-quiet">gtwaction.org</p>
-      <p class="side-fact side-quiet">pikanopika.com</p>
-      <p class="side-fact side-quiet">[B! 日本語] 彼女がサークル内の男女比2:2の旅行に行くと言っているが、何も</p>
-      <p class="side-fact side-quiet">q.hatena.ne.jp</p>
+      <p class="side-fact side-quiet">www.flickr.com</p>
+      <p class="side-fact side-quiet">www.it2l.com</p>
+      <p class="side-fact side-quiet">www.amazon.co.jp</p>
+      <p class="side-fact side-quiet">View source for Wikibooks:General discla</p>
+      <p class="side-fact side-quiet">ntest.nikkei.jp</p>
+      <p class="side-fact side-quiet">www.google.com</p>
       <p class="side-fact side-quiet">ほか 982 箇所</p>
     </div>
 
