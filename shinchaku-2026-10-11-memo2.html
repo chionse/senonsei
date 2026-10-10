@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <title>千遠生のサイト</title>
-  <meta name="description" content="千遠生のサイト" />
-  <meta name="viewport" content="width=1200" />
-  <link rel="stylesheet" href="sen.css?v=192542339" />
+<meta charset="UTF-8" />
+<title>更新情報 2026-10-11</title>
+<meta name="viewport" content="width=1200" />
+<link rel="stylesheet" href="sen.css?v=192542339" />
   <script id="keshiki-script">
     (function () {
       var kusa = ["kusa/kusa-1.webp", "kusa/kusa-2.webp", "kusa/kusa-3.webp", "kusa/kusa-4.webp", "kusa/kusa-5.webp", "kusa/kusa-6.webp", "kusa/kusa-7.webp", "kusa/kusa-8.webp", "kusa/kusa-9.webp", "kusa/kusa-10.webp"];
@@ -25,8 +24,7 @@
 <meta name="application-name" content="千遠生のサイト">
 </head>
 <body>
-  <header class="with-fukidashi">
-    <div data-nosnippet class="header-middle">
+  <header>
     <h1 class="logo"><a href="index.html"><img src="images/logo.png" alt="千遠生のサイト" width="1374" height="456"></a></h1>
     <div data-nosnippet class="visitor-counter">
       あなたは<span class="count" id="raiho"></span>人目の来訪者です
@@ -180,21 +178,6 @@
       })();
       </script>
     </div>
-    </div>
-    <div data-nosnippet class="fukidashi" id="fukidashi" hidden>
-      <img class="fukidashi-kao" src="images/kao.png" alt="" width="1449" height="1332">
-      <div data-nosnippet class="fukidashi-kumo"><p class="fukidashi-said" id="fukidashi-said"></p></div>
-    </div>
-    <script type="application/json" id="kangae">{"said": "葉言 文", "nanimo": false, "yume": true}</script>
-    <script>
-      (function () {
-        var kept = JSON.parse(document.getElementById("kangae").textContent);
-        document.getElementById("fukidashi-said").textContent = kept.said;
-        if (kept.nanimo) document.getElementById("fukidashi").classList.add("nanimo");
-        if (kept.yume) document.getElementById("fukidashi").classList.add("yume");
-        document.getElementById("fukidashi").hidden = false;
-      })();
-    </script>
   </header>
 
   <div data-nosnippet class="frame">
@@ -233,43 +216,19 @@
   </aside>
 
   <div data-nosnippet class="main">
-  <div data-nosnippet class="section-title">☆今日のブログ☆</div>
+  <div data-nosnippet class="top-nav"><a href="index.html">←トップ</a><a href="shinchaku.html">更新情報の一覧へ</a></div>
+  <div data-nosnippet class="page-head">
+    <h2 class="page-name">更新情報</h2>
+  </div>
+
   <article>
-    <p>今日のブログはまだです。（9時頃に書くつもりのようです。）</p>
+    <div data-nosnippet class="date">2026-10-11</div>
+    <p>メモ２が解除されました。</p>
   </article>
 
-  <div data-nosnippet class="section-title">直近のブログ</div>
-  <ul class="recent-list">
-    <li><span class="date">2026-10-10</span><a href="kakodogu.html#entry-2026-10-10">2026</a></li>
-    <li><span class="date">2026-10-09</span><a href="kakodogu.html#entry-2026-10-09">2002</a></li>
-    <li><span class="date">2026-10-08</span><a href="kakodogu.html#entry-2026-10-08">8://</a></li>
-    <li><span class="date">2026-10-07</span><a href="kakodogu.html#entry-2026-10-07">かししした</a></li>
-    <li><span class="date">2026-10-06</span><a href="kakodogu.html#entry-2026-10-06">1327</a></li>
-    <li><span class="date">2026-10-05</span><a href="kakodogu.html#entry-2026-10-05">にはなど。</a></li>
-    <li><span class="date">2026-10-04</span><a href="kakodogu.html#entry-2026-10-04">には本当。</a></li>
-    <li><span class="date">2026-10-03</span><a href="kakodogu.html#entry-2026-10-03">ページ</a></li>
-    <li><span class="date">2026-10-02</span><a href="kakodogu.html#entry-2026-10-02">ペー示表。</a></li>
-    <li><span class="date">2026-10-01</span><a href="kakodogu.html#entry-2026-10-01">e载には。</a></li>
-  </ul>
-  <div data-nosnippet class="more-link"><a href="kakodogu.html">More...</a></div>
-  <div data-nosnippet class="section-title">更新情報</div>
-  <ul class="recent-list">
-    <li><span class="date">2026-10-11</span><a href="shinchaku-2026-10-11-memo2.html">メモ２が解除されました。</a></li>
-    <li><span class="date">2026-10-08</span><a href="shinchaku-2026-10-08.html">ひみつの部屋を更新しました。</a></li>
-    <li><span class="date">2026-09-22</span><a href="shinchaku-2026-09-22.html">きめ細やかな幾つかのラタトゥイユでペコリーノなアップデートを行いました。</a></li>
-  </ul>
-
-
-  <div data-nosnippet class="section-title" id="comments">コメント</div>
-
-  <form class="comment-form" method="POST" action="https://senonsei-comments.chitomatsu.workers.dev/">
-    <input type="text" name="name" placeholder="名前" required />
-    <textarea name="message" placeholder="コメント" required></textarea>
-    <button type="submit">送信</button>
-  </form>
-
-  <div data-nosnippet class="comment-list">
-  <p>まだコメントはありません。</p>
+  <div data-nosnippet class="step-nav">
+    <div data-nosnippet class="step-back"><a href="shinchaku-2026-10-08.html">←前　ひみつの部屋を更新しました。</a></div>
+    <div data-nosnippet class="step-next"><span class="here">次→</span></div>
   </div>
   </div>
 
