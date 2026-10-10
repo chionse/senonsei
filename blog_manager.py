@@ -950,6 +950,17 @@ def generate_memo_html(keywords, menu_items, articles):
       closeCloser();
       showWhatTheAddressSays();
     }});
+    // 開いたメモの紙の外を押したら、一覧に戻る(2026-10-11、彼女が決めた)。
+    // 後ろの一覧の道は押しても開かない。まず紙を閉じるだけにする。
+    // 絵を大きく見ているあいだは、その絵を閉じるほうが先
+    document.addEventListener('click', function (event) {{
+      var open = document.querySelector('.memo-page:not([hidden])');
+      if (!open || !document.getElementById('look-closer').hidden) {{ return; }}
+      if (event.target.closest('.memo-page')) {{ return; }}
+      event.preventDefault();
+      event.stopPropagation();
+      location.hash = '';
+    }}, true);
     showWhatTheAddressSays();
   </script>
 </body>
