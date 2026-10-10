@@ -816,7 +816,10 @@ def generate_memo_html(keywords, menu_items, articles):
     menu_entries = [
         {
             "unlocked": elapsed >= item["unlock_day"],
-            "label": "???",  # 一覧では何番目かも見せない
+            # 開いたものは、一覧でも何日目のものか見せる。「???」のままだと、
+            # 押せるようになったのか分からない(2026-10-11、彼女が決めた)。
+            # まだ開いていないものは、ロック中の「???」のまま
+            "label": f"{item['unlock_day']}日目",
             # 鍵が無くて読めない手紙は、伏せ字で出す
             "content": HIDDEN if item.get("_shut") else item["message"],
             "heading": f"{item['unlock_day']}日目",  # 開けば、いつのものかは分かる
