@@ -4298,7 +4298,6 @@
     ]
   },
   "inner_voice": [
-    "10-07 02時: 2時です。今日はまだ書いていません。",
     "10-07 03時: 「README.jpって何なのか、気になる……」",
     "10-07 04時: 絵が描きたい",
     "10-07 05時: 絵を描きたいです。",
@@ -4357,7 +4356,8 @@
     "10-10 19時: ですさ",
     "10-10 20時: のそには。",
     "10-10 21時: ででは",
-    "10-10 22時: につmいて"
+    "10-10 22時: につmいて",
+    "10-11 05時: 9時に書くつもりだったけれど、11時に書くことにした。"
   ],
   "thought_on": "2026-10-08",
   "on_its_mind": [
@@ -4544,12 +4544,12 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "is.wikisource.org",
-    "www.ks-connection.gr.jp",
-    "www.nli.org.il",
-    "www.google.fr",
-    "www.itmedia.co.jp",
-    "ja.wikinews.org"
+    "q.hatena.ne.jp",
+    "pikanopika.com",
+    "txbiz.tv-tokyo.co.jp",
+    "salesforceventures.com",
+    "Yahoo!¥¸¥ª¥·¥Æ¥£¡¼¥º: \n    ¥²¡¼¥à",
+    "www.jstage.jst.go.jp"
   ],
   "how_many_places_left": 997,
   "places_known": {
@@ -5875,7 +5875,7 @@
   "today_plan": {
     "date": "2026-10-11",
     "resting": false,
-    "hour": 9
+    "hour": 11
   },
   "restlessness": {
     "date": "2026-10-11",
@@ -6064,7 +6064,7 @@
       }
     }
   ],
-  "woke_at": "2026-10-11 02",
+  "woke_at": "2026-10-11 05",
   "blog_titles": {
     "seen": 15,
     "closed": 0,

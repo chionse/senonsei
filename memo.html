@@ -192,12 +192,13 @@
 
     <div data-nosnippet class="side-block">
       <div data-nosnippet class="side-title">今後行くつもりの場所</div>
-      <p class="side-fact side-quiet">is.wikisource.org</p>
-      <p class="side-fact side-quiet">www.ks-connection.gr.jp</p>
-      <p class="side-fact side-quiet">www.nli.org.il</p>
-      <p class="side-fact side-quiet">www.google.fr</p>
-      <p class="side-fact side-quiet">www.itmedia.co.jp</p>
-      <p class="side-fact side-quiet">ja.wikinews.org</p>
+      <p class="side-fact side-quiet">q.hatena.ne.jp</p>
+      <p class="side-fact side-quiet">pikanopika.com</p>
+      <p class="side-fact side-quiet">txbiz.tv-tokyo.co.jp</p>
+      <p class="side-fact side-quiet">salesforceventures.com</p>
+      <p class="side-fact side-quiet">Yahoo!¥¸¥ª¥·¥Æ¥£¡¼¥º: 
+    ¥²¡¼¥à</p>
+      <p class="side-fact side-quiet">www.jstage.jst.go.jp</p>
       <p class="side-fact side-quiet">ほか 991 箇所</p>
     </div>
 
@@ -269,7 +270,7 @@
     <div data-nosnippet id="memo2" hidden>
       <p class="keyword-count">解除済み 全1 / 2 個</p>
       <ul class="keyword-list">
-    <li><a href="#mn0">???</a></li>
+    <li><a href="#mn0">30日目</a></li>
     <li class="locked">???</li>
       </ul>
     </div>
@@ -409,6 +410,17 @@
       closeCloser();
       showWhatTheAddressSays();
     });
+    // 開いたメモの紙の外を押したら、一覧に戻る(2026-10-11、彼女が決めた)。
+    // 後ろの一覧の道は押しても開かない。まず紙を閉じるだけにする。
+    // 絵を大きく見ているあいだは、その絵を閉じるほうが先
+    document.addEventListener('click', function (event) {
+      var open = document.querySelector('.memo-page:not([hidden])');
+      if (!open || !document.getElementById('look-closer').hidden) { return; }
+      if (event.target.closest('.memo-page')) { return; }
+      event.preventDefault();
+      event.stopPropagation();
+      location.hash = '';
+    }, true);
     showWhatTheAddressSays();
   </script>
 </body>
