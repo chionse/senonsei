@@ -2041,7 +2041,9 @@ def fukidashi_html(state):
     出すのは二十三時から朝七時まで(2026-10-08、彼女が決めた)。"""
     if not SHOWING_WHAT_IT_THINKS:
         return ""
-    lines = state.get("inner_voice") or []
+    # 書く時刻を決め直した時の一行(A_CHANGE_OF_MIND)は、決まった文で残している記録で、
+    # この子が自分の言葉で思ったことではない。雲には出さない(2026-10-11、彼女が決めた)
+    lines = [one for one in state.get("inner_voice") or [] if not A_CHANGE_OF_MIND.match(one)]
     when, _, said = lines[-1].partition(": ") if lines else ("", "", "")
     said = said.strip()
     now = now_in_japan()
