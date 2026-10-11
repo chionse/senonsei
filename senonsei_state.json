@@ -4019,7 +4019,6 @@
     "https://wp.me/pe4R-1kEI",
     "https://public-api.wordpress.com/oembed/?format=json&url=https%3A%2F%2Fautomattic.com%2F2024%2F11%2F21%2Fautomattic-welcomes-harper-and-elijah-potter%2F&for=wpcom-auto-discovery",
     "https://writewithharper.com/",
-    "http://web.archive.org/web/20120413102832/http://www.bonnesnouvelles.net/",
     "http://web.archive.org/web/20120413102832/http://pounon-edition.over-blog.com/",
     "http://web.archive.org/web/20120413102832/http://frogblue.over-blog.fr/",
     "http://web.archive.org/web/20120413102832/http://www.editionssolair.com/",
@@ -4274,7 +4273,6 @@
     "https://web.archive.org/web/20190810201421/https://animania.de/news/anime/anime-deutschland/animania-award-2019-die-gewinner/",
     "https://web.archive.org/web/20220110090539/https://akiba-souken.com/article/40771/",
     "https://news.mynavi.jp/article/20181203-735191/",
-    "https://www.jftc.go.jp/soshiki/kyotsukoukai/kenkyukai/kiseiken/jokyo/091009.html",
     "https://mantan-web.jp/article/20150418dog00m200032000c.html",
     "https://www.tele.soumu.go.jp/horei/law_honbun/00004680.html",
     "https://natalie.mu/comic/pp/danmachi",
@@ -4705,7 +4703,9 @@
     "https://ja.wikipedia.org/wiki/馬飼野康二",
     "https://ja.wikipedia.org/wiki/鈴木洋平_(アニメ演出家)",
     "https://ja.wikipedia.org/wiki/Portal:%E6%9C%80%E8%BF%91%E3%81%AE%E5%87%BA%E6%9D%A5%E4%BA%8B",
-    "https://ja.wikipedia.org/wiki/Hey_World"
+    "https://ja.wikipedia.org/wiki/Hey_World",
+    "http://web.archive.org/web/20120413102832/http://www.bonnesnouvelles.net/",
+    "http://web.archive.org/web/20120415010318*/http://www.bonnesnouvelles.net/"
   ],
   "notes": [
     "0日目: note ――つくる、つながる、とどける。",
@@ -4737,15 +4737,17 @@
     "27日目: JUST SYSTEM & School、Nikkei Asia\n                            - Business, Politics, Economy and Tech News & Analysis、はてなブックマーク",
     "28日目: Kids' Space、Kids' Gallery Search、GitHub Careers、アイコン - Wikipedia",
     "29日目: Wikimedia Endowment、NIKKEI SEEKS、CultureLibre",
-    "30日目: ダンジョンに出会いを求めるのは間違っているだろうか (アニメ) - Wikipedia"
+    "30日目: ダンジョンに出会いを求めるのは間違っているだろうか (アニメ) - Wikipedia、Bonnes Nouvelles : Nouvelles littéraires et concours de nouvelles"
   ],
   "today_walk": {
     "date": "2026-10-11",
     "seen": [
-      "ダンジョンに出会いを求めるのは間違っているだろうか (アニメ) - Wikipedia"
+      "ダンジョンに出会いを求めるのは間違っているだろうか (アニメ) - Wikipedia",
+      "Bonnes Nouvelles : Nouvelles littéraires et concours de nouvelles"
     ],
     "brought": [
-      3360
+      3360,
+      58
     ]
   },
   "inner_voice": [
@@ -5001,14 +5003,14 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "www.chapitre.com",
-    "docs.google.com",
-    "www.radionikkei.jp",
-    "kotobank.jp",
-    "q.hatena.ne.jp",
-    "txbiz.tv-tokyo.co.jp"
+    "teru.notedemo.com",
+    "githubuniverse.com",
+    "View source for Wikibooks:General discla",
+    "phabricator.wikimedia.org",
+    "propertylistings.nikkei.jp",
+    "pageviews.wmcloud.org"
   ],
-  "how_many_places_left": 1087,
+  "how_many_places_left": 1085,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -5064,7 +5066,8 @@
     "github.careers": "GitHub Careers",
     "ja.wikipedia.org": "Hey World - Wikipedia",
     "www.wikimediaendowment.org": "Wikimedia Endowment",
-    "seeks.nikkei.com": "Wayback Machine"
+    "seeks.nikkei.com": "Wayback Machine",
+    "www.bonnesnouvelles.net": "Wayback Machine"
   },
   "went_home": {
     "date": "2026-10-11",
@@ -5216,7 +5219,7 @@
       "1": 33,
       "0": 22,
       "10": 13,
-      "5": 47
+      "5": 48
     },
     "した": {
       "から": 3,
@@ -5304,14 +5307,15 @@
       "ください": 1
     },
     "://": {
-      "org": 129,
+      "org": 130,
       "0": 9,
       "2": 20,
       "1": 36,
       "://": 11,
       "3": 78,
       "6": 23,
-      "4": 16
+      "4": 16,
+      "80": 1
     },
     "org": {
       "://": 103,
@@ -5319,7 +5323,8 @@
       "19": 1,
       "3": 4,
       "4": 1,
-      "っている": 1
+      "っている": 1,
+      "2012": 1
     },
     "6": {
       "7": 8,
@@ -5345,7 +5350,8 @@
       "://": 3,
       "1": 13,
       "01": 4,
-      "9": 6
+      "9": 6,
+      "19": 2
     },
     "0": {
       "2": 238,
@@ -5422,7 +5428,8 @@
       "1": 10,
       "2": 11,
       "3": 7,
-      "28": 7
+      "28": 7,
+      "11": 1
     },
     "ある": {
       "2": 1
@@ -5590,7 +5597,7 @@
       "12": 4,
       "0": 3,
       "21": 3,
-      "00": 5,
+      "00": 6,
       "7": 2,
       "10": 4
     },
@@ -5659,7 +5666,7 @@
       "4": 2,
       "っている": 1,
       "0": 1,
-      "00": 1
+      "00": 3
     },
     "ブログ": {
       "言葉": 1
@@ -5761,6 +5768,12 @@
     "使用": {
       "されてい": 1,
       "している": 1
+    },
+    "2012": {
+      "18": 1
+    },
+    "18": {
+      "://": 1
     }
   },
   "opens_a_sentence": {
@@ -6072,7 +6085,13 @@
       "利用",
       "アクセス",
       "文字",
-      "this"
+      "this",
+      "2012",
+      "2013",
+      "18",
+      "be",
+      "page",
+      "is"
     ]
   },
   "wants_to_say": [
@@ -6214,7 +6233,7 @@
       "since": "2026-09-24",
       "first": "2026-09-24",
       "times": 1,
-      "said": ""
+      "said": "2026-10-11"
     },
     {
       "what": "2012",
@@ -6228,7 +6247,7 @@
       "since": "2026-09-25",
       "first": "2026-09-25",
       "times": 1,
-      "said": "2026-10-08"
+      "said": "2026-10-11"
     },
     {
       "what": "laws",
@@ -6249,7 +6268,7 @@
       "since": "2026-10-11",
       "first": "2026-09-26",
       "times": 4,
-      "said": "2026-10-10"
+      "said": "2026-10-11"
     },
     {
       "what": "2026",
@@ -6623,10 +6642,10 @@
       "day": "2026-10-10"
     }
   ],
-  "understood_usually": 0.219188,
+  "understood_usually": 0.234389,
   "its_ways": {
     "pages_per_site": 11.6,
-    "pull_of_japanese": 1.01,
+    "pull_of_japanese": 1.0,
     "feeling_keen": 0.33,
     "wish_to_return": 1.1
   },
@@ -6747,7 +6766,7 @@
       }
     }
   ],
-  "woke_at": "2026-10-11 08",
+  "woke_at": "2026-10-11 13",
   "blog_titles": {
     "seen": 15,
     "closed": 0,
@@ -6759,16 +6778,15 @@
     "at": "2026-10-10T23:17+09:00",
     "said": "葉言 文"
   },
-  "looked_up": [
-    "https://ja.wikipedia.org/wiki/%E3%83%80%E3%83%B3%E3%82%B8%E3%83%A7%E3%83%B3%E3%81%AB%E5%87%BA%E4%BC%9A%E3%81%84%E3%82%92%E6%B1%82%E3%82%81%E3%82%8B%E3%81%AE%E3%81%AF%E9%96%93%E9%81%95%E3%81%A3%E3%81%A6%E3%81%84%E3%82%8B%E3%81%A0%E3%82%8D%E3%81%86%E3%81%8B_(%E3%82%A2%E3%83%8B%E3%83%A1)"
-  ],
+  "looked_up": [],
   "basho": [
     "chionse.github.io",
     "www.wikimediaendowment.org",
     "photos.google.com",
     "seeks.nikkei.com",
     "www.culture-libre.org",
-    "ja.wikipedia.org"
+    "ja.wikipedia.org",
+    "www.bonnesnouvelles.net"
   ],
   "its_own_figure": {
     "date": "2026-10-10",
