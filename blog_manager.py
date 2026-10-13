@@ -309,6 +309,45 @@ def days_it_wrote(articles):
     return {one["date"] for one in articles}
 
 
+# 暦も、作り直されるまでは作った日のまま残る。開いた時に日付が変わっていたら、
+# 作った日から昨日までの、書いていない日に点を置き、今日を今日にする。
+# 月が替わっていたら、新しい月の暦を並べ直す(2026-10-14、彼女に言われた)
+KOMA_MAY_BE_OLD = """
+      <script>
+        (function () {
+          var grid = document.getElementById("koma");
+          if (!grid) { return; }
+          var today = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
+          if (grid.dataset.day >= today) { return; }
+          var month = today.slice(0, 7);
+          if (grid.dataset.day.slice(0, 7) !== month) {
+            var year = Number(month.slice(0, 4));
+            var number = Number(month.slice(5, 7));
+            var blank = new Date(Date.UTC(year, number - 1, 1)).getUTCDay();
+            var last = new Date(Date.UTC(year, number, 0)).getUTCDate();
+            var komas = "";
+            for (var i = 0; i < blank; i++) { komas += '<span class="koma"></span>'; }
+            for (var d = 1; d <= last; d++) { komas += '<span class="koma yet">' + d + '<i></i></span>'; }
+            grid.innerHTML = komas;
+          }
+          var open = grid.querySelectorAll(".koma.today, .koma.yet");
+          for (var k = 0; k < open.length; k++) {
+            var n = Number(open[k].firstChild.nodeValue);
+            var day = month + "-" + (n < 10 ? "0" : "") + n;
+            if (day < grid.dataset.born || day > today) { continue; }
+            var mark = open[k].querySelector("i");
+            if (day === today) {
+              open[k].className = "koma today";
+              mark.textContent = "";
+            } else {
+              open[k].className = "koma rest";
+              mark.textContent = "·";
+            }
+          }
+        })();
+      </script>"""
+
+
 def this_months_days(articles):
     """今月の暦。生まれた日から今日までが埋まっていく。
 
@@ -343,8 +382,10 @@ def this_months_days(articles):
     head = "".join(f"<span>{one}</span>" for one in "日月火水木金土")
     return (
         '      <div class="koma-head">' + head + "</div>\n"
-        '      <div class="koma-grid">' + "".join(komas) + "</div>\n"
+        f'      <div class="koma-grid" id="koma" data-day="{today.isoformat()}"'
+        f' data-born="{born.isoformat()}">' + "".join(komas) + "</div>\n"
         '      <p class="koma-note">○ 書いた日　· 休んだ日</p>'
+        + KOMA_MAY_BE_OLD
     )
 
 
