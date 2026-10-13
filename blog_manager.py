@@ -309,6 +309,45 @@ def days_it_wrote(articles):
     return {one["date"] for one in articles}
 
 
+# 暦も、作り直されるまでは作った日のまま残る。開いた時に日付が変わっていたら、
+# 作った日から昨日までの、書いていない日に点を置き、今日を今日にする。
+# 月が替わっていたら、新しい月の暦を並べ直す(2026-10-14、彼女に言われた)
+KOMA_MAY_BE_OLD = """
+      <script>
+        (function () {
+          var grid = document.getElementById("koma");
+          if (!grid) { return; }
+          var today = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
+          if (grid.dataset.day >= today) { return; }
+          var month = today.slice(0, 7);
+          if (grid.dataset.day.slice(0, 7) !== month) {
+            var year = Number(month.slice(0, 4));
+            var number = Number(month.slice(5, 7));
+            var blank = new Date(Date.UTC(year, number - 1, 1)).getUTCDay();
+            var last = new Date(Date.UTC(year, number, 0)).getUTCDate();
+            var komas = "";
+            for (var i = 0; i < blank; i++) { komas += '<span class="koma"></span>'; }
+            for (var d = 1; d <= last; d++) { komas += '<span class="koma yet">' + d + '<i></i></span>'; }
+            grid.innerHTML = komas;
+          }
+          var open = grid.querySelectorAll(".koma.today, .koma.yet");
+          for (var k = 0; k < open.length; k++) {
+            var n = Number(open[k].firstChild.nodeValue);
+            var day = month + "-" + (n < 10 ? "0" : "") + n;
+            if (day < grid.dataset.born || day > today) { continue; }
+            var mark = open[k].querySelector("i");
+            if (day === today) {
+              open[k].className = "koma today";
+              mark.textContent = "";
+            } else {
+              open[k].className = "koma rest";
+              mark.textContent = "·";
+            }
+          }
+        })();
+      </script>"""
+
+
 def this_months_days(articles):
     """今月の暦。生まれた日から今日までが埋まっていく。
 
@@ -343,8 +382,10 @@ def this_months_days(articles):
     head = "".join(f"<span>{one}</span>" for one in "日月火水木金土")
     return (
         '      <div class="koma-head">' + head + "</div>\n"
-        '      <div class="koma-grid">' + "".join(komas) + "</div>\n"
+        f'      <div class="koma-grid" id="koma" data-day="{today.isoformat()}"'
+        f' data-born="{born.isoformat()}">' + "".join(komas) + "</div>\n"
         '      <p class="koma-note">○ 書いた日　· 休んだ日</p>'
+        + KOMA_MAY_BE_OLD
     )
 
 
@@ -2131,6 +2172,36 @@ def what_it_meant_to_do(plan, first):
     return f"（初めは{was_hour}時頃に書くつもりでしたが、{now_hour}時頃に変更したようです。）"
 
 
+# ページは千遠生が起こされた時にしか作り直されない。夜中に日付が変わっても
+# 次に起こされるまでは、昨日の様子が「今日のブログ」に残っていた。
+# 開いた時に日付が変わっていたら、ページのほうで「まだ」に戻し、
+# 昨日の記事は直近のブログの先頭へ移す(2026-10-14、彼女と決めた)
+TODAY_MAY_BE_OVER = f"""
+  <script>
+    (function () {{
+      var kyou = document.getElementById("kyou");
+      if (!kyou) {{ return; }}
+      var today = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
+      if (kyou.dataset.day === today) {{ return; }}
+      var list = document.getElementById("chokkin");
+      if (kyou.dataset.entry && list) {{
+        var li = document.createElement("li");
+        var day = document.createElement("span");
+        day.className = "date";
+        day.textContent = kyou.dataset.entry;
+        var link = document.createElement("a");
+        link.href = "kakodogu.html#entry-" + kyou.dataset.entry;
+        link.textContent = kyou.dataset.title;
+        li.appendChild(day);
+        li.appendChild(link);
+        list.insertBefore(li, list.firstElementChild);
+        while (list.children.length > {RECENT_COUNT}) {{ list.removeChild(list.lastElementChild); }}
+      }}
+      kyou.innerHTML = "<p>今日のブログはまだです。</p>";
+    }})();
+  </script>"""
+
+
 def generate_index_html(articles, state=None, news=None):
     ordered = sorted_articles(articles)
     state = state or load_senonsei_state()
@@ -2147,13 +2218,13 @@ def generate_index_html(articles, state=None, news=None):
         wrote_today = ordered[0]["date"] == today_in_japan().isoformat()
         if wrote_today:
             latest = ordered[0]
-            latest_html = f"""<article>
+            latest_html = f"""<article id="kyou" data-day="{today}" data-entry="{latest['date']}" data-title="{escape_html(latest['title'], quote=True)}">
     <div class="date today-head"><a class="article-title" href="kakodogu.html#entry-{latest['date']}">{latest['title']}</a>{iine_html(latest['date'])}<span class="today-when">{latest['date']} {latest.get('time', '')}</span></div>
     <p>{latest['content']}</p>
   </article>"""
         elif plan.get("date") == today_in_japan().isoformat() and plan.get("resting"):
             # 今日は書かないと、この子自身が決めた日
-            latest_html = f'<article>\n    <p>今日のブログはお休みです。{changed or ""}</p>\n  </article>'
+            latest_html = f'<article id="kyou" data-day="{today}">\n    <p>今日のブログはお休みです。{changed or ""}</p>\n  </article>'
         else:
             # 書くつもりでまだ書いていないか、今日をどう過ごすかまだ決めていない。
             # 何時ごろに書くつもりかを自分で決めているなら、それも添える。
@@ -2168,7 +2239,7 @@ def generate_index_html(articles, state=None, news=None):
                 and now_in_japan().hour <= plan.get("hour", 0)
             ):
                 yet += f"（{plan['hour']}時頃に書くつもりのようです。）"
-            latest_html = f"<article>\n    <p>{yet}</p>\n  </article>"
+            latest_html = f'<article id="kyou" data-day="{today}">\n    <p>{yet}</p>\n  </article>'
 
         # 今日書いていないなら、いちばん新しい記事は直近のほうに並ぶ
         start = 1 if wrote_today else 0
@@ -2180,7 +2251,7 @@ def generate_index_html(articles, state=None, news=None):
                 for a in recent
             )
             recent_html = f"""<div class="section-title">直近のブログ</div>
-  <ul class="recent-list">
+  <ul class="recent-list" id="chokkin">
 {items}
   </ul>
   <div class="more-link"><a href="kakodogu.html">More...</a></div>"""
@@ -2237,7 +2308,7 @@ def generate_index_html(articles, state=None, news=None):
   <div class="section-title">☆今日のブログ☆</div>
   {latest_html}
 
-  {recent_html}{news_html}
+  {recent_html}{TODAY_MAY_BE_OVER}{news_html}
 
   <div class="section-title" id="comments">コメント</div>
 
