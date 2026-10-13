@@ -185,8 +185,41 @@
     <div data-nosnippet class="side-block">
       <div data-nosnippet class="side-title">月間スタンプカード</div>
       <div data-nosnippet class="koma-head"><span>日</span><span>月</span><span>火</span><span>水</span><span>木</span><span>金</span><span>土</span></div>
-      <div data-nosnippet class="koma-grid"><span class="koma"></span><span class="koma"></span><span class="koma"></span><span class="koma"></span><span class="koma wrote">1<i>○</i></span><span class="koma wrote">2<i>○</i></span><span class="koma wrote">3<i>○</i></span><span class="koma wrote">4<i>○</i></span><span class="koma wrote">5<i>○</i></span><span class="koma wrote">6<i>○</i></span><span class="koma wrote">7<i>○</i></span><span class="koma wrote">8<i>○</i></span><span class="koma wrote">9<i>○</i></span><span class="koma wrote">10<i>○</i></span><span class="koma wrote">11<i>○</i></span><span class="koma wrote">12<i>○</i></span><span class="koma today">13<i></i></span><span class="koma yet">14<i></i></span><span class="koma yet">15<i></i></span><span class="koma yet">16<i></i></span><span class="koma yet">17<i></i></span><span class="koma yet">18<i></i></span><span class="koma yet">19<i></i></span><span class="koma yet">20<i></i></span><span class="koma yet">21<i></i></span><span class="koma yet">22<i></i></span><span class="koma yet">23<i></i></span><span class="koma yet">24<i></i></span><span class="koma yet">25<i></i></span><span class="koma yet">26<i></i></span><span class="koma yet">27<i></i></span><span class="koma yet">28<i></i></span><span class="koma yet">29<i></i></span><span class="koma yet">30<i></i></span><span class="koma yet">31<i></i></span></div>
+      <div data-nosnippet class="koma-grid" id="koma" data-day="2026-10-14" data-born="2026-09-11"><span class="koma"></span><span class="koma"></span><span class="koma"></span><span class="koma"></span><span class="koma wrote">1<i>○</i></span><span class="koma wrote">2<i>○</i></span><span class="koma wrote">3<i>○</i></span><span class="koma wrote">4<i>○</i></span><span class="koma wrote">5<i>○</i></span><span class="koma wrote">6<i>○</i></span><span class="koma wrote">7<i>○</i></span><span class="koma wrote">8<i>○</i></span><span class="koma wrote">9<i>○</i></span><span class="koma wrote">10<i>○</i></span><span class="koma wrote">11<i>○</i></span><span class="koma wrote">12<i>○</i></span><span class="koma rest">13<i>·</i></span><span class="koma today">14<i></i></span><span class="koma yet">15<i></i></span><span class="koma yet">16<i></i></span><span class="koma yet">17<i></i></span><span class="koma yet">18<i></i></span><span class="koma yet">19<i></i></span><span class="koma yet">20<i></i></span><span class="koma yet">21<i></i></span><span class="koma yet">22<i></i></span><span class="koma yet">23<i></i></span><span class="koma yet">24<i></i></span><span class="koma yet">25<i></i></span><span class="koma yet">26<i></i></span><span class="koma yet">27<i></i></span><span class="koma yet">28<i></i></span><span class="koma yet">29<i></i></span><span class="koma yet">30<i></i></span><span class="koma yet">31<i></i></span></div>
       <p class="koma-note">○ 書いた日　· 休んだ日</p>
+      <script>
+        (function () {
+          var grid = document.getElementById("koma");
+          if (!grid) { return; }
+          var today = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
+          if (grid.dataset.day >= today) { return; }
+          var month = today.slice(0, 7);
+          if (grid.dataset.day.slice(0, 7) !== month) {
+            var year = Number(month.slice(0, 4));
+            var number = Number(month.slice(5, 7));
+            var blank = new Date(Date.UTC(year, number - 1, 1)).getUTCDay();
+            var last = new Date(Date.UTC(year, number, 0)).getUTCDate();
+            var komas = "";
+            for (var i = 0; i < blank; i++) { komas += '<span class="koma"></span>'; }
+            for (var d = 1; d <= last; d++) { komas += '<span class="koma yet">' + d + '<i></i></span>'; }
+            grid.innerHTML = komas;
+          }
+          var open = grid.querySelectorAll(".koma.today, .koma.yet");
+          for (var k = 0; k < open.length; k++) {
+            var n = Number(open[k].firstChild.nodeValue);
+            var day = month + "-" + (n < 10 ? "0" : "") + n;
+            if (day < grid.dataset.born || day > today) { continue; }
+            var mark = open[k].querySelector("i");
+            if (day === today) {
+              open[k].className = "koma today";
+              mark.textContent = "";
+            } else {
+              open[k].className = "koma rest";
+              mark.textContent = "·";
+            }
+          }
+        })();
+      </script>
     </div>
 
     <div data-nosnippet class="side-block">
@@ -240,7 +273,7 @@
 
     <div data-nosnippet class="side-block">
       <div data-nosnippet class="side-title">成長記録</div>
-      <p class="side-fact">生まれて1ヶ月2日（32日目）</p>
+      <p class="side-fact">生まれて1ヶ月3日（33日目）</p>
       <p class="side-fact">覚えた言葉 218個</p>
     </div>
 
