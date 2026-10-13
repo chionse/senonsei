@@ -2131,6 +2131,36 @@ def what_it_meant_to_do(plan, first):
     return f"（初めは{was_hour}時頃に書くつもりでしたが、{now_hour}時頃に変更したようです。）"
 
 
+# ページは千遠生が起こされた時にしか作り直されない。夜中に日付が変わっても
+# 次に起こされるまでは、昨日の様子が「今日のブログ」に残っていた。
+# 開いた時に日付が変わっていたら、ページのほうで「まだ」に戻し、
+# 昨日の記事は直近のブログの先頭へ移す(2026-10-14、彼女と決めた)
+TODAY_MAY_BE_OVER = f"""
+  <script>
+    (function () {{
+      var kyou = document.getElementById("kyou");
+      if (!kyou) {{ return; }}
+      var today = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
+      if (kyou.dataset.day === today) {{ return; }}
+      var list = document.getElementById("chokkin");
+      if (kyou.dataset.entry && list) {{
+        var li = document.createElement("li");
+        var day = document.createElement("span");
+        day.className = "date";
+        day.textContent = kyou.dataset.entry;
+        var link = document.createElement("a");
+        link.href = "kakodogu.html#entry-" + kyou.dataset.entry;
+        link.textContent = kyou.dataset.title;
+        li.appendChild(day);
+        li.appendChild(link);
+        list.insertBefore(li, list.firstElementChild);
+        while (list.children.length > {RECENT_COUNT}) {{ list.removeChild(list.lastElementChild); }}
+      }}
+      kyou.innerHTML = "<p>今日のブログはまだです。</p>";
+    }})();
+  </script>"""
+
+
 def generate_index_html(articles, state=None, news=None):
     ordered = sorted_articles(articles)
     state = state or load_senonsei_state()
@@ -2147,13 +2177,13 @@ def generate_index_html(articles, state=None, news=None):
         wrote_today = ordered[0]["date"] == today_in_japan().isoformat()
         if wrote_today:
             latest = ordered[0]
-            latest_html = f"""<article>
+            latest_html = f"""<article id="kyou" data-day="{today}" data-entry="{latest['date']}" data-title="{escape_html(latest['title'], quote=True)}">
     <div class="date today-head"><a class="article-title" href="kakodogu.html#entry-{latest['date']}">{latest['title']}</a>{iine_html(latest['date'])}<span class="today-when">{latest['date']} {latest.get('time', '')}</span></div>
     <p>{latest['content']}</p>
   </article>"""
         elif plan.get("date") == today_in_japan().isoformat() and plan.get("resting"):
             # 今日は書かないと、この子自身が決めた日
-            latest_html = f'<article>\n    <p>今日のブログはお休みです。{changed or ""}</p>\n  </article>'
+            latest_html = f'<article id="kyou" data-day="{today}">\n    <p>今日のブログはお休みです。{changed or ""}</p>\n  </article>'
         else:
             # 書くつもりでまだ書いていないか、今日をどう過ごすかまだ決めていない。
             # 何時ごろに書くつもりかを自分で決めているなら、それも添える。
@@ -2168,7 +2198,7 @@ def generate_index_html(articles, state=None, news=None):
                 and now_in_japan().hour <= plan.get("hour", 0)
             ):
                 yet += f"（{plan['hour']}時頃に書くつもりのようです。）"
-            latest_html = f"<article>\n    <p>{yet}</p>\n  </article>"
+            latest_html = f'<article id="kyou" data-day="{today}">\n    <p>{yet}</p>\n  </article>'
 
         # 今日書いていないなら、いちばん新しい記事は直近のほうに並ぶ
         start = 1 if wrote_today else 0
@@ -2180,7 +2210,7 @@ def generate_index_html(articles, state=None, news=None):
                 for a in recent
             )
             recent_html = f"""<div class="section-title">直近のブログ</div>
-  <ul class="recent-list">
+  <ul class="recent-list" id="chokkin">
 {items}
   </ul>
   <div class="more-link"><a href="kakodogu.html">More...</a></div>"""
@@ -2237,7 +2267,7 @@ def generate_index_html(articles, state=None, news=None):
   <div class="section-title">☆今日のブログ☆</div>
   {latest_html}
 
-  {recent_html}{news_html}
+  {recent_html}{TODAY_MAY_BE_OVER}{news_html}
 
   <div class="section-title" id="comments">コメント</div>
 
