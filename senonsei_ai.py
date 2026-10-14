@@ -376,6 +376,27 @@ DOORS_TO_TRY = 2  # 扉は多くても二つまで。探し回るためのもの
 PATHS_FROM_A_DOOR = 30
 
 RETURN_TO_ENTRANCE_CHANCE = 0.12  # ときどき、最初にいた入口へ戻ってみる
+# 名前は分かれていても、同じ持ち主の仲間のサイト。行き先の束では一つの持ち主として数える。
+# Wikipedia の仲間は言語ごと・種類ごとに名前が分かれていて、別々の持ち主として
+# 数えられていたので、仲間だけで行き先の一割ほどを占めていた(2026-10-14、彼女と決めた)。
+# 一人ひとりが書く場所(はてなブログ、github.io など)は、仲間にまとめない
+FAMILIES = {
+    "ウィキの仲間": (
+        "wikipedia.org", "wiktionary.org", "wikibooks.org", "wikivoyage.org", "wikinews.org",
+        "wikiquote.org", "wikisource.org", "wikiversity.org", "wikimedia.org", "wikidata.org",
+        "wikifunctions.org", "mediawiki.org", "wikimediafoundation.org", "wikimediaendowment.org",
+    ),
+    "日経の仲間": ("nikkei.com", "nikkei.co.jp", "nikkei.jp", "nikkei-cnbc.co.jp", "nikkeibp.co.jp"),
+    "GitHub の仲間": ("github.com", "githubstatus.com", "githubusercontent.com", "github.blog"),
+    "Google の仲間": ("google.com", "google.co.jp", "youtube.com"),
+}
+# 最近歩いた仲間の場所には、しばらく惹かれにくい(2026-10-14、彼女と決めた)。
+# 直近これだけのページで歩いた仲間を「最近」とする。一か所でおよそ十ページ読むので、三か所ぶんほど
+RECENT_PAGES_FOR_FAMILIES = 35
+AWAY_FROM_RECENT = 0.3  # 最近歩いた仲間への惹かれ方は、これだけに弱まる
+# ときどき、最初の入口のどれかから歩き直す(2026-10-14、彼女と決めた)。
+# リンクを辿るだけだと、似た場所の仲間ばかりが行き先に溜まっていく
+FRESH_START_CHANCE = 0.15
 TRIES_BEFORE_GIVING_UP = 3  # 行った先が消えていたら、これだけ別の場所を試してみる
 # 尋ねすぎた時は、少し待ってから尋ね直す。一日は長いし、急かす人もいない
 HOW_LONG_TO_WAIT = (20, 45, 90)
@@ -2082,6 +2103,23 @@ def owner_of(place):
     return ".".join(parts[-2:]) if len(parts) >= 2 else place
 
 
+def family_of(place):
+    """その場所の仲間。仲間に入っていなければ、持ち主がそのまま仲間の名前になる。"""
+    owner = owner_of(place)
+    for family, members in FAMILIES.items():
+        if owner in members:
+            return family
+    return owner
+
+
+def families_walked_lately(state):
+    """最近歩いた場所の仲間。"""
+    return {
+        family_of(place_of(url))
+        for url in (state.get("visited") or [])[-RECENT_PAGES_FOR_FAMILIES:]
+    }
+
+
 def tidy_frontier(state):
     """行き先の束を整える。
     読むものが無い裏方を捨て、ひとつの場所の道が多すぎたら適当に間引く。
@@ -2096,7 +2134,7 @@ def tidy_frontier(state):
         place = place_of(url)
         if kept_by_place.get(place, 0) >= PATHS_PER_PLACE:
             continue
-        owner = owner_of(place)
+        owner = family_of(place)
         if kept_by_owner.get(owner, 0) >= PATHS_PER_OWNER:
             continue
         kept_by_place[place] = kept_by_place.get(place, 0) + 1
@@ -2511,6 +2549,12 @@ def choose_destination(state):
     if looked_up and random.random() < min(0.9, reading_it):
         return looked_up[-1], False
 
+    # ときどきは、最初の入口のどれかから歩き直す。最近歩いた仲間の入口は避ける
+    lately = families_walked_lately(state)
+    if random.random() < FRESH_START_CHANCE:
+        fresh = [one for one in SEEDS if family_of(place_of(one)) not in lately] or list(SEEDS)
+        return random.choice(fresh), False
+
     candidates = spread_out_choices(state, frontier, CHOICES_SHOWN)
     # もう一度行きたいと思い出した場所と、引いてまだ読んでいない記事は、
     # いつも候補に入っている
@@ -2520,7 +2564,11 @@ def choose_destination(state):
     # 選ぶのはこの子。持っているものから決める。
     # 借りた頭に選ばせていたので、行き先だけは他人が決めていた
     close = evened_out(words_it_holds_close(state))
-    weights = [what_draws_it(state, url, close) for url in candidates]
+    # 最近歩いた仲間の場所には、しばらく惹かれにくい
+    weights = [
+        what_draws_it(state, url, close) * (AWAY_FROM_RECENT if family_of(place_of(url)) in lately else 1)
+        for url in candidates
+    ]
     return (
         random.choices(candidates, weights=weights)[0],
         random.random() < WANTING_THE_PAST,
