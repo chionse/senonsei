@@ -2,6 +2,7 @@ import datetime
 import json
 import os
 import re
+import urllib.parse
 import zlib
 from html import escape as escape_html
 
@@ -49,7 +50,7 @@ WHERE_SHE_WROTE = (
     (HIMITSU_PAGE, "ひみつの部屋"),
 )
 WALKED_SHOWN = 3  # 今日歩いたところを、多くてもこれだけ出す
-LEARNED_SHOWN = 5  # 最近覚えた言葉を、新しいほうからこれだけ出す
+LEARNED_SHOWN = 20  # トップの最近覚えた言葉を、新しいほうからこれだけ並べる(2026-10-14、彼女が決めた)
 # 気がかりは一つも捨てないので、ここに出すのは前に出ているぶんだけ。
 # 抱えていないのではなく、いま手前にあるのがこれ、ということ
 MINDED_SHOWN = 3
@@ -225,6 +226,13 @@ def side_panel(state, here):
         + "\n      </nav>\n    </div>"
     )
 
+    # 語彙辞典の入口。区画の見出しそのものを押すと入る(2026-10-11、彼女と決めた)
+    blocks.append(
+        '    <div class="side-block">\n'
+        f'      <div class="side-title"><a href="{JITEN_PAGE}">{JITEN_NAME}</a></div>\n'
+        "    </div>"
+    )
+
     today = today_in_japan()
     now = []
     try:
@@ -256,19 +264,7 @@ def side_panel(state, here):
         rows = ['      <p class="side-fact side-quiet">今日はまだ散歩に行っていません。</p>']
     blocks.append(one_side_block("今日歩いたところ", rows))
 
-    # 覚えた言葉は後ろほど新しい。その後ろから五つを並べる。
-    #
-    # 「最近」は期間のことではない。覚えた言葉の後ろ五つ、というだけ。
-    # だから「最近のものが無い」という状態は無い。
-    # 一度でも覚えたら、そこには必ず五つまでの何かがある。
-    # 空になるのは、まだ一語も覚えていない初めの頃だけなので、
-    # そこに「ありません」と書いても一度きりの表示にしかならない
-    learned = [one for one in (state.get("learned_words") or []) if one]
-    if learned:
-        blocks.append(one_side_block("最近覚えた言葉", [
-            f'      <p class="side-word">{one}</p>'
-            for one in reversed(learned[-LEARNED_SHOWN:])
-        ]))
+    # 最近覚えた言葉は、トップの真ん中の直近のブログの下へ移した(2026-10-14、彼女が決めた)
 
     # 何年か経てば気がかりは千を超える。全部並べたら右の欄がそれだけになる。
     # 最後に触れたものから数えて、手前のぶんだけを出す
@@ -1983,6 +1979,357 @@ def generate_kakodogu_html(articles):
         f.write(html)
 
 
+# ---- 語彙辞典 ----
+# 覚えた言葉を引ける辞典(2026-10-10 から彼女と決めてきた。名前は 2026-10-12、彼女が決めた)。
+# 見出しや札の言葉は彼女が決めたもの。変えるときは彼女に聞く
+JITEN_PAGE = "jiten.html"
+JITEN_NAME = "語彙辞典"
+JITEN_LINKS_SHOWN = 8  # 言葉ごとに並べる、つながっているもの
+# どこで会ったか分からない時の文。彼女の言葉のまま(2026-10-14)。
+# 場所の記録は 2026-10-10 から。それより前に会っていた言葉は、初めて会った場所が分からない
+PLACE_UNKNOWN = "場所の特定をすることができませんでした"
+# 今日の一語は、これだけつながりのある言葉から選ぶ。そういう言葉が無ければ全部から
+TODAYS_WORD_TIES = 3
+
+
+def a_kind_of_word(word):
+    """絞るボタンの種類。見た目だけで分けられるものだけにする(2026-10-14、彼女が決めた)。
+
+    ひらがな・カタカナ・漢字で分けると、「困る」や「1番」のように混ざった言葉の
+    置き場に迷うので分けない。四字熟語は漢字四文字の言葉なら何でも入れる。
+    本物の四字熟語と見分ける手立てが無いので、「利用規約」も入る。"""
+    if re.fullmatch(r"[0-9０-９]+", word):
+        return "数字"
+    if not re.search(r"\w", word):
+        return "記号"
+    if re.fullmatch(r"[一-鿿々]{4}", word):
+        return "四字熟語"
+    return ""
+
+
+def the_net():
+    """頭の中の、連想の網。束に分けてしまってあるのを集める。"""
+    net = {}
+    folder = os.path.join("atama", "ami")
+    if not os.path.isdir(folder):
+        return net
+    for name in sorted(os.listdir(folder)):
+        if not name.endswith(".json"):
+            continue
+        try:
+            with open(os.path.join(folder, name), encoding="utf-8") as f:
+                net.update(json.load(f))
+        except (OSError, ValueError):
+            continue
+    return net
+
+
+def written_as_a_date(day):
+    """「2026-10-07」を「2026年10月7日」に。日付には年を入れる(2026-10-14、彼女が決めた)。"""
+    try:
+        when = datetime.date.fromisoformat(day)
+    except (TypeError, ValueError):
+        return ""
+    return f"{when.year}年{when.month}月{when.day}日"
+
+
+def words_for_the_dictionary(state, articles):
+    """辞典に載せる、覚えた言葉ぜんぶ。言葉ごとに、引いた時に出すものを添える。
+
+    日記の書き損じや、言葉がくっついて一語に見えるものは載せない
+    (2026-10-14、彼女が決めた)。載せるのは覚えた言葉だけ。"""
+    learned = [one for one in (state.get("learned_words") or []) if one]
+    known = set(learned)
+    learned_on = state.get("learned_on") or {}
+    where = state.get("learned_where") or {}
+    basho = state.get("basho") or []
+    named = state.get("places_known") or {}
+    try:
+        born = datetime.date.fromisoformat(ITS_BIRTHDAY)
+    except ValueError:
+        born = None
+    try:
+        today = (today_in_japan() - datetime.date.fromisoformat(state["started_date"])).days
+    except (KeyError, TypeError, ValueError):
+        today = 0
+    net = the_net()
+    diaries = [(one.get("title") or "") + "\n" + (one.get("content") or "") for one in articles]
+
+    def place(number):
+        if not isinstance(number, int) or not 0 <= number < len(basho):
+            return None
+        return named.get(basho[number]) or basho[number]
+
+    def ties_of(word):
+        # 網の線は、この子が通らないと日ごとに細る。細り方は頭のほうの決まり(atama.edge_now)と同じ
+        import atama
+        held = net.get(word) or {}
+        found = []
+        for other, edge in (held.get("e") or {}).items():
+            if other not in net:
+                continue
+            found.append((atama.edge_now(edge, today), other))
+        found.sort(reverse=True)
+        shown = []
+        for _, other in found[:JITEN_LINKS_SHOWN]:
+            if other.startswith("@"):
+                shown.append([named.get(other[1:]) or other[1:], 0])
+            else:
+                shown.append([other.strip(), 1 if other in known else 0])
+        return len(found), shown
+
+    words = []
+    for order, word in enumerate(learned):
+        day = learned_on.get(word) or ""
+        try:
+            nth = (datetime.date.fromisoformat(day) - born).days if born else None
+        except ValueError:
+            nth = None
+        first, that_day = (list(where.get(word) or []) + [None, None])[:2]
+        ties, links = ties_of(word)
+        words.append({
+            "w": word,
+            "k": a_kind_of_word(word),
+            "o": order,
+            "d": written_as_a_date(day),
+            "n": nth,
+            "u": sum(1 for one in diaries if word in one),
+            "t": ties,
+            "l": links,
+            "f": place(first),
+            "h": place(that_day),
+        })
+    return words
+
+
+# 辞典のページで動くところ。言葉の一覧から引く、絞る、並べ替える、一語を開く。
+# 字はどれも彼女が決めたもの(2026-10-12、2026-10-14)
+JITEN_SCRIPT = r"""
+  <script>
+    (function () {
+      var DATA = JSON.parse(document.getElementById("jt-data").textContent);
+      var UNKNOWN = __UNKNOWN__;
+      var KINDS = ["すべて", "四字熟語", "数字", "記号"];
+      var phone = window.matchMedia("(max-width: 700px)").matches;
+      var state = { q: "", kind: "すべて", sort: "random", sel: null, greet: false };
+      var $ = function (id) { return document.getElementById(id); };
+      var esc = function (t) {
+        return String(t).replace(/[&<>"]/g, function (c) {
+          return { "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" }[c];
+        });
+      };
+      var byWord = {};
+      DATA.forEach(function (d) { byWord[d.w] = d; });
+      var shuffled = DATA.slice();
+      var mix = function () {
+        for (var i = shuffled.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var t = shuffled[i]; shuffled[i] = shuffled[j]; shuffled[j] = t;
+        }
+      };
+      mix();
+      $("jt-total").textContent = DATA.length;
+
+      // 今日の一語。日本の日付で決まるので、同じ日のうちは誰が開いても同じ一語
+      var todays = function () {
+        var day = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
+        var pool = DATA.filter(function (d) { return d.t >= __TIES__; });
+        if (!pool.length) { pool = DATA; }
+        if (!pool.length) { return null; }
+        var h = 0;
+        for (var i = 0; i < day.length; i++) { h = (h * 31 + day.charCodeAt(i)) % 1000003; }
+        return pool[h % pool.length].w;
+      };
+
+      var ordered = function () {
+        if (state.sort === "random") { return shuffled; }
+        var rows = DATA.slice();
+        if (state.sort === "new") { rows.sort(function (a, b) { return b.o - a.o; }); }
+        if (state.sort === "uses") { rows.sort(function (a, b) { return b.u - a.u || b.o - a.o; }); }
+        if (state.sort === "ties") { rows.sort(function (a, b) { return b.t - a.t || b.o - a.o; }); }
+        return rows;
+      };
+      var byPlace = function (d) {
+        return (d.f && d.f.indexOf(state.q) >= 0) || (d.h && d.h.indexOf(state.q) >= 0);
+      };
+      var shown = function () {
+        return ordered().filter(function (d) {
+          if (state.kind !== "すべて" && d.k !== state.kind) { return false; }
+          if (!state.q) { return true; }
+          return d.w.indexOf(state.q) >= 0 || byPlace(d);
+        });
+      };
+      var side = function (d) {
+        if (state.sort === "uses") { return "日記で" + d.u + "回"; }
+        if (state.sort === "ties") { return "つながり" + d.t; }
+        return d.d;
+      };
+      var chips = function () {
+        $("jt-chips").innerHTML = KINDS.map(function (k) {
+          var n = k === "すべて" ? DATA.length : DATA.filter(function (d) { return d.k === k; }).length;
+          return '<button type="button" class="jt-chip' + (k === state.kind ? " on" : "") + '" data-k="' + k + '">' +
+            k + '<span>' + n + '</span></button>';
+        }).join("");
+      };
+      var list = function () {
+        var rows = shown(), html = "";
+        rows.forEach(function (d) {
+          var w = esc(d.w);
+          if (state.q) { w = w.split(esc(state.q)).join("<mark>" + esc(state.q) + "</mark>"); }
+          var why = state.q && d.w.indexOf(state.q) < 0 ? '<em class="jt-why">場所で一致</em>' : "";
+          html += '<li class="jt-row' + (d.w === state.sel ? " on" : "") + '" data-w="' + esc(d.w) + '">' +
+            '<span class="jt-row-w">' + w + why + '</span><span class="jt-row-d">' + side(d) + '</span></li>';
+        });
+        $("jt-list").innerHTML = html || '<li class="jt-none">見つかりませんでした</li>';
+        $("jt-count").textContent = state.q ? "「" + state.q + "」で " + rows.length + "語" : rows.length + "語";
+      };
+      var place = function (name) {
+        return name ? '<p class="jt-place">' + esc(name) + '</p>' : '<p class="jt-place jt-unknown">' + esc(UNKNOWN) + '</p>';
+      };
+      var entry = function () {
+        var d = byWord[state.sel];
+        if (!d) { $("jt-entry").hidden = true; return; }
+        $("jt-entry").hidden = false;
+        var links = d.l.length ? d.l.map(function (l) {
+          return l[1] ? '<button type="button" class="jt-link known" data-w="' + esc(l[0]) + '">' + esc(l[0]) + '</button>'
+                      : '<span class="jt-link">' + esc(l[0]) + '</span>';
+        }).join("") : '<span class="jt-empty">まだつながっている言葉はありません</span>';
+        $("jt-entry").innerHTML =
+          '<button type="button" class="jt-back">‹ 一覧にもどる</button>' +
+          (state.greet ? '<p class="jt-greet">今日の一語</p>' : '') +
+          (d.k ? '<p class="jt-kind">' + d.k + '</p>' : '') +
+          '<h3 class="jt-word">' + esc(d.w) + '</h3>' +
+          '<div class="jt-meta">' +
+            (d.d ? '<span><b>' + d.d + '</b>に覚えた</span>' : '') +
+            (d.n !== null ? '<span>生まれて<b>' + d.n + '</b>日目に覚えた</span>' : '') +
+            '<span>日記で<b>' + d.u + '</b>回</span>' +
+          '</div>' +
+          '<section class="jt-sec"><h4>初めて会った場所</h4>' + place(d.f) + '</section>' +
+          '<section class="jt-sec"><h4>覚えた日に会ってた場所</h4>' + place(d.h) + '</section>' +
+          '<section class="jt-sec"><h4>つながっている言葉</h4><div class="jt-links">' + links + '</div></section>';
+      };
+      var today = function () {
+        var d = byWord[state.sel];
+        if (!state.greet || !d) { $("jt-today").hidden = true; return; }
+        $("jt-today").hidden = false;
+        $("jt-today").innerHTML = '<span class="jt-greet">今日の一語</span>' +
+          '<span class="jt-today-w">' + esc(d.w) + '</span>' +
+          '<span class="jt-today-m">' + (d.d ? d.d + 'に覚えた・' : '') + '日記で' + d.u + '回・つながり' + d.t + '</span>' +
+          '<span class="jt-today-go">くわしく見る ›</span>';
+      };
+      var open = function () { document.body.classList.add("jt-open"); window.scrollTo(0, 0); };
+      var close = function () { document.body.classList.remove("jt-open"); window.scrollTo(0, 0); };
+      var pick = function (word) {
+        state.sel = word; state.greet = false;
+        if (history.replaceState) { history.replaceState(null, "", "#w=" + encodeURIComponent(word)); }
+        list(); entry(); today();
+        if (phone) { open(); }
+      };
+
+      var asked = /^#w=/.test(location.hash) ? decodeURIComponent(location.hash.slice(3)) : "";
+      if (asked && byWord[asked]) {
+        state.sel = asked;
+      } else {
+        state.sel = todays(); state.greet = true;
+      }
+      chips(); list(); entry(); today();
+      if (phone && asked && byWord[asked]) { document.body.classList.add("jt-open"); }
+
+      $("jt-today").addEventListener("click", open);
+      $("jt-entry").addEventListener("click", function (e) {
+        if (e.target.closest(".jt-back")) { close(); return; }
+        var to = e.target.closest(".jt-link.known");
+        if (to && byWord[to.dataset.w]) { pick(to.dataset.w); window.scrollTo(0, 0); }
+      });
+      $("jt-q").addEventListener("input", function (e) {
+        document.body.classList.remove("jt-open");
+        state.q = e.target.value.trim(); list();
+        document.querySelector(".jt-listscroll").scrollTop = 0;
+      });
+      $("jt-sort").addEventListener("change", function (e) {
+        state.sort = e.target.value;
+        if (state.sort === "random") { mix(); }
+        list();
+        document.querySelector(".jt-listscroll").scrollTop = 0;
+      });
+      $("jt-chips").addEventListener("click", function (e) {
+        var b = e.target.closest(".jt-chip");
+        if (b) { state.kind = b.dataset.k; chips(); list(); }
+      });
+      $("jt-list").addEventListener("click", function (e) {
+        var r = e.target.closest(".jt-row");
+        if (r) { pick(r.dataset.w); }
+      });
+    })();
+  </script>"""
+
+
+def generate_jiten_html(state, articles):
+    """語彙辞典のページ。覚えた言葉を引いて、一語ずつ開ける。
+
+    このページだけは、スマホでは画面の幅で組む(2026-10-11、彼女と決めた)。
+    一覧と説明を並べるので、左右の欄は置かず、真ん中の列を広く使う。"""
+    words = words_for_the_dictionary(state or {}, articles)
+    # ページの中に置く言葉の一覧。言葉は外の世界から来たものなので、
+    # </script> を閉じてしまう並びが入らないよう、< をそのまま書かない
+    data = json.dumps(words, ensure_ascii=False, separators=(",", ":")).replace("<", "\\u003c")
+    script = (JITEN_SCRIPT
+              .replace("__UNKNOWN__", json.dumps(PLACE_UNKNOWN, ensure_ascii=False))
+              .replace("__TIES__", str(TODAYS_WORD_TIES)))
+    html = f"""<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<title>{JITEN_NAME}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="{styled()}" />
+</head>
+<body class="jiten">
+  {site_header()}
+
+  <div class="frame">
+  <div class="main">
+  <div class="top-nav"><a href="index.html">←トップ</a></div>
+  <div class="jt">
+    <div class="jt-hero">
+      <div class="jt-titles">
+        <h2 class="jt-title">{JITEN_NAME}</h2>
+        <p class="jt-sub">覚えた言葉　<b id="jt-total">{len(words)}</b>語</p>
+      </div>
+      <label class="jt-search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+        <input id="jt-q" type="search" placeholder="言葉・場所で引く" autocomplete="off" aria-label="言葉・場所で引く">
+      </label>
+      <div class="jt-chips" id="jt-chips"></div>
+    </div>
+    <button type="button" class="jt-today" id="jt-today" hidden></button>
+    <div class="jt-body">
+      <div class="jt-listwrap">
+        <div class="jt-listhead">
+          <span id="jt-count"></span>
+          <select class="jt-sort" id="jt-sort" aria-label="並べ方">
+            <option value="random">ランダム</option>
+            <option value="new">覚えた順</option>
+            <option value="uses">日記でよく使う順</option>
+            <option value="ties">つながりが多い順</option>
+          </select>
+        </div>
+        <div class="jt-listscroll"><ol class="jt-list" id="jt-list"></ol></div>
+      </div>
+      <article class="jt-entry" id="jt-entry" hidden></article>
+    </div>
+  </div>
+  </div>
+  </div>
+
+  <script type="application/json" id="jt-data">{data}</script>{script}
+</body>
+</html>
+"""
+    with open(JITEN_PAGE, "w", encoding="utf-8") as f:
+        f.write(html)
+
+
 def render_comments(comments):
     """コメントを並べる。新しいものが上。返しは、そのコメントの下に古い順で。
 
@@ -2258,6 +2605,22 @@ def generate_index_html(articles, state=None, news=None):
         else:
             recent_html = ""
 
+    # 最近覚えた言葉。直近のブログの下に、新しいほうから丸い囲いで並べる。
+    # 押すと語彙辞典でその言葉が開く(2026-10-14、彼女が決めた)
+    learned = [one for one in (state.get("learned_words") or []) if one]
+    kotoba_html = ""
+    if learned:
+        pills = "\n".join(
+            f'    <a href="{JITEN_PAGE}#w={urllib.parse.quote(one)}">{escape_html(one)}</a>'
+            for one in reversed(learned[-LEARNED_SHOWN:])
+        )
+        kotoba_html = f"""
+
+  <div class="section-title">最近覚えた言葉</div>
+  <div class="kotoba-pills">
+{pills}
+  </div>"""
+
     # 彼女が書いた更新情報と、メモが開いた知らせ。一件も無い日は、見出しごと出さない。
     # 空の見出しだけが残っているのは、間が抜けている
     if news is None:
@@ -2308,7 +2671,7 @@ def generate_index_html(articles, state=None, news=None):
   <div class="section-title">☆今日のブログ☆</div>
   {latest_html}
 
-  {recent_html}{TODAY_MAY_BE_OVER}{news_html}
+  {recent_html}{TODAY_MAY_BE_OVER}{kotoba_html}{news_html}
 
   <div class="section-title" id="comments">コメント</div>
 
@@ -2486,6 +2849,7 @@ def regenerate_pages(articles):
 
     about = load_about()
     generate_about_html(about)
+    generate_jiten_html(state, articles)
 
     every_page = (
         EVERY_PAGE + tuple(all_news_pages(news)) + tuple(all_himitsu_pages(himitsu))
@@ -2494,9 +2858,9 @@ def regenerate_pages(articles):
     side_panels(every_page)
     page_heads_on_pages(every_page)
     iine_on_pages(EVERY_PAGE + tuple(all_himitsu_pages(himitsu)))
-    keshiki_on_pages(every_page)
-    icons_on_pages(every_page)
-    out_of_search_snippets(every_page)
+    keshiki_on_pages(every_page + (JITEN_PAGE,))
+    icons_on_pages(every_page + (JITEN_PAGE,))
+    out_of_search_snippets(every_page + (JITEN_PAGE,))
 
 
 # ホーム画面とタブに出す絵(2026-10-07、彼女が描いた。いちばん外の白い枠を外して6倍にしたもの)。
