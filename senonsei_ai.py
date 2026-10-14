@@ -376,6 +376,31 @@ DOORS_TO_TRY = 2  # 扉は多くても二つまで。探し回るためのもの
 PATHS_FROM_A_DOOR = 30
 
 RETURN_TO_ENTRANCE_CHANCE = 0.12  # ときどき、最初にいた入口へ戻ってみる
+# 名前は分かれていても、同じ持ち主の仲間のサイト(2026-10-14、彼女と決めた)。
+# 最近歩いた仲間には、しばらく惹かれにくい。
+# 一人ひとりが書く場所(はてなブログ、github.io など)は、仲間にまとめない
+FAMILIES = {
+    "ウィキの仲間": (
+        "wikipedia.org", "wiktionary.org", "wikibooks.org", "wikivoyage.org", "wikinews.org",
+        "wikiquote.org", "wikisource.org", "wikiversity.org", "wikimedia.org", "wikidata.org",
+        "wikifunctions.org", "mediawiki.org", "wikimediafoundation.org", "wikimediaendowment.org",
+    ),
+    "日経の仲間": ("nikkei.com", "nikkei.co.jp", "nikkei.jp", "nikkei-cnbc.co.jp", "nikkeibp.co.jp"),
+    "GitHub の仲間": ("github.com", "githubstatus.com", "githubusercontent.com", "github.blog"),
+    "Google の仲間": ("google.com", "google.co.jp", "youtube.com"),
+}
+# 行き先の束で、仲間ごと一つの持ち主として数えるもの。日経の仲間などは名前が分かれていて、
+# 仲間だけで行き先をたくさん占めていた。ウィキの仲間はまとめない。
+# 彼女は Wikipedia の言葉の記事にこそ多く行ってほしかった。ウィキの仲間で読んでいたのは、
+# ほとんどが記事ではない裏方のページだったので、そちらを道から外す(wiki_backstage)
+FAMILIES_COUNTED_AS_ONE = ("日経の仲間", "GitHub の仲間", "Google の仲間")
+# 最近歩いた仲間の場所には、しばらく惹かれにくい(2026-10-14、彼女と決めた)。
+# 直近これだけのページで歩いた仲間を「最近」とする。一か所でおよそ十ページ読むので、三か所ぶんほど
+RECENT_PAGES_FOR_FAMILIES = 35
+AWAY_FROM_RECENT = 0.3  # 最近歩いた仲間への惹かれ方は、これだけに弱まる
+# ときどき、最初の入口のどれかから歩き直す(2026-10-14、彼女と決めた)。
+# リンクを辿るだけだと、似た場所の仲間ばかりが行き先に溜まっていく
+FRESH_START_CHANCE = 0.15
 TRIES_BEFORE_GIVING_UP = 3  # 行った先が消えていたら、これだけ別の場所を試してみる
 # 尋ねすぎた時は、少し待ってから尋ね直す。一日は長いし、急かす人もいない
 HOW_LONG_TO_WAIT = (20, 45, 90)
@@ -1367,11 +1392,64 @@ def worth_reading(url):
     return score
 
 
+# ウィキの仲間の、記事ではない裏方のページ。利用規約や方針、特別ページ、利用者のページ、
+# ノート、ヘルプ、テンプレートなど。題が「裏方の名前:」で始まる。
+# 「Re:ゼロから始める異世界生活」や「Star Wars: …」のように、題にコロンがあっても記事のものはある。
+# ウィキの仲間で読んでいたページの七割以上がこれだった(2026-10-14、彼女と決めた)
+WIKI_BACKSTAGE_NAMES = {
+    "special", "特別", "wikipedia", "wp", "project", "help", "ヘルプ", "template", "テンプレート",
+    "category", "カテゴリ", "file", "ファイル", "image", "画像", "user", "利用者", "talk", "ノート",
+    "会話", "mediawiki", "module", "モジュール", "draft", "wiktionary", "wikisource", "wikibooks",
+    "wikiquote", "wikivoyage", "wikinews", "wikiversity", "wikimedia", "meta", "policy", "legal",
+    "speciaal", "overleg", "gebruiker", "sjabloon", "categorie", "bestand",
+    "spezial", "benutzer", "diskussion", "vorlage", "kategorie", "datei",
+    "spécial", "utilisateur", "discussion", "modèle", "catégorie", "fichier",
+    "especial", "usuario", "discusión", "plantilla", "categoría", "archivo",
+    "speciale", "utente", "discussioni", "categoria",
+    "служебная", "участник", "обсуждение", "шаблон", "категория", "файл",
+    "特殊", "用户", "讨论", "分类", "특수", "사용자", "토론", "틀", "분류", "파일",
+}
+# おまかせ表示は、記事のどれかへ連れていってくれる道なので通す
+WIKI_RANDOM_ARTICLE = re.compile(r"^(特別|Special):(おまかせ表示|Random)", re.IGNORECASE)
+# 記事を置いていない裏方だけの場所
+WIKI_BACKSTAGE_PLACES = re.compile(
+    r"(^|\.)(wikidata\.org|phabricator\.wikimedia\.org|toolforge\.org|wmflabs\.org|wmcloud\.org)$"
+)
+
+
+def wiki_backstage(url):
+    """ウィキの仲間の、記事ではない裏方のページか。"""
+    found = INNER_URL.search(url)
+    if found:
+        url = found.group(1)  # 昔のページは、中の本当の道で見る
+    try:
+        parts = urllib.parse.urlparse(url)
+    except Exception:
+        return False
+    host = parts.netloc.lower()
+    if not WIKIPEDIA_FAMILY.search(host):
+        return False
+    if WIKI_BACKSTAGE_PLACES.search(host):
+        return True
+    path = urllib.parse.unquote(parts.path)
+    if path.startswith("/w/"):
+        return True  # 書き換えの履歴や編集の画面
+    if not path.startswith("/wiki/"):
+        return False
+    title = path[len("/wiki/"):]
+    if WIKI_RANDOM_ARTICLE.match(title) or ":" not in title:
+        return False
+    before = title.split(":", 1)[0].lower()
+    return any(one in WIKI_BACKSTAGE_NAMES for one in re.split(r"[\s_‐-]+", before) if one)
+
+
 def is_walkable(url):
     """そこへ行っていいか。最低限これだけは避ける。"""
     if not url.startswith("http"):
         return False
     if AVOID.search(url) or NOT_A_PAGE.search(url) or NOT_A_PLACE.search(url):
+        return False
+    if wiki_backstage(url):
         return False
     if AN_ADVERT.search(url):
         return False
@@ -2082,6 +2160,23 @@ def owner_of(place):
     return ".".join(parts[-2:]) if len(parts) >= 2 else place
 
 
+def family_of(place):
+    """その場所の仲間。仲間に入っていなければ、持ち主がそのまま仲間の名前になる。"""
+    owner = owner_of(place)
+    for family, members in FAMILIES.items():
+        if owner in members:
+            return family
+    return owner
+
+
+def families_walked_lately(state):
+    """最近歩いた場所の仲間。"""
+    return {
+        family_of(place_of(url))
+        for url in (state.get("visited") or [])[-RECENT_PAGES_FOR_FAMILIES:]
+    }
+
+
 def tidy_frontier(state):
     """行き先の束を整える。
     読むものが無い裏方を捨て、ひとつの場所の道が多すぎたら適当に間引く。
@@ -2096,7 +2191,9 @@ def tidy_frontier(state):
         place = place_of(url)
         if kept_by_place.get(place, 0) >= PATHS_PER_PLACE:
             continue
-        owner = owner_of(place)
+        owner = family_of(place)
+        if owner not in FAMILIES_COUNTED_AS_ONE:
+            owner = owner_of(place)
         if kept_by_owner.get(owner, 0) >= PATHS_PER_OWNER:
             continue
         kept_by_place[place] = kept_by_place.get(place, 0) + 1
@@ -2511,6 +2608,12 @@ def choose_destination(state):
     if looked_up and random.random() < min(0.9, reading_it):
         return looked_up[-1], False
 
+    # ときどきは、最初の入口のどれかから歩き直す。最近歩いた仲間の入口は避ける
+    lately = families_walked_lately(state)
+    if random.random() < FRESH_START_CHANCE:
+        fresh = [one for one in SEEDS if family_of(place_of(one)) not in lately] or list(SEEDS)
+        return random.choice(fresh), False
+
     candidates = spread_out_choices(state, frontier, CHOICES_SHOWN)
     # もう一度行きたいと思い出した場所と、引いてまだ読んでいない記事は、
     # いつも候補に入っている
@@ -2520,7 +2623,11 @@ def choose_destination(state):
     # 選ぶのはこの子。持っているものから決める。
     # 借りた頭に選ばせていたので、行き先だけは他人が決めていた
     close = evened_out(words_it_holds_close(state))
-    weights = [what_draws_it(state, url, close) for url in candidates]
+    # 最近歩いた仲間の場所には、しばらく惹かれにくい
+    weights = [
+        what_draws_it(state, url, close) * (AWAY_FROM_RECENT if family_of(place_of(url)) in lately else 1)
+        for url in candidates
+    ]
     return (
         random.choices(candidates, weights=weights)[0],
         random.random() < WANTING_THE_PAST,
