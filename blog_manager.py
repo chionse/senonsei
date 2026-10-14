@@ -1285,6 +1285,9 @@ def news_title(one):
     読む人は続きを見るために必ず開かなければならなくなる。
     二文以上あるときだけ、頭を借りて後ろを省く。"""
     said = (one.get("title") or one.get("content", "")).strip()
+    # 本文が行に分けてあれば、一行目が見出し(2026-10-14、彼女が一覧の一行と開いた中身を分けて書いた)
+    if not one.get("title") and "\n" in said:
+        said = said.split("\n", 1)[0].strip()
     if one.get("title") or len(said) <= NEWS_TITLE_LENGTH or just_one_sentence(said):
         return said
     return said[:NEWS_TITLE_LENGTH] + "…"
@@ -1370,7 +1373,7 @@ def generate_news_entry_html(news, index):
   {MAIN_STARTS}
   <article>
     <div class="date">{one['date']}{named}</div>
-    <p>{one['content']}</p>
+    <p>{one['content'].replace(chr(10), '<br>')}</p>
   </article>
 
   <div class="step-nav">
