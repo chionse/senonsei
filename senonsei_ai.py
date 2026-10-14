@@ -3013,6 +3013,7 @@ def absorb(state, text, pattern=WORD_CANDIDATE, only_known=False):
     hit_hard = set()  # ここで強く出会った言葉。気がかりが移ることがある
     # どこで会ったか(言葉の辞典のため)。自分の書いたものを読み返す時は、どこでもない
     where = None if only_known else place_number(state, WHERE_IT_IS[0])
+    page = None if only_known or where is None else page_number(state, PAGE_IT_IS[0])
     for word in set(found) | named:
         # 自分が書いたものを読み返す時は、新しい言葉は生まれない。
         # 誰にも教わっていない文字列を、自分だけで言葉にすることはできない
@@ -3023,7 +3024,7 @@ def absorb(state, text, pattern=WORD_CANDIDATE, only_known=False):
             MET_FOR_THE_FIRST_TIME[0] += 1
         new_day = record is None or record[1] != today_number
         count = (record[0] if record else 0) + (1 if new_day else 0)
-        met[word] = [count, today_number] + where_it_met(record, where)
+        met[word] = [count, today_number] + where_it_met(record, where, page)
         if new_day and word in struck and not met_often_enough(state, word):
             impact[word] = impact.get(word, 0) + 1
             hit_hard.add(word)
@@ -3050,13 +3051,38 @@ def place_number(state, place):
     return PLACE_NUMBERS["at"][place]
 
 
-def where_it_met(record, where):
+def page_number(state, title):
+    """そのページの番号。初めてのページなら、ページの並び(peeji)の後ろに足す。
+
+    場所(basho)はサイトごとなので、Wikipedia で会った言葉はどれも同じ場所になり、
+    辞典ではどの言葉にも、そのサイトで最後に読んだページの題が出ていた。
+    言葉と会ったページそのものも取る(2026-10-14、彼女と決めた)。
+    題は peeji に一度だけ書いて、言葉の側は番号で指す。"""
+    if not title:
+        return None
+    pages = state.setdefault("peeji", [])
+    if PAGE_NUMBERS["of"] is not pages or len(PAGE_NUMBERS["at"]) != len(pages):
+        PAGE_NUMBERS["of"] = pages
+        PAGE_NUMBERS["at"] = {one: number for number, one in enumerate(pages)}
+    if title not in PAGE_NUMBERS["at"]:
+        PAGE_NUMBERS["at"][title] = len(pages)
+        pages.append(title)
+    return PAGE_NUMBERS["at"][title]
+
+
+def where_it_met(record, where, page=None):
     """覚えかけの記録の三つめと四つめ。初めて会った場所と、いちばん最近会った場所の番号。
 
     記録を取り始める前から会っていた言葉は、初めての場所が分からないので None のまま。
     どちらも分からないうちは何も足さない(記録が軽いまま)。"""
     first = record[2] if record and len(record) > 2 else (where if record is None else None)
     last = where if where is not None else (record[3] if record and len(record) > 3 else None)
+    # 五つめと六つめは、初めて会ったページと、いちばん最近会ったページ(2026-10-14 から)。
+    # それより前から会っていた言葉は、初めて会ったページが分からないので None のまま
+    first_page = record[4] if record and len(record) > 4 else (page if record is None else None)
+    last_page = page if page is not None else (record[5] if record and len(record) > 5 else None)
+    if first_page is not None or last_page is not None:
+        return [first, last, first_page, last_page]
     return [] if first is None and last is None else [first, last]
 
 
@@ -3178,10 +3204,12 @@ def look_around_site(state, entrance, wants_the_past):
                 state["frontier"].remove(url)
             if url == entrance:
                 WHERE_IT_IS[0] = None
+                PAGE_IT_IS[0] = None
                 return None, 0  # 入口から入れなかった
             continue
 
         pages += 1
+        PAGE_IT_IS[0] = title
         atama.feel(head, "疲れ", 0.015)  # 一枚読むごとに、少しずつ
         if url in state["frontier"]:
             state["frontier"].remove(url)
@@ -3271,6 +3299,7 @@ def look_around_site(state, entrance, wants_the_past):
         time.sleep(max(random.uniform(*READING_A_PAGE), wait_asked_for(url)))
 
     WHERE_IT_IS[0] = None
+    PAGE_IT_IS[0] = None
     # 自分の家から伸びている道は数えない。家は自分で作った場所なので
     if not its_own_home(entrance):
         seen_linked_from_here(state, linked_here)
@@ -4032,14 +4061,21 @@ def learn(state):
     for word in learned:
         remembered.setdefault(word, today)
     # どこで会ってきた言葉かも、覚えかけの記録と一緒に消えてしまうので、先に移しておく。
-    # [初めて会った場所, 覚えた日に会っていた場所] の番号(basho の何番目か)。分からなければ None
+    # [初めて会った場所, 覚えた日に会っていた場所] の番号(basho の何番目か)。分からなければ None。
+    # 2026-10-14 からは、そのあとに同じ二つのページの番号(peeji の何番目か)も続く
     where = state.setdefault("learned_where", {})
     today_number = day_number(state)
     for word in learned:
         record = words_met(state).get(word) or []
         first = record[2] if len(record) > 2 else None
         that_day = record[3] if len(record) > 3 and record[1] == today_number else None
-        if first is not None or that_day is not None:
+        # 三つめと四つめは、初めて会ったページと覚えた日に会っていたページ(peeji の何番目か)。
+        # ページを取り始めた 2026-10-14 より前のものは無い
+        first_page = record[4] if len(record) > 4 else None
+        that_day_page = record[5] if len(record) > 5 and record[1] == today_number else None
+        if first_page is not None or that_day_page is not None:
+            where.setdefault(word, [first, that_day, first_page, that_day_page])
+        elif first is not None or that_day is not None:
             where.setdefault(word, [first, that_day])
     # 覚えた言葉はもう忘れないので、覚えかけの記録は手放してよい。
     # 何年も経つと、ここが記憶のいちばん重い場所になる
@@ -4386,6 +4422,10 @@ OTHER_TONGUES = [[]]
 WHERE_IT_IS = [None]
 # 場所の名前 → basho の番号。毎回 basho を端から探さないように(place_number)
 PLACE_NUMBERS = {"of": None, "at": {}}
+# いま読んでいるページの題。言葉の辞典に、言葉と会ったページを出すため(2026-10-14、彼女と決めた)
+PAGE_IT_IS = [None]
+# ページの題 → peeji の番号(page_number)
+PAGE_NUMBERS = {"of": None, "at": {}}
 # 今日もう頭に入れたものを、また読んでいるところか。家の言葉は読む日には毎時間読むので、
 # 頭に入れるのと気持ちが動くのは、その日のはじめの一度だけにする
 READ_AGAIN_TODAY = [False]

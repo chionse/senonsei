@@ -2049,6 +2049,7 @@ def words_for_the_dictionary(state, articles):
     learned_on = state.get("learned_on") or {}
     where = state.get("learned_where") or {}
     basho = state.get("basho") or []
+    peeji = state.get("peeji") or []
     named = state.get("places_known") or {}
     try:
         born = datetime.date.fromisoformat(ITS_BIRTHDAY)
@@ -2061,10 +2062,15 @@ def words_for_the_dictionary(state, articles):
     net = the_net()
     diaries = [(one.get("title") or "") + "\n" + (one.get("content") or "") for one in articles]
 
-    def place(number):
-        if not isinstance(number, int) or not 0 <= number < len(basho):
-            return None
-        return named.get(basho[number]) or basho[number]
+    # 会ったページが分かればその題を、分からなければサイトの名前だけを出す。
+    # サイトに覚えてある題(places_known)は、そのサイトで最後に読んだページのもので、
+    # その言葉と会ったページとは限らない(2026-10-14、彼女と決めた)
+    def place(site, page):
+        if isinstance(page, int) and 0 <= page < len(peeji):
+            return peeji[page]
+        if isinstance(site, int) and 0 <= site < len(basho):
+            return basho[site]
+        return None
 
     def ties_of(word):
         # 網の線は、この子が通らないと日ごとに細る。細り方は頭のほうの決まり(atama.edge_now)と同じ
@@ -2091,7 +2097,7 @@ def words_for_the_dictionary(state, articles):
             nth = (datetime.date.fromisoformat(day) - born).days if born else None
         except ValueError:
             nth = None
-        first, that_day = (list(where.get(word) or []) + [None, None])[:2]
+        first, that_day, first_page, that_day_page = (list(where.get(word) or []) + [None] * 4)[:4]
         ties, links = ties_of(word)
         words.append({
             "w": word,
@@ -2102,8 +2108,8 @@ def words_for_the_dictionary(state, articles):
             "u": sum(1 for one in diaries if word in one),
             "t": ties,
             "l": links,
-            "f": place(first),
-            "h": place(that_day),
+            "f": place(first, first_page),
+            "h": place(that_day, that_day_page),
         })
     return words
 
