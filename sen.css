@@ -1454,3 +1454,116 @@ nav a,
 }
 
 /* 狭い画面では、五列のまま文字を少しだけ小さくする */
+
+/* 語彙辞典(2026-10-10 から彼女と決めてきた)。
+   今どきの辞書アプリの形。引く欄と絞るボタン、左に一覧、右に開いた一語。
+   一覧や説明の字は読みやすい書体にし、言葉そのものだけ点の書体で出す */
+.jt {
+  --ink: #18235a;
+  --soft: #5b6696;
+  --faint: #9aa3c7;
+  --line: #e3e7f6;
+  --tint: #f3f5ff;
+  --accent: var(--main-color);
+  --sans: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic", "Meiryo", system-ui, sans-serif;
+  font-family: var(--sans);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+.jt button { font-family: var(--sans); }
+.jt-hero { display: grid; gap: 14px; padding: 6px 0 18px; }
+.jt-titles { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 20px; }
+.jt-title { margin: 0; font-family: "DotGothic16", monospace; -webkit-font-smoothing: none; font-weight: normal; font-size: 32px; color: var(--accent); }
+.jt-sub { margin: 0; font-size: 14px; color: var(--soft); }
+.jt-sub b { font-size: 20px; color: var(--ink); font-weight: 700; }
+.jt-search { display: flex; align-items: center; gap: 12px; padding: 0 20px; height: 56px; border-radius: 999px; background: var(--tint); border: 2px solid transparent; color: var(--soft); }
+.jt-search:focus-within { border-color: var(--accent); background: #fff; }
+.jt-search svg { width: 22px; height: 22px; flex: none; }
+.jt-search input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font: 400 18px var(--sans); color: var(--ink); }
+/* 絞るボタン。すべて・四字熟語・数字・記号の順(2026-10-14、彼女が決めた) */
+.jt-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.jt-chip { font: 500 14px var(--sans); color: var(--soft); background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; cursor: pointer; }
+.jt-chip span { margin-left: 6px; color: var(--faint); font-size: 12px; }
+.jt-chip.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.jt-chip.on span { color: rgba(255, 255, 255, 0.75); }
+.jt-chip:focus-visible, .jt-row:focus-visible, .jt-link:focus-visible, .jt-today:focus-visible, .jt-back:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.jt-body { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 28px; align-items: start; }
+.jt-listwrap { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: #fff; }
+.jt-listhead { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px 8px 16px; font-size: 13px; color: var(--soft); border-bottom: 1px solid var(--line); }
+.jt-sort { font: 500 13px var(--sans); color: var(--accent); background: var(--tint); border: 0; border-radius: 999px; padding: 5px 10px; }
+.jt-listscroll { height: 560px; overflow-y: auto; }
+.jt-list { list-style: none; margin: 0; padding: 0; }
+.jt-row { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; padding: 10px 16px; border-bottom: 1px solid var(--line); cursor: pointer; }
+.jt-row:hover { background: var(--tint); }
+.jt-row.on { background: var(--tint); box-shadow: inset 4px 0 0 var(--accent); }
+.jt-row-w { font-family: "DotGothic16", monospace; -webkit-font-smoothing: none; font-size: 16px; color: var(--ink); overflow-wrap: anywhere; }
+.jt-row-w mark { background: #fff36b; color: inherit; }
+.jt-why { font: normal 11px var(--sans); color: var(--soft); background: var(--tint); border-radius: 4px; padding: 1px 6px; margin-left: 8px; vertical-align: 2px; white-space: nowrap; }
+.jt-row-d { font-size: 12px; color: var(--faint); white-space: nowrap; }
+.jt-none { padding: 24px 16px; color: var(--soft); }
+.jt-entry { border: 1px solid var(--line); border-radius: 14px; padding: 28px 32px 22px; min-height: 520px; box-sizing: border-box; background: #fff; }
+.jt-greet { margin: 0 0 10px; display: inline-block; font-size: 12px; font-weight: 700; color: #fff; background: var(--accent); border-radius: 999px; padding: 3px 10px; }
+.jt-kind { margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; color: var(--accent); }
+.jt-word { margin: 6px 0 14px; font-family: "DotGothic16", monospace; -webkit-font-smoothing: none; font-weight: normal; font-size: 64px; line-height: 1.1; color: var(--ink); overflow-wrap: anywhere; }
+.jt-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
+.jt-meta span { font-size: 14px; color: var(--soft); background: var(--tint); border-radius: 999px; padding: 5px 12px; }
+.jt-meta b { color: var(--ink); font-weight: 700; margin: 0 2px; }
+.jt-sec { padding: 14px 0; border-top: 1px solid var(--line); }
+.jt-sec h4 { margin: 0 0 6px; font-size: 12px; font-weight: 700; color: var(--soft); letter-spacing: 0.04em; }
+.jt-place { margin: 0; font-size: 17px; line-height: 1.6; overflow-wrap: anywhere; }
+.jt-place.jt-unknown { font-size: 15px; color: var(--soft); }
+.jt-links { display: flex; flex-wrap: wrap; gap: 8px; }
+.jt-link { font-size: 15px; padding: 6px 12px; border-radius: 999px; border: 1px dashed var(--faint); color: var(--soft); background: transparent; }
+.jt-link.known { border: 1px solid var(--accent); color: var(--accent); background: #fff; font-weight: 600; cursor: pointer; }
+.jt-empty { font-size: 14px; color: var(--faint); }
+.jt-today, .jt-back { display: none; }
+
+/* スマホでは、このページだけ画面の幅で組む(2026-10-11、彼女と決めた)。
+   一覧と説明は並べず、言葉を押すと説明の画面に切り替わる */
+@media (max-width: 700px) {
+  body.jiten { width: auto; margin: 0; padding: 0; }
+  body.jiten > header { display: none; }
+  body.jiten > .frame { border: 0; border-radius: 0; padding: 14px 16px 40px; }
+  .jt-titles { gap: 2px 14px; }
+  .jt-sub b { font-size: 18px; }
+  .jt-search { height: 50px; padding: 0 16px; }
+  .jt-search input { font-size: 16px; }
+  .jt-chips { flex-wrap: nowrap; overflow-x: auto; margin: 0 -16px; padding: 0 16px 2px; }
+  .jt-chip { white-space: nowrap; }
+  .jt-body { grid-template-columns: 1fr; gap: 0; }
+  .jt-listscroll { height: auto; overflow: visible; }
+  .jt-entry { display: none; }
+  body.jt-open .jt-listwrap, body.jt-open .jt-chips, body.jt-open .jt-today { display: none; }
+  body.jt-open .jt-entry:not([hidden]) { display: block; min-height: 0; border: 0; padding: 4px 0 0; }
+  .jt-today:not([hidden]) { display: grid; justify-items: start; gap: 4px; width: 100%; margin: 0 0 16px; padding: 16px 18px 14px; box-sizing: border-box; text-align: left; color: var(--ink); background: var(--tint); border: 0; border-radius: 14px; cursor: pointer; }
+  .jt-today .jt-greet { margin: 0 0 2px; }
+  .jt-today-w { font-family: "DotGothic16", monospace; -webkit-font-smoothing: none; font-size: 32px; line-height: 1.3; }
+  .jt-today-m { font-size: 13px; color: var(--soft); }
+  .jt-today-go { margin-top: 6px; font-size: 14px; font-weight: 700; color: var(--accent); }
+  body.jt-open .jt-back { display: block; width: fit-content; margin: 0 0 16px; padding: 8px 14px 8px 10px; font-size: 14px; font-weight: 700; color: var(--accent); background: var(--tint); border: 0; border-radius: 999px; cursor: pointer; }
+  .jt-word { font-size: 48px; }
+}
+
+/* トップの真ん中の「最近覚えた言葉」。辞典の絞るボタンのような丸い囲いで、
+   新しいほうから横に並べる。押すと辞典でその言葉が開く(2026-10-14、彼女が決めた) */
+.kotoba-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.kotoba-pills a {
+  display: inline-block;
+  padding: 5px 16px;
+  border: 1px solid #d5daf0;
+  border-radius: 999px;
+  background: #fff;
+  font-size: 16px;
+  line-height: 1.4;
+  text-decoration: none;
+}
+
+.kotoba-pills a:hover {
+  background: #f3f5ff;
+  border-color: var(--main-color);
+}
