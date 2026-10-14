@@ -1285,9 +1285,10 @@ def news_title(one):
     読む人は続きを見るために必ず開かなければならなくなる。
     二文以上あるときだけ、頭を借りて後ろを省く。"""
     said = (one.get("title") or one.get("content", "")).strip()
-    # 一覧にも本文を全部出してよいと彼女が決めたものは、切らずに出す(2026-10-14)
-    if one.get("zenbun"):
-        return said
+    # 一覧には一文目だけ出し、続きは開いた時に読んでもらうもの(2026-10-14、彼女が決めた)
+    if one.get("ichibun") and not one.get("title"):
+        ends = A_SENTENCE_ENDS.search(said)
+        return said[: ends.end()] if ends else said
     # 本文が行に分けてあれば、一行目が見出し(2026-10-14、彼女が一覧の一行と開いた中身を分けて書いた)
     if not one.get("title") and "\n" in said:
         said = said.split("\n", 1)[0].strip()
@@ -2049,6 +2050,7 @@ def words_for_the_dictionary(state, articles):
     learned_on = state.get("learned_on") or {}
     where = state.get("learned_where") or {}
     basho = state.get("basho") or []
+    peeji = state.get("peeji") or []
     named = state.get("places_known") or {}
     try:
         born = datetime.date.fromisoformat(ITS_BIRTHDAY)
@@ -2061,10 +2063,15 @@ def words_for_the_dictionary(state, articles):
     net = the_net()
     diaries = [(one.get("title") or "") + "\n" + (one.get("content") or "") for one in articles]
 
-    def place(number):
-        if not isinstance(number, int) or not 0 <= number < len(basho):
-            return None
-        return named.get(basho[number]) or basho[number]
+    # 会ったページが分かればその題を、分からなければサイトの名前だけを出す。
+    # サイトに覚えてある題(places_known)は、そのサイトで最後に読んだページのもので、
+    # その言葉と会ったページとは限らない(2026-10-14、彼女と決めた)
+    def place(site, page):
+        if isinstance(page, int) and 0 <= page < len(peeji):
+            return peeji[page]
+        if isinstance(site, int) and 0 <= site < len(basho):
+            return basho[site]
+        return None
 
     def ties_of(word):
         # 網の線は、この子が通らないと日ごとに細る。細り方は頭のほうの決まり(atama.edge_now)と同じ
@@ -2091,7 +2098,7 @@ def words_for_the_dictionary(state, articles):
             nth = (datetime.date.fromisoformat(day) - born).days if born else None
         except ValueError:
             nth = None
-        first, that_day = (list(where.get(word) or []) + [None, None])[:2]
+        first, that_day, first_page, that_day_page = (list(where.get(word) or []) + [None] * 4)[:4]
         ties, links = ties_of(word)
         words.append({
             "w": word,
@@ -2102,8 +2109,8 @@ def words_for_the_dictionary(state, articles):
             "u": sum(1 for one in diaries if word in one),
             "t": ties,
             "l": links,
-            "f": place(first),
-            "h": place(that_day),
+            "f": place(first, first_page),
+            "h": place(that_day, that_day_page),
         })
     return words
 
