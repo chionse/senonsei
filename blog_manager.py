@@ -13,7 +13,7 @@ KEYWORDS_FILE = "keywords.json"
 STYLE_FILE = "sen.css"
 NEWS_FILE = "news.json"
 NEWS_PAGE = "shinchaku.html"
-NEWS_ON_TOP = 3  # トップに出す更新情報の数。残りは一覧に全部ある
+NEWS_ON_TOP = 5  # トップに出す更新情報の数。残りは一覧に全部ある(2026-10-14、彼女が3から5にした)
 NEWS_TITLE_LENGTH = 24  # 一覧に出す見出しの長さ。題が無い時は本文の頭を借りる
 # ひみつの部屋。彼女が作りの裏側を話すところ。
 # 更新情報は日付で並ぶが、こちらは中身ごとに分かれるので、
