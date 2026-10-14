@@ -376,9 +376,8 @@ DOORS_TO_TRY = 2  # 扉は多くても二つまで。探し回るためのもの
 PATHS_FROM_A_DOOR = 30
 
 RETURN_TO_ENTRANCE_CHANCE = 0.12  # ときどき、最初にいた入口へ戻ってみる
-# 名前は分かれていても、同じ持ち主の仲間のサイト。行き先の束では一つの持ち主として数える。
-# Wikipedia の仲間は言語ごと・種類ごとに名前が分かれていて、別々の持ち主として
-# 数えられていたので、仲間だけで行き先の一割ほどを占めていた(2026-10-14、彼女と決めた)。
+# 名前は分かれていても、同じ持ち主の仲間のサイト(2026-10-14、彼女と決めた)。
+# 最近歩いた仲間には、しばらく惹かれにくい。
 # 一人ひとりが書く場所(はてなブログ、github.io など)は、仲間にまとめない
 FAMILIES = {
     "ウィキの仲間": (
@@ -390,6 +389,11 @@ FAMILIES = {
     "GitHub の仲間": ("github.com", "githubstatus.com", "githubusercontent.com", "github.blog"),
     "Google の仲間": ("google.com", "google.co.jp", "youtube.com"),
 }
+# 行き先の束で、仲間ごと一つの持ち主として数えるもの。日経の仲間などは名前が分かれていて、
+# 仲間だけで行き先をたくさん占めていた。ウィキの仲間はまとめない。
+# 彼女は Wikipedia の言葉の記事にこそ多く行ってほしかった。ウィキの仲間で読んでいたのは、
+# ほとんどが記事ではない裏方のページだったので、そちらを道から外す(wiki_backstage)
+FAMILIES_COUNTED_AS_ONE = ("日経の仲間", "GitHub の仲間", "Google の仲間")
 # 最近歩いた仲間の場所には、しばらく惹かれにくい(2026-10-14、彼女と決めた)。
 # 直近これだけのページで歩いた仲間を「最近」とする。一か所でおよそ十ページ読むので、三か所ぶんほど
 RECENT_PAGES_FOR_FAMILIES = 35
@@ -1388,11 +1392,64 @@ def worth_reading(url):
     return score
 
 
+# ウィキの仲間の、記事ではない裏方のページ。利用規約や方針、特別ページ、利用者のページ、
+# ノート、ヘルプ、テンプレートなど。題が「裏方の名前:」で始まる。
+# 「Re:ゼロから始める異世界生活」や「Star Wars: …」のように、題にコロンがあっても記事のものはある。
+# ウィキの仲間で読んでいたページの七割以上がこれだった(2026-10-14、彼女と決めた)
+WIKI_BACKSTAGE_NAMES = {
+    "special", "特別", "wikipedia", "wp", "project", "help", "ヘルプ", "template", "テンプレート",
+    "category", "カテゴリ", "file", "ファイル", "image", "画像", "user", "利用者", "talk", "ノート",
+    "会話", "mediawiki", "module", "モジュール", "draft", "wiktionary", "wikisource", "wikibooks",
+    "wikiquote", "wikivoyage", "wikinews", "wikiversity", "wikimedia", "meta", "policy", "legal",
+    "speciaal", "overleg", "gebruiker", "sjabloon", "categorie", "bestand",
+    "spezial", "benutzer", "diskussion", "vorlage", "kategorie", "datei",
+    "spécial", "utilisateur", "discussion", "modèle", "catégorie", "fichier",
+    "especial", "usuario", "discusión", "plantilla", "categoría", "archivo",
+    "speciale", "utente", "discussioni", "categoria",
+    "служебная", "участник", "обсуждение", "шаблон", "категория", "файл",
+    "特殊", "用户", "讨论", "分类", "특수", "사용자", "토론", "틀", "분류", "파일",
+}
+# おまかせ表示は、記事のどれかへ連れていってくれる道なので通す
+WIKI_RANDOM_ARTICLE = re.compile(r"^(特別|Special):(おまかせ表示|Random)", re.IGNORECASE)
+# 記事を置いていない裏方だけの場所
+WIKI_BACKSTAGE_PLACES = re.compile(
+    r"(^|\.)(wikidata\.org|phabricator\.wikimedia\.org|toolforge\.org|wmflabs\.org|wmcloud\.org)$"
+)
+
+
+def wiki_backstage(url):
+    """ウィキの仲間の、記事ではない裏方のページか。"""
+    found = INNER_URL.search(url)
+    if found:
+        url = found.group(1)  # 昔のページは、中の本当の道で見る
+    try:
+        parts = urllib.parse.urlparse(url)
+    except Exception:
+        return False
+    host = parts.netloc.lower()
+    if not WIKIPEDIA_FAMILY.search(host):
+        return False
+    if WIKI_BACKSTAGE_PLACES.search(host):
+        return True
+    path = urllib.parse.unquote(parts.path)
+    if path.startswith("/w/"):
+        return True  # 書き換えの履歴や編集の画面
+    if not path.startswith("/wiki/"):
+        return False
+    title = path[len("/wiki/"):]
+    if WIKI_RANDOM_ARTICLE.match(title) or ":" not in title:
+        return False
+    before = title.split(":", 1)[0].lower()
+    return any(one in WIKI_BACKSTAGE_NAMES for one in re.split(r"[\s_‐-]+", before) if one)
+
+
 def is_walkable(url):
     """そこへ行っていいか。最低限これだけは避ける。"""
     if not url.startswith("http"):
         return False
     if AVOID.search(url) or NOT_A_PAGE.search(url) or NOT_A_PLACE.search(url):
+        return False
+    if wiki_backstage(url):
         return False
     if AN_ADVERT.search(url):
         return False
@@ -2135,6 +2192,8 @@ def tidy_frontier(state):
         if kept_by_place.get(place, 0) >= PATHS_PER_PLACE:
             continue
         owner = family_of(place)
+        if owner not in FAMILIES_COUNTED_AS_ONE:
+            owner = owner_of(place)
         if kept_by_owner.get(owner, 0) >= PATHS_PER_OWNER:
             continue
         kept_by_place[place] = kept_by_place.get(place, 0) + 1
