@@ -1351,11 +1351,11 @@ def generate_news_entry_html(news, index):
     older = news[index + 1] if index + 1 < len(news) else None
     newer = news[index - 1] if index > 0 else None
 
+    # 前と次には中身を書かない。矢印だけ(2026-10-14、彼女が決めた)
     def step(entry, label):
         if not entry:
             return f'<span class="here">{label}</span>'
-        return (f'<a href="{news_page_name(entry)}">'
-                f'{label}　{news_title(entry)}</a>')
+        return f'<a href="{news_page_name(entry)}">{label}</a>'
 
     named = f'<span class="article-title">{one["title"]}</span>' if one.get("title") else ""
     html = f"""<!DOCTYPE html>
