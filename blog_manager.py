@@ -49,7 +49,6 @@ WHERE_SHE_WROTE = (
     (NEWS_PAGE, "更新情報"),
     (HIMITSU_PAGE, "ひみつの部屋"),
 )
-WALKED_SHOWN = 3  # 今日歩いたところを、多くてもこれだけ出す
 LEARNED_SHOWN = 20  # トップの最近覚えた言葉を、新しいほうからこれだけ並べる(2026-10-14、彼女が決めた)
 # 気がかりは一つも捨てないので、ここに出すのは前に出ているぶんだけ。
 # 抱えていないのではなく、いま手前にあるのがこれ、ということ
@@ -255,10 +254,12 @@ def side_panel(state, here):
     seen = walk.get("seen") or []
     if walk.get("date") == today.isoformat() and seen:
         # 場所の名前は長くて折り返すので、一つずつ間を空ける。
-        # 詰めて並べると、どこで名前が切れているのか分からない
+        # 詰めて並べると、どこで名前が切れているのか分からない。
+        # 歩いたところは全部出す(2026-10-15、彼女が決めた。前は多くても三つ)。
+        # 一日に歩けるのは多くても五箇所なので、欄が伸びすぎることはない
         rows = [
             f'      <p class="side-fact side-apart">{one}</p>'
-            for one in seen[-WALKED_SHOWN:]
+            for one in seen
         ]
     else:
         rows = ['      <p class="side-fact side-quiet">今日はまだ散歩に行っていません。</p>']
