@@ -1050,14 +1050,17 @@ def go_home(state, today):
     return True
 
 
-def sites_per_day(state):
-    """世界を知るほど、1日に見て回れる範囲が2〜6箇所に広がっていく。
+# 1日に見て回れる場所の数。前は覚えた言葉が増えるほど2〜6箇所に
+# 広がっていったが、これからは一定にする(2026-10-15、彼女が決めた。
+# その時の広さの4箇所で止めた)。
+SITES_PER_DAY = 4
 
-    それとは別に、その日の気が乗っていれば一箇所だけ増える。
-    上限の中に収めてしまうと、いちばん広がりきった日から後は
-    気が乗っても何も起きないことになるので、上限の外に足す。"""
-    many = min(6, 2 + len(state["learned_words"]) // 120)
-    return many + (1 if (state.get("today_keen") or {}).get("keen") else 0)
+
+def sites_per_day(state):
+    """1日に見て回れる場所の数。言葉が増えても変わらない。
+
+    それとは別に、その日の気が乗っていれば一箇所だけ増える。"""
+    return SITES_PER_DAY + (1 if (state.get("today_keen") or {}).get("keen") else 0)
 
 
 def feeling_keen(state, today):
