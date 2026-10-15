@@ -2124,7 +2124,7 @@ JITEN_SCRIPT = r"""
       var UNKNOWN = __UNKNOWN__;
       var KINDS = ["すべて", "四字熟語", "数字", "記号"];
       var phone = window.matchMedia("(max-width: 700px)").matches;
-      var state = { q: "", kind: "すべて", sort: "random", sel: null, greet: false };
+      var state = { q: "", kind: "すべて", sort: "new", sel: null, greet: false };
       var $ = function (id) { return document.getElementById(id); };
       var esc = function (t) {
         return String(t).replace(/[&<>"]/g, function (c) {
@@ -2321,8 +2321,8 @@ def generate_jiten_html(state, articles):
         <div class="jt-listhead">
           <span id="jt-count"></span>
           <select class="jt-sort" id="jt-sort" aria-label="並べ方">
-            <option value="random">ランダム</option>
             <option value="new">覚えた順</option>
+            <option value="random">ランダム</option>
             <option value="uses">日記でよく使う順</option>
             <option value="ties">つながりが多い順</option>
           </select>
