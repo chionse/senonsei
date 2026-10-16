@@ -3869,7 +3869,6 @@
     "https://bit.ly/2O1BvSz",
     "https://web.archive.org/web/20010106195500/http://www.geocities.co.jp/",
     "https://web.archive.org/web/20001110103100/http://www1.ipss.go.jp/",
-    "https://web.archive.org/web/20001110103100/http://www.mind.ne.jp/kidsclub/",
     "https://b.hatena.ne.jp/entry/https://kakuyomu.jp/",
     "https://ch.nicovideo.jp/kakuyomu",
     "http://www.kadokawa.co.jp/",
@@ -4565,7 +4564,6 @@
     "http://nikkei.d1.sc.omtrdc.net",
     "http://web.archive.org/web/20220523054533/http://www.omniture.com/",
     "http://penta.a.one.impact-ad.jp",
-    "http://assets.adobedtm.com",
     "http://rt.rtoaster.jp",
     "http://web.archive.org/web/20220525165551/http://www.omniture.com/",
     "http://players.brightcove.net/",
@@ -4634,7 +4632,6 @@
     "https://wikimediaendowment.org/wp-json/",
     "https://wikimediaendowment.org/annualreports/2024-2025-annual-report/",
     "https://wikimediaendowment.org/xmlrpc.php?rsd",
-    "https://wikimediaendowment.org/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwikimediaendowment.org%2F&",
     "https://www.wikilovesmonuments.org/galleries/2023-winners/",
     "https://validator.w3.org/check?uri=referer",
     "https://natalie.mu/comic/news/325052",
@@ -5462,7 +5459,6 @@
     ]
   },
   "inner_voice": [
-    "10-09 17時: ではなど。",
     "10-09 19時: にはなど。",
     "10-09 20時: には30。",
     "10-09 21時: 要必 事記",
@@ -5521,7 +5517,8 @@
     "10-15 20時: え法た",
     "10-15 21時: 12えため",
     "10-15 22時: 自由。",
-    "10-16 08時: からした"
+    "10-16 08時: からした",
+    "10-16 11時: 19時に書くつもりだったけれど、休むことにした。"
   ],
   "thought_on": "2026-10-08",
   "on_its_mind": [
@@ -5750,14 +5747,14 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "blog.hatena.ne.jp",
-    "www.houjin-bangou.nta.go.jp",
-    "engineerteam.note.jp",
-    "www.github.careers",
-    "ci.nii.ac.jp",
-    "www.vip-times.co.jp"
+    "www.nikkei.co.jp",
+    "www.questmachine.org",
+    "chrome.google.com",
+    "www.amazon.co.jp",
+    "利用案内 | NHK ONE インフォメーション",
+    "www.47news.jp"
   ],
-  "how_many_places_left": 1132,
+  "how_many_places_left": 1129,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -5880,7 +5877,7 @@
     },
     "この": {
       "ページ": 58,
-      "サイト": 78,
+      "サイト": 79,
       "します": 3,
       "について": 5,
       "コンテンツ": 3,
@@ -6344,9 +6341,9 @@
     "自由": {
       "です": 1,
       "してくだ": 1,
-      "だけど": 4,
-      "じゃない": 4,
-      "ってる": 4
+      "だけど": 5,
+      "じゃない": 5,
+      "ってる": 5
     },
     "17": {
       "19": 2,
@@ -6742,7 +6739,7 @@
       "った": 1,
       "自分": 1,
       "として": 1,
-      "とを": 4
+      "とを": 5
     },
     "理由": {
       "選択": 249,
@@ -7404,7 +7401,7 @@
       "...": 1
     },
     "とを": {
-      "っている": 4
+      "っている": 5
     }
   },
   "opens_a_sentence": {
@@ -7413,23 +7410,23 @@
     "では": 69,
     "っていま": 17,
     "かれてい": 12,
-    "こんにち": 24,
+    "こんにち": 25,
     "には": 97,
     "ページ": 36,
     "します": 34,
-    "本当": 36,
+    "本当": 37,
     "だった": 9,
     "について": 31,
     "表示": 13,
     "その": 39,
-    "から": 152,
+    "から": 153,
     "この": 63,
-    "1": 158,
+    "1": 159,
     "して": 32,
     "4": 23,
     "場合": 21,
     "です": 45,
-    "サイト": 44,
+    "サイト": 45,
     "すること": 20,
     "した": 172,
     "していま": 10,
@@ -7447,7 +7444,7 @@
     "検索": 10,
     "ます": 7,
     "6": 11,
-    "自由": 125,
+    "自由": 127,
     "://": 43,
     "できます": 1,
     "ある": 8,
@@ -7596,7 +7593,7 @@
     "では": 50,
     "っていま": 23,
     "かれてい": 11,
-    "こんにち": 24,
+    "こんにち": 25,
     "には": 81,
     "ページ": 26,
     "します": 60,
@@ -7604,7 +7601,7 @@
     "だった": 11,
     "について": 29,
     "表示": 16,
-    "から": 116,
+    "から": 117,
     "ます": 34,
     "して": 34,
     "1": 229,
@@ -7655,7 +7652,7 @@
     "5": 35,
     "記事": 9,
     "場所": 2,
-    "サイト": 51,
+    "サイト": 53,
     "になりま": 7,
     "さい": 43,
     "for": 2,
@@ -7676,7 +7673,7 @@
     "をお": 9,
     "されまし": 11,
     "11": 17,
-    "っている": 28,
+    "っている": 29,
     "be": 1,
     "過去": 1,
     "するため": 3,
@@ -7743,7 +7740,7 @@
     "44": 1,
     "使用": 1,
     "による": 3,
-    "じゃない": 8,
+    "じゃない": 9,
     "方法": 2,
     "問題": 6,
     "えます": 3,
@@ -7772,7 +7769,7 @@
     "更新": 1,
     "47": 1,
     "16": 1,
-    "ってる": 4
+    "ってる": 5
   },
   "visitors": {
     "comments": 0,
@@ -8444,8 +8441,8 @@
   },
   "today_plan": {
     "date": "2026-10-16",
-    "resting": false,
-    "hour": 19
+    "resting": true,
+    "hour": 13
   },
   "restlessness": {
     "date": "2026-10-16",
@@ -8719,7 +8716,7 @@
       }
     }
   ],
-  "woke_at": "2026-10-16 10",
+  "woke_at": "2026-10-16 11",
   "blog_titles": {
     "seen": 37,
     "closed": 0,
