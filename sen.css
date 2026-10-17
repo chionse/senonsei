@@ -1327,6 +1327,9 @@ article.yomimono .article-head {
   /* 外枠は細い 1px(2026-10-18、彼女が選んだ。太いと紙から浮いて見えた) */
   border: 1px solid var(--main-color);
   box-shadow: 3px 3px 0 var(--sc-shadow);
+  /* 左の欄の幅は変えず、カードだけ左と上に 8px、右に 6px はみ出して一回り大きくする
+     (2026-10-18、彼女が選んだ。紙のふちと区切り線の手前の空白を埋める) */
+  margin: -8px -6px 0 -8px;
 }
 
 .sc-bar {
@@ -1539,7 +1542,7 @@ article.yomimono .article-head {
   align-items: center;
   justify-content: center;
   gap: 1px;
-  height: 28px;
+  height: 30px;
 }
 
 .sc-c b {
