@@ -2080,9 +2080,10 @@ def a_script_of(word):
 # この子が自分で結びつけた、外国語と日本語(senonsei_ai.bridge)。
 # 信じるのは、この強さから。senonsei_ai.BRIDGE_TRUSTED と同じにしておく
 READING_TRUSTED = 2
-# 辞典で、外国語の言葉にだけ出す欄の見出しと、まだ結びついていない時の文。仮(彼女が決める)
-READING_TITLE = "千遠生の訳"
-READING_UNKNOWN = "まだ訳せません"
+# 辞典で、外国語の言葉にだけ出す欄の見出しと、まだ結びついていない時の文。
+# 彼女の言葉のまま(2026-10-18)
+READING_TITLE = "千遠生の日本語訳"
+READING_UNKNOWN = "まだ訳がありません"
 
 
 def the_readings():
