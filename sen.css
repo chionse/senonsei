@@ -1312,7 +1312,8 @@ article.yomimono .article-head {
   --sc-shade: #8e9ed6;
   --sc-faint: #c3cbec;
   --sc-today: #f5148a;
-  --sc-shadow: #fba6d2;
+  /* 影は透ける薄いピンク。白い紙の上では #fba6d2 と同じ色に見え、月の一覧の影は下の暦が透ける */
+  --sc-shadow: rgba(245, 20, 138, 0.38);
   position: relative;
   font-family: var(--small-font);
   -webkit-font-smoothing: none;
