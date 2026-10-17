@@ -2015,6 +2015,100 @@ def a_kind_of_word(word):
     return ""
 
 
+# 言葉を、書いてある字で分ける(2026-10-18、彼女が決めた)。
+# 言語では分けない。英語とフランス語は見た目では見分けられず、
+# 「英語」と名付けると、ほかの言葉が混ざった時に名前が嘘になる。
+# 漢字だけの言葉は、中国語でも日本語に入る。字が同じなので見分けられない。
+# 名前はまだ仮(彼女が決める)
+JAPANESE_SCRIPT = "日本語"
+SCRIPT_NAMES = {
+    "LATIN": "アルファベット",
+    "ARABIC": "アラビア文字",
+    "CYRILLIC": "キリル文字",
+    "DEVANAGARI": "デーヴァナーガリー",
+    "HANGUL": "ハングル",
+    "THAI": "タイ文字",
+    "ARMENIAN": "アルメニア文字",
+    "HEBREW": "ヘブライ文字",
+    "GREEK": "ギリシャ文字",
+    "GEORGIAN": "ジョージア文字",
+    "BENGALI": "ベンガル文字",
+    "GUJARATI": "グジャラート文字",
+    "GURMUKHI": "グルムキー文字",
+    "TAMIL": "タミル文字",
+    "TELUGU": "テルグ文字",
+    "KANNADA": "カンナダ文字",
+    "MALAYALAM": "マラヤーラム文字",
+    "SINHALA": "シンハラ文字",
+    "LAO": "ラーオ文字",
+    "KHMER": "クメール文字",
+    "MYANMAR": "ミャンマー文字",
+    "TIBETAN": "チベット文字",
+    "ETHIOPIC": "エチオピア文字",
+    "THAANA": "ターナ文字",
+    "SYRIAC": "シリア文字",
+    "MONGOLIAN": "モンゴル文字",
+}
+# 表に無い字。出会った時にここへ名前を足す
+OTHER_SCRIPT = "そのほかの文字"
+# 最初から並べておく字。ほかの字は、その字の言葉を初めて覚えた日に増える
+SCRIPTS_FROM_THE_START = [JAPANESE_SCRIPT, "アルファベット"]
+
+
+def a_script_of(word):
+    """その言葉が書いてある字。数字や記号だけの言葉は、どの字でもない("")。
+
+    日本語の字(ひらがな・カタカナ・漢字)が一つでも入っていれば日本語。
+    「1番」のように数字が混ざっていても日本語になる。"""
+    import unicodedata
+    seen = {}
+    for ch in word:
+        name = unicodedata.name(ch, "")
+        parts = name.replace("-", " ").split()
+        if {"HIRAGANA", "KATAKANA", "CJK", "IDEOGRAPHIC"} & set(parts):
+            return JAPANESE_SCRIPT
+        if not ch.isalpha():
+            continue
+        script = next((SCRIPT_NAMES[p] for p in parts if p in SCRIPT_NAMES), OTHER_SCRIPT)
+        seen[script] = seen.get(script, 0) + 1
+    if not seen:
+        return ""
+    # 字が混ざっていたら、多いほう
+    return max(seen, key=seen.get)
+
+
+# この子が自分で結びつけた、外国語と日本語(senonsei_ai.bridge)。
+# 信じるのは、この強さから。senonsei_ai.BRIDGE_TRUSTED と同じにしておく
+READING_TRUSTED = 2
+# 辞典で、外国語の言葉にだけ出す欄の見出しと、まだ結びついていない時の文。仮(彼女が決める)
+READING_TITLE = "千遠生の訳"
+READING_UNKNOWN = "まだ訳せません"
+
+
+def the_readings():
+    """この子が外国語に当てている日本語。外国語(小文字) → いちばん強く結びついた日本語。"""
+    tied = {}
+    folder = os.path.join("kotoba", "bridges")
+    if not os.path.isdir(folder):
+        return tied
+    for name in sorted(os.listdir(folder)):
+        if not name.endswith(".json"):
+            continue
+        try:
+            with open(os.path.join(folder, name), encoding="utf-8") as f:
+                tied.update(json.load(f))
+        except (OSError, ValueError):
+            continue
+    readings = {}
+    for foreign, japanese in tied.items():
+        if not isinstance(japanese, dict) or not japanese:
+            continue
+        word, strength = max(japanese.items(), key=lambda kv: kv[1])
+        if strength >= READING_TRUSTED:
+            readings[foreign] = word
+    return readings
+
+
 def the_net():
     """頭の中の、連想の網。束に分けてしまってあるのを集める。"""
     net = {}
@@ -2062,6 +2156,7 @@ def words_for_the_dictionary(state, articles):
     except (KeyError, TypeError, ValueError):
         today = 0
     net = the_net()
+    readings = the_readings()
     diaries = [(one.get("title") or "") + "\n" + (one.get("content") or "") for one in articles]
 
     # 会ったページが分かればその題を、分からなければサイトの名前だけを出す。
@@ -2101,9 +2196,11 @@ def words_for_the_dictionary(state, articles):
             nth = None
         first, that_day, first_page, that_day_page = (list(where.get(word) or []) + [None] * 4)[:4]
         ties, links = ties_of(word)
-        words.append({
+        script = a_script_of(word)
+        one = {
             "w": word,
             "k": a_kind_of_word(word),
+            "s": script,
             "o": order,
             "d": written_as_a_date(day),
             "n": nth,
@@ -2112,7 +2209,12 @@ def words_for_the_dictionary(state, articles):
             "l": links,
             "f": place(first, first_page),
             "h": place(that_day, that_day_page),
-        })
+        }
+        # 訳の欄は外国語の言葉にだけ作る(2026-10-18、彼女が決めた)。
+        # 日本語と、数字や記号だけの言葉には欄そのものが無い
+        if script and script != JAPANESE_SCRIPT:
+            one["y"] = readings.get(" ".join(word.lower().split()), "")
+        words.append(one)
     return words
 
 
@@ -2123,7 +2225,18 @@ JITEN_SCRIPT = r"""
     (function () {
       var DATA = JSON.parse(document.getElementById("jt-data").textContent);
       var UNKNOWN = __UNKNOWN__;
-      var KINDS = ["すべて", "四字熟語", "数字", "記号"];
+      var READING_TITLE = __READING_TITLE__;
+      var READING_UNKNOWN = __READING_UNKNOWN__;
+      // 字のボタン。最初からあるものに、覚えた順で初めて出てきた字を足していく
+      var SCRIPTS = __SCRIPTS__;
+      DATA.slice().sort(function (a, b) { return a.o - b.o; }).forEach(function (d) {
+        if (d.s && SCRIPTS.indexOf(d.s) < 0) { SCRIPTS.push(d.s); }
+      });
+      var KINDS = ["すべて"].concat(SCRIPTS, ["四字熟語", "数字", "記号"]);
+      var fits = function (d, k) {
+        if (k === "すべて") { return true; }
+        return SCRIPTS.indexOf(k) >= 0 ? d.s === k : d.k === k;
+      };
       var phone = window.matchMedia("(max-width: 700px)").matches;
       var state = { q: "", kind: "すべて", sort: "new", sel: null, greet: false };
       var $ = function (id) { return document.getElementById(id); };
@@ -2168,7 +2281,7 @@ JITEN_SCRIPT = r"""
       };
       var shown = function () {
         return ordered().filter(function (d) {
-          if (state.kind !== "すべて" && d.k !== state.kind) { return false; }
+          if (!fits(d, state.kind)) { return false; }
           if (!state.q) { return true; }
           return d.w.indexOf(state.q) >= 0 || byPlace(d);
         });
@@ -2180,7 +2293,7 @@ JITEN_SCRIPT = r"""
       };
       var chips = function () {
         $("jt-chips").innerHTML = KINDS.map(function (k) {
-          var n = k === "すべて" ? DATA.length : DATA.filter(function (d) { return d.k === k; }).length;
+          var n = DATA.filter(function (d) { return fits(d, k); }).length;
           return '<button type="button" class="jt-chip' + (k === state.kind ? " on" : "") + '" data-k="' + k + '">' +
             k + '<span>' + n + '</span></button>';
         }).join("");
@@ -2218,6 +2331,10 @@ JITEN_SCRIPT = r"""
             (d.n !== null ? '<span>生まれて<b>' + d.n + '</b>日目に覚えた</span>' : '') +
             '<span>日記で<b>' + d.u + '</b>回</span>' +
           '</div>' +
+          // 訳の欄は、外国語の言葉にだけある(d.y がある時だけ。空でも欄は出す)
+          ("y" in d ? '<section class="jt-sec"><h4>' + esc(READING_TITLE) + '</h4>' +
+            (d.y ? '<p class="jt-place">' + esc(d.y) + '</p>'
+                 : '<p class="jt-place jt-unknown">' + esc(READING_UNKNOWN) + '</p>') + '</section>' : '') +
           '<section class="jt-sec"><h4>初めて会った場所</h4>' + place(d.f) + '</section>' +
           '<section class="jt-sec"><h4>覚えた日に会ってた場所</h4>' + place(d.h) + '</section>' +
           '<section class="jt-sec"><h4>つながっている言葉</h4><div class="jt-links">' + links + '</div></section>';
@@ -2289,6 +2406,9 @@ def generate_jiten_html(state, articles):
     data = json.dumps(words, ensure_ascii=False, separators=(",", ":")).replace("<", "\\u003c")
     script = (JITEN_SCRIPT
               .replace("__UNKNOWN__", json.dumps(PLACE_UNKNOWN, ensure_ascii=False))
+              .replace("__READING_TITLE__", json.dumps(READING_TITLE, ensure_ascii=False))
+              .replace("__READING_UNKNOWN__", json.dumps(READING_UNKNOWN, ensure_ascii=False))
+              .replace("__SCRIPTS__", json.dumps(SCRIPTS_FROM_THE_START, ensure_ascii=False))
               .replace("__TIES__", str(TODAYS_WORD_TIES)))
     html = f"""<!DOCTYPE html>
 <html lang="ja">
