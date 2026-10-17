@@ -1307,8 +1307,11 @@ article.yomimono .article-head {
    隙間は窓の中どこも 5px、欄の高さは 20px にそろえてある。
    今日は細いピンクの枠、影は薄いピンク(どちらも彼女が選んだ色) */
 .sc-win {
-  --sc-face: #f3f6ff;
+  /* 窓の地は白(2026-10-18、彼女に言われた。薄い青だと紙から浮いて見えた)。
+     曜日の段もごく薄い青に。ボタンの塗りは押せる形に見えるよう薄い青のまま */
+  --sc-face: #ffffff;
   --sc-fill: #e8edff;
+  --sc-band: #f3f6ff;
   --sc-shade: #8e9ed6;
   --sc-faint: #c3cbec;
   --sc-today: #f5148a;
@@ -1321,8 +1324,12 @@ article.yomimono .article-head {
   line-height: 1.6;
   color: var(--main-color);
   background: var(--sc-face);
-  border: 2px solid var(--main-color);
+  /* 外枠は細い 1px(2026-10-18、彼女が選んだ。太いと紙から浮いて見えた) */
+  border: 1px solid var(--main-color);
   box-shadow: 3px 3px 0 var(--sc-shadow);
+  /* 左の欄の幅は変えず、カードだけ左と上に 8px、右に 6px はみ出して一回り大きくする
+     (2026-10-18、彼女が選んだ。紙のふちと区切り線の手前の空白を埋める) */
+  margin: -8px -6px 0 -8px;
 }
 
 .sc-bar {
@@ -1526,7 +1533,7 @@ article.yomimono .article-head {
   text-align: center;
   padding: 2px 0 3px;
   margin-bottom: 2px;
-  background: var(--sc-fill);
+  background: var(--sc-band);
 }
 
 .sc-c {
@@ -1535,7 +1542,7 @@ article.yomimono .article-head {
   align-items: center;
   justify-content: center;
   gap: 1px;
-  height: 28px;
+  height: 30px;
 }
 
 .sc-c b {
