@@ -3947,7 +3947,6 @@
     "81"
   ],
   "frontier": [
-    "https://ang.wikibooks.org/wiki/",
     "https://b.hatena.ne.jp/hotentry",
     "https://ja.wikipedia.org/wiki/特別:おまかせ表示",
     "https://note.jp/n/nc0fe1a230633",
@@ -5128,7 +5127,19 @@
     "https://donate.wikimedia.org/?wmf_source=donate&wmf_medium=sidebar&wmf_campaign=cs.wikiversity.org&uselang=cs",
     "https://www.fi.muni.cz/usr/pelikan/ARCHIT/TEXTY/VNEUM.HTML",
     "http://statnice.dqd.cz/home:prog:ap2",
-    "https://chatgpt.com/"
+    "https://chatgpt.com/",
+    "https://la.wikibooks.org/wiki/Pagina_prima",
+    "https://te.wikibooks.org/wiki/%E0%B0%AE%E0%B1%8A%E0%B0%A6%E0%B0%9F%E0%B0%BF_%E0%B0%AA%E0%B1%87%E0%B0%9C%E0%B1%80",
+    "https://si.wikibooks.org/wiki/%E0%B6%B8%E0%B7%94%E0%B6%BD%E0%B7%8A_%E0%B6%B4%E0%B7%92%E0%B6%A7%E0%B7%94%E0%B7%80",
+    "https://se.wikibooks.org/wiki/V%C3%A1ldosiidu",
+    "https://en.wikisource.org/wiki/H%C4%93afods%C4%ABde:Ealdenglisc",
+    "https://commons.wikimedia.org/wiki/H%C4%93afodtramet",
+    "https://outreach.wikimedia.org/wiki/Main_Page",
+    "https://wikimania.wikimedia.org/wiki/Wikimania",
+    "https://species.wikimedia.org/wiki/H%C4%93afodtramet",
+    "https://incubator.wikimedia.org/wiki/Wq/ang/H%C4%93afodtramet",
+    "http://wikimediafoundation.org/fundraising",
+    "https://donate.wikimedia.org/?wmf_source=donate&wmf_medium=sidebar&wmf_campaign=ang.wikibooks.org&uselang=ang"
   ],
   "visited": [
     "https://note.com/",
@@ -5625,7 +5636,9 @@
     "https://cs.wikiversity.org/wiki/Informatika_pro_kombinovan%C3%A9_lyceum/2026/Svobodaje",
     "https://cs.wikiversity.org/wiki/Informatika_pro_kombinovan%C3%A9_lyceum/2026/Vojta_%C5%A0trobl",
     "https://cs.wikiversity.org/wiki/Informatika_pro_kombinovan%C3%A9_lyceum/2026/Marcarioo",
-    "https://cs.wikiversity.org/wiki/Speci%C3%A1ln%C3%AD:Souvisej%C3%ADc%C3%AD_zm%C4%9Bny/Informatika_pro_kombinovan%C3%A9_lyceum/2026/Anitkanas"
+    "https://cs.wikiversity.org/wiki/Speci%C3%A1ln%C3%AD:Souvisej%C3%ADc%C3%AD_zm%C4%9Bny/Informatika_pro_kombinovan%C3%A9_lyceum/2026/Anitkanas",
+    "https://ang.wikibooks.org/wiki/",
+    "https://ang.wikibooks.org/wiki/Syndrig:WhatLinksHere/H%C4%93afods%C4%ABde"
   ],
   "notes": [
     "7日目: 本の未来基金、【創作/読書】カクヨム運営公式、aozorahack · GitHub",
@@ -5657,19 +5670,21 @@
     "33日目: Overleg gebruiker:Lieven - Wikibooks、GitHub Status、Wiktionary:ショートカット - ウィクショナリー日本語版、Charts · Workboard(むかしのすがた)、CWE -\r\n\n    CWE-829: Inclusion of Functionality from Untrusted Control Sphere (4.20)",
     "34日目: ぷろだくしょんバオバブ - Wikipedia、利用者情報の外部送信について - Hatena Policies(むかしのすがた)、NHKニュース 速報・最新情報、「市長に全責任がある」石垣市の国際フェリーがたった4カ月で運休に…現役市議が明かす「市民が赤字補償」の“とんでもスキーム” | 女性自身、CNN Chile",
     "35日目: Kids' Space、あおきさやか公式サイト あおきさやかweb、Nominate amazing open source contributors for the GitHub Stars program | GitHub Stars、行動履歴情報の取り扱いに関する原則 - 株式会社マイクロアド、はてなブックマーク - 新着エントリー - 総合",
-    "36日目: アンケート｜NHK、株式会社ヒナプロジェクト、Poslední změny – Wikiverzita"
+    "36日目: アンケート｜NHK、株式会社ヒナプロジェクト、Poslední změny – Wikiverzita、Wikibooks"
   ],
   "today_walk": {
     "date": "2026-10-17",
     "seen": [
       "アンケート｜NHK",
       "株式会社ヒナプロジェクト",
-      "Poslední změny – Wikiverzita"
+      "Poslední změny – Wikiverzita",
+      "Wikibooks"
     ],
     "brought": [
       61,
       187,
-      494
+      494,
+      157
     ]
   },
   "inner_voice": [
@@ -5885,6 +5900,12 @@
       "since": "2026-10-17",
       "first": "2026-10-17",
       "times": 1
+    },
+    {
+      "what": ";&#",
+      "since": "2026-10-17",
+      "first": "2026-10-17",
+      "times": 1
     }
   ],
   "saw_on": "2026-10-17",
@@ -5973,14 +5994,14 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "www.appsflyer.com",
-    "teru.notedemo.com",
-    "www.radionikkei.jp",
-    "danmachi.com",
-    "art.nikkei-ps.co.jp",
-    "hatenacorp.jp"
+    "en.wikiquote.org",
+    "hatena.co.jp",
+    "www.google.fr",
+    "www.yahoo.co.jp",
+    "messages.yahoo.co.jp",
+    "techjob.zdnet.co.jp"
   ],
-  "how_many_places_left": 1182,
+  "how_many_places_left": 1193,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -6323,7 +6344,7 @@
       "使用": 1
     },
     "://": {
-      "org": 218,
+      "org": 220,
       "2": 30,
       "1": 41,
       "://": 13,
@@ -6736,7 +6757,7 @@
       "には": 2,
       "12": 6,
       "28": 2,
-      "18": 1
+      "34": 1
     },
     "男性": {
       "されてい": 1,
@@ -7232,7 +7253,7 @@
       "39": 17,
       "34": 61,
       "4": 4,
-      "160": 74,
+      "160": 94,
       "0": 54,
       "7": 1,
       "27": 8
@@ -7813,7 +7834,8 @@
       "20": 1
     },
     "160": {
-      "には": 1
+      "には": 1,
+      "160": 32
     },
     "ない": {
       "にある": 1
@@ -8009,7 +8031,7 @@
     "ます": 8,
     "6": 25,
     "自由": 149,
-    "://": 48,
+    "://": 49,
     "できます": 1,
     "ある": 8,
     "という": 28,
@@ -8257,7 +8279,7 @@
     "in": 4,
     "機能": 14,
     "きな": 4,
-    "org": 23,
+    "org": 24,
     "リンク": 2,
     "求める": 2,
     "ブログ": 7,
@@ -8578,7 +8600,16 @@
       "59",
       "0",
       "24",
-      "27"
+      "27",
+      "in",
+      "for",
+      ";&",
+      "日本語",
+      "中文",
+      "2013",
+      "the",
+      "of",
+      "be"
     ]
   },
   "wants_to_say": [
@@ -9109,9 +9140,9 @@
     },
     {
       "what": ";&#",
-      "since": "2026-10-15",
+      "since": "2026-10-17",
       "first": "2026-10-15",
-      "times": 1,
+      "times": 2,
       "said": ""
     },
     {
@@ -9225,6 +9256,13 @@
       "first": "2026-10-17",
       "times": 1,
       "said": ""
+    },
+    {
+      "what": "8211",
+      "since": "2026-10-17",
+      "first": "2026-10-17",
+      "times": 1,
+      "said": ""
     }
   ],
   "thinking_about": "からだ。",
@@ -9254,9 +9292,7 @@
     "2026-10-13 アーカイブに寄付する",
     "2026-10-15 おまかせ表示: ぷろだくしょんバオバブ"
   ],
-  "wants_to_return": {
-    "ang.wikibooks.org": "https://ang.wikibooks.org/wiki/"
-  },
+  "wants_to_return": {},
   "remembered_on": "2026-10-17",
   "homesickness": {
     "date": "2026-10-17",
@@ -9344,12 +9380,12 @@
       "day": "2026-10-17"
     }
   ],
-  "understood_usually": 0.344241,
+  "understood_usually": 0.321511,
   "its_ways": {
     "pages_per_site": 11.1,
-    "pull_of_japanese": 1.13,
+    "pull_of_japanese": 1.14,
     "feeling_keen": 0.35,
-    "wish_to_return": 1.3
+    "wish_to_return": 1.4
   },
   "came_back": [
     {
@@ -9558,9 +9594,32 @@
         "pages": 10,
         "unread": 0
       }
+    },
+    {
+      "place": "ang.wikibooks.org",
+      "before": {
+        "day": 17,
+        "entrance": "https://ang.wikibooks.org/wiki/",
+        "knew": 0,
+        "of": 436,
+        "pages": 2,
+        "title": "Wikibooks",
+        "unread": 1,
+        "vocabulary": 15
+      },
+      "now": {
+        "entrance": "https://ang.wikibooks.org/wiki/",
+        "title": "Wikibooks",
+        "day": 36,
+        "vocabulary": 361,
+        "knew": 45,
+        "of": 535,
+        "pages": 2,
+        "unread": 0
+      }
     }
   ],
-  "woke_at": "2026-10-17 18",
+  "woke_at": "2026-10-17 19",
   "blog_titles": {
     "seen": 47,
     "closed": 0,
@@ -9603,7 +9662,8 @@
     "b.hatena.ne.jp",
     "forms.nhk.jp",
     "hinaproject.co.jp",
-    "cs.wikiversity.org"
+    "cs.wikiversity.org",
+    "ang.wikibooks.org"
   ],
   "its_own_figure": {
     "date": "2026-10-14",
@@ -9686,6 +9746,8 @@
     "Informatika pro kombinované lyceum/2026/Svobodaje – Wikiverzita",
     "Informatika pro kombinované lyceum/2026/Vojta Štrobl – Wikiverzita",
     "Informatika pro kombinované lyceum/2026/Marcarioo – Wikiverzita",
-    "Související změny – Wikiverzita"
+    "Související změny – Wikiverzita",
+    "Wikibooks",
+    "Trametas þa habbaþ hlencan gecnytede to \"Hēafodsīde\" - Wikibooks"
   ]
 }
