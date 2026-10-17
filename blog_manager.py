@@ -1,3 +1,4 @@
+import calendar
 import datetime
 import json
 import os
@@ -306,83 +307,133 @@ def days_it_wrote(articles):
     return {one["date"] for one in articles}
 
 
-# 暦も、作り直されるまでは作った日のまま残る。開いた時に日付が変わっていたら、
-# 作った日から昨日までの、書いていない日に点を置き、今日を今日にする。
-# 月が替わっていたら、新しい月の暦を並べ直す(2026-10-14、彼女に言われた)
-KOMA_MAY_BE_OLD = """
+# 月間スタンプカード(2026-10-18、彼女と決めた形)。
+# 昔のパソコンの「日付と時刻」の窓を、サイトの青と白で描いたもの。
+# 「10月 ▼」と「▲▼」で、生まれた月から今月までのカードを見られる。
+#
+# 書いた日は月ごとに「1」と「0」の並びにしてページに埋めておき、開いた側で並べる。
+# ページは作り直されるまで作った日のまま残るので、開いた時に日付が変わっていたら、
+# 作った日から昨日までの書いていない日を休んだ日にして、今日を今日にする
+# (2026-10-14、彼女に言われた。前の暦から引き継いだ決まり)
+STAMP_CARD_SCRIPT = """
       <script>
         (function () {
-          var grid = document.getElementById("koma");
-          if (!grid) { return; }
+          var card = document.getElementById("koma");
+          if (!card) { return; }
+          var born = card.dataset.born, built = card.dataset.day, wrote = {};
+          try { wrote = JSON.parse(card.dataset.wrote); } catch (e) { wrote = {}; }
           var today = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
-          if (grid.dataset.day >= today) { return; }
-          var month = today.slice(0, 7);
-          if (grid.dataset.day.slice(0, 7) !== month) {
-            var year = Number(month.slice(0, 4));
-            var number = Number(month.slice(5, 7));
-            var blank = new Date(Date.UTC(year, number - 1, 1)).getUTCDay();
-            var last = new Date(Date.UTC(year, number, 0)).getUTCDate();
-            var komas = "";
-            for (var i = 0; i < blank; i++) { komas += '<span class="koma"></span>'; }
-            for (var d = 1; d <= last; d++) { komas += '<span class="koma yet">' + d + '<i></i></span>'; }
-            grid.innerHTML = komas;
-          }
-          var open = grid.querySelectorAll(".koma.today, .koma.yet");
-          for (var k = 0; k < open.length; k++) {
-            var n = Number(open[k].firstChild.nodeValue);
-            var day = month + "-" + (n < 10 ? "0" : "") + n;
-            if (day < grid.dataset.born || day > today) { continue; }
-            var mark = open[k].querySelector("i");
-            if (day === today) {
-              open[k].className = "koma today";
-              mark.textContent = "";
-            } else {
-              open[k].className = "koma rest";
-              mark.textContent = "·";
+          if (today < built) { today = built; }
+          var first = born.slice(0, 7), now = today.slice(0, 7), shown = now;
+          var $ = function (s) { return card.querySelector(s); };
+          var grid = $(".sc-grid"), menu = $(".sc-months"), drop = $(".sc-drop");
+          var up = $(".sc-up"), down = $(".sc-down");
+          var pad = function (n) { return (n < 10 ? "0" : "") + n; };
+          var kind = function (key, d) {
+            var day = key + "-" + pad(d);
+            if (day < born || day > today) { return "yet"; }
+            if ((wrote[key] || "").charAt(d - 1) === "1" && day <= built) { return "wrote"; }
+            return day === today ? "today" : "rest";
+          };
+          var draw = function () {
+            var y = Number(shown.slice(0, 4)), m = Number(shown.slice(5, 7));
+            var blank = new Date(Date.UTC(y, m - 1, 1)).getUTCDay();
+            var last = new Date(Date.UTC(y, m, 0)).getUTCDate();
+            var html = "";
+            for (var i = 0; i < blank; i++) { html += '<span class="sc-c"></span>'; }
+            for (var d = 1; d <= last; d++) {
+              html += '<span class="sc-c ' + kind(shown, d) + '"><b>' + d + '</b><i></i></span>';
             }
-          }
+            grid.innerHTML = html;
+            $(".sc-month").textContent = m + "月";
+            $(".sc-year").textContent = y;
+            up.disabled = y >= Number(now.slice(0, 4));
+            down.disabled = y <= Number(first.slice(0, 4));
+          };
+          var clamp = function (key) { return key < first ? first : (key > now ? now : key); };
+          var shut = function () { menu.hidden = true; drop.setAttribute("aria-expanded", "false"); };
+          var open = function () {
+            var y = shown.slice(0, 4), html = "";
+            for (var m = 1; m <= 12; m++) {
+              var key = y + "-" + pad(m);
+              html += '<button type="button" data-k="' + key + '"' +
+                (key === shown ? ' class="on"' : '') + (key < first || key > now ? ' disabled' : '') + '>' + m + '月</button>';
+            }
+            menu.innerHTML = html; menu.hidden = false; drop.setAttribute("aria-expanded", "true");
+          };
+          drop.addEventListener("click", function () { if (menu.hidden) { open(); } else { shut(); } });
+          menu.addEventListener("click", function (e) {
+            var b = e.target.closest("button");
+            if (b && !b.disabled) { shown = b.dataset.k; shut(); draw(); }
+          });
+          var year = function (step) {
+            shown = clamp((Number(shown.slice(0, 4)) + step) + shown.slice(4)); shut(); draw();
+          };
+          up.addEventListener("click", function () { year(1); });
+          down.addEventListener("click", function () { year(-1); });
+          document.addEventListener("click", function (e) { if (!card.contains(e.target)) { shut(); } });
+          document.addEventListener("keydown", function (e) { if (e.key === "Escape") { shut(); } });
+          draw();
         })();
       </script>"""
 
 
+def months_it_wrote(articles, born, today):
+    """生まれた月から今月まで、月ごとの書いた日。1日目から順に、書いた日は「1」、ほかは「0」。"""
+    wrote = days_it_wrote(articles)
+    months = {}
+    year, month = born.year, born.month
+    while (year, month) <= (today.year, today.month):
+        key = f"{year}-{month:02d}"
+        last = calendar.monthrange(year, month)[1]
+        months[key] = "".join("1" if f"{key}-{day:02d}" in wrote else "0" for day in range(1, last + 1))
+        year, month = (year + 1, 1) if month == 12 else (year, month + 1)
+    return months
+
+
 def this_months_days(articles):
-    """今月の暦。生まれた日から今日までが埋まっていく。
+    """月間スタンプカード。今月のカードを描いておき、前の月は開いた側で並べる。
 
     書いた日には丸を、書かないと決めた日には点を置く。
-    今日はまだ書いていないかもしれないので、何も置かない。"""
+    今日はまだ書いていないかもしれないので、枠で囲むだけにする。"""
     today = today_in_japan()
     try:
         born = datetime.date.fromisoformat(ITS_BIRTHDAY)
     except ValueError:
         return ""
     wrote = days_it_wrote(articles)
-    first = datetime.date(today.year, today.month, 1)
-    if today.month == 12:
-        after = datetime.date(today.year + 1, 1, 1)
-    else:
-        after = datetime.date(today.year, today.month + 1, 1)
-    last = (after - datetime.timedelta(days=1)).day
-
-    # 日曜から始める。月曜が0の数え方なので、日曜を0に直す
-    komas = ['<span class="koma"></span>'] * ((first.weekday() + 1) % 7)
+    blank = (datetime.date(today.year, today.month, 1).weekday() + 1) % 7  # 日曜から始める
+    last = calendar.monthrange(today.year, today.month)[1]
+    cells = ['<span class="sc-c"></span>'] * blank
     for number in range(1, last + 1):
         day = datetime.date(today.year, today.month, number)
         if day < born or day > today:
-            komas.append(f'<span class="koma yet">{number}<i></i></span>')
+            kind = "yet"
         elif day.isoformat() in wrote:
-            komas.append(f'<span class="koma wrote">{number}<i>○</i></span>')
+            kind = "wrote"
         elif day == today:
-            komas.append(f'<span class="koma today">{number}<i></i></span>')
+            kind = "today"
         else:
-            komas.append(f'<span class="koma rest">{number}<i>·</i></span>')
-
+            kind = "rest"
+        cells.append(f'<span class="sc-c {kind}"><b>{number}</b><i></i></span>')
     head = "".join(f"<span>{one}</span>" for one in "日月火水木金土")
+    data = escape_html(json.dumps(months_it_wrote(articles, born, today), separators=(",", ":")))
     return (
-        '      <div class="koma-head">' + head + "</div>\n"
-        f'      <div class="koma-grid" id="koma" data-day="{today.isoformat()}"'
-        f' data-born="{born.isoformat()}">' + "".join(komas) + "</div>\n"
-        '      <p class="koma-note">○ 書いた日　· 休んだ日</p>'
-        + KOMA_MAY_BE_OLD
+        f'      <div class="sc-win" id="koma" data-day="{today.isoformat()}" data-born="{born.isoformat()}" data-wrote="{data}">\n'
+        '        <div class="sc-bar"><i class="sc-ico"></i><span class="sc-ttl">月間スタンプカード</span>'
+        '<span class="sc-btns" aria-hidden="true"><i class="mn"></i><i class="mx"></i><i class="cl"></i></span></div>\n'
+        '        <div class="sc-body">\n'
+        '          <div class="sc-tools">'
+        f'<button type="button" class="sc-drop" aria-haspopup="true" aria-expanded="false"><span class="sc-month">{today.month}月</span><i></i></button>'
+        f'<span class="sc-spin"><span class="sc-year">{today.year}</span><span class="sc-arrows">'
+        '<button type="button" class="sc-up" aria-label="次の年"></button><button type="button" class="sc-down" aria-label="前の年"></button>'
+        '</span></span></div>\n'
+        '          <div class="sc-months" hidden></div>\n'
+        f'          <div class="sc-pane"><div class="sc-head">{head}</div><div class="sc-grid">{"".join(cells)}</div></div>\n'
+        '          <div class="sc-status"><span><i class="ok"></i>書いた日</span><span><i class="rs"></i>休んだ日</span></div>\n'
+        '        </div>\n'
+        '      </div>'
+        + STAMP_CARD_SCRIPT
     )
 
 
@@ -437,12 +488,8 @@ def side_panel_left(state, articles):
 
     koma = this_months_days(articles)
     if koma:
-        blocks.append(
-            '    <div class="side-block">\n'
-            '      <div class="side-title">月間スタンプカード</div>\n'
-            + koma
-            + "\n    </div>"
-        )
+        # 題はカードの帯の中にある(2026-10-18、彼女が決めた)ので、欄の題は置かない
+        blocks.append('    <div class="side-block">\n' + koma + "\n    </div>")
 
     going = where_it_will_go(state)
     if going:

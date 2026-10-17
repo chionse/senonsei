@@ -1301,69 +1301,280 @@ article.yomimono .article-head {
 }
 
 
-/* 今月の暦。書いた日に丸、休んだ日に点。
-   生まれた日より前と、まだ来ていない日は薄いまま */
-.koma-head,
-.koma-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 0.15rem;
-}
-
-.koma-head {
-  font-size: 12px;
+/* 月間スタンプカード(2026-10-18、彼女と決めた形)。
+   昔のパソコンの「日付と時刻」の窓を、サイトの青と白で描いたもの。
+   線はどれもサイトの青一色。薄い青は線ではなく塗り。
+   隙間は窓の中どこも 5px、欄の高さは 20px にそろえてある。
+   今日は細いピンクの枠、影は薄いピンク(どちらも彼女が選んだ色) */
+.sc-win {
+  --sc-face: #f3f6ff;
+  --sc-fill: #e8edff;
+  --sc-shade: #8e9ed6;
+  --sc-faint: #c3cbec;
+  --sc-today: #f5148a;
+  --sc-shadow: #fba6d2;
+  position: relative;
   font-family: var(--small-font);
   -webkit-font-smoothing: none;
-  opacity: 0.55;
-  text-align: center;
-  margin-bottom: 0.2rem;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--main-color);
+  background: var(--sc-face);
+  border: 2px solid var(--main-color);
+  box-shadow: 3px 3px 0 var(--sc-shadow);
 }
 
-.koma {
+.sc-bar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 20px;
+  box-sizing: border-box;
+  padding: 0 5px;
+  background: var(--main-color);
+  color: #fff;
+}
+
+.sc-ttl {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.sc-ico {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Cpath fill='%23ffffff' d='M3 1h1v1H3zM10 1h1v1H10zM3 2h1v1H3zM10 2h1v1H10zM2 4h12v1H2zM2 5h12v1H2zM2 6h1v1H2zM4 6h1v1H4zM6 6h1v1H6zM8 6h1v1H8zM10 6h1v1H10zM12 6h2v1H12zM2 7h12v1H2zM2 8h1v1H2zM4 8h1v1H4zM6 8h1v1H6zM8 8h1v1H8zM10 8h1v1H10zM12 8h2v1H12zM2 9h12v1H2zM2 10h1v1H2zM4 10h1v1H4zM6 10h1v1H6zM8 10h1v1H8zM10 10h1v1H10zM12 10h2v1H12zM2 11h12v1H2zM2 12h1v1H2zM4 12h1v1H4zM6 12h1v1H6zM8 12h1v1H8zM10 12h1v1H10zM12 12h2v1H12zM2 13h12v1H2z'/%3E%3Cpath fill='%239fb6ff' d='M2 2h1v1H2zM4 2h6v1H4zM11 2h3v1H11zM2 3h12v1H2z'/%3E%3Cpath fill='%230029ae' d='M3 6h1v1H3zM5 6h1v1H5zM7 6h1v1H7zM9 6h1v1H9zM11 6h1v1H11zM3 8h1v1H3zM5 8h1v1H5zM7 8h1v1H7zM9 8h1v1H9zM11 8h1v1H11zM3 10h1v1H3zM5 10h1v1H5zM9 10h1v1H9zM11 10h1v1H11zM3 12h1v1H3zM5 12h1v1H5zM7 12h1v1H7zM9 12h1v1H9zM11 12h1v1H11z'/%3E%3Cpath fill='%23f5148a' d='M7 10h1v1H7z'/%3E%3C/svg%3E") center / 100% no-repeat;
+  image-rendering: pixelated;
+}
+
+/* 窓の三つのボタンは飾り。ふくらみは内側の光と影で付け、外の形は四角のままにする */
+.sc-btns {
+  display: flex;
+  gap: 3px;
+  flex: none;
+}
+
+.sc-btns i,
+.sc-drop i,
+.sc-arrows button {
+  background: var(--sc-fill) center / 8px 8px no-repeat;
+  image-rendering: pixelated;
+  box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 var(--sc-shade);
+}
+
+.sc-btns i {
+  width: 14px;
+  height: 12px;
+}
+
+.sc-btns .mn { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Cpath fill='%230029ae' d='M2 5h4v1H2zM2 6h4v1H2z'/%3E%3C/svg%3E"); }
+.sc-btns .mx { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Cpath fill='%230029ae' d='M1 1h6v1H1zM1 2h6v1H1zM1 3h1v1H1zM6 3h1v1H6zM1 4h1v1H1zM6 4h1v1H6zM1 5h1v1H1zM6 5h1v1H6zM1 6h6v1H1z'/%3E%3C/svg%3E"); }
+.sc-btns .cl { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Cpath fill='%230029ae' d='M1 1h2v1H1zM5 1h2v1H5zM2 2h4v1H2zM3 3h2v1H3zM2 4h4v1H2zM1 5h2v1H1zM5 5h2v1H5z'/%3E%3C/svg%3E"); }
+
+.sc-body {
+  padding: 5px;
+}
+
+.sc-tools {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 5px;
+}
+
+.sc-drop,
+.sc-spin {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 20px;
+  box-sizing: border-box;
+  padding: 0 0 0 4px;
+  background: #fff;
+  border: 1px solid var(--main-color);
+  border-radius: 0;
+  font: inherit;
+  color: inherit;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.sc-drop {
+  flex: 1;
+  cursor: pointer;
+}
+
+.sc-spin {
+  width: 62px;
+}
+
+.sc-drop i {
+  width: 16px;
+  height: 100%;
+  border-left: 1px solid var(--main-color);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Cpath fill='%230029ae' d='M1 2h7v1H1zM2 3h5v1H2zM3 4h3v1H3zM4 5h1v1H4z'/%3E%3C/svg%3E");
+}
+
+.sc-arrows {
+  display: flex;
+  flex-direction: column;
+  width: 16px;
+  height: 100%;
+  border-left: 1px solid var(--main-color);
+}
+
+.sc-arrows button {
+  flex: 1;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background-size: 7px 7px;
+  cursor: pointer;
+}
+
+.sc-up {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Cpath fill='%230029ae' d='M4 1h1v1H4zM3 2h3v1H3zM2 3h5v1H2zM1 4h7v1H1z'/%3E%3C/svg%3E") !important;
+  border-bottom: 1px solid var(--main-color) !important;
+}
+
+.sc-down {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Cpath fill='%230029ae' d='M1 2h7v1H1zM2 3h5v1H2zM3 4h3v1H3zM4 5h1v1H4z'/%3E%3C/svg%3E") !important;
+}
+
+.sc-arrows button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.sc-drop:focus-visible,
+.sc-arrows button:focus-visible,
+.sc-months button:focus-visible {
+  outline: 1px dotted var(--main-color);
+  outline-offset: 1px;
+}
+
+/* 「10月 ▼」を押すと出る月の一覧。三つずつ四段 */
+.sc-months {
+  position: absolute;
+  z-index: 5;
+  left: 7px;
+  top: 52px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3px;
+  width: 126px;
+  box-sizing: border-box;
+  padding: 4px;
+  background: #fff;
+  border: 1px solid var(--main-color);
+  box-shadow: 2px 2px 0 var(--sc-shade);
+}
+
+.sc-months[hidden] {
+  display: none;
+}
+
+.sc-months button {
+  height: 20px;
+  padding: 0;
+  border: 0;
+  background: var(--sc-fill);
+  box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 var(--sc-shade);
+  font: inherit;
+  color: var(--main-color);
+  cursor: pointer;
+}
+
+.sc-months button.on {
+  background: var(--main-color);
+  color: #fff;
+  box-shadow: none;
+}
+
+.sc-months button:disabled {
+  background: transparent;
+  box-shadow: none;
+  color: var(--sc-faint);
+  cursor: default;
+}
+
+.sc-pane {
+  padding: 2px;
+  background: #fff;
+  border: 1px solid var(--main-color);
+}
+
+.sc-head,
+.sc-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.sc-head span {
+  text-align: center;
+  padding: 2px 0 3px;
+  margin-bottom: 2px;
+  background: var(--sc-fill);
+}
+
+.sc-c {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.1rem;
-  font-size: 12px;
-  font-family: var(--small-font);
-  -webkit-font-smoothing: none;
-  line-height: 1.1;
-  padding: 0.2rem 0;
-  opacity: 0.45;
+  justify-content: center;
+  gap: 1px;
+  height: 28px;
 }
 
-.koma i {
-  font-style: normal;
-  font-size: 12px;
-  font-family: var(--small-font);
-  -webkit-font-smoothing: none;
+.sc-c b {
+  font-weight: normal;
   line-height: 1;
-  min-height: 0.7rem;
 }
 
-.koma.wrote {
-  opacity: 1;
+.sc-c i,
+.sc-status i {
+  display: block;
+  width: 12px;
+  height: 12px;
 }
 
-.koma.rest {
-  opacity: 0.7;
+.sc-c.wrote i,
+.sc-status .ok {
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Cpath fill='%230029ae' d='M5 2h6v1H5zM4 3h3v1H4zM9 3h3v1H9zM3 4h2v1H3zM11 4h2v1H11zM2 5h2v1H2zM12 5h2v1H12zM2 6h2v1H2zM12 6h2v1H12zM2 7h1v1H2zM13 7h1v1H13zM2 8h1v1H2zM13 8h1v1H13zM2 9h2v1H2zM12 9h2v1H12zM2 10h2v1H2zM12 10h2v1H12zM3 11h2v1H3zM11 11h2v1H11zM4 12h3v1H4zM9 12h3v1H9zM5 13h6v1H5z'/%3E%3C/svg%3E") center / 100% no-repeat;
+  image-rendering: pixelated;
 }
 
-.koma.today {
-  opacity: 1;
-  font-weight: bold;
+.sc-c.rest i,
+.sc-status .rs {
+  background: radial-gradient(var(--sc-shade) 0 1.6px, transparent 2px) center / 100% no-repeat;
 }
 
-.koma.yet {
-  opacity: 0.25;
+.sc-c.yet {
+  color: var(--sc-faint);
 }
 
-.koma-note {
-  font-size: 12px;
-  font-family: var(--small-font);
-  -webkit-font-smoothing: none;
-  opacity: 0.6;
-  margin: 0.5rem 0 0;
+.sc-c.today {
+  box-shadow: inset 0 0 0 1px var(--sc-today);
+}
+
+.sc-status {
+  display: flex;
+  gap: 5px;
+  margin-top: 5px;
+}
+
+.sc-status span {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  height: 20px;
+  box-sizing: border-box;
+  padding: 0 5px;
+  background: #fff;
+  border: 1px solid var(--main-color);
+  white-space: nowrap;
 }
 
 /* この先の育ち。今いる段階だけがはっきり出る */
