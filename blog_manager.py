@@ -1337,6 +1337,9 @@ def news_title(one):
     読む人は続きを見るために必ず開かなければならなくなる。
     二文以上あるときだけ、頭を借りて後ろを省く。"""
     said = (one.get("title") or one.get("content", "")).strip()
+    # トップにも一覧にも、本文を切らずに全部出すもの(2026-10-18、彼女に言われた)
+    if one.get("zenbun") and not one.get("title"):
+        return said
     # 一覧には一文目だけ出し、続きは開いた時に読んでもらうもの(2026-10-14、彼女が決めた)
     if one.get("ichibun") and not one.get("title"):
         ends = A_SENTENCE_ENDS.search(said)
