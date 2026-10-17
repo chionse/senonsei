@@ -1324,7 +1324,8 @@ article.yomimono .article-head {
   line-height: 1.6;
   color: var(--main-color);
   background: var(--sc-face);
-  border: 2px solid var(--main-color);
+  /* 外枠は細い 1px(2026-10-18、彼女が選んだ。太いと紙から浮いて見えた) */
+  border: 1px solid var(--main-color);
   box-shadow: 3px 3px 0 var(--sc-shadow);
 }
 
