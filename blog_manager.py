@@ -2105,6 +2105,8 @@ SCRIPTS_FROM_THE_START = [JAPANESE_SCRIPT, "アルファベット"]
 # 増えた字は、多くなりすぎないよう一つの選ぶ欄にまとめる。その欄の名前。
 # 彼女の言葉のまま(2026-10-18)。字の名前は一般的な呼び方に合わせる(同じ日、彼女が決めた)
 SCRIPTS_FOLDED = "その他の文字"
+# その欄を押すと出る一覧は、縦にこの数まで並べ、あふれたら右に列を足す(2026-10-18、彼女が決めた。数は仮)
+SCRIPTS_PER_COLUMN = 8
 
 
 def a_chinese_hand(ch):
@@ -2320,6 +2322,8 @@ JITEN_SCRIPT = r"""
         if (d.s && SCRIPTS.indexOf(d.s) < 0 && MORE.indexOf(d.s) < 0) { MORE.push(d.s); }
       });
       var FOLDED = __FOLDED__;
+      var MORE_ROWS = __MORE_ROWS__;
+      var menuOpen = false;
       var FRONT = ["すべて"].concat(SCRIPTS);
       var BACK = ["四字熟語", "数字", "記号"];
       var isScript = function (k) { return SCRIPTS.indexOf(k) >= 0 || MORE.indexOf(k) >= 0; };
@@ -2392,15 +2396,34 @@ JITEN_SCRIPT = r"""
         var html = buttons(FRONT);
         if (MORE.length) {
           var on = MORE.indexOf(state.kind) >= 0;
-          html += '<select class="jt-chip jt-more' + (on ? " on" : "") + '" id="jt-more" aria-label="' + esc(FOLDED) + '">' +
-            '<option value=""' + (on ? "" : " selected") + '>' + esc(FOLDED) + '</option>' +
-            MORE.map(function (k) {
-              return '<option value="' + esc(k) + '"' + (k === state.kind ? " selected" : "") + '>' +
-                esc(k) + '　' + count(k) + '</option>';
-            }).join("") + '</select>';
+          html += '<button type="button" class="jt-chip jt-more' + (on ? " on" : "") + '" id="jt-more"' +
+            ' aria-haspopup="true" aria-expanded="' + (menuOpen ? "true" : "false") + '">' +
+            (on ? esc(state.kind) + '<span>' + count(state.kind) + '</span>' : esc(FOLDED)) + '</button>';
         }
         html += buttons(BACK);
         $("jt-chips").innerHTML = html;
+      };
+      // その他の文字を押すと出る一覧。縦に MORE_ROWS 個まで並べ、あふれたら右に列を足す
+      var menu = function () {
+        var box = $("jt-more-menu"), btn = $("jt-more");
+        if (!menuOpen || !btn) { box.hidden = true; return; }
+        box.innerHTML = MORE.map(function (k) {
+          return '<button type="button" class="jt-more-item' + (k === state.kind ? " on" : "") + '" data-k="' + esc(k) + '">' +
+            esc(k) + '<span>' + count(k) + '</span></button>';
+        }).join("");
+        var rows = Math.min(MORE_ROWS, MORE.length);
+        box.style.gridTemplateRows = "repeat(" + rows + ", auto)";
+        box.hidden = false;
+        // スマホで横に収まらない時は、収まるまで一列を長くする
+        while (box.scrollWidth > box.clientWidth && rows < MORE.length) {
+          rows += 1;
+          box.style.gridTemplateRows = "repeat(" + rows + ", auto)";
+        }
+        var hero = document.querySelector(".jt-hero").getBoundingClientRect();
+        var r = btn.getBoundingClientRect();
+        // 押したボタンの下に出す。右にはみ出す時は、はみ出さないところまで左に寄せる
+        box.style.left = Math.max(0, Math.min(r.left - hero.left, hero.width - box.offsetWidth)) + "px";
+        box.style.top = (r.bottom - hero.top + 6) + "px";
       };
       var list = function () {
         var rows = shown(), html = "";
@@ -2487,15 +2510,24 @@ JITEN_SCRIPT = r"""
         list();
         document.querySelector(".jt-listscroll").scrollTop = 0;
       });
+      var pickKind = function (k) { state.kind = k; menuOpen = false; chips(); menu(); list(); };
+      var shut = function () { if (menuOpen) { menuOpen = false; chips(); menu(); } };
       $("jt-chips").addEventListener("click", function (e) {
+        if (e.target.closest("#jt-more")) { menuOpen = !menuOpen; chips(); menu(); return; }
         var b = e.target.closest(".jt-chip");
-        if (b && b.tagName === "BUTTON") { state.kind = b.dataset.k; chips(); list(); }
+        if (b) { pickKind(b.dataset.k); }
       });
-      // まとめた欄で字を選んだ時。いちばん上(まとめた名前)に戻したら、すべてに戻る
-      $("jt-chips").addEventListener("change", function (e) {
-        if (e.target.id !== "jt-more") { return; }
-        state.kind = e.target.value || "すべて"; chips(); list();
+      $("jt-more-menu").addEventListener("click", function (e) {
+        var b = e.target.closest(".jt-more-item");
+        if (b) { pickKind(b.dataset.k); }
       });
+      // 一覧の外を押した時と Esc で閉じる。画面の幅が変わった時やボタンの列を横に送った時は付いていく
+      document.addEventListener("click", function (e) {
+        if (!e.target.closest("#jt-more") && !e.target.closest("#jt-more-menu")) { shut(); }
+      });
+      document.addEventListener("keydown", function (e) { if (e.key === "Escape") { shut(); } });
+      window.addEventListener("resize", menu);
+      $("jt-chips").addEventListener("scroll", menu);
       $("jt-list").addEventListener("click", function (e) {
         var r = e.target.closest(".jt-row");
         if (r) { pick(r.dataset.w); }
@@ -2519,6 +2551,7 @@ def generate_jiten_html(state, articles):
               .replace("__READING_UNKNOWN__", json.dumps(READING_UNKNOWN, ensure_ascii=False))
               .replace("__SCRIPTS__", json.dumps(SCRIPTS_FROM_THE_START, ensure_ascii=False))
               .replace("__FOLDED__", json.dumps(SCRIPTS_FOLDED, ensure_ascii=False))
+              .replace("__MORE_ROWS__", str(SCRIPTS_PER_COLUMN))
               .replace("__TIES__", str(TODAYS_WORD_TIES)))
     html = f"""<!DOCTYPE html>
 <html lang="ja">
@@ -2545,6 +2578,7 @@ def generate_jiten_html(state, articles):
         <input id="jt-q" type="search" placeholder="言葉・場所で引く" autocomplete="off" aria-label="言葉・場所で引く">
       </label>
       <div class="jt-chips" id="jt-chips"></div>
+      <div class="jt-more-menu" id="jt-more-menu" hidden></div>
     </div>
     <button type="button" class="jt-today" id="jt-today" hidden></button>
     <div class="jt-body">

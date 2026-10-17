@@ -1471,7 +1471,7 @@ nav a,
   -webkit-font-smoothing: antialiased;
 }
 .jt button { font-family: var(--sans); }
-.jt-hero { display: grid; gap: 14px; padding: 6px 0 18px; }
+.jt-hero { display: grid; gap: 14px; padding: 6px 0 18px; position: relative; }
 .jt-titles { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 20px; }
 .jt-title { margin: 0; font-family: "DotGothic16", monospace; -webkit-font-smoothing: none; font-weight: normal; font-size: 32px; color: var(--accent); }
 .jt-sub { margin: 0; font-size: 14px; color: var(--soft); }
@@ -1486,10 +1486,18 @@ nav a,
 .jt-chip span { margin-left: 6px; color: var(--faint); font-size: 12px; }
 .jt-chip.on { background: var(--accent); border-color: var(--accent); color: #fff; }
 .jt-chip.on span { color: rgba(255, 255, 255, 0.75); }
-/* 増えた字をまとめた選ぶ欄。ボタンと同じ形にして、右に下向きの印を付ける */
-.jt-more { appearance: none; -webkit-appearance: none; padding-right: 32px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%235b6696' stroke-width='1.6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 13px center; background-size: 10px 6px; }
+/* 増えた字をまとめたボタン。右に下向きの印を付ける */
+.jt-more { padding-right: 32px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%235b6696' stroke-width='1.6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 13px center; background-size: 10px 6px; }
 .jt-more.on { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23ffffff' stroke-width='1.6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 13px center; background-size: 10px 6px; }
-.jt-more option { color: #18235a; background: #fff; }
+/* そのボタンを押すと出る一覧。縦に決まった数まで並べ、あふれたら右に列を足す(列の数は JS が決める) */
+.jt-more-menu { position: absolute; z-index: 20; display: grid; grid-auto-flow: column; grid-auto-columns: max-content; gap: 2px 6px; padding: 8px; background: #fff; border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 8px 24px rgba(24, 35, 90, 0.16); max-width: 100%; box-sizing: border-box; overflow-x: auto; }
+.jt-more-menu[hidden] { display: none; }
+.jt-more-item { font: 500 14px var(--sans); color: var(--soft); background: none; border: 0; border-radius: 8px; padding: 8px 12px; text-align: left; white-space: nowrap; cursor: pointer; }
+.jt-more-item span { margin-left: 8px; color: var(--faint); font-size: 12px; }
+.jt-more-item:hover { background: var(--tint); }
+.jt-more-item.on { background: var(--accent); color: #fff; }
+.jt-more-item.on span { color: rgba(255, 255, 255, 0.75); }
+.jt-more-item:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .jt-chip:focus-visible, .jt-row:focus-visible, .jt-link:focus-visible, .jt-today:focus-visible, .jt-back:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .jt-body { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 28px; align-items: start; }
 .jt-listwrap { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: #fff; }
