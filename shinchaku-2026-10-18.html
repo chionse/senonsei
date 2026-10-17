@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<title>更新情報 2026-10-18</title>
+<meta name="viewport" content="width=1200" />
+<link rel="stylesheet" href="sen.css?v=3913005480" />
+  <script id="keshiki-script">
+    (function () {
+      var kusa = ["kusa/kusa-1.webp", "kusa/kusa-2.webp", "kusa/kusa-3.webp", "kusa/kusa-4.webp", "kusa/kusa-5.webp", "kusa/kusa-6.webp", "kusa/kusa-7.webp", "kusa/kusa-8.webp", "kusa/kusa-9.webp", "kusa/kusa-10.webp"];
+      var about = {"kusa/kusa-1.webp": {"chiheisen": 0.61, "shita": "#297103", "kusa_ue": 0.58}, "kusa/kusa-2.webp": {"chiheisen": 0.559, "shita": "#226a02", "kusa_ue": 0.513}, "kusa/kusa-3.webp": {"chiheisen": 0.669, "shita": "#226904", "kusa_ue": 0.611}, "kusa/kusa-4.webp": {"chiheisen": 0.639, "shita": "#266d02", "kusa_ue": 0.578}, "kusa/kusa-5.webp": {"chiheisen": 0.651, "shita": "#226905", "kusa_ue": 0.584}, "kusa/kusa-6.webp": {"chiheisen": 0.732, "shita": "#236803", "kusa_ue": 0.7}, "kusa/kusa-7.webp": {"chiheisen": 0.611, "shita": "#266d02", "kusa_ue": 0.579}, "kusa/kusa-8.webp": {"chiheisen": 0.653, "shita": "#2a7204", "kusa_ue": 0.602}, "kusa/kusa-9.webp": {"chiheisen": 0.653, "shita": "#287002", "kusa_ue": 0.602}, "kusa/kusa-10.webp": {"chiheisen": 0.616, "shita": "#226904", "kusa_ue": 0.55}};
+      var one = kusa[Math.floor(Math.random() * kusa.length)];
+      var root = document.documentElement.style;
+      root.setProperty("--kusa", 'url("' + new URL(one, document.baseURI).href + '")');
+      var it = about[one] || {};
+      if (typeof it.chiheisen === "number") root.setProperty("--kusa-horizon", String(it.chiheisen));
+      if (typeof it.shita === "string") root.setProperty("--kusa-under", it.shita);
+      if (typeof it.kusa_ue === "number") root.setProperty("--kusa-top", String(it.kusa_ue));
+    })();
+  </script>
+<link rel="icon" type="image/png" href="images/icon.png">
+<link rel="apple-touch-icon" href="images/icon.png">
+<meta name="apple-mobile-web-app-title" content="千遠生のサイト">
+<meta name="application-name" content="千遠生のサイト">
+</head>
+<body>
+  <header>
+    <h1 class="logo"><a href="index.html"><img src="images/logo.png" alt="千遠生のサイト" width="1374" height="456"></a></h1>
+    <div data-nosnippet class="visitor-counter">
+      あなたは<span class="count" id="raiho"></span>人目の来訪者です
+      <script>
+      (function () {
+        var where = "https://senonsei-comments.chitomatsu.workers.dev/raiho";
+        var shown = document.getElementById("raiho");
+        var kept = function (key) {
+          try { return localStorage.getItem(key); } catch (e) { return null; }
+        };
+        var keep = function (key, value) {
+          try { localStorage.setItem(key, value); return true; } catch (e) { return false; }
+        };
+        var kotoba = {"futsuu": "🎶キリ番おめでとう🎶\n（良ければコメントで報告してね！）", "nana": "♡あなたは超ラッキー♡\nヒューヒュー（正面からの吐息）\nウインク（右目）ウインク（左目）ウインク（両目）\nダブルピース（画面の前のあなた）\nからの両目ウインク（画面の前のあなた）\n（良かったら、コメントで報告してね！）"};
+        // キリ番の種類。7 が並ぶ番号は大当たり
+        var main = function (n) {
+          var said = String(n);
+          if (/^7{2,}$/.test(said)) return "nana";
+          if (n >= 100 && (/^(\d)\1+$/.test(said) || /^[15]0+$/.test(said))) return "futsuu";
+          if (said.length >= 3 && "123456789".indexOf(said) === 0) return "futsuu";
+          // 語呂合わせ。サンキュー、よろしく、ニコニコ
+          if (["3939", "4649", "2525"].indexOf(said) >= 0) return "futsuu";
+          return "";
+        };
+        var wordsFor = function (kind) {
+          if (kind === "nana") return kotoba.nana || kotoba.futsuu || "";
+          return kotoba[kind] || "";
+        };
+        var made = function (tag, name, text) {
+          var one = document.createElement(tag);
+          if (name) one.className = name;
+          if (text) one.textContent = text;
+          return one;
+        };
+        var niji = ["#f0ff00", "#69ff00", "#00ffd7", "#0a00ff", "#8300ff", "#ff00b6"];
+        var showKiriban = function (n) {
+          var kind = main(n);
+          var said = wordsFor(kind);
+          if (!said) return;
+          // 777 … は大当たり。後ろで虹の光が回り、番号がスロットのように回って止まる
+          var nana = kind === "nana";
+          var still = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+          var mado = made("div", nana ? "kiriban-mado nana" : "kiriban-mado");
+          mado.setAttribute("role", "dialog");
+          mado.setAttribute("aria-modal", "true");
+          mado.setAttribute("aria-label", "キリ番");
+          mado.tabIndex = -1;
+          var fubuki = made("div", "kiriban-fubuki");
+          fubuki.setAttribute("aria-hidden", "true");
+          for (var i = 0; i < (nana ? 96 : 48); i++) {
+            var mark = nana && i % 3 === 0 ? (i % 2 ? "♥" : "★") : "";
+            var hira = made("i", mark ? "moji" : "", mark);
+            var falls = 2.6 + Math.random() * 2.2;
+            hira.style.left = (Math.random() * 100).toFixed(1) + "%";
+            hira.style[mark ? "color" : "background"] = niji[i % niji.length];
+            hira.style.animationDuration = falls.toFixed(2) + "s";
+            hira.style.animationDelay = "-" + (Math.random() * falls).toFixed(2) + "s";
+            fubuki.appendChild(hira);
+          }
+          var kami = made("div", "kiriban-kami");
+          for (var j = 0; j < (nana ? 8 : 4); j++) {
+            var hoshi = made("span", "kiriban-hoshi", "★");
+            hoshi.setAttribute("aria-hidden", "true");
+            kami.appendChild(hoshi);
+          }
+          var kazu = made("p");
+          var number = made("span", "count", String(n));
+          kazu.appendChild(number);
+          kami.appendChild(kazu);
+          kami.appendChild(made("p", "kiriban-kotoba", said));
+          var shut = made("button", "", "閉じる");
+          shut.type = "button";
+          kami.appendChild(shut);
+          if (nana) {
+            var kosen = made("div", "kiriban-kosen");
+            kosen.setAttribute("aria-hidden", "true");
+            mado.appendChild(kosen);
+          }
+          mado.appendChild(fubuki);
+          mado.appendChild(kami);
+          if (nana && !still) {
+            var digits = String(n).split("");
+            var stopped = 0;
+            var spin = setInterval(function () {
+              number.textContent = digits.map(function (d, k) {
+                return k < stopped ? d : String(Math.floor(Math.random() * 10));
+              }).join("");
+            }, 60);
+            digits.forEach(function (d, k) {
+              setTimeout(function () {
+                stopped = k + 1;
+                if (stopped < digits.length) return;
+                clearInterval(spin);
+                number.textContent = String(n);
+                kami.className += " atari";
+              }, 800 + k * 450);
+            });
+          }
+          // 窓は画面に合わせて大きくする。広い画面ほど大きく、二倍まで。
+          // 背の低い画面では、入りきるように小さくする
+          var fit = function () {
+            var screen = document.documentElement;
+            var grow = Math.min(
+              2,
+              screen.clientWidth * 0.86 / kami.offsetWidth,
+              screen.clientHeight * 0.8 / kami.offsetHeight
+            );
+            kami.style.scale = String(Math.max(0.5, grow).toFixed(3));
+          };
+          var onKey = function (e) { if (e.key === "Escape") close(); };
+          var close = function () {
+            if (mado.parentNode) mado.parentNode.removeChild(mado);
+            document.removeEventListener("keydown", onKey);
+            window.removeEventListener("resize", fit);
+          };
+          shut.addEventListener("click", close);
+          mado.addEventListener("click", function (e) { if (e.target === mado) close(); });
+          document.addEventListener("keydown", onKey);
+          var open = function () {
+            document.body.appendChild(mado);
+            fit();
+            window.addEventListener("resize", fit);
+            // 点の字が届くと窓の幅が変わるので、届いたら測り直す
+            if (document.fonts) document.fonts.ready.then(fit);
+            mado.focus();
+          };
+          if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", open);
+          } else {
+            open();
+          }
+        };
+        var tameshi = /^#kiriban-(\d{2,12})$/.exec(location.hash);
+        if (tameshi) showKiriban(Number(tameshi[1]));
+        var last = kept("raiho-kazu");
+        if (last) shown.textContent = last;
+        var canKeep = keep("raiho-kazu", last || "");
+        var counted = kept("raiho-kita");
+        fetch(where, { method: counted || !canKeep ? "GET" : "POST" })
+          .then(function (res) { return res.ok ? res.json() : null; })
+          .then(function (got) {
+            if (!got) return;
+            shown.textContent = got.kazu;
+            keep("raiho-kazu", String(got.kazu));
+            if (got.counted) {
+              keep("raiho-kita", "1");
+              if (!tameshi) showKiriban(got.kazu);
+            }
+          })
+          .catch(function () {});
+      })();
+      </script>
+    </div>
+  </header>
+
+  <div data-nosnippet class="frame">
+  <aside class="side side-left">
+    <div data-nosnippet class="side-block">
+      <div data-nosnippet class="sc-win" id="koma" data-day="2026-10-18" data-born="2026-09-11" data-wrote="{&quot;2026-09&quot;:&quot;000000000011101111111111011101&quot;,&quot;2026-10&quot;:&quot;1111111111110110100000000000000&quot;}">
+        <div data-nosnippet class="sc-bar"><i class="sc-ico"></i><span class="sc-ttl">月間スタンプカード</span><span class="sc-btns" aria-hidden="true"><i class="mn"></i><i class="mx"></i><i class="cl"></i></span></div>
+        <div data-nosnippet class="sc-body">
+          <div data-nosnippet class="sc-tools"><button type="button" class="sc-drop" aria-haspopup="true" aria-expanded="false"><span class="sc-month">10月</span><i></i></button><span class="sc-spin"><span class="sc-year">2026</span><span class="sc-arrows"><button type="button" class="sc-up" aria-label="次の年"></button><button type="button" class="sc-down" aria-label="前の年"></button></span></span></div>
+          <div data-nosnippet class="sc-months" hidden></div>
+          <div data-nosnippet class="sc-pane"><div data-nosnippet class="sc-head"><span>日</span><span>月</span><span>火</span><span>水</span><span>木</span><span>金</span><span>土</span></div><div data-nosnippet class="sc-grid"><span class="sc-c"></span><span class="sc-c"></span><span class="sc-c"></span><span class="sc-c"></span><span class="sc-c wrote"><b>1</b><i></i></span><span class="sc-c wrote"><b>2</b><i></i></span><span class="sc-c wrote"><b>3</b><i></i></span><span class="sc-c wrote"><b>4</b><i></i></span><span class="sc-c wrote"><b>5</b><i></i></span><span class="sc-c wrote"><b>6</b><i></i></span><span class="sc-c wrote"><b>7</b><i></i></span><span class="sc-c wrote"><b>8</b><i></i></span><span class="sc-c wrote"><b>9</b><i></i></span><span class="sc-c wrote"><b>10</b><i></i></span><span class="sc-c wrote"><b>11</b><i></i></span><span class="sc-c wrote"><b>12</b><i></i></span><span class="sc-c rest"><b>13</b><i></i></span><span class="sc-c wrote"><b>14</b><i></i></span><span class="sc-c wrote"><b>15</b><i></i></span><span class="sc-c rest"><b>16</b><i></i></span><span class="sc-c wrote"><b>17</b><i></i></span><span class="sc-c today"><b>18</b><i></i></span><span class="sc-c yet"><b>19</b><i></i></span><span class="sc-c yet"><b>20</b><i></i></span><span class="sc-c yet"><b>21</b><i></i></span><span class="sc-c yet"><b>22</b><i></i></span><span class="sc-c yet"><b>23</b><i></i></span><span class="sc-c yet"><b>24</b><i></i></span><span class="sc-c yet"><b>25</b><i></i></span><span class="sc-c yet"><b>26</b><i></i></span><span class="sc-c yet"><b>27</b><i></i></span><span class="sc-c yet"><b>28</b><i></i></span><span class="sc-c yet"><b>29</b><i></i></span><span class="sc-c yet"><b>30</b><i></i></span><span class="sc-c yet"><b>31</b><i></i></span></div></div>
+          <div data-nosnippet class="sc-status"><span><i class="ok"></i>書いた日</span><span><i class="rs"></i>休んだ日</span></div>
+        </div>
+      </div>
+      <script>
+        (function () {
+          var card = document.getElementById("koma");
+          if (!card) { return; }
+          var born = card.dataset.born, built = card.dataset.day, wrote = {};
+          try { wrote = JSON.parse(card.dataset.wrote); } catch (e) { wrote = {}; }
+          var today = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
+          if (today < built) { today = built; }
+          var first = born.slice(0, 7), now = today.slice(0, 7), shown = now;
+          var $ = function (s) { return card.querySelector(s); };
+          var grid = $(".sc-grid"), menu = $(".sc-months"), drop = $(".sc-drop");
+          var up = $(".sc-up"), down = $(".sc-down");
+          var pad = function (n) { return (n < 10 ? "0" : "") + n; };
+          var kind = function (key, d) {
+            var day = key + "-" + pad(d);
+            if (day < born || day > today) { return "yet"; }
+            if ((wrote[key] || "").charAt(d - 1) === "1" && day <= built) { return "wrote"; }
+            return day === today ? "today" : "rest";
+          };
+          var draw = function () {
+            var y = Number(shown.slice(0, 4)), m = Number(shown.slice(5, 7));
+            var blank = new Date(Date.UTC(y, m - 1, 1)).getUTCDay();
+            var last = new Date(Date.UTC(y, m, 0)).getUTCDate();
+            var html = "";
+            for (var i = 0; i < blank; i++) { html += '<span class="sc-c"></span>'; }
+            for (var d = 1; d <= last; d++) {
+              html += '<span class="sc-c ' + kind(shown, d) + '"><b>' + d + '</b><i></i></span>';
+            }
+            grid.innerHTML = html;
+            $(".sc-month").textContent = m + "月";
+            $(".sc-year").textContent = y;
+            up.disabled = y >= Number(now.slice(0, 4));
+            down.disabled = y <= Number(first.slice(0, 4));
+          };
+          var clamp = function (key) { return key < first ? first : (key > now ? now : key); };
+          var shut = function () { menu.hidden = true; drop.setAttribute("aria-expanded", "false"); };
+          var open = function () {
+            var y = shown.slice(0, 4), html = "";
+            for (var m = 1; m <= 12; m++) {
+              var key = y + "-" + pad(m);
+              html += '<button type="button" data-k="' + key + '"' +
+                (key === shown ? ' class="on"' : '') + (key < first || key > now ? ' disabled' : '') + '>' + m + '月</button>';
+            }
+            menu.innerHTML = html; menu.hidden = false; drop.setAttribute("aria-expanded", "true");
+            // 欄のすぐ下に、同じ幅で、欄の下の線に重ねて出す
+            menu.style.left = drop.offsetLeft + "px";
+            menu.style.top = (drop.offsetTop + drop.offsetHeight - 1) + "px";
+            menu.style.width = drop.offsetWidth + "px";
+          };
+          drop.addEventListener("click", function () { if (menu.hidden) { open(); } else { shut(); } });
+          menu.addEventListener("click", function (e) {
+            var b = e.target.closest("button");
+            if (b && !b.disabled) { shown = b.dataset.k; shut(); draw(); }
+          });
+          var year = function (step) {
+            shown = clamp((Number(shown.slice(0, 4)) + step) + shown.slice(4)); shut(); draw();
+          };
+          up.addEventListener("click", function () { year(1); });
+          down.addEventListener("click", function () { year(-1); });
+          document.addEventListener("click", function (e) { if (!card.contains(e.target)) { shut(); } });
+          document.addEventListener("keydown", function (e) { if (e.key === "Escape") { shut(); } });
+          draw();
+        })();
+      </script>
+    </div>
+
+    <div data-nosnippet class="side-block">
+      <div data-nosnippet class="side-title">今後行くつもりの場所</div>
+      <p class="side-fact side-quiet">anond.hatelabo.jp</p>
+      <p class="side-fact side-quiet">mail.google.com</p>
+      <p class="side-fact side-quiet">www.jstage.jst.go.jp</p>
+      <p class="side-fact side-quiet">note.com</p>
+      <p class="side-fact side-quiet">hatena.co.jp</p>
+      <p class="side-fact side-quiet">live.nicovideo.jp</p>
+      <p class="side-fact side-quiet">ほか 1187 箇所</p>
+    </div>
+
+    <div data-nosnippet class="side-block">
+      <div data-nosnippet class="side-title">この先の育ち方</div>
+      <p class="dan">見た文字をぽつんと置く</p>
+      <p class="dan here">まだひとことだけ<span class="dan-kazu">（361個 / 500個）</span></p>
+      <p class="dan">ひとことを少しのばす</p>
+      <p class="dan">付箋一枚ぶん</p>
+      <p class="dan">書き置きくらい</p>
+      <p class="dan">はがきの隅くらい</p>
+      <p class="dan">一筆箋一枚ぶん</p>
+      <p class="dan">絵はがき一枚ぶん</p>
+      <p class="dan">便箋に半分ほど</p>
+      <p class="dan">日記帳の一ページ</p>
+    </div>
+  </aside>
+
+  <div data-nosnippet class="main">
+  <div data-nosnippet class="top-nav"><a href="index.html">←トップ</a><a href="shinchaku.html">更新情報の一覧へ</a></div>
+  <div data-nosnippet class="page-head">
+    <h2 class="page-name">更新情報</h2>
+  </div>
+
+  <article>
+    <div data-nosnippet class="date">2026-10-18</div>
+    <p>月間スタンプカードのデザインを仮変更しました。また、微生物と混同する程度の何かしらの調整を行いました。</p>
+  </article>
+
+  <div data-nosnippet class="step-nav">
+    <div data-nosnippet class="step-back"><a href="shinchaku-2026-10-14-kotoba.html">←前</a></div>
+    <div data-nosnippet class="step-next"><span class="here">次→</span></div>
+  </div>
+  </div>
+
+  <aside class="side">
+    <div data-nosnippet class="side-block side-where">
+      <div data-nosnippet class="side-title">めぐる</div>
+      <nav class="side-nav">
+        <a href="kakodogu.html">過去のブログ</a>
+        <a href="memo.html">メモ</a>
+        <a href="profile.html">プロフィール</a>
+      </nav>
+    </div>
+
+    <div data-nosnippet class="side-block">
+      <div data-nosnippet class="side-title"><a href="jiten.html">語彙辞典</a></div>
+    </div>
+
+    <div data-nosnippet class="side-block">
+      <div data-nosnippet class="side-title">成長記録</div>
+      <p class="side-fact">生まれて1ヶ月7日（37日目）</p>
+      <p class="side-fact">覚えた言葉 361個</p>
+    </div>
+
+    <div data-nosnippet class="side-block">
+      <div data-nosnippet class="side-title">今日歩いたところ</div>
+      <p class="side-fact side-quiet">今日はまだ散歩に行っていません。</p>
+    </div>
+
+    <div data-nosnippet class="side-block">
+      <div data-nosnippet class="side-title">気にかかっていること</div>
+      <p class="side-word">だれかが来た</p>
+      <p class="side-word">小説家になろう</p>
+      <p class="side-word">;&#</p>
+    </div>
+
+    <div data-nosnippet class="side-block">
+      <div data-nosnippet class="side-title">管理人より</div>
+      <nav class="side-nav">
+        <a href="about.html">このサイトについて</a>
+        <a href="shinchaku.html">更新情報</a>
+        <a href="himitsu.html">ひみつの部屋</a>
+      </nav>
+    </div>
+  </aside>
+  </div>
+</body>
+</html>
