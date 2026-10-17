@@ -2019,7 +2019,6 @@ def a_kind_of_word(word):
 # 言語では分けない。英語とフランス語は見た目では見分けられず、
 # 「英語」と名付けると、ほかの言葉が混ざった時に名前が嘘になる。
 # 漢字だけの言葉は、中国語でも日本語に入る。字が同じなので見分けられない。
-# 名前はまだ仮(彼女が決める)
 JAPANESE_SCRIPT = "日本語"
 SCRIPT_NAMES = {
     "LATIN": "アルファベット",
@@ -2053,8 +2052,9 @@ SCRIPT_NAMES = {
 OTHER_SCRIPT = "そのほかの文字"
 # 最初から並べておく字。ほかの字は、その字の言葉を初めて覚えた日に増える
 SCRIPTS_FROM_THE_START = [JAPANESE_SCRIPT, "アルファベット"]
-# 増えた字は、多くなりすぎないよう一つの選ぶ欄にまとめる。その欄の名前。仮(彼女が決める)
-SCRIPTS_FOLDED = "ほかの文字"
+# 増えた字は、多くなりすぎないよう一つの選ぶ欄にまとめる。その欄の名前。
+# 彼女の言葉のまま(2026-10-18)。字の名前は一般的な呼び方に合わせる(同じ日、彼女が決めた)
+SCRIPTS_FOLDED = "その他の文字"
 
 
 def a_script_of(word):
@@ -2230,16 +2230,18 @@ JITEN_SCRIPT = r"""
       var UNKNOWN = __UNKNOWN__;
       var READING_TITLE = __READING_TITLE__;
       var READING_UNKNOWN = __READING_UNKNOWN__;
-      // 字のボタン。四字熟語・数字・記号のあとに並べる(2026-10-18、彼女が決めた)。
-      // 日本語とアルファベットは最初からある。ほかの字は、その字の言葉を初めて覚えた日から、
-      // 一つの選ぶ欄にまとめて覚えた順に並べる。覚えるまでは欄も無い
+      // 並びは、すべて・日本語・アルファベット・その他の文字・四字熟語・数字・記号
+      // (2026-10-18、彼女が決めた)。日本語とアルファベットは最初からある。
+      // ほかの字は、その字の言葉を初めて覚えた日から、一つの選ぶ欄にまとめて覚えた順に並べる。
+      // 覚えるまでは欄も無い
       var SCRIPTS = __SCRIPTS__;
       var MORE = [];
       DATA.slice().sort(function (a, b) { return a.o - b.o; }).forEach(function (d) {
         if (d.s && SCRIPTS.indexOf(d.s) < 0 && MORE.indexOf(d.s) < 0) { MORE.push(d.s); }
       });
       var FOLDED = __FOLDED__;
-      var KINDS = ["すべて", "四字熟語", "数字", "記号"].concat(SCRIPTS);
+      var FRONT = ["すべて"].concat(SCRIPTS);
+      var BACK = ["四字熟語", "数字", "記号"];
       var isScript = function (k) { return SCRIPTS.indexOf(k) >= 0 || MORE.indexOf(k) >= 0; };
       var fits = function (d, k) {
         if (k === "すべて") { return true; }
@@ -2301,10 +2303,13 @@ JITEN_SCRIPT = r"""
         return d.d;
       };
       var chips = function () {
-        var html = KINDS.map(function (k) {
-          return '<button type="button" class="jt-chip' + (k === state.kind ? " on" : "") + '" data-k="' + k + '">' +
-            k + '<span>' + count(k) + '</span></button>';
-        }).join("");
+        var buttons = function (ks) {
+          return ks.map(function (k) {
+            return '<button type="button" class="jt-chip' + (k === state.kind ? " on" : "") + '" data-k="' + k + '">' +
+              k + '<span>' + count(k) + '</span></button>';
+          }).join("");
+        };
+        var html = buttons(FRONT);
         if (MORE.length) {
           var on = MORE.indexOf(state.kind) >= 0;
           html += '<select class="jt-chip jt-more' + (on ? " on" : "") + '" id="jt-more" aria-label="' + esc(FOLDED) + '">' +
@@ -2314,6 +2319,7 @@ JITEN_SCRIPT = r"""
                 esc(k) + '　' + count(k) + '</option>';
             }).join("") + '</select>';
         }
+        html += buttons(BACK);
         $("jt-chips").innerHTML = html;
       };
       var list = function () {
