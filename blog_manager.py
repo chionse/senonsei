@@ -2018,8 +2018,11 @@ def a_kind_of_word(word):
 # 言葉を、書いてある字で分ける(2026-10-18、彼女が決めた)。
 # 言語では分けない。英語とフランス語は見た目では見分けられず、
 # 「英語」と名付けると、ほかの言葉が混ざった時に名前が嘘になる。
-# 漢字だけの言葉は、中国語でも日本語に入る。字が同じなので見分けられない。
+# 中国語は、日本語には無い漢字が入っている時だけ簡体字・繁体字に分ける(同じ日、彼女が決めた)。
+# 「学生」のように日本と同じ字だけの言葉は、日本語に入る。
 JAPANESE_SCRIPT = "日本語"
+SIMPLIFIED_CHINESE = "簡体字"
+TRADITIONAL_CHINESE = "繁体字"
 SCRIPT_NAMES = {
     "LATIN": "アルファベット",
     "ARABIC": "アラビア文字",
@@ -2047,7 +2050,54 @@ SCRIPT_NAMES = {
     "THAANA": "ターナ文字",
     "SYRIAC": "シリア文字",
     "MONGOLIAN": "モンゴル文字",
+    "ORIYA": "オリヤー文字",
+    "CHEROKEE": "チェロキー文字",
+    "CANADIAN": "カナダ先住民文字",
+    "JAVANESE": "ジャワ文字",
+    "BALINESE": "バリ文字",
+    "SUNDANESE": "スンダ文字",
+    "BUGINESE": "ブギス文字",
+    "BATAK": "バタク文字",
+    "TAGALOG": "バイバイン文字",
+    "TIFINAGH": "ティフィナグ文字",
+    "NKO": "ンコ文字",
+    "VAI": "ヴァイ文字",
+    "ADLAM": "アドラム文字",
+    "BAMUM": "バムン文字",
+    "YI": "イ文字",
+    "BOPOMOFO": "注音符号",
+    "TANGUT": "西夏文字",
+    "LIMBU": "リンブ文字",
+    "LEPCHA": "レプチャ文字",
+    "NEWA": "ネワール文字",
+    "MEETEI": "メイテイ文字",
+    "SYLOTI": "シロティ・ナグリ文字",
+    "CHAM": "チャム文字",
+    "KAYAH": "カヤー・リー文字",
+    "HANIFI": "ハニーフィー文字",
+    "SAMARITAN": "サマリア文字",
+    "MANDAIC": "マンダ文字",
+    "OSAGE": "オセージ文字",
+    "DESERET": "デザレット文字",
+    "SHAVIAN": "ショー文字",
+    "GLAGOLITIC": "グラゴル文字",
+    "COPTIC": "コプト文字",
+    "GOTHIC": "ゴート文字",
+    "RUNIC": "ルーン文字",
+    "OGHAM": "オガム文字",
+    "PHOENICIAN": "フェニキア文字",
+    "AVESTAN": "アヴェスター文字",
+    "BRAHMI": "ブラーフミー文字",
+    "LINEAR": "線文字",
+    "CUNEIFORM": "楔形文字",
+    "EGYPTIAN": "ヒエログリフ",
+    "LISU": "リス文字",
+    "NUSHU": "女書",
+    "KHITAN": "契丹文字",
 }
+# 飾り文字(𝐀 のような数学用の字や、ʰ のような添え字)は、名前に字の種類が無い。
+# ほとんどがアルファベットを飾ったものなので、アルファベットに入れる
+DRESSED_LETTERS = {"MATHEMATICAL": "アルファベット", "MODIFIER": "アルファベット"}
 # 表に無い字。出会った時にここへ名前を足す
 OTHER_SCRIPT = "そのほかの文字"
 # 最初から並べておく字。ほかの字は、その字の言葉を初めて覚えた日に増える
@@ -2057,22 +2107,52 @@ SCRIPTS_FROM_THE_START = [JAPANESE_SCRIPT, "アルファベット"]
 SCRIPTS_FOLDED = "その他の文字"
 
 
+def a_chinese_hand(ch):
+    """日本語には無い漢字なら、簡体字か繁体字か。日本語にもある字なら ""。
+
+    日本語のパソコンで使う字の表(cp932)に無い漢字は、日本語では使わない字。
+    中国本土の字の表(gb2312)にあれば簡体字、台湾や香港の字の表(big5)にあれば繁体字。
+    們・這・國・學のように日本の古い字と同じものは、日本語と見分けられない。
+    どの表にも無い字は、日本語の珍しい字かもしれないので、日本語のままにしておく。"""
+    for table, hand in (("cp932", ""), ("gb2312", SIMPLIFIED_CHINESE), ("big5", TRADITIONAL_CHINESE)):
+        try:
+            ch.encode(table)
+            return hand
+        except UnicodeEncodeError:
+            continue
+    return ""
+
+
 def a_script_of(word):
     """その言葉が書いてある字。数字や記号だけの言葉は、どの字でもない("")。
 
-    日本語の字(ひらがな・カタカナ・漢字)が一つでも入っていれば日本語。
-    「1番」のように数字が混ざっていても日本語になる。"""
+    ひらがなかカタカナ(変体仮名も)が一つでも入っていれば日本語。
+    漢字は、日本語には無い字(簡体字・繁体字)が一つでも入っていればそちら、
+    そうでなければ日本語。「1番」のように数字が混ざっていても日本語になる。"""
     import unicodedata
     seen = {}
+    kanji = []
     for ch in word:
         name = unicodedata.name(ch, "")
-        parts = name.replace("-", " ").split()
-        if {"HIRAGANA", "KATAKANA", "CJK", "IDEOGRAPHIC"} & set(parts):
+        parts = set(name.replace("-", " ").split())
+        if {"HIRAGANA", "KATAKANA", "HENTAIGANA"} & parts:
             return JAPANESE_SCRIPT
+        if {"CJK", "IDEOGRAPHIC"} & parts:
+            kanji.append(ch)
+            continue
         if not ch.isalpha():
             continue
-        script = next((SCRIPT_NAMES[p] for p in parts if p in SCRIPT_NAMES), OTHER_SCRIPT)
+        words = name.replace("-", " ").split()
+        script = next((SCRIPT_NAMES[p] for p in words if p in SCRIPT_NAMES), None)
+        if script is None:
+            script = next((DRESSED_LETTERS[p] for p in words if p in DRESSED_LETTERS), OTHER_SCRIPT)
         seen[script] = seen.get(script, 0) + 1
+    if kanji:
+        hands = [a_chinese_hand(ch) for ch in kanji]
+        for hand in (SIMPLIFIED_CHINESE, TRADITIONAL_CHINESE):
+            if hand in hands:
+                return hand
+        return JAPANESE_SCRIPT
     if not seen:
         return ""
     # 字が混ざっていたら、多いほう
