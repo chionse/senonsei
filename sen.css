@@ -1442,9 +1442,17 @@ article.yomimono .article-head {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Cpath fill='%230029ae' d='M1 2h7v1H1zM2 3h5v1H2zM3 4h3v1H3zM4 5h1v1H4z'/%3E%3C/svg%3E") !important;
 }
 
+/* 押せない時(今は 2026 年しか無い)は、ボタンの形はそのままで三角だけ薄くする */
 .sc-arrows button:disabled {
-  opacity: 0.35;
   cursor: default;
+}
+
+.sc-up:disabled {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Cpath fill='%238e9ed6' d='M4 1h1v1H4zM3 2h3v1H3zM2 3h5v1H2zM1 4h7v1H1z'/%3E%3C/svg%3E") !important;
+}
+
+.sc-down:disabled {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Cpath fill='%238e9ed6' d='M1 2h7v1H1zM2 3h5v1H2zM3 4h3v1H3zM4 5h1v1H4z'/%3E%3C/svg%3E") !important;
 }
 
 .sc-drop:focus-visible,
@@ -1454,21 +1462,23 @@ article.yomimono .article-head {
   outline-offset: 1px;
 }
 
-/* 「10月 ▼」を押すと出る月の一覧。三つずつ四段 */
+/* 「10月 ▼」を押すと出る月の一覧。三つずつ四段。
+   欄のすぐ下に、欄と同じ幅で、欄の下の線に重ねてつなげる(場所と幅は開く時に JS が合わせる)。
+   影はカードと同じ薄いピンク */
 .sc-months {
   position: absolute;
   z-index: 5;
-  left: 7px;
-  top: 52px;
+  left: 5px;
+  top: 44px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 3px;
-  width: 126px;
+  width: 127px;
   box-sizing: border-box;
   padding: 4px;
   background: #fff;
   border: 1px solid var(--main-color);
-  box-shadow: 2px 2px 0 var(--sc-shade);
+  box-shadow: 3px 3px 0 var(--sc-shadow);
 }
 
 .sc-months[hidden] {

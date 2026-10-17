@@ -360,6 +360,10 @@ STAMP_CARD_SCRIPT = """
                 (key === shown ? ' class="on"' : '') + (key < first || key > now ? ' disabled' : '') + '>' + m + '月</button>';
             }
             menu.innerHTML = html; menu.hidden = false; drop.setAttribute("aria-expanded", "true");
+            // 欄のすぐ下に、同じ幅で、欄の下の線に重ねて出す
+            menu.style.left = drop.offsetLeft + "px";
+            menu.style.top = (drop.offsetTop + drop.offsetHeight - 1) + "px";
+            menu.style.width = drop.offsetWidth + "px";
           };
           drop.addEventListener("click", function () { if (menu.hidden) { open(); } else { shut(); } });
           menu.addEventListener("click", function (e) {
