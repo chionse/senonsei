@@ -1,3 +1,4 @@
+import calendar
 import datetime
 import json
 import os
@@ -306,83 +307,137 @@ def days_it_wrote(articles):
     return {one["date"] for one in articles}
 
 
-# 暦も、作り直されるまでは作った日のまま残る。開いた時に日付が変わっていたら、
-# 作った日から昨日までの、書いていない日に点を置き、今日を今日にする。
-# 月が替わっていたら、新しい月の暦を並べ直す(2026-10-14、彼女に言われた)
-KOMA_MAY_BE_OLD = """
+# 月間スタンプカード(2026-10-18、彼女と決めた形)。
+# 昔のパソコンの「日付と時刻」の窓を、サイトの青と白で描いたもの。
+# 「10月 ▼」と「▲▼」で、生まれた月から今月までのカードを見られる。
+#
+# 書いた日は月ごとに「1」と「0」の並びにしてページに埋めておき、開いた側で並べる。
+# ページは作り直されるまで作った日のまま残るので、開いた時に日付が変わっていたら、
+# 作った日から昨日までの書いていない日を休んだ日にして、今日を今日にする
+# (2026-10-14、彼女に言われた。前の暦から引き継いだ決まり)
+STAMP_CARD_SCRIPT = """
       <script>
         (function () {
-          var grid = document.getElementById("koma");
-          if (!grid) { return; }
+          var card = document.getElementById("koma");
+          if (!card) { return; }
+          var born = card.dataset.born, built = card.dataset.day, wrote = {};
+          try { wrote = JSON.parse(card.dataset.wrote); } catch (e) { wrote = {}; }
           var today = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
-          if (grid.dataset.day >= today) { return; }
-          var month = today.slice(0, 7);
-          if (grid.dataset.day.slice(0, 7) !== month) {
-            var year = Number(month.slice(0, 4));
-            var number = Number(month.slice(5, 7));
-            var blank = new Date(Date.UTC(year, number - 1, 1)).getUTCDay();
-            var last = new Date(Date.UTC(year, number, 0)).getUTCDate();
-            var komas = "";
-            for (var i = 0; i < blank; i++) { komas += '<span class="koma"></span>'; }
-            for (var d = 1; d <= last; d++) { komas += '<span class="koma yet">' + d + '<i></i></span>'; }
-            grid.innerHTML = komas;
-          }
-          var open = grid.querySelectorAll(".koma.today, .koma.yet");
-          for (var k = 0; k < open.length; k++) {
-            var n = Number(open[k].firstChild.nodeValue);
-            var day = month + "-" + (n < 10 ? "0" : "") + n;
-            if (day < grid.dataset.born || day > today) { continue; }
-            var mark = open[k].querySelector("i");
-            if (day === today) {
-              open[k].className = "koma today";
-              mark.textContent = "";
-            } else {
-              open[k].className = "koma rest";
-              mark.textContent = "·";
+          if (today < built) { today = built; }
+          var first = born.slice(0, 7), now = today.slice(0, 7), shown = now;
+          var $ = function (s) { return card.querySelector(s); };
+          var grid = $(".sc-grid"), menu = $(".sc-months"), drop = $(".sc-drop");
+          var up = $(".sc-up"), down = $(".sc-down");
+          var pad = function (n) { return (n < 10 ? "0" : "") + n; };
+          var kind = function (key, d) {
+            var day = key + "-" + pad(d);
+            if (day < born || day > today) { return "yet"; }
+            if ((wrote[key] || "").charAt(d - 1) === "1" && day <= built) { return "wrote"; }
+            return day === today ? "today" : "rest";
+          };
+          var draw = function () {
+            var y = Number(shown.slice(0, 4)), m = Number(shown.slice(5, 7));
+            var blank = new Date(Date.UTC(y, m - 1, 1)).getUTCDay();
+            var last = new Date(Date.UTC(y, m, 0)).getUTCDate();
+            var html = "";
+            for (var i = 0; i < blank; i++) { html += '<span class="sc-c"></span>'; }
+            for (var d = 1; d <= last; d++) {
+              html += '<span class="sc-c ' + kind(shown, d) + '"><b>' + d + '</b><i></i></span>';
             }
-          }
+            grid.innerHTML = html;
+            $(".sc-month").textContent = m + "月";
+            $(".sc-year").textContent = y;
+            up.disabled = y >= Number(now.slice(0, 4));
+            down.disabled = y <= Number(first.slice(0, 4));
+          };
+          var clamp = function (key) { return key < first ? first : (key > now ? now : key); };
+          var shut = function () { menu.hidden = true; drop.setAttribute("aria-expanded", "false"); };
+          var open = function () {
+            var y = shown.slice(0, 4), html = "";
+            for (var m = 1; m <= 12; m++) {
+              var key = y + "-" + pad(m);
+              html += '<button type="button" data-k="' + key + '"' +
+                (key === shown ? ' class="on"' : '') + (key < first || key > now ? ' disabled' : '') + '>' + m + '月</button>';
+            }
+            menu.innerHTML = html; menu.hidden = false; drop.setAttribute("aria-expanded", "true");
+            // 欄のすぐ下に、同じ幅で、欄の下の線に重ねて出す
+            menu.style.left = drop.offsetLeft + "px";
+            menu.style.top = (drop.offsetTop + drop.offsetHeight - 1) + "px";
+            menu.style.width = drop.offsetWidth + "px";
+          };
+          drop.addEventListener("click", function () { if (menu.hidden) { open(); } else { shut(); } });
+          menu.addEventListener("click", function (e) {
+            var b = e.target.closest("button");
+            if (b && !b.disabled) { shown = b.dataset.k; shut(); draw(); }
+          });
+          var year = function (step) {
+            shown = clamp((Number(shown.slice(0, 4)) + step) + shown.slice(4)); shut(); draw();
+          };
+          up.addEventListener("click", function () { year(1); });
+          down.addEventListener("click", function () { year(-1); });
+          document.addEventListener("click", function (e) { if (!card.contains(e.target)) { shut(); } });
+          document.addEventListener("keydown", function (e) { if (e.key === "Escape") { shut(); } });
+          draw();
         })();
       </script>"""
 
 
+def months_it_wrote(articles, born, today):
+    """生まれた月から今月まで、月ごとの書いた日。1日目から順に、書いた日は「1」、ほかは「0」。"""
+    wrote = days_it_wrote(articles)
+    months = {}
+    year, month = born.year, born.month
+    while (year, month) <= (today.year, today.month):
+        key = f"{year}-{month:02d}"
+        last = calendar.monthrange(year, month)[1]
+        months[key] = "".join("1" if f"{key}-{day:02d}" in wrote else "0" for day in range(1, last + 1))
+        year, month = (year + 1, 1) if month == 12 else (year, month + 1)
+    return months
+
+
 def this_months_days(articles):
-    """今月の暦。生まれた日から今日までが埋まっていく。
+    """月間スタンプカード。今月のカードを描いておき、前の月は開いた側で並べる。
 
     書いた日には丸を、書かないと決めた日には点を置く。
-    今日はまだ書いていないかもしれないので、何も置かない。"""
+    今日はまだ書いていないかもしれないので、枠で囲むだけにする。"""
     today = today_in_japan()
     try:
         born = datetime.date.fromisoformat(ITS_BIRTHDAY)
     except ValueError:
         return ""
     wrote = days_it_wrote(articles)
-    first = datetime.date(today.year, today.month, 1)
-    if today.month == 12:
-        after = datetime.date(today.year + 1, 1, 1)
-    else:
-        after = datetime.date(today.year, today.month + 1, 1)
-    last = (after - datetime.timedelta(days=1)).day
-
-    # 日曜から始める。月曜が0の数え方なので、日曜を0に直す
-    komas = ['<span class="koma"></span>'] * ((first.weekday() + 1) % 7)
+    blank = (datetime.date(today.year, today.month, 1).weekday() + 1) % 7  # 日曜から始める
+    last = calendar.monthrange(today.year, today.month)[1]
+    cells = ['<span class="sc-c"></span>'] * blank
     for number in range(1, last + 1):
         day = datetime.date(today.year, today.month, number)
         if day < born or day > today:
-            komas.append(f'<span class="koma yet">{number}<i></i></span>')
+            kind = "yet"
         elif day.isoformat() in wrote:
-            komas.append(f'<span class="koma wrote">{number}<i>○</i></span>')
+            kind = "wrote"
         elif day == today:
-            komas.append(f'<span class="koma today">{number}<i></i></span>')
+            kind = "today"
         else:
-            komas.append(f'<span class="koma rest">{number}<i>·</i></span>')
-
+            kind = "rest"
+        cells.append(f'<span class="sc-c {kind}"><b>{number}</b><i></i></span>')
     head = "".join(f"<span>{one}</span>" for one in "日月火水木金土")
+    data = escape_html(json.dumps(months_it_wrote(articles, born, today), separators=(",", ":")))
     return (
-        '      <div class="koma-head">' + head + "</div>\n"
-        f'      <div class="koma-grid" id="koma" data-day="{today.isoformat()}"'
-        f' data-born="{born.isoformat()}">' + "".join(komas) + "</div>\n"
-        '      <p class="koma-note">○ 書いた日　· 休んだ日</p>'
-        + KOMA_MAY_BE_OLD
+        f'      <div class="sc-win" id="koma" data-day="{today.isoformat()}" data-born="{born.isoformat()}" data-wrote="{data}">\n'
+        '        <div class="sc-bar"><i class="sc-ico"></i><span class="sc-ttl">月間スタンプカード</span>'
+        '<span class="sc-btns" aria-hidden="true"><i class="mn"></i><i class="mx"></i><i class="cl"></i></span></div>\n'
+        '        <div class="sc-body">\n'
+        '          <div class="sc-tools">'
+        f'<button type="button" class="sc-drop" aria-haspopup="true" aria-expanded="false"><span class="sc-month">{today.month}月</span><i></i></button>'
+        f'<span class="sc-spin"><span class="sc-year">{today.year}</span><span class="sc-arrows">'
+        '<button type="button" class="sc-up" aria-label="次の年"></button><button type="button" class="sc-down" aria-label="前の年"></button>'
+        '</span></span></div>\n'
+        '          <div class="sc-months" hidden></div>\n'
+        f'          <div class="sc-pane"><div class="sc-head">{head}</div><div class="sc-grid">{"".join(cells)}</div></div>\n'
+        '          <div class="sc-status"><span><i class="ok"></i>書いた日</span><span><i class="rs"></i>休んだ日</span></div>\n'
+        '        </div>\n'
+        '      </div>'
+        + STAMP_CARD_SCRIPT
     )
 
 
@@ -437,12 +492,8 @@ def side_panel_left(state, articles):
 
     koma = this_months_days(articles)
     if koma:
-        blocks.append(
-            '    <div class="side-block">\n'
-            '      <div class="side-title">月間スタンプカード</div>\n'
-            + koma
-            + "\n    </div>"
-        )
+        # 題はカードの帯の中にある(2026-10-18、彼女が決めた)ので、欄の題は置かない
+        blocks.append('    <div class="side-block">\n' + koma + "\n    </div>")
 
     going = where_it_will_go(state)
     if going:
@@ -2015,6 +2066,185 @@ def a_kind_of_word(word):
     return ""
 
 
+# 言葉を、書いてある字で分ける(2026-10-18、彼女が決めた)。
+# 言語では分けない。英語とフランス語は見た目では見分けられず、
+# 「英語」と名付けると、ほかの言葉が混ざった時に名前が嘘になる。
+# 中国語は、日本語には無い漢字が入っている時だけ簡体字・繁体字に分ける(同じ日、彼女が決めた)。
+# 「学生」のように日本と同じ字だけの言葉は、日本語に入る。
+JAPANESE_SCRIPT = "日本語"
+SIMPLIFIED_CHINESE = "簡体字"
+TRADITIONAL_CHINESE = "繁体字"
+SCRIPT_NAMES = {
+    "LATIN": "アルファベット",
+    "ARABIC": "アラビア文字",
+    "CYRILLIC": "キリル文字",
+    "DEVANAGARI": "デーヴァナーガリー",
+    "HANGUL": "ハングル",
+    "THAI": "タイ文字",
+    "ARMENIAN": "アルメニア文字",
+    "HEBREW": "ヘブライ文字",
+    "GREEK": "ギリシャ文字",
+    "GEORGIAN": "ジョージア文字",
+    "BENGALI": "ベンガル文字",
+    "GUJARATI": "グジャラート文字",
+    "GURMUKHI": "グルムキー文字",
+    "TAMIL": "タミル文字",
+    "TELUGU": "テルグ文字",
+    "KANNADA": "カンナダ文字",
+    "MALAYALAM": "マラヤーラム文字",
+    "SINHALA": "シンハラ文字",
+    "LAO": "ラーオ文字",
+    "KHMER": "クメール文字",
+    "MYANMAR": "ミャンマー文字",
+    "TIBETAN": "チベット文字",
+    "ETHIOPIC": "エチオピア文字",
+    "THAANA": "ターナ文字",
+    "SYRIAC": "シリア文字",
+    "MONGOLIAN": "モンゴル文字",
+    "ORIYA": "オリヤー文字",
+    "CHEROKEE": "チェロキー文字",
+    "CANADIAN": "カナダ先住民文字",
+    "JAVANESE": "ジャワ文字",
+    "BALINESE": "バリ文字",
+    "SUNDANESE": "スンダ文字",
+    "BUGINESE": "ブギス文字",
+    "BATAK": "バタク文字",
+    "TAGALOG": "バイバイン文字",
+    "TIFINAGH": "ティフィナグ文字",
+    "NKO": "ンコ文字",
+    "VAI": "ヴァイ文字",
+    "ADLAM": "アドラム文字",
+    "BAMUM": "バムン文字",
+    "YI": "イ文字",
+    "BOPOMOFO": "注音符号",
+    "TANGUT": "西夏文字",
+    "LIMBU": "リンブ文字",
+    "LEPCHA": "レプチャ文字",
+    "NEWA": "ネワール文字",
+    "MEETEI": "メイテイ文字",
+    "SYLOTI": "シロティ・ナグリ文字",
+    "CHAM": "チャム文字",
+    "KAYAH": "カヤー・リー文字",
+    "HANIFI": "ハニーフィー文字",
+    "SAMARITAN": "サマリア文字",
+    "MANDAIC": "マンダ文字",
+    "OSAGE": "オセージ文字",
+    "DESERET": "デザレット文字",
+    "SHAVIAN": "ショー文字",
+    "GLAGOLITIC": "グラゴル文字",
+    "COPTIC": "コプト文字",
+    "GOTHIC": "ゴート文字",
+    "RUNIC": "ルーン文字",
+    "OGHAM": "オガム文字",
+    "PHOENICIAN": "フェニキア文字",
+    "AVESTAN": "アヴェスター文字",
+    "BRAHMI": "ブラーフミー文字",
+    "LINEAR": "線文字",
+    "CUNEIFORM": "楔形文字",
+    "EGYPTIAN": "ヒエログリフ",
+    "LISU": "リス文字",
+    "NUSHU": "女書",
+    "KHITAN": "契丹文字",
+}
+# 飾り文字(𝐀 のような数学用の字や、ʰ のような添え字)は、名前に字の種類が無い。
+# ほとんどがアルファベットを飾ったものなので、アルファベットに入れる
+DRESSED_LETTERS = {"MATHEMATICAL": "アルファベット", "MODIFIER": "アルファベット"}
+# 表に無い字の呼び名。彼女の言葉のまま(2026-10-18)。出会ったら、表に名前を足してもいい
+OTHER_SCRIPT = "名前の分からない文字"
+# 最初から並べておく字。ほかの字は、その字の言葉を初めて覚えた日に増える
+SCRIPTS_FROM_THE_START = [JAPANESE_SCRIPT, "アルファベット"]
+# 増えた字は、多くなりすぎないよう一つの選ぶ欄にまとめる。その欄の名前。
+# 彼女の言葉のまま(2026-10-18)。字の名前は一般的な呼び方に合わせる(同じ日、彼女が決めた)
+SCRIPTS_FOLDED = "その他の文字"
+# その欄を押すと出る一覧は、縦にこの数まで並べ、あふれたら右に列を足す(2026-10-18、彼女が決めた。数は仮)
+SCRIPTS_PER_COLUMN = 8
+
+
+def a_chinese_hand(ch):
+    """日本語には無い漢字なら、簡体字か繁体字か。日本語にもある字なら ""。
+
+    日本語のパソコンで使う字の表(cp932)に無い漢字は、日本語では使わない字。
+    中国本土の字の表(gb2312)にあれば簡体字、台湾や香港の字の表(big5)にあれば繁体字。
+    們・這・國・學のように日本の古い字と同じものは、日本語と見分けられない。
+    どの表にも無い字は、日本語の珍しい字かもしれないので、日本語のままにしておく。"""
+    for table, hand in (("cp932", ""), ("gb2312", SIMPLIFIED_CHINESE), ("big5", TRADITIONAL_CHINESE)):
+        try:
+            ch.encode(table)
+            return hand
+        except UnicodeEncodeError:
+            continue
+    return ""
+
+
+def a_script_of(word):
+    """その言葉が書いてある字。数字や記号だけの言葉は、どの字でもない("")。
+
+    ひらがなかカタカナ(変体仮名も)が一つでも入っていれば日本語。
+    漢字は、日本語には無い字(簡体字・繁体字)が一つでも入っていればそちら、
+    そうでなければ日本語。「1番」のように数字が混ざっていても日本語になる。"""
+    import unicodedata
+    seen = {}
+    kanji = []
+    for ch in word:
+        name = unicodedata.name(ch, "")
+        parts = set(name.replace("-", " ").split())
+        if {"HIRAGANA", "KATAKANA", "HENTAIGANA"} & parts:
+            return JAPANESE_SCRIPT
+        if {"CJK", "IDEOGRAPHIC"} & parts:
+            kanji.append(ch)
+            continue
+        if not ch.isalpha():
+            continue
+        words = name.replace("-", " ").split()
+        script = next((SCRIPT_NAMES[p] for p in words if p in SCRIPT_NAMES), None)
+        if script is None:
+            script = next((DRESSED_LETTERS[p] for p in words if p in DRESSED_LETTERS), OTHER_SCRIPT)
+        seen[script] = seen.get(script, 0) + 1
+    if kanji:
+        hands = [a_chinese_hand(ch) for ch in kanji]
+        for hand in (SIMPLIFIED_CHINESE, TRADITIONAL_CHINESE):
+            if hand in hands:
+                return hand
+        return JAPANESE_SCRIPT
+    if not seen:
+        return ""
+    # 字が混ざっていたら、多いほう
+    return max(seen, key=seen.get)
+
+
+# この子が自分で結びつけた、外国語と日本語(senonsei_ai.bridge)。
+# 信じるのは、この強さから。senonsei_ai.BRIDGE_TRUSTED と同じにしておく
+READING_TRUSTED = 2
+# 辞典で、外国語の言葉にだけ出す欄の見出しと、まだ結びついていない時の文。
+# 彼女の言葉のまま(2026-10-18)
+READING_TITLE = "千遠生の日本語訳"
+READING_UNKNOWN = "まだ訳がありません"
+
+
+def the_readings():
+    """この子が外国語に当てている日本語。外国語(小文字) → いちばん強く結びついた日本語。"""
+    tied = {}
+    folder = os.path.join("kotoba", "bridges")
+    if not os.path.isdir(folder):
+        return tied
+    for name in sorted(os.listdir(folder)):
+        if not name.endswith(".json"):
+            continue
+        try:
+            with open(os.path.join(folder, name), encoding="utf-8") as f:
+                tied.update(json.load(f))
+        except (OSError, ValueError):
+            continue
+    readings = {}
+    for foreign, japanese in tied.items():
+        if not isinstance(japanese, dict) or not japanese:
+            continue
+        word, strength = max(japanese.items(), key=lambda kv: kv[1])
+        if strength >= READING_TRUSTED:
+            readings[foreign] = word
+    return readings
+
+
 def the_net():
     """頭の中の、連想の網。束に分けてしまってあるのを集める。"""
     net = {}
@@ -2062,6 +2292,7 @@ def words_for_the_dictionary(state, articles):
     except (KeyError, TypeError, ValueError):
         today = 0
     net = the_net()
+    readings = the_readings()
     diaries = [(one.get("title") or "") + "\n" + (one.get("content") or "") for one in articles]
 
     # 会ったページが分かればその題を、分からなければサイトの名前だけを出す。
@@ -2101,9 +2332,11 @@ def words_for_the_dictionary(state, articles):
             nth = None
         first, that_day, first_page, that_day_page = (list(where.get(word) or []) + [None] * 4)[:4]
         ties, links = ties_of(word)
-        words.append({
+        script = a_script_of(word)
+        one = {
             "w": word,
             "k": a_kind_of_word(word),
+            "s": script,
             "o": order,
             "d": written_as_a_date(day),
             "n": nth,
@@ -2112,7 +2345,12 @@ def words_for_the_dictionary(state, articles):
             "l": links,
             "f": place(first, first_page),
             "h": place(that_day, that_day_page),
-        })
+        }
+        # 訳の欄は外国語の言葉にだけ作る(2026-10-18、彼女が決めた)。
+        # 日本語と、数字や記号だけの言葉には欄そのものが無い
+        if script and script != JAPANESE_SCRIPT:
+            one["y"] = readings.get(" ".join(word.lower().split()), "")
+        words.append(one)
     return words
 
 
@@ -2123,7 +2361,28 @@ JITEN_SCRIPT = r"""
     (function () {
       var DATA = JSON.parse(document.getElementById("jt-data").textContent);
       var UNKNOWN = __UNKNOWN__;
-      var KINDS = ["すべて", "四字熟語", "数字", "記号"];
+      var READING_TITLE = __READING_TITLE__;
+      var READING_UNKNOWN = __READING_UNKNOWN__;
+      // 並びは、すべて・日本語・アルファベット・その他の文字・四字熟語・数字・記号
+      // (2026-10-18、彼女が決めた)。日本語とアルファベットは最初からある。
+      // ほかの字は、その字の言葉を初めて覚えた日から、一つの選ぶ欄にまとめて覚えた順に並べる。
+      // 覚えるまでは欄も無い
+      var SCRIPTS = __SCRIPTS__;
+      var MORE = [];
+      DATA.slice().sort(function (a, b) { return a.o - b.o; }).forEach(function (d) {
+        if (d.s && SCRIPTS.indexOf(d.s) < 0 && MORE.indexOf(d.s) < 0) { MORE.push(d.s); }
+      });
+      var FOLDED = __FOLDED__;
+      var MORE_ROWS = __MORE_ROWS__;
+      var menuOpen = false;
+      var FRONT = ["すべて"].concat(SCRIPTS);
+      var BACK = ["四字熟語", "数字", "記号"];
+      var isScript = function (k) { return SCRIPTS.indexOf(k) >= 0 || MORE.indexOf(k) >= 0; };
+      var fits = function (d, k) {
+        if (k === "すべて") { return true; }
+        return isScript(k) ? d.s === k : d.k === k;
+      };
+      var count = function (k) { return DATA.filter(function (d) { return fits(d, k); }).length; };
       var phone = window.matchMedia("(max-width: 700px)").matches;
       var state = { q: "", kind: "すべて", sort: "new", sel: null, greet: false };
       var $ = function (id) { return document.getElementById(id); };
@@ -2168,7 +2427,7 @@ JITEN_SCRIPT = r"""
       };
       var shown = function () {
         return ordered().filter(function (d) {
-          if (state.kind !== "すべて" && d.k !== state.kind) { return false; }
+          if (!fits(d, state.kind)) { return false; }
           if (!state.q) { return true; }
           return d.w.indexOf(state.q) >= 0 || byPlace(d);
         });
@@ -2179,11 +2438,43 @@ JITEN_SCRIPT = r"""
         return d.d;
       };
       var chips = function () {
-        $("jt-chips").innerHTML = KINDS.map(function (k) {
-          var n = k === "すべて" ? DATA.length : DATA.filter(function (d) { return d.k === k; }).length;
-          return '<button type="button" class="jt-chip' + (k === state.kind ? " on" : "") + '" data-k="' + k + '">' +
-            k + '<span>' + n + '</span></button>';
+        var buttons = function (ks) {
+          return ks.map(function (k) {
+            return '<button type="button" class="jt-chip' + (k === state.kind ? " on" : "") + '" data-k="' + k + '">' +
+              k + '<span>' + count(k) + '</span></button>';
+          }).join("");
+        };
+        var html = buttons(FRONT);
+        if (MORE.length) {
+          var on = MORE.indexOf(state.kind) >= 0;
+          html += '<button type="button" class="jt-chip jt-more' + (on ? " on" : "") + '" id="jt-more"' +
+            ' aria-haspopup="true" aria-expanded="' + (menuOpen ? "true" : "false") + '">' +
+            (on ? esc(state.kind) + '<span>' + count(state.kind) + '</span>' : esc(FOLDED)) + '</button>';
+        }
+        html += buttons(BACK);
+        $("jt-chips").innerHTML = html;
+      };
+      // その他の文字を押すと出る一覧。縦に MORE_ROWS 個まで並べ、あふれたら右に列を足す
+      var menu = function () {
+        var box = $("jt-more-menu"), btn = $("jt-more");
+        if (!menuOpen || !btn) { box.hidden = true; return; }
+        box.innerHTML = MORE.map(function (k) {
+          return '<button type="button" class="jt-more-item' + (k === state.kind ? " on" : "") + '" data-k="' + esc(k) + '">' +
+            esc(k) + '<span>' + count(k) + '</span></button>';
         }).join("");
+        var rows = Math.min(MORE_ROWS, MORE.length);
+        box.style.gridTemplateRows = "repeat(" + rows + ", auto)";
+        box.hidden = false;
+        // スマホで横に収まらない時は、収まるまで一列を長くする
+        while (box.scrollWidth > box.clientWidth && rows < MORE.length) {
+          rows += 1;
+          box.style.gridTemplateRows = "repeat(" + rows + ", auto)";
+        }
+        var hero = document.querySelector(".jt-hero").getBoundingClientRect();
+        var r = btn.getBoundingClientRect();
+        // 押したボタンの下に出す。右にはみ出す時は、はみ出さないところまで左に寄せる
+        box.style.left = Math.max(0, Math.min(r.left - hero.left, hero.width - box.offsetWidth)) + "px";
+        box.style.top = (r.bottom - hero.top + 6) + "px";
       };
       var list = function () {
         var rows = shown(), html = "";
@@ -2218,6 +2509,10 @@ JITEN_SCRIPT = r"""
             (d.n !== null ? '<span>生まれて<b>' + d.n + '</b>日目に覚えた</span>' : '') +
             '<span>日記で<b>' + d.u + '</b>回</span>' +
           '</div>' +
+          // 訳の欄は、外国語の言葉にだけある(d.y がある時だけ。空でも欄は出す)
+          ("y" in d ? '<section class="jt-sec"><h4>' + esc(READING_TITLE) + '</h4>' +
+            (d.y ? '<p class="jt-place">' + esc(d.y) + '</p>'
+                 : '<p class="jt-place jt-unknown">' + esc(READING_UNKNOWN) + '</p>') + '</section>' : '') +
           '<section class="jt-sec"><h4>初めて会った場所</h4>' + place(d.f) + '</section>' +
           '<section class="jt-sec"><h4>覚えた日に会ってた場所</h4>' + place(d.h) + '</section>' +
           '<section class="jt-sec"><h4>つながっている言葉</h4><div class="jt-links">' + links + '</div></section>';
@@ -2266,10 +2561,24 @@ JITEN_SCRIPT = r"""
         list();
         document.querySelector(".jt-listscroll").scrollTop = 0;
       });
+      var pickKind = function (k) { state.kind = k; menuOpen = false; chips(); menu(); list(); };
+      var shut = function () { if (menuOpen) { menuOpen = false; chips(); menu(); } };
       $("jt-chips").addEventListener("click", function (e) {
+        if (e.target.closest("#jt-more")) { menuOpen = !menuOpen; chips(); menu(); return; }
         var b = e.target.closest(".jt-chip");
-        if (b) { state.kind = b.dataset.k; chips(); list(); }
+        if (b) { pickKind(b.dataset.k); }
       });
+      $("jt-more-menu").addEventListener("click", function (e) {
+        var b = e.target.closest(".jt-more-item");
+        if (b) { pickKind(b.dataset.k); }
+      });
+      // 一覧の外を押した時と Esc で閉じる。画面の幅が変わった時やボタンの列を横に送った時は付いていく
+      document.addEventListener("click", function (e) {
+        if (!e.target.closest("#jt-more") && !e.target.closest("#jt-more-menu")) { shut(); }
+      });
+      document.addEventListener("keydown", function (e) { if (e.key === "Escape") { shut(); } });
+      window.addEventListener("resize", menu);
+      $("jt-chips").addEventListener("scroll", menu);
       $("jt-list").addEventListener("click", function (e) {
         var r = e.target.closest(".jt-row");
         if (r) { pick(r.dataset.w); }
@@ -2289,6 +2598,11 @@ def generate_jiten_html(state, articles):
     data = json.dumps(words, ensure_ascii=False, separators=(",", ":")).replace("<", "\\u003c")
     script = (JITEN_SCRIPT
               .replace("__UNKNOWN__", json.dumps(PLACE_UNKNOWN, ensure_ascii=False))
+              .replace("__READING_TITLE__", json.dumps(READING_TITLE, ensure_ascii=False))
+              .replace("__READING_UNKNOWN__", json.dumps(READING_UNKNOWN, ensure_ascii=False))
+              .replace("__SCRIPTS__", json.dumps(SCRIPTS_FROM_THE_START, ensure_ascii=False))
+              .replace("__FOLDED__", json.dumps(SCRIPTS_FOLDED, ensure_ascii=False))
+              .replace("__MORE_ROWS__", str(SCRIPTS_PER_COLUMN))
               .replace("__TIES__", str(TODAYS_WORD_TIES)))
     html = f"""<!DOCTYPE html>
 <html lang="ja">
@@ -2315,6 +2629,7 @@ def generate_jiten_html(state, articles):
         <input id="jt-q" type="search" placeholder="言葉・場所で引く" autocomplete="off" aria-label="言葉・場所で引く">
       </label>
       <div class="jt-chips" id="jt-chips"></div>
+      <div class="jt-more-menu" id="jt-more-menu" hidden></div>
     </div>
     <button type="button" class="jt-today" id="jt-today" hidden></button>
     <div class="jt-body">
