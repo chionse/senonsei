@@ -2053,6 +2053,8 @@ SCRIPT_NAMES = {
 OTHER_SCRIPT = "そのほかの文字"
 # 最初から並べておく字。ほかの字は、その字の言葉を初めて覚えた日に増える
 SCRIPTS_FROM_THE_START = [JAPANESE_SCRIPT, "アルファベット"]
+# 増えた字は、多くなりすぎないよう一つの選ぶ欄にまとめる。その欄の名前。仮(彼女が決める)
+SCRIPTS_FOLDED = "ほかの文字"
 
 
 def a_script_of(word):
@@ -2228,16 +2230,22 @@ JITEN_SCRIPT = r"""
       var UNKNOWN = __UNKNOWN__;
       var READING_TITLE = __READING_TITLE__;
       var READING_UNKNOWN = __READING_UNKNOWN__;
-      // 字のボタン。最初からあるものに、覚えた順で初めて出てきた字を足していく
+      // 字のボタン。四字熟語・数字・記号のあとに並べる(2026-10-18、彼女が決めた)。
+      // 日本語とアルファベットは最初からある。ほかの字は、その字の言葉を初めて覚えた日から、
+      // 一つの選ぶ欄にまとめて覚えた順に並べる。覚えるまでは欄も無い
       var SCRIPTS = __SCRIPTS__;
+      var MORE = [];
       DATA.slice().sort(function (a, b) { return a.o - b.o; }).forEach(function (d) {
-        if (d.s && SCRIPTS.indexOf(d.s) < 0) { SCRIPTS.push(d.s); }
+        if (d.s && SCRIPTS.indexOf(d.s) < 0 && MORE.indexOf(d.s) < 0) { MORE.push(d.s); }
       });
-      var KINDS = ["すべて"].concat(SCRIPTS, ["四字熟語", "数字", "記号"]);
+      var FOLDED = __FOLDED__;
+      var KINDS = ["すべて", "四字熟語", "数字", "記号"].concat(SCRIPTS);
+      var isScript = function (k) { return SCRIPTS.indexOf(k) >= 0 || MORE.indexOf(k) >= 0; };
       var fits = function (d, k) {
         if (k === "すべて") { return true; }
-        return SCRIPTS.indexOf(k) >= 0 ? d.s === k : d.k === k;
+        return isScript(k) ? d.s === k : d.k === k;
       };
+      var count = function (k) { return DATA.filter(function (d) { return fits(d, k); }).length; };
       var phone = window.matchMedia("(max-width: 700px)").matches;
       var state = { q: "", kind: "すべて", sort: "new", sel: null, greet: false };
       var $ = function (id) { return document.getElementById(id); };
@@ -2293,11 +2301,20 @@ JITEN_SCRIPT = r"""
         return d.d;
       };
       var chips = function () {
-        $("jt-chips").innerHTML = KINDS.map(function (k) {
-          var n = DATA.filter(function (d) { return fits(d, k); }).length;
+        var html = KINDS.map(function (k) {
           return '<button type="button" class="jt-chip' + (k === state.kind ? " on" : "") + '" data-k="' + k + '">' +
-            k + '<span>' + n + '</span></button>';
+            k + '<span>' + count(k) + '</span></button>';
         }).join("");
+        if (MORE.length) {
+          var on = MORE.indexOf(state.kind) >= 0;
+          html += '<select class="jt-chip jt-more' + (on ? " on" : "") + '" id="jt-more" aria-label="' + esc(FOLDED) + '">' +
+            '<option value=""' + (on ? "" : " selected") + '>' + esc(FOLDED) + '</option>' +
+            MORE.map(function (k) {
+              return '<option value="' + esc(k) + '"' + (k === state.kind ? " selected" : "") + '>' +
+                esc(k) + '　' + count(k) + '</option>';
+            }).join("") + '</select>';
+        }
+        $("jt-chips").innerHTML = html;
       };
       var list = function () {
         var rows = shown(), html = "";
@@ -2386,7 +2403,12 @@ JITEN_SCRIPT = r"""
       });
       $("jt-chips").addEventListener("click", function (e) {
         var b = e.target.closest(".jt-chip");
-        if (b) { state.kind = b.dataset.k; chips(); list(); }
+        if (b && b.tagName === "BUTTON") { state.kind = b.dataset.k; chips(); list(); }
+      });
+      // まとめた欄で字を選んだ時。いちばん上(まとめた名前)に戻したら、すべてに戻る
+      $("jt-chips").addEventListener("change", function (e) {
+        if (e.target.id !== "jt-more") { return; }
+        state.kind = e.target.value || "すべて"; chips(); list();
       });
       $("jt-list").addEventListener("click", function (e) {
         var r = e.target.closest(".jt-row");
@@ -2410,6 +2432,7 @@ def generate_jiten_html(state, articles):
               .replace("__READING_TITLE__", json.dumps(READING_TITLE, ensure_ascii=False))
               .replace("__READING_UNKNOWN__", json.dumps(READING_UNKNOWN, ensure_ascii=False))
               .replace("__SCRIPTS__", json.dumps(SCRIPTS_FROM_THE_START, ensure_ascii=False))
+              .replace("__FOLDED__", json.dumps(SCRIPTS_FOLDED, ensure_ascii=False))
               .replace("__TIES__", str(TODAYS_WORD_TIES)))
     html = f"""<!DOCTYPE html>
 <html lang="ja">
