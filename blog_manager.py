@@ -2059,8 +2059,31 @@ PLACE_UNKNOWN = "場所の特定をすることができませんでした"
 TODAYS_WORD_TIES = 3
 
 
-# この子が絵文字として拾う字。異体字セレクタと、絵文字どうしを繋ぐ字も付いてよい
-AN_EMOJI = re.compile(r"(?=.*[\U0001F000-\U0001FAFF\u2600-\u27BF\u2B00-\u2BFF])[\U0001F000-\U0001FAFF\u2600-\u27BF\u2B00-\u2BFF\uFE0F\u200D]+")
+# 辞典で「絵文字」に入れる字。色のついた絵として出るものだけにする。
+# ☆★♡♥♪ のような、文字と同じ色で出る記号は「記号」のほう(2026-10-19、彼女が決めた)。
+# 0x1F000 から先は絵の字。その手前は、ふつうでも絵で出るものだけを数える(Unicode の Emoji_Presentation)
+EMOJI_BEFORE_1F000 = (
+    "\u231a\u231b\u23e9\u23ea\u23eb\u23ec\u23f0\u23f3\u25fd\u25fe\u2614\u2615"
+    + "".join(chr(c) for c in range(0x2648, 0x2654))
+    + "\u267f\u2693\u26a1\u26aa\u26ab\u26bd\u26be\u26c4\u26c5\u26ce\u26d4\u26ea"
+    "\u26f2\u26f3\u26f5\u26fa\u26fd\u2705\u270a\u270b\u2728\u274c\u274e"
+    "\u2753\u2754\u2755\u2757\u2795\u2796\u2797\u27b0\u27bf\u2b1b\u2b1c\u2b50\u2b55"
+)
+
+
+def looks_like_an_emoji(word):
+    """色のついた絵として出る字だけでできているか。絵で出すしるし(FE0F)が付いた字も絵とみなす。"""
+    glued = "\ufe0f\u200d"
+    marks = [ch for ch in word if ch not in glued]
+    if not marks:
+        return False
+    for i, ch in enumerate(word):
+        if ch in glued:
+            continue
+        drawn = ord(ch) >= 0x1F000 or ch in EMOJI_BEFORE_1F000 or word[i + 1:i + 2] == "\ufe0f"
+        if not drawn:
+            return False
+    return True
 
 
 def a_kind_of_word(word):
@@ -2069,11 +2092,11 @@ def a_kind_of_word(word):
     ひらがな・カタカナ・漢字で分けると、「困る」や「1番」のように混ざった言葉の
     置き場に迷うので分けない。四字熟語は漢字四文字の言葉なら何でも入れる。
     本物の四字熟語と見分ける手立てが無いので、「利用規約」も入る。
-    絵文字は、この子が絵文字として拾う字(senonsei_ai の ALSO_WRITTEN と同じ範囲)だけでできた言葉。
-    ☆や♡もここに入る(2026-10-18、彼女に言われて足した)。"""
+    絵文字は、色のついた絵として出る字だけでできた言葉(2026-10-18、彼女に言われて足した)。
+    ☆や♡は記号のほうに入れる(2026-10-19、彼女が決めた)。"""
     if re.fullmatch(r"[0-9０-９]+", word):
         return "数字"
-    if AN_EMOJI.fullmatch(word):
+    if looks_like_an_emoji(word):
         return "絵文字"
     if not re.search(r"\w", word):
         return "記号"
