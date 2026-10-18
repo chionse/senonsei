@@ -659,7 +659,7 @@ CHARS_BEFORE_WORDS = 20
 # 何日ぶん出会えば「覚えた」ことになるか。
 # 同じ日に何度見かけても一日ぶんにしか数えない。
 # だから一日にどれだけ読んでも、この日数を待たないと身につかない。
-# 育つ速さは、ふだんはここで決まる(一日の天井は WORDS_A_DAY_AT_MOST)。
+# 一日にいくつまでという上限は無いので、育つ速さはここで決まる。
 #
 # 三十日にしていた。生まれて一月、一語も持たないまま、
 # 見た文字をぽつんと置くだけの日が続いた。
@@ -670,13 +670,8 @@ CHARS_BEFORE_WORDS = 20
 # 生まれて五週間、何度も会ってきた言葉が次々に十五日に届いて、
 # 一日に五十語ほど覚えるようになり、増えるのが早すぎた
 DAYS_BEFORE_LEARNING = 20
-# 一日に覚えられる言葉の数の天井(2026-10-18、彼女が決めた)。
-# 日数の決まりだけでは、生きた日が増えるほど覚える数も増えていき、止まらない。
-# 「最後の段に着くのは、せめて早くて四年くらい」と言われて置いた。
-# 最後の段(六万語、blog_manager.GROWTH_STAGES)÷ これ で、およそ四年ちょっと。
-# ふだんは日数の決まりのほうが遅いので、速くなってきた時にだけ効く。
-# あふれた言葉は捨てない。次の日に、また日数を数え直して並ぶ
-WORDS_A_DAY_AT_MOST = 40
+# 同じ日に、一日に覚える数の天井(四十語)も一度置いたが、
+# 彼女に「いらない」と言われて外した。上限は置かない
 # 覚えかけたまま、これだけの日数 × それまで見かけた日数だけ見かけないと、
 # 一日ぶん薄れる(how_long_it_holds / days_held)。
 # どれだけ薄れても、一度出会ったことだけは消えない。出会った言葉は捨てない。
@@ -4161,7 +4156,7 @@ def days_needed_for(state, word):
 
 def learn(state):
     """何日も見かけ続けた言葉が、その子の中に残っていく。
-    どれだけの日を共に過ごしたかで決まる。ただし一日に WORDS_A_DAY_AT_MOST まで。"""
+    一日にいくつまで、という上限は無い。どれだけの日を共に過ごしたかで決まる。"""
     if len(state["seen_chars"]) < CHARS_BEFORE_WORDS:
         return []  # まだ文字の形すら掴めていないので、言葉は身につかない
 
@@ -4172,10 +4167,6 @@ def learn(state):
         if word not in known and days_held(state, word) >= days_needed_for(state, word)
     ]
     learned.sort(key=lambda w: days_held(state, w), reverse=True)
-    # 一日に覚えられる数には天井がある。今日もう覚えたぶんを引いて、長く抱えてきたものから入る
-    today = f"{now_in_japan():%Y-%m-%d}"
-    already = sum(1 for day in (state.get("learned_on") or {}).values() if day == today)
-    learned = learned[: max(0, WORDS_A_DAY_AT_MOST - already)]
     # はじめて言葉を覚えたとき、それまでに知っていた文字の数を残す。
     # 昔の書き方に戻る日に、その頃の文字で書けるように
     if learned and not known:
@@ -4184,6 +4175,7 @@ def learn(state):
 
     # 覚えた日を残す。取り始めないと、あとからは分からない。
     # 一度覚えた言葉は忘れないので、この日付も書き換わらない
+    today = f"{now_in_japan():%Y-%m-%d}"
     remembered = state.setdefault("learned_on", {})
     for word in learned:
         remembered.setdefault(word, today)
