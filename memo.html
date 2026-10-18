@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <title>メモ</title>
   <meta name="viewport" content="width=1200" />
-  <link rel="stylesheet" href="sen.css?v=1047212265" />
+  <link rel="stylesheet" href="sen.css?v=2005044411" />
   <script id="keshiki-script">
     (function () {
       var kusa = ["kusa/kusa-1.webp", "kusa/kusa-2.webp", "kusa/kusa-3.webp", "kusa/kusa-4.webp", "kusa/kusa-5.webp", "kusa/kusa-6.webp", "kusa/kusa-7.webp", "kusa/kusa-8.webp", "kusa/kusa-9.webp", "kusa/kusa-10.webp"];
@@ -39,7 +39,7 @@
         var keep = function (key, value) {
           try { localStorage.setItem(key, value); return true; } catch (e) { return false; }
         };
-        var kotoba = {"futsuu": "🎶キリ番おめでとう🎶\n（良ければコメントで報告してね！）", "nana": "♡あなたは超ラッキー♡\nヒューヒュー（正面からの吐息）\nウインク（右目）ウインク（左目）ウインク（両目）\nダブルピース（画面の前のあなた）\nからの両目ウインク（画面の前のあなた）\n（良かったら、コメントで報告してね！）"};
+        var kotoba = {"futsuu": "🎶キリ番おめでとう🎶\n（良かったら、コメントで報告してね！）", "nana": "♡あなたは超ラッキー♡\nヒューヒュー（正面からの吐息）\nウインク（右目）ウインク（左目）ウインク（両目）\nダブルピース（画面の前のあなた）\nからの両目ウインク（画面の前のあなた）\n（良かったら、コメントで報告してね！）"};
         // キリ番の種類。7 が並ぶ番号は大当たり
         var main = function (n) {
           var said = String(n);
@@ -414,6 +414,15 @@
   <div data-nosnippet id="look-closer" hidden onclick="closeCloser()">
     <img id="closer-image" src="" alt="" />
   </div>
+  <div data-nosnippet id="mitai-kakunin" hidden>
+    <div data-nosnippet class="mk-win" role="dialog" aria-modal="true" aria-labelledby="mk-q">
+      <p id="mk-q">本当に見ますか？</p>
+      <div data-nosnippet class="mk-btns">
+        <button type="button" id="mk-hai">はい</button>
+        <button type="button" id="mk-iie">いいえ</button>
+      </div>
+    </div>
+  </div>
 
   <script>
     // メモの中の絵を押すと、画面いっぱいに大きくして見せる
@@ -435,8 +444,48 @@
       }
     });
     document.addEventListener('keydown', function (event) {
-      if (event.key === 'Escape') { closeCloser(); }
+      if (event.key === 'Escape') { closeCloser(); closeMitai(); }
     });
+
+    // 押してから見る動画(2026-10-19、彼女が決めた)。押すまでは中を見せず、
+    // 「本当に見ますか？」に「はい」と答えた時だけ、その場で流す
+    var mitaiNow = null;
+    function askMitai(box) {
+      mitaiNow = box;
+      document.getElementById('mitai-kakunin').hidden = false;
+      document.getElementById('mk-iie').focus();
+    }
+    function closeMitai() {
+      var ask = document.getElementById('mitai-kakunin');
+      if (ask.hidden) { return; }
+      ask.hidden = true;
+      if (mitaiNow) { mitaiNow.focus(); }
+      mitaiNow = null;
+    }
+    function showMitai() {
+      var box = mitaiNow;
+      closeMitai();
+      if (!box) { return; }
+      var video = document.createElement('video');
+      video.className = 'mitai-douga';
+      video.src = box.getAttribute('data-src');
+      video.controls = true;
+      video.muted = true;
+      video.autoplay = true;
+      video.setAttribute('playsinline', '');
+      box.parentNode.replaceChild(video, box);
+      var playing = video.play();
+      if (playing && playing.catch) { playing.catch(function () {}); }
+    }
+    document.addEventListener('click', function (event) {
+      var box = event.target.closest && event.target.closest('.mitai');
+      if (box) { askMitai(box); }
+    });
+    document.getElementById('mk-hai').onclick = showMitai;
+    document.getElementById('mk-iie').onclick = closeMitai;
+    document.getElementById('mitai-kakunin').onclick = function (event) {
+      if (event.target === this) { closeMitai(); }
+    };
 
     // 一覧をめくる。並び順は変えないので、何ページ目に何があるかは
     // どの画面でも同じ
@@ -484,6 +533,7 @@
     }
     window.addEventListener('hashchange', function () {
       closeCloser();
+      closeMitai();
       showWhatTheAddressSays();
     });
     // 開いたメモの紙の外を押したら、一覧に戻る(2026-10-11、彼女が決めた)。
@@ -492,6 +542,7 @@
     document.addEventListener('click', function (event) {
       var open = document.querySelector('.memo-page:not([hidden])');
       if (!open || !document.getElementById('look-closer').hidden) { return; }
+      if (!document.getElementById('mitai-kakunin').hidden) { return; }
       if (event.target.closest('.memo-page')) { return; }
       event.preventDefault();
       event.stopPropagation();
