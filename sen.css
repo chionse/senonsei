@@ -37,6 +37,9 @@
      上ほど濃く、地平線に近いほど白っぽい */
   --sky-top: #4f9fe0;
   --sky-bottom: #b9dcf5;
+  /* 窓の影。透ける薄いピンクを、右下に大きめにずらす
+     (2026-10-19、彼女が 8px に決めた。前は 3px。月間スタンプカードと、押してから見る動画で使う) */
+  --kage: 8px 8px 0 1px rgba(245, 20, 138, 0.38);
 }
 
 /* 景色。草の絵は地平線から上が透けているので、そこに空の色が見える。
@@ -1080,6 +1083,99 @@ article.yomimono .article-head {
   cursor: zoom-in;
 }
 
+/* 押してから見る動画(2026-10-19)。押すまでは中を見せない。
+   「本当に見ますか？」で「はい」を押すと、同じ場所で動画に変わる */
+.memo-body .mitai,
+.memo-body .mitai-douga {
+  display: block;
+  box-sizing: border-box;
+  /* 右下の影が紙の縁で切れないよう、影のぶんだけ細くする */
+  width: calc(100% - 9px);
+  aspect-ratio: 3 / 2;
+  margin: 0.3rem 0 0.4rem;
+  border: 1px solid var(--main-color);
+  box-shadow: var(--kage);
+}
+
+.memo-body .mitai {
+  position: relative;
+  padding: 0;
+  /* 濃い青に、薄い青の ▶(2026-10-19、彼女が決めた) */
+  background: var(--main-color);
+  cursor: pointer;
+}
+
+.memo-body .mitai:hover,
+.memo-body .mitai:focus-visible {
+  background: #1a3fc0;
+}
+
+/* 真ん中の ▶ */
+.memo-body .mitai::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-style: solid;
+  border-width: 22px 0 22px 36px;
+  border-color: transparent transparent transparent #e8edff;
+  transform: translate(-38%, -50%);
+}
+
+.memo-body .mitai-douga {
+  background: #000;
+}
+
+/* 確かめの窓。月間スタンプカードと同じ、白い面に細い線と桃色の影 */
+#mitai-kakunin {
+  position: fixed;
+  inset: 0;
+  z-index: 11;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(14, 30, 90, 0.18);
+}
+
+#mitai-kakunin[hidden] {
+  display: none;
+}
+
+#mitai-kakunin .mk-win {
+  min-width: 260px;
+  padding: 22px 28px 20px;
+  background: #fff;
+  border: 1px solid var(--main-color);
+  box-shadow: var(--kage);
+  text-align: center;
+}
+
+#mitai-kakunin p {
+  margin: 0 0 18px;
+  font-size: 18px;
+}
+
+#mitai-kakunin .mk-btns {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+}
+
+#mitai-kakunin button {
+  min-width: 84px;
+  height: 30px;
+  font: inherit;
+  color: var(--main-color);
+  background: #e8edff;
+  border: 1px solid var(--main-color);
+  box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #8e9ed6;
+  cursor: pointer;
+}
+
+#mitai-kakunin button:active {
+  box-shadow: inset 1px 1px 0 #8e9ed6, inset -1px -1px 0 #fff;
+}
+
 /* 絵を押したとき、画面いっぱいに大きくして見せる一枚 */
 #look-closer {
   position: fixed;
@@ -1336,10 +1432,11 @@ article.yomimono .article-head {
   background: var(--sc-face);
   /* 外枠は細い 1px(2026-10-18、彼女が選んだ。太いと紙から浮いて見えた) */
   border: 1px solid var(--main-color);
-  box-shadow: 3px 3px 0 var(--sc-shadow);
-  /* 左の欄の幅は変えず、カードだけ左と上に 8px、右に 6px はみ出して一回り大きくする
-     (2026-10-18、彼女が選んだ。紙のふちと区切り線の手前の空白を埋める) */
-  margin: -8px -6px 0 -8px;
+  box-shadow: var(--kage);
+  /* 左の欄の幅は変えず、カードだけ一回り大きくする(2026-10-18、彼女が選んだ。
+     紙のふちと区切り線の手前の空白を埋める)。大きさは前のまま(左右で 14px はみ出す)。
+     影を含めて、紙のふちと区切り線のちょうど真ん中に来るよう、左に寄せてある(2026-10-19、彼女が決めた) */
+  margin: -8px 0 0 -14px;
 }
 
 .sc-bar {
@@ -1496,7 +1593,7 @@ article.yomimono .article-head {
   padding: 4px;
   background: #fff;
   border: 1px solid var(--main-color);
-  box-shadow: 3px 3px 0 var(--sc-shadow);
+  box-shadow: var(--kage);
 }
 
 .sc-months[hidden] {
