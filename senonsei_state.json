@@ -3679,7 +3679,12 @@
     "＼",
     "︎",
     "稔",
-    "冥"
+    "冥",
+    "瞼",
+    "窩",
+    "朵",
+    "腱",
+    "�"
   ],
   "learned_words": [
     "など",
@@ -4726,7 +4731,6 @@
     "https://wordpress.com/log-in?redirect_to=https%3A%2F%2Fr-login.wordpress.com%2Fremote-login.php%3Faction%3Dlink%26back%3Dhttps%253A%252F%252Fautomattic.com%252F2024%252F11%252F21%252Fautomattic-welcomes-harper-and-elijah-potter%252F",
     "https://wp.me/pe4R-1kEI",
     "https://public-api.wordpress.com/oembed/?format=json&url=https%3A%2F%2Fautomattic.com%2F2024%2F11%2F21%2Fautomattic-welcomes-harper-and-elijah-potter%2F&for=wpcom-auto-discovery",
-    "https://writewithharper.com/",
     "http://web.archive.org/web/20120413102832/http://pounon-edition.over-blog.com/",
     "http://web.archive.org/web/20120413102832/http://frogblue.over-blog.fr/",
     "http://web.archive.org/web/20120413102832/http://www.editionssolair.com/",
@@ -5480,7 +5484,23 @@
     "https://www.tmsshop.jp/",
     "https://www.segasammy.co.jp/ja/sustainability/group-sustainabilitymateriality/governance/",
     "https://bsky.app/profile/tms-e.co.jp",
-    "http://tms-lab.jp/"
+    "http://tms-lab.jp/",
+    "https://marketplace.visualstudio.com/items?itemName=elijah-potter.harper",
+    "https://lifehacker.com/tech/harper-offline-alternative-to-grammarly?test_uuid=02DN02BmbRCcASIX6xMQtY9&test_variant=B",
+    "https://www.xda-developers.com/ditched-grammarly-for-this-amazing-open-source-alternative/",
+    "https://beingpax.medium.com/9-new-obsidian-plugins-you-need-to-check-out-today-d55dba29bfb8",
+    "https://obsidian.rocks/resource-harper/",
+    "https://elijahpotter.dev",
+    "https://crates.io/crates/harper-core",
+    "https://gribnau.dev/posts/harper-cli/",
+    "https://www.wearefounders.uk/the-grammar-checker-that-actually-gets-developers-meet-harper/",
+    "https://elijahpotter.dev/articles/naming-harper",
+    "https://microsoftedge.microsoft.com/addons/detail/private-grammar-checker-/ihjkkjfembmnjldmdchmadigpmapkpdh",
+    "https://discord.gg/invite/JBqcAaKrzQ",
+    "https://addons.mozilla.org/en-US/firefox/addon/private-grammar-checker-harper/",
+    "https://elijahpotter.dev/articles/the_chrome_extension_supersedes_the_wordpress_plugin",
+    "https://automattic.com/",
+    "https://docs.rs/harper-core/latest/harper_core/"
   ],
   "visited": [
     "https://note.com/",
@@ -6009,7 +6029,9 @@
     "https://storyweb.jp/beauty/792032/",
     "https://storyweb.jp/magazine/803739/",
     "https://www.tms-e.co.jp/alltitles/2000s/603101.html",
-    "https://www.tms-e.co.jp/alltitles/era/2000s/632101.html"
+    "https://www.tms-e.co.jp/alltitles/era/2000s/632101.html",
+    "https://writewithharper.com/",
+    "https://writewithharper.com/docs/integrations/wordpress"
   ],
   "notes": [
     "8日目: Public Citizen - Protecting Health, Safety, and Democracy、Become an Activist with Public Citizen、README.jp へようこそ！",
@@ -6041,7 +6063,7 @@
     "34日目: ぷろだくしょんバオバブ - Wikipedia、利用者情報の外部送信について - Hatena Policies(むかしのすがた)、NHKニュース 速報・最新情報、「市長に全責任がある」石垣市の国際フェリーがたった4カ月で運休に…現役市議が明かす「市民が赤字補償」の“とんでもスキーム” | 女性自身、CNN Chile",
     "35日目: Kids' Space、あおきさやか公式サイト あおきさやかweb、Nominate amazing open source contributors for the GitHub Stars program | GitHub Stars、行動履歴情報の取り扱いに関する原則 - 株式会社マイクロアド、はてなブックマーク - 新着エントリー - 総合",
     "36日目: アンケート｜NHK、株式会社ヒナプロジェクト、Poslední změny – Wikiverzita、Wikibooks",
-    "37日目: 9784054063518に関連する商品一覧 - honto電子書籍ストア、ディープライブラリープロジェクト、STORY [ストーリィ] オフィシャルサイト – 「新しい40代」のためのファッション＆ライフスタイル誌、ソニックX | 2000年代 | TMS作品一覧 | アニメーションの総合プロデュース会社 トムス・エンタテインメント"
+    "37日目: 9784054063518に関連する商品一覧 - honto電子書籍ストア、ディープライブラリープロジェクト、STORY [ストーリィ] オフィシャルサイト – 「新しい40代」のためのファッション＆ライフスタイル誌、ソニックX | 2000年代 | TMS作品一覧 | アニメーションの総合プロデュース会社 トムス・エンタテインメント、Harper | Privacy-First Offline Grammar Checker for Developers & Writers"
   ],
   "today_walk": {
     "date": "2026-10-18",
@@ -6049,13 +6071,15 @@
       "9784054063518に関連する商品一覧 - honto電子書籍ストア",
       "ディープライブラリープロジェクト",
       "STORY [ストーリィ] オフィシャルサイト – 「新しい40代」のためのファッション＆ライフスタイル誌",
-      "ソニックX | 2000年代 | TMS作品一覧 | アニメーションの総合プロデュース会社 トムス・エンタテインメント"
+      "ソニックX | 2000年代 | TMS作品一覧 | アニメーションの総合プロデュース会社 トムス・エンタテインメント",
+      "Harper | Privacy-First Offline Grammar Checker for Developers & Writers"
     ],
     "brought": [
       509,
       18,
       1690,
-      248
+      248,
+      142
     ]
   },
   "inner_voice": [
@@ -6287,8 +6311,6 @@
   ],
   "saw_on": "2026-10-18",
   "pictures_seen": [
-    "2026-10-10 www.wikimediaendowment.org: 車の屋根、樹木、人、車の座席、車のドア、車の床、車の壁",
-    "2026-10-14 chionse.github.io: わたしの姿。絵には、頭部が描かれています。頭部には、眉毛があり、その眉毛は、紫色に描かれています。また、頭部には、目が描かれており、その目は、紫色に描かれています。",
     "2026-10-14 nl.wikibooks.org: 本",
     "2026-10-14 cwe.mitre.org: マイルスキャスコード",
     "2026-10-15 www3.nhk.or.jp: 3. 球団：ロサンゼルス・ドジャース（LA Dodgers）。",
@@ -6316,7 +6338,9 @@
     "2026-10-18 storyweb.jp: 着物",
     "2026-10-18 storyweb.jp: 黒のTシャツ、白のTシャツ。",
     "2026-10-18 www.tms-e.co.jp: 猫、薄い毛、紫色、猫の耳、猫の顔、猫の口、猫の鼻、猫の尾、猫の背中、猫の脚、猫の手、猫の足、猫の顔、猫の口、猫の鼻、猫の尾、猫の背中",
-    "2026-10-18 www.tms-e.co.jp: 絵には、白いキャラクターがいる。"
+    "2026-10-18 www.tms-e.co.jp: 絵には、白いキャラクターがいる。",
+    "2026-10-18 writewithharper.com: 花、視力、髪、眼、眼鏡、眼瞼、眼窩、眼球、眼瞼筋、眼窩筋、眼球筋、顔、耳、耳朵、耳膜、耳膜筋、耳膜筋腱、�����",
+    "2026-10-18 writewithharper.com: ハーパー"
   ],
   "impressions": [
     "2026-09-14 note.jp: note株式会社はクリエイターが文章や画像、音声、動画を投稿し、ユーザーがそのコンテンツを楽しんで応援できるメディアプラットフォームです。",
@@ -6371,14 +6395,14 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "art.nikkei-ps.co.jp",
-    "百恵さんの介護支える友和の覚悟「妻を楽にするのが夫の務め」 | 女性自身",
-    "wikimediaendowment.org",
-    "www.gnu.org",
-    "namietourism.jp",
-    "bit.ly"
+    "comic-pureri.jp",
+    "logx.optimizely.com",
+    "www.weblio.jp",
+    "www.chapitre.com",
+    "endowment@wikimedia.org",
+    "event.ospn.jp"
   ],
-  "how_many_places_left": 1384,
+  "how_many_places_left": 1399,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -6460,7 +6484,8 @@
     "dlib.jp": "ディープライブラリープロジェクト",
     "www.zendesk.co.jp": "カスタマーサポートツール15社を徹底比較　おすすめツールの料金・機能・特徴",
     "storyweb.jp": "STORY2026年11月号｜MAGAZINE｜STORY [ストーリィ] オフ",
-    "www.tms-e.co.jp": "のらみみ | 2000年代 | TMS作品一覧 | アニメーションの総合プロデュ"
+    "www.tms-e.co.jp": "のらみみ | 2000年代 | TMS作品一覧 | アニメーションの総合プロデュ",
+    "writewithharper.com": "Harper | Privacy-First Offline Grammar C"
   },
   "went_home": {
     "date": "2026-10-18",
@@ -6511,7 +6536,7 @@
     },
     "この": {
       "ページ": 80,
-      "サイト": 117,
+      "サイト": 118,
       "します": 13,
       "について": 5,
       "への": 18,
@@ -6547,9 +6572,8 @@
       "1": 157,
       "2": 157,
       "10": 26,
-      "0": 63,
-      "されてい": 16,
-      "09": 1
+      "0": 65,
+      "されてい": 16
     },
     "されてい": {
       "ます": 30,
@@ -6642,15 +6666,14 @@
       "して": 1
     },
     "2": {
-      "0": 243,
+      "0": 245,
       "3": 223,
       "1": 175,
       "2": 229,
       "://": 30,
       "8": 98,
       "4": 48,
-      "えた": 55,
-      "言葉": 1
+      "えた": 55
     },
     "しかし": {
       "について": 1,
@@ -6789,14 +6812,13 @@
     },
     "0": {
       "2": 243,
-      "0": 150,
+      "0": 151,
       "://": 23,
       "1": 83,
       "4": 24,
       "3": 38,
       "6": 26,
-      "7": 30,
-      "9": 1
+      "7": 30
     },
     "った": {
       "していま": 3,
@@ -7005,9 +7027,9 @@
     "自由": {
       "です": 1,
       "してくだ": 1,
-      "だけど": 30,
-      "じゃない": 30,
-      "ってる": 30,
+      "だけど": 31,
+      "じゃない": 31,
+      "ってる": 31,
       "だった": 1,
       "関する": 1
     },
@@ -7461,7 +7483,7 @@
       "った": 1,
       "自分": 1,
       "として": 1,
-      "とを": 30,
+      "とを": 31,
       "だった": 2
     },
     "理由": {
@@ -8419,7 +8441,7 @@
       "音楽": 1
     },
     "とを": {
-      "っている": 30,
+      "っている": 31,
       "するため": 1,
       "します": 2,
       "により": 1,
@@ -8688,7 +8710,7 @@
       "せん": 3
     },
     "まだ": {
-      "サイト": 14,
+      "サイト": 15,
       "ではない": 5,
       "掲載": 1
     },
@@ -8735,10 +8757,10 @@
       "3": 1
     },
     "のことが": {
-      "からない": 12
+      "からない": 13
     },
     "からない": {
-      "から": 12
+      "から": 13
     },
     "51": {
       "://": 1
@@ -8957,18 +8979,18 @@
     "では": 89,
     "っていま": 23,
     "かれてい": 12,
-    "こんにち": 53,
+    "こんにち": 54,
     "には": 128,
     "ページ": 43,
     "します": 41,
-    "本当": 69,
+    "本当": 70,
     "だった": 9,
     "について": 45,
     "表示": 14,
     "その": 59,
     "から": 199,
     "この": 117,
-    "1": 224,
+    "1": 226,
     "して": 58,
     "4": 33,
     "場合": 38,
@@ -8991,7 +9013,7 @@
     "検索": 22,
     "ます": 11,
     "6": 27,
-    "自由": 178,
+    "自由": 180,
     "://": 55,
     "できます": 13,
     "ある": 10,
@@ -9169,7 +9191,7 @@
     "21": 1,
     "月間": 1,
     "コメント": 1,
-    "まだ": 14,
+    "まだ": 15,
     "表現": 5,
     "特集": 7,
     "無料": 15,
@@ -9180,7 +9202,7 @@
     "きな": 8,
     "になる": 4,
     "ダウンロード": 2,
-    "のことが": 12,
+    "のことが": 13,
     "目的": 6,
     "タグ": 2,
     "ボタン": 5,
@@ -9236,7 +9258,7 @@
     "では": 54,
     "っていま": 31,
     "かれてい": 12,
-    "こんにち": 53,
+    "こんにち": 54,
     "には": 100,
     "ページ": 31,
     "します": 248,
@@ -9244,7 +9266,7 @@
     "だった": 13,
     "について": 35,
     "表示": 16,
-    "から": 163,
+    "から": 164,
     "ます": 122,
     "して": 50,
     "1": 252,
@@ -9280,7 +9302,7 @@
     "という": 34,
     "った": 39,
     "://": 25,
-    "0": 34,
+    "0": 35,
     "9": 35,
     "30": 9,
     "10": 14,
@@ -9295,7 +9317,7 @@
     "5": 44,
     "記事": 16,
     "場所": 5,
-    "サイト": 105,
+    "サイト": 107,
     "になりま": 22,
     "さい": 68,
     "for": 2,
@@ -9316,7 +9338,7 @@
     "をお": 33,
     "されまし": 15,
     "11": 18,
-    "っている": 57,
+    "っている": 58,
     "be": 1,
     "過去": 12,
     "するため": 6,
@@ -9383,7 +9405,7 @@
     "44": 1,
     "使用": 11,
     "による": 10,
-    "じゃない": 34,
+    "じゃない": 35,
     "方法": 5,
     "問題": 8,
     "えます": 9,
@@ -9412,7 +9434,7 @@
     "更新": 4,
     "47": 1,
     "16": 1,
-    "ってる": 31,
+    "ってる": 32,
     "名前": 1,
     "画像": 3,
     "内容": 4,
@@ -10657,13 +10679,23 @@
       "meant": "される",
       "wrote": "れさる",
       "day": "2026-10-17"
+    },
+    {
+      "meant": "について",
+      "wrote": "についてて",
+      "day": "2026-10-18"
+    },
+    {
+      "meant": "提供",
+      "wrote": "提",
+      "day": "2026-10-18"
     }
   ],
-  "understood_usually": 0.366705,
+  "understood_usually": 0.345511,
   "its_ways": {
     "pages_per_site": 10.9,
-    "pull_of_japanese": 1.16,
-    "feeling_keen": 0.35,
+    "pull_of_japanese": 1.17,
+    "feeling_keen": 0.34,
     "wish_to_return": 1.5
   },
   "came_back": [
@@ -10921,7 +10953,7 @@
       }
     }
   ],
-  "woke_at": "2026-10-18 20",
+  "woke_at": "2026-10-18 21",
   "blog_titles": {
     "seen": 64,
     "closed": 0,
@@ -10970,7 +11002,8 @@
     "dlib.jp",
     "www.zendesk.co.jp",
     "storyweb.jp",
-    "www.tms-e.co.jp"
+    "www.tms-e.co.jp",
+    "writewithharper.com"
   ],
   "its_own_figure": {
     "date": "2026-10-18",
@@ -11082,6 +11115,7 @@
     "多忙な40代は手応えを感じる〝先手美容〟を！ – STORY [ストーリィ] オフィシャルサイト",
     "STORY2026年11月号｜MAGAZINE｜STORY [ストーリィ] オフィシャルサイト",
     "ソニックX | 2000年代 | TMS作品一覧 | アニメーションの総合プロデュース会社 トムス・エンタテインメント",
-    "のらみみ | 2000年代 | TMS作品一覧 | アニメーションの総合プロデュース会社 トムス・エンタテインメント"
+    "のらみみ | 2000年代 | TMS作品一覧 | アニメーションの総合プロデュース会社 トムス・エンタテインメント",
+    "Harper | Privacy-First Offline Grammar Checker for Developers & Writers"
   ]
 }
