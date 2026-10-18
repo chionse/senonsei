@@ -135,6 +135,16 @@ body > .frame,
   padding: 24px 24px 32px;
 }
 
+/* 左右の欄の縦線は、紙の上の縁から下の縁までつなげる(2026-10-19、彼女に言われた)。
+   紙の上下の余白のぶんだけ欄をはみ出させ、中身は同じだけ内へ戻すので、字の位置は変わらない */
+body > .frame > .side,
+#memo-index > .frame > .side {
+  margin-top: -24px;
+  margin-bottom: -32px;
+  padding-top: 24px;
+  padding-bottom: 32px;
+}
+
 /* 下の紙の、真ん中の列の頭に置くページの名前 */
 .page-head {
   text-align: center;
