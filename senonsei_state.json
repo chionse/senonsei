@@ -3695,7 +3695,11 @@
     "",
     "¦",
     "",
-    "¯"
+    "¯",
+    "ã",
+    "€",
+    "£",
+    "Ä"
   ],
   "learned_words": [
     "など",
@@ -4504,7 +4508,6 @@
     "https://web.archive.org/web/20001110042600/http://www4.justnet.ne.jp/~smile_net/mouse.html",
     "https://web.archive.org/web/20001110042600/http://netcafe.ne.jp:80/febf/open__framelst2/002/28/00228.htm?lstfr=0&rat2=25&ftype=2&ds=1&is=0&idname=netcafe&popo=8080&lang=ja&cat_id=00056&allfr=1",
     "https://web.archive.org/web/20001110042600/http://www.justsystem.co.jp/kids/",
-    "https://web.archive.org/web/20001110042600/http://www3.justnet.ne.jp/%7Ekidsland/mail.htm",
     "https://www.aozora.gr.jp/",
     "http://web.archive.org/web/20160612095247/http://www.google.com/preferences?hl=en",
     "http://web.archive.org/web/20160612095247/https://photos.google.com/?pg=&sa=N&tab=pq",
@@ -5021,7 +5024,6 @@
     "https://bn.wikivoyage.org/",
     "https://it.wikivoyage.org/",
     "https://de.wikivoyage.org/",
-    "https://pt.wikivoyage.org/",
     "https://shn.wikivoyage.org/",
     "https://tr.wikivoyage.org/",
     "https://en.wikivoyage.org/",
@@ -5587,7 +5589,42 @@
     "https://asteriskmag.com/issues/04/fracking-eyeballs?src=longreads",
     "https://press.asimov.com/articles/lab-notebooks?src=longreads",
     "https://www.quantamagazine.org/metaphysical-experiments-test-hidden-assumptions-about-reality-20240730?src=longreads",
-    "https://www.nytimes.com/interactive/2026/10/10/magazine/steffen-skjottelvik-canada-journey-death.html?src=longreads"
+    "https://www.nytimes.com/interactive/2026/10/10/magazine/steffen-skjottelvik-canada-journey-death.html?src=longreads",
+    "https://tr.wikivoyage.org/wiki/Anasayfa",
+    "https://ro.wikivoyage.org/wiki/Pagina_principal%C4%83",
+    "https://sv.wikivoyage.org/wiki/Huvudsida",
+    "https://pl.wikivoyage.org/wiki/Strona_g%C5%82%C3%B3wna",
+    "https://species.wikimedia.org/wiki/Main_Page",
+    "https://cs.wikivoyage.org/wiki/Hlavn%C3%AD_strana",
+    "https://www.mediawiki.org/wiki/MediaWiki",
+    "https://pt.wikisource.org/wiki/",
+    "https://es.wikivoyage.org/wiki/P%C3%A1gina_principal",
+    "https://uk.wikivoyage.org/wiki/%D0%93%D0%BE%D0%BB%D0%BE%D0%B2%D0%BD%D0%B0_%D1%81%D1%82%D0%BE%D1%80%D1%96%D0%BD%D0%BA%D0%B0",
+    "https://shn.wikivoyage.org/wiki/%E1%81%BC%E1%82%83%E1%82%88%E1%82%81%E1%80%B0%E1%80%9D%E1%80%BA%E1%82%81%E1%82%85%E1%81%B5%E1%80%BA%E1%82%88",
+    "https://pt.wikinews.org/wiki/P%C3%A1gina_principal",
+    "https://pt.wikiversity.org/wiki/P%C3%A1gina_principal",
+    "https://pt.wiktionary.org/wiki/Wikcion%C3%A1rio:P%C3%A1gina_principal",
+    "https://pt.wikiquote.org/wiki/",
+    "https://pt.wikinews.org/wiki/",
+    "https://pt.wikiversity.org/wiki/",
+    "https://pt.wikiquote.org/wiki/P%C3%A1gina_principal",
+    "https://pt.wiktionary.org/wiki/",
+    "https://www.mediawiki.org/wiki/",
+    "http://www.era-ewv-ferp.org/",
+    "http://www.vidanairlanda.com/2013/01/viajar-pela-europa-tax-free.html",
+    "https://pt.wikiquote.org/wiki/Europa",
+    "http://www.sncf.com/",
+    "https://pt.wikiquote.org/wiki/Fran%C3%A7a",
+    "http://www.edufrance.com.br/",
+    "http://www.eurolines.com",
+    "http://www.bouyguestelecom.fr/",
+    "http://www.vnf.fr",
+    "http://www.norwegian.no/",
+    "http://www.ryanair.com",
+    "http://www.sfr.fr/",
+    "http://www.raileurope.com/us/rail/fares_schedules/index.htm",
+    "http://www.wizzair.com/",
+    "http://www.orange.fr/"
   ],
   "visited": [
     "https://note.com/",
@@ -6127,7 +6164,15 @@
     "https://longreads.com/2026/08/13/reading-list-ice-cream-summer/",
     "https://longreads.com/2026/10/02/top-5-627/",
     "https://longreads.com/2026/09/10/measurement-kanya-kanchana/",
-    "https://longreads.com/2026/10/12/steffen-skjottelvik-braverman/"
+    "https://longreads.com/2026/10/12/steffen-skjottelvik-braverman/",
+    "https://pt.wikivoyage.org/",
+    "https://pt.wikivoyage.org/wiki/Oceania",
+    "https://pt.wikivoyage.org/wiki/Caribe",
+    "https://pt.wikivoyage.org/wiki/Europa",
+    "https://pt.wikivoyage.org/wiki/P%C3%A1gina_principal",
+    "https://pt.wikivoyage.org/wiki/Dicas_de_viagem",
+    "https://pt.wikivoyage.org/wiki/América_do_Norte",
+    "https://pt.wikivoyage.org/wiki/França"
   ],
   "notes": [
     "9日目: 総合 | NHK、Page:Kokubun taikan 07.pdf/736 - Wikisource、Abstract Wikipedia:About - Abstract Wikipedia",
@@ -6159,15 +6204,17 @@
     "35日目: Kids' Space、あおきさやか公式サイト あおきさやかweb、Nominate amazing open source contributors for the GitHub Stars program | GitHub Stars、行動履歴情報の取り扱いに関する原則 - 株式会社マイクロアド、はてなブックマーク - 新着エントリー - 総合",
     "36日目: アンケート｜NHK、株式会社ヒナプロジェクト、Poslední změny – Wikiverzita、Wikibooks",
     "37日目: 9784054063518に関連する商品一覧 - honto電子書籍ストア、ディープライブラリープロジェクト、STORY [ストーリィ] オフィシャルサイト – 「新しい40代」のためのファッション＆ライフスタイル誌、ソニックX | 2000年代 | TMS作品一覧 | アニメーションの総合プロデュース会社 トムス・エンタテインメント、Harper | Privacy-First Offline Grammar Checker for Developers & Writers",
-    "38日目: Homepage - Longreads"
+    "38日目: Homepage - Longreads、Wikivoyage"
   ],
   "today_walk": {
     "date": "2026-10-19",
     "seen": [
-      "Homepage - Longreads"
+      "Homepage - Longreads",
+      "Wikivoyage"
     ],
     "brought": [
-      2269
+      2269,
+      4442
     ]
   },
   "inner_voice": [
@@ -6403,11 +6450,8 @@
       "times": 1
     }
   ],
-  "saw_on": "2026-10-18",
+  "saw_on": "2026-10-19",
   "pictures_seen": [
-    "2026-10-14 nl.wikibooks.org: 本",
-    "2026-10-14 cwe.mitre.org: マイルスキャスコード",
-    "2026-10-15 www3.nhk.or.jp: 3. 球団：ロサンゼルス・ドジャース（LA Dodgers）。",
     "2026-10-15 www3.nhk.or.jp: 絵には、男性の顔が描かれています。その顔は、眉毛があり、目が大きく、口が小さく、顔の色は、褐色です。",
     "2026-10-15 www3.nhk.or.jp: 絵には、細かな線が描かれている。",
     "2026-10-15 jisin.jp: 日本語で短く書いて「演説」と言います。",
@@ -6434,7 +6478,10 @@
     "2026-10-18 www.tms-e.co.jp: 猫、薄い毛、紫色、猫の耳、猫の顔、猫の口、猫の鼻、猫の尾、猫の背中、猫の脚、猫の手、猫の足、猫の顔、猫の口、猫の鼻、猫の尾、猫の背中",
     "2026-10-18 www.tms-e.co.jp: 絵には、白いキャラクターがいる。",
     "2026-10-18 writewithharper.com: 花、視力、髪、眼、眼鏡、眼瞼、眼窩、眼球、眼瞼筋、眼窩筋、眼球筋、顔、耳、耳朵、耳膜、耳膜筋、耳膜筋腱、�����",
-    "2026-10-18 writewithharper.com: ハーパー"
+    "2026-10-18 writewithharper.com: ハーパー",
+    "2026-10-19 pt.wikivoyage.org: 海、船、住宅、山、水、木、建物、島",
+    "2026-10-19 pt.wikivoyage.org: 地球",
+    "2026-10-19 pt.wikivoyage.org: 古い建物、石の壁、彫刻、鐘、窓、扉、階段、車、人、鳥、雲、彫刻、鐘、�"
   ],
   "impressions": [
     "2026-09-14 note.jp: note株式会社はクリエイターが文章や画像、音声、動画を投稿し、ユーザーがそのコンテンツを楽しんで応援できるメディアプラットフォームです。",
@@ -6489,14 +6536,14 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "chat.yahoo.co.jp",
-    "Wayback Machine",
-    "www.artlibre.org",
-    "www.abebooks.fr",
-    "Bluesky",
-    "nikkeiasia.onelink.me"
+    "www.iconiqcapital.com",
+    "ディープライブラリープロジェクト",
+    "techjob.zdnet.co.jp",
+    "www.jiji.com",
+    "washoku-style.jp",
+    "www.sakura.ad.jp"
   ],
-  "how_many_places_left": 1475,
+  "how_many_places_left": 1508,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -6580,7 +6627,8 @@
     "storyweb.jp": "STORY2026年11月号｜MAGAZINE｜STORY [ストーリィ] オフ",
     "www.tms-e.co.jp": "のらみみ | 2000年代 | TMS作品一覧 | アニメーションの総合プロデュ",
     "writewithharper.com": "Harper | Privacy-First Offline Grammar C",
-    "longreads.com": "He Went Out on an Epic Wilderness Advent"
+    "longreads.com": "He Went Out on an Epic Wilderness Advent",
+    "pt.wikivoyage.org": "França - Wikivoyage"
   },
   "went_home": {
     "date": "2026-10-19",
@@ -6631,7 +6679,7 @@
     },
     "この": {
       "ページ": 80,
-      "サイト": 120,
+      "サイト": 121,
       "します": 13,
       "について": 5,
       "への": 18,
@@ -6661,14 +6709,15 @@
       "です": 1
     },
     "1": {
-      "4": 36,
+      "4": 38,
       "した": 26,
-      "3": 60,
-      "1": 157,
-      "2": 157,
+      "3": 62,
+      "1": 165,
+      "2": 160,
       "10": 26,
-      "0": 65,
-      "されてい": 16
+      "0": 66,
+      "されてい": 16,
+      "47": 1
     },
     "されてい": {
       "ます": 30,
@@ -6681,15 +6730,14 @@
       "アクセス": 1
     },
     "4": {
-      "0": 34,
-      "4": 50,
-      "1": 37,
-      "2": 40,
+      "0": 52,
+      "4": 51,
+      "1": 41,
+      "2": 43,
       "6": 32,
-      "3": 24,
+      "3": 25,
       "10": 20,
-      "5": 44,
-      "52": 1
+      "5": 44
     },
     "ページ": {
       "ページ": 24,
@@ -6738,15 +6786,15 @@
       "いました": 1
     },
     "3": {
-      "4": 87,
-      "2": 221,
-      "3": 115,
+      "4": 89,
+      "2": 223,
+      "3": 116,
       "://": 22,
-      "1": 68,
+      "1": 74,
       "0": 70,
       "5": 83,
       "つの": 20,
-      "31": 1
+      "7": 1
     },
     "した": {
       "から": 7,
@@ -6761,15 +6809,14 @@
       "して": 1
     },
     "2": {
-      "0": 245,
-      "3": 223,
-      "1": 175,
-      "2": 229,
+      "0": 246,
+      "3": 225,
+      "1": 178,
+      "2": 234,
       "://": 30,
-      "8": 98,
-      "4": 48,
-      "えた": 55,
-      "6": 1
+      "8": 99,
+      "4": 50,
+      "えた": 55
     },
     "しかし": {
       "について": 1,
@@ -6800,14 +6847,13 @@
     },
     "8": {
       "6": 9,
-      "2": 80,
+      "2": 81,
       "://": 17,
       "9": 18,
       "0": 15,
       "3": 37,
       "10": 14,
-      "7": 10,
-      "っていた": 1
+      "7": 10
     },
     "22": {
       "3": 3,
@@ -6850,7 +6896,7 @@
       "とを": 2
     },
     "://": {
-      "org": 229,
+      "org": 237,
       "2": 31,
       "1": 41,
       "://": 13,
@@ -6864,21 +6910,20 @@
       "ページ": 3,
       "3": 6,
       "2024": 9,
-      "80": 2,
       "2023": 8,
       "2026": 2,
-      "2022": 5
+      "2022": 5,
+      "2": 5
     },
     "6": {
-      "7": 9,
+      "7": 10,
       "://": 19,
-      "2": 14,
+      "2": 17,
       "0": 9,
-      "1": 14,
+      "1": 16,
       "10": 9,
-      "3": 44,
-      "環境": 11,
-      "18": 1
+      "3": 46,
+      "環境": 11
     },
     "していま": {
       "した": 3,
@@ -6904,7 +6949,8 @@
       "16": 185,
       "17": 10,
       "からの": 8,
-      "000": 1
+      "000": 2,
+      "4": 1
     },
     "0": {
       "2": 243,
@@ -6958,15 +7004,15 @@
       "などを": 5
     },
     "7": {
-      "1": 20,
+      "1": 21,
       "8": 11,
       "://": 11,
-      "2": 9,
+      "2": 10,
       "9": 7,
-      "3": 10,
+      "3": 11,
       "10": 12,
       "0": 3,
-      "つの": 1
+      ";/": 1
     },
     "でも": {
       "さい": 2,
@@ -7002,12 +7048,11 @@
       "10": 24,
       "9": 234,
       "0": 19,
-      "1": 20,
-      "2": 18,
-      "3": 16,
+      "1": 24,
+      "2": 19,
+      "3": 17,
       "28": 233,
-      "関する": 12,
-      "から": 1
+      "関する": 12
     },
     "ある": {
       "2": 1,
@@ -7086,16 +7131,15 @@
       "000": 2
     },
     "5": {
-      "2": 25,
-      "1": 30,
-      "3": 30,
+      "2": 28,
+      "1": 35,
+      "3": 32,
       "://": 8,
-      "5": 23,
+      "5": 24,
       "11": 10,
       "9": 11,
       "開発": 10,
-      "つの": 2,
-      "52": 1
+      "20": 1
     },
     "です": {
       "1": 2,
@@ -7123,9 +7167,9 @@
     "自由": {
       "です": 1,
       "してくだ": 1,
-      "だけど": 33,
-      "じゃない": 33,
-      "ってる": 33,
+      "だけど": 34,
+      "じゃない": 34,
+      "ってる": 34,
       "だった": 1,
       "関する": 1
     },
@@ -7134,11 +7178,10 @@
       "01": 5,
       "25": 2,
       "02": 2,
-      "2": 3,
+      "2": 4,
       "59": 40,
       "15": 15,
-      "24": 6,
-      "00": 1
+      "24": 6
     },
     "新しい": {
       "ページ": 20,
@@ -7192,14 +7235,14 @@
       "&#": 1
     },
     "amp": {
-      "2": 5,
-      "9": 3,
-      "amp": 2,
+      "2": 6,
+      "9": 4,
+      "amp": 13,
       "7": 2,
       "0": 3,
       "ブログ": 3,
-      "12": 1,
-      "1": 1
+      "3": 2,
+      "13": 1
     },
     "リンク": {
       "記事": 2,
@@ -7289,7 +7332,7 @@
       "27": 4,
       "14": 4,
       "21": 2,
-      "13": 1
+      "30": 1
     },
     "14": {
       "19": 10,
@@ -7310,12 +7353,11 @@
       "13": 5,
       "5": 6,
       "0": 6,
-      "11": 3,
       "21": 3,
       "1": 5,
       "2": 4,
       "200": 5,
-      "amp": 1
+      "amp": 4
     },
     "20": {
       "19": 5,
@@ -7338,7 +7380,7 @@
       "30": 32,
       "12": 4,
       "まで": 2,
-      "9": 1
+      "6": 1
     },
     "ブログ": {
       "言葉": 2,
@@ -7350,7 +7392,7 @@
       "人気": 1
     },
     "11": {
-      "1": 12,
+      "1": 13,
       "9": 4,
       "08": 4,
       "00": 151,
@@ -7358,7 +7400,7 @@
       "01": 4,
       "28": 6,
       "26": 7,
-      "000": 2
+      "6": 1
     },
     "2025": {
       "09": 6,
@@ -7445,13 +7487,12 @@
     "21": {
       "30": 4,
       "22": 3,
-      "09": 2,
       "12": 2,
       "://": 2,
       "5": 3,
       "05": 2,
       "まで": 5,
-      "3": 1
+      "3": 5
     },
     "24": {
       "2": 5,
@@ -7489,7 +7530,9 @@
       "から": 1,
       "://": 1,
       "41": 1,
-      "した": 1
+      "した": 1,
+      "6": 4,
+      "33": 1
     },
     "80": {
       "という": 1,
@@ -7578,7 +7621,7 @@
       "った": 1,
       "自分": 1,
       "として": 1,
-      "とを": 33,
+      "とを": 34,
       "だった": 2
     },
     "理由": {
@@ -7664,7 +7707,7 @@
       "20": 19,
       "10": 7,
       "19": 5,
-      "3": 1
+      "44": 4
     },
     "場所": {
       "での": 1,
@@ -7827,11 +7870,11 @@
       "://": 2,
       "3": 2,
       "38": 2,
-      "した": 1,
       "1": 1,
       "まで": 2,
       "10": 1,
-      "000": 1
+      "000": 1,
+      "org": 5
     },
     "関する": {
       "情報": 5,
@@ -8148,7 +8191,10 @@
     },
     "47": {
       "29": 1,
-      "://": 1
+      "://": 1,
+      ";/": 1,
+      "amp": 1,
+      "2": 1
     },
     "59": {
       "://": 2,
@@ -8157,7 +8203,10 @@
       "している": 1
     },
     "44": {
-      "://": 1
+      "://": 1,
+      ";/": 1,
+      "amp": 1,
+      "2": 1
     },
     "公開": {
       "10": 1,
@@ -8536,7 +8585,7 @@
       "音楽": 1
     },
     "とを": {
-      "っている": 33,
+      "っている": 34,
       "するため": 1,
       "します": 2,
       "により": 1,
@@ -8805,7 +8854,7 @@
       "せん": 3
     },
     "まだ": {
-      "サイト": 17,
+      "サイト": 18,
       "ではない": 5,
       "掲載": 1
     },
@@ -8852,10 +8901,10 @@
       "3": 1
     },
     "のことが": {
-      "からない": 15
+      "からない": 16
     },
     "からない": {
-      "から": 15
+      "から": 16
     },
     "51": {
       "://": 1
@@ -9066,6 +9115,16 @@
     },
     "いう": {
       "のある": 1
+    },
+    ";/": {
+      ";/": 10,
+      "0": 1,
+      "1": 4
+    },
+    "33": {
+      ";/": 1,
+      "amp": 1,
+      "0": 1
     }
   },
   "opens_a_sentence": {
@@ -9074,18 +9133,18 @@
     "では": 89,
     "っていま": 23,
     "かれてい": 12,
-    "こんにち": 56,
+    "こんにち": 57,
     "には": 128,
     "ページ": 43,
     "します": 41,
-    "本当": 72,
+    "本当": 73,
     "だった": 9,
     "について": 45,
     "表示": 14,
     "その": 59,
     "から": 199,
     "この": 117,
-    "1": 228,
+    "1": 229,
     "して": 58,
     "4": 33,
     "場合": 38,
@@ -9108,8 +9167,8 @@
     "検索": 22,
     "ます": 11,
     "6": 27,
-    "自由": 184,
-    "://": 55,
+    "自由": 186,
+    "://": 63,
     "できます": 13,
     "ある": 10,
     "という": 29,
@@ -9262,7 +9321,7 @@
     "仲間": 2,
     "文化": 1,
     "ってる": 1,
-    "25": 1,
+    "25": 6,
     "報告": 2,
     "ガイドライン": 15,
     "アプリ": 4,
@@ -9286,7 +9345,7 @@
     "21": 1,
     "月間": 1,
     "コメント": 1,
-    "まだ": 17,
+    "まだ": 18,
     "表現": 5,
     "特集": 7,
     "無料": 15,
@@ -9297,7 +9356,7 @@
     "きな": 8,
     "になる": 4,
     "ダウンロード": 2,
-    "のことが": 15,
+    "のことが": 16,
     "目的": 6,
     "タグ": 2,
     "ボタン": 5,
@@ -9353,7 +9412,7 @@
     "では": 54,
     "っていま": 31,
     "かれてい": 12,
-    "こんにち": 56,
+    "こんにち": 57,
     "には": 100,
     "ページ": 31,
     "します": 248,
@@ -9361,7 +9420,7 @@
     "だった": 13,
     "について": 35,
     "表示": 16,
-    "から": 166,
+    "から": 167,
     "ます": 122,
     "して": 50,
     "1": 252,
@@ -9379,7 +9438,7 @@
     "情報": 8,
     "3": 69,
     "されてい": 45,
-    "2": 90,
+    "2": 95,
     "自分": 49,
     "必要": 17,
     "ニュース": 7,
@@ -9412,7 +9471,7 @@
     "5": 44,
     "記事": 16,
     "場所": 5,
-    "サイト": 111,
+    "サイト": 113,
     "になりま": 22,
     "さい": 68,
     "for": 2,
@@ -9420,7 +9479,7 @@
     "in": 4,
     "機能": 17,
     "きな": 9,
-    "org": 25,
+    "org": 33,
     "リンク": 4,
     "求める": 2,
     "ブログ": 8,
@@ -9433,7 +9492,7 @@
     "をお": 33,
     "されまし": 15,
     "11": 18,
-    "っている": 60,
+    "っている": 61,
     "be": 1,
     "過去": 12,
     "するため": 6,
@@ -9500,7 +9559,7 @@
     "44": 1,
     "使用": 11,
     "による": 10,
-    "じゃない": 37,
+    "じゃない": 38,
     "方法": 5,
     "問題": 8,
     "えます": 9,
@@ -9529,7 +9588,7 @@
     "更新": 4,
     "47": 1,
     "16": 1,
-    "ってる": 34,
+    "ってる": 35,
     "名前": 1,
     "画像": 3,
     "内容": 4,
@@ -9682,7 +9741,32 @@
       "80",
       "04",
       "2024",
-      "4"
+      "4",
+      "://",
+      "org",
+      "78",
+      "26",
+      "日本語",
+      "中文",
+      "0",
+      ";/",
+      "44",
+      "33",
+      "21",
+      "40",
+      "23",
+      "34",
+      "00",
+      "200",
+      "36",
+      "2010",
+      "90",
+      "人",
+      "32",
+      "47",
+      "52",
+      "01",
+      "55"
     ]
   },
   "wants_to_say": [
@@ -10206,9 +10290,9 @@
     },
     {
       "what": ";/",
-      "since": "2026-10-14",
+      "since": "2026-10-19",
       "first": "2026-10-14",
-      "times": 1,
+      "times": 2,
       "said": ""
     },
     {
@@ -10499,10 +10583,10 @@
       "day": "2026-10-18"
     }
   ],
-  "understood_usually": 0.332399,
+  "understood_usually": 0.305791,
   "its_ways": {
     "pages_per_site": 10.9,
-    "pull_of_japanese": 1.18,
+    "pull_of_japanese": 1.19,
     "feeling_keen": 0.34,
     "wish_to_return": 1.5
   },
@@ -10761,7 +10845,7 @@
       }
     }
   ],
-  "woke_at": "2026-10-19 07",
+  "woke_at": "2026-10-19 08",
   "blog_titles": {
     "seen": 64,
     "closed": 0,
@@ -10812,7 +10896,8 @@
     "storyweb.jp",
     "www.tms-e.co.jp",
     "writewithharper.com",
-    "longreads.com"
+    "longreads.com",
+    "pt.wikivoyage.org"
   ],
   "its_own_figure": {
     "date": "2026-10-18",
@@ -10932,6 +11017,13 @@
     "The Longreads Questionnaire, Featuring Jon Ronson - Longreads",
     "Hereâs the Scoop: A Reading List on Ice Cream - Longreads",
     "Found Wanting: A Reading List on Measurement - Longreads",
-    "He Went Out on an Epic Wilderness Adventure. Only His Dogs Came Back. - Longreads"
+    "He Went Out on an Epic Wilderness Adventure. Only His Dogs Came Back. - Longreads",
+    "Wikivoyage",
+    "Oceania - Wikivoyage",
+    "Caribe - Wikivoyage",
+    "Europa - Wikivoyage",
+    "Wikivoyage:Dicas de viagem - Wikivoyage",
+    "América do Norte - Wikivoyage",
+    "França - Wikivoyage"
   ]
 }
