@@ -3597,7 +3597,86 @@
     "墨",
     "鯛",
     "啼",
-    "蕩"
+    "蕩",
+    "º",
+    "轄",
+    "齟",
+    "齬",
+    "迂",
+    "喪",
+    "租",
+    "罰",
+    "惧",
+    "函",
+    "郡",
+    "賄",
+    "賂",
+    "洪",
+    "賦",
+    "酵",
+    "褒",
+    "膳",
+    "煎",
+    "炉",
+    "裾",
+    "衿",
+    "贅",
+    "涯",
+    "漆",
+    "渓",
+    "煌",
+    "璧",
+    "･",
+    "坐",
+    "冑",
+    "藩",
+    "珈",
+    "琲",
+    "袖",
+    "洒",
+    "⑤",
+    "奔",
+    "暑",
+    "穿",
+    "￥",
+    "奢",
+    "陶",
+    "邉",
+    "℃",
+    "汗",
+    "馴",
+    "彷",
+    "彿",
+    "☎",
+    "➀",
+    "⑥",
+    "⑦",
+    "⑧",
+    "⑨",
+    "⑩",
+    "⑪",
+    "⑫",
+    "⑬",
+    "⑭",
+    "¥",
+    "繡",
+    "雛",
+    "＊",
+    "膜",
+    "㎖",
+    "Ｖ",
+    "ℊ",
+    "嶌",
+    "蛯",
+    "膚",
+    "騨",
+    "椒",
+    "叡",
+    "ｇ",
+    "繫",
+    "袈",
+    "裟",
+    "＼"
   ],
   "learned_words": [
     "など",
@@ -3977,7 +4056,42 @@
     "さらに",
     "発表",
     "となる",
-    "知識"
+    "知識",
+    "うな",
+    "ちの",
+    "生活",
+    "活用",
+    "しない",
+    "りません",
+    "33",
+    "いる",
+    "たちの",
+    "可能",
+    "プライバシー",
+    "ただし",
+    "になった",
+    "のある",
+    "において",
+    "言語",
+    "いを",
+    "たな",
+    "いう",
+    "未来",
+    "いて",
+    "取得",
+    "存在",
+    "こちら",
+    "管理",
+    "チーム",
+    "システム",
+    "特定",
+    "90",
+    "海外",
+    "2021",
+    "2011",
+    "アイコン",
+    "まれてい",
+    "いま"
   ],
   "frontier": [
     "https://b.hatena.ne.jp/hotentry",
@@ -4078,7 +4192,6 @@
     "http://www.twnside.org.sg/",
     "http://digitalarchivejapan.org/",
     "http://www.impressrd.jp/",
-    "http://bookwalker.jp/ex/sp/aozora-point/coin_donation.php",
     "http://thinktppip.jp/",
     "https://www.slideshare.net/takahashim/osc201703-aozorahack",
     "https://aozoraslackin.herokuapp.com/",
@@ -5033,7 +5146,6 @@
     "http://web.archive.org/web/20230627232525/https://hatenablog.com/oembed?url=https%3A%2F%2Fpolicies.hatena.ne.jp%2Fcookie-policy&format=xml",
     "http://web.archive.org/web/20230627232525/https://www.logly.co.jp/optout.html",
     "http://web.archive.org/web/20230627232525/https://sentry.io/welcome/",
-    "http://web.archive.org/web/20230627232525/https://www.zendesk.co.jp/company/policies-procedures/cookie-policy/?cta=cookie",
     "http://web.archive.org/web/20230627232525/http://hatenacorp.jp/",
     "http://web.archive.org/web/20230627232525/https://pubmatic.co.jp/legal/pubmatic-opt-out-jp/",
     "http://web.archive.org/web/20230627232525/https://aja-kk.co.jp/optout",
@@ -5058,7 +5170,6 @@
     "http://washoku-style.jp/",
     "https://runrun.kobunsha.com/",
     "http://bisweb.jp/",
-    "http://storyweb.jp/",
     "https://www.kobunsha.com/",
     "https://subscription.books.kokode.jp/jisin/",
     "http://jj-jj.net/",
@@ -5180,7 +5291,189 @@
     "http://blog.dlib.jp/",
     "http://www.jspmi.or.jp/biclibrary/",
     "http://iss.ndl.go.jp/api/openurl?",
-    "http://ci.nii.ac.jp/openurl/query?url_ver=z39.88-2004&ctx_ver=z39.88-2004"
+    "http://ci.nii.ac.jp/openurl/query?url_ver=z39.88-2004&ctx_ver=z39.88-2004",
+    "http://web.archive.org/web/20220707034351/https://cookiepedia.co.uk/cookies/_zendesk_authenticated",
+    "http://web.archive.org/web/20220707034351/https://s.w.org/",
+    "http://web.archive.org/web/20220707034351/https://cookiepedia.co.uk/host/cloudflare.com",
+    "http://web.archive.org/web/20220707034351/https://cookiepedia.co.uk/cookies/zte2095",
+    "http://web.archive.org/web/20220707034351/https://web-assets.zendesk.com/",
+    "http://web.archive.org/web/20220707034351/https://cookiepedia.co.uk/cookies/_uetvid",
+    "http://web.archive.org/web/20220707034351/https://cookiepedia.co.uk/host/hubspot.net",
+    "http://web.archive.org/web/20220707034351/https://cookiepedia.co.uk/cookies/flight",
+    "http://web.archive.org/web/20220707034351/https://cookiepedia.co.uk/cookies/chat-zopim-notice",
+    "http://web.archive.org/web/20220707034351/https://cookiepedia.co.uk/cookies/_biz_ABTestA",
+    "http://web.archive.org/web/20220707034351/https://www.zendesk.co.uk/company/agreements-and-terms/cookie-policy/",
+    "http://web.archive.org/web/20220707034351/https://www.zendesk.com/sg/company/agreements-and-terms/cookie-policy/",
+    "http://web.archive.org/web/20220707034351/https://www.zendesk.com/company/agreements-and-terms/cookie-policy/",
+    "http://web.archive.org/web/20220707034351/https://www.zendesk.nl/company/agreements-and-terms/cookie-policy/",
+    "http://web.archive.org/web/20220707034351/https://www.zendesk.de/company/agreements-and-terms/cookie-policy/",
+    "http://web.archive.org/web/20220707034351/http://windows.microsoft.com/en-us/internet-explorer/delete-manage-cookies",
+    "http://web.archive.org/web/20220707034351/https://static.zdassets.com/",
+    "http://web.archive.org/web/20220707034351/https://www.zendesk.tw/company/agreements-and-terms/cookie-policy/",
+    "http://web.archive.org/web/20220707034351/https://www.zendesk.com.mx/company/agreements-and-terms/cookie-policy/",
+    "http://web.archive.org/web/20220707052745/https://www.zendesk.nl/company/agreements-and-terms/protect-service-data-enterprise-services/",
+    "http://web.archive.org/web/20220707052745/https://www.zendesk.com/?p=434061",
+    "http://web.archive.org/web/20220707052745/https://status.zendesk.com/",
+    "http://web.archive.org/web/20220707052745/https://www.zendesk.tw/company/agreements-and-terms/protect-service-data-enterprise-services/",
+    "http://web.archive.org/web/20220707052745/https://www.zendesk.com/in/company/agreements-and-terms/protect-service-data-enterprise-services/",
+    "http://web.archive.org/web/20220707052745/https://www.zendesk.com/wp-json/wp/v2/pages/434061/",
+    "http://web.archive.org/web/20220707052745/https://www.zendesk.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.zendesk.com%2Fcompany%2Fagreements-and-terms%2Fprotect-service-data-enterprise-services%2F",
+    "http://web.archive.org/web/20220707052745/https://www.zendesk.fr/company/agreements-and-terms/protect-service-data-enterprise-services/",
+    "https://www.zendesk.com",
+    "http://web.archive.org/web/20220707052745/https://investor.zendesk.com/",
+    "http://web.archive.org/web/20220707052745/https://www.zendesk.it/company/agreements-and-terms/protect-service-data-enterprise-services/",
+    "http://web.archive.org/web/20220707052745/https://static.zdassets.com/",
+    "http://web.archive.org/web/20220707052745/https://www.zendesk.com.mx/company/agreements-and-terms/protect-service-data-enterprise-services/",
+    "http://web.archive.org/web/20220707052745/https://powerforms.docusign.net/527cab9f-c129-4998-b88c-57309efba92a?env=na1&acct=a7a358c4-b8d0-44b1-8d0e-0e02ee4195fe)",
+    "http://web.archive.org/web/20220707052745/https://training.zendesk.com/",
+    "http://web.archive.org/web/20220707052745/https://www.zendesk.kr/company/agreements-and-terms/protect-service-data-enterprise-services/",
+    "http://web.archive.org/web/20220707052745/https://www.zendesk.co.uk/company/agreements-and-terms/protect-service-data-enterprise-services/",
+    "http://web.archive.org/web/20220707052745/https://logx.optimizely.com/",
+    "http://web.archive.org/web/20220707052745/https://web-assets.zendesk.com/",
+    "http://web.archive.org/web/20220707052745/https://s.w.org/",
+    "http://web.archive.org/web/20220707052745/https://www.zendesk.es/company/agreements-and-terms/protect-service-data-enterprise-services/",
+    "http://web.archive.org/web/20220707052745/https://www.zendesk.hk/company/agreements-and-terms/protect-service-data-enterprise-services/",
+    "http://web.archive.org/web/20220707052745/https://cdn3.optimizely.com/",
+    "http://web.archive.org/web/20220707052745/https://jobs.zendesk.com/",
+    "http://web.archive.org/web/20220707052745/https://www.zendesk.com.br/company/agreements-and-terms/protect-service-data-enterprise-services/",
+    "http://web.archive.org/web/20220707052745/https://www.zendesk.de/company/agreements-and-terms/protect-service-data-enterprise-services/",
+    "http://web.archive.org/web/20220630221606/https://www.zendesk.kr/company/agreements-and-terms/region-specific-terms/",
+    "http://web.archive.org/web/20220630221606/https://www.zendesk.nl/company/agreements-and-terms/region-specific-terms/",
+    "http://web.archive.org/web/20220630221606/https://static.zdassets.com/",
+    "http://web.archive.org/web/20220630221606/https://www.zendesk.it/company/agreements-and-terms/region-specific-terms/",
+    "http://web.archive.org/web/20220630221606/https://www.zendesk.tw/company/agreements-and-terms/region-specific-terms/",
+    "http://web.archive.org/web/20220630221606/https://www.zendesk.co.uk/company/agreements-and-terms/region-specific-terms/",
+    "http://web.archive.org/web/20220630221606/https://www.zendesk.com.mx/company/agreements-and-terms/region-specific-terms/",
+    "http://web.archive.org/web/20220630221606/https://web-assets.zendesk.com/",
+    "http://web.archive.org/web/20220630221606/https://investor.zendesk.com/",
+    "http://web.archive.org/web/20220630221606/https://www.zendesk.es/company/agreements-and-terms/region-specific-terms/",
+    "http://web.archive.org/web/20220630221606/https://powerforms.docusign.net/527cab9f-c129-4998-b88c-57309efba92a?env=na1&acct=a7a358c4-b8d0-44b1-8d0e-0e02ee4195fe)",
+    "http://web.archive.org/web/20220630221606/https://logx.optimizely.com/",
+    "http://web.archive.org/web/20220630221606/https://cdn3.optimizely.com/",
+    "http://web.archive.org/web/20220630221606/https://www.zendesk.fr/company/agreements-and-terms/region-specific-terms/",
+    "http://web.archive.org/web/20220630221606/https://www.zendesk.com.br/company/agreements-and-terms/region-specific-terms/",
+    "http://web.archive.org/web/20220630221606/https://www.zendesk.de/company/agreements-and-terms/region-specific-terms/",
+    "http://web.archive.org/web/20220630221606/https://s.w.org/",
+    "http://web.archive.org/web/20220630221606/https://www.zendesk.hk/company/agreements-and-terms/region-specific-terms/",
+    "http://web.archive.org/web/20220705161126/https://www.zendesk.nl/company/agreements-and-terms/master-subscription-agreement/",
+    "http://web.archive.org/web/20220705161126/https://www.zendesk.hk/company/agreements-and-terms/master-subscription-agreement/",
+    "http://web.archive.org/web/20220705161126/https://cdn3.optimizely.com/",
+    "http://web.archive.org/web/20220705161126/https://www.zendesk.com.br/company/agreements-and-terms/master-subscription-agreement/",
+    "http://web.archive.org/web/20220705161126/https://www.zendesk.kr/company/agreements-and-terms/master-subscription-agreement/",
+    "http://web.archive.org/web/20220705161126/https://static.zdassets.com/",
+    "http://web.archive.org/web/20220705161126/https://s.w.org/",
+    "http://web.archive.org/web/20220705161126/https://www.zendesk.fr/company/agreements-and-terms/master-subscription-agreement/",
+    "http://web.archive.org/web/20220705161126/https://www.zendesk.tw/company/agreements-and-terms/master-subscription-agreement/",
+    "http://web.archive.org/web/20220705161126/https://powerforms.docusign.net/527cab9f-c129-4998-b88c-57309efba92a?env=na1&acct=a7a358c4-b8d0-44b1-8d0e-0e02ee4195fe)",
+    "http://web.archive.org/web/20220705161126/https://www.zendesk.it/company/agreements-and-terms/master-subscription-agreement/",
+    "http://web.archive.org/web/20220705161126/https://logx.optimizely.com/",
+    "http://web.archive.org/web/20220705161126/https://www.zendesk.co.uk/company/agreements-and-terms/master-subscription-agreement/",
+    "http://web.archive.org/web/20220705161126/https://www.zendesk.com.mx/company/agreements-and-terms/master-subscription-agreement/",
+    "http://web.archive.org/web/20220705161126/https://www.zendesk.es/company/agreements-and-terms/master-subscription-agreement/",
+    "http://web.archive.org/web/20220705161126/https://www.zendesk.de/company/agreements-and-terms/master-subscription-agreement/",
+    "http://web.archive.org/web/20220705163153/https://www.zendesk.hk/company/agreements-and-terms/reseller-terms-of-service/",
+    "http://web.archive.org/web/20220705163153/https://www.zendesk.fr/company/agreements-and-terms/reseller-terms-of-service/",
+    "http://web.archive.org/web/20220705163153/https://www.zendesk.de/company/agreements-and-terms/reseller-terms-of-service/",
+    "http://web.archive.org/web/20220705163153/https://www.zendesk.com.br/company/agreements-and-terms/reseller-terms-of-service/",
+    "http://web.archive.org/web/20220705163153/https://www.zendesk.co.uk/company/agreements-and-terms/reseller-terms-of-service/",
+    "http://web.archive.org/web/20220705163153/https://www.zendesk.it/company/agreements-and-terms/reseller-terms-of-service/",
+    "http://web.archive.org/web/20220705163153/https://www.zendesk.com.mx/company/agreements-and-terms/reseller-terms-of-service/",
+    "http://web.archive.org/web/20220705163153/https://www.zendesk.tw/company/agreements-and-terms/reseller-terms-of-service/",
+    "http://web.archive.org/web/20220705163153/https://www.zendesk.es/company/agreements-and-terms/reseller-terms-of-service/",
+    "http://web.archive.org/web/20220705163153/https://static.zdassets.com/",
+    "http://web.archive.org/web/20220705163153/https://s.w.org/",
+    "http://web.archive.org/web/20220705163153/https://www.zendesk.nl/company/agreements-and-terms/reseller-terms-of-service/",
+    "http://web.archive.org/web/20220705163153/https://cdn3.optimizely.com/",
+    "http://web.archive.org/web/20220705163153/https://powerforms.docusign.net/527cab9f-c129-4998-b88c-57309efba92a?env=na1&acct=a7a358c4-b8d0-44b1-8d0e-0e02ee4195fe)",
+    "http://web.archive.org/web/20220705163153/https://www.zendesk.kr/company/agreements-and-terms/reseller-terms-of-service/",
+    "http://web.archive.org/web/20220705163153/https://logx.optimizely.com/",
+    "http://web.archive.org/web/20220707042814/https://www.zendesk.com.mx/service/ticketing-system/customer-service-management-software/",
+    "http://web.archive.org/web/20220707042814/https://cdn3.optimizely.com/",
+    "http://web.archive.org/web/20220707042814/https://www.socialmediaexaminer.com/5-creative-ways-to-use-facebook-messenger-for-business/",
+    "http://web.archive.org/web/20220707042814/https://www.messenger.com/",
+    "http://web.archive.org/web/20220707042814/https://www.zendesk.tw/service/ticketing-system/customer-service-management-software/",
+    "http://web.archive.org/web/20220707042814/https://www.niceincontact.com/",
+    "http://web.archive.org/web/20220707042814/https://freshdesk.com/",
+    "http://web.archive.org/web/20220707042814/https://www.atlassian.com/software/jira/service-desk",
+    "http://web.archive.org/web/20220707042814/https://www.zendesk.com.br/service/ticketing-system/customer-service-management-software/",
+    "http://web.archive.org/web/20220707042814/https://logx.optimizely.com/",
+    "http://web.archive.org/web/20220707042814/https://slack.com/",
+    "http://web.archive.org/web/20220707042814/https://s.w.org/",
+    "http://web.archive.org/web/20220707042814/https://www.statista.com/statistics/657936/companies-with-worst-customer-service-us/",
+    "http://web.archive.org/web/20220707042814/https://www.ezofficeinventory.com/",
+    "http://web.archive.org/web/20220707042814/https://www.zendesk.it/service/ticketing-system/customer-service-management-software/",
+    "http://web.archive.org/web/20220707042814/https://www.hnkpmgciosurvey.com/",
+    "http://web.archive.org/web/20220707042814/https://recurly.com/",
+    "http://web.archive.org/web/20220707042814/https://www.zendesk.kr/service/ticketing-system/customer-service-management-software/",
+    "http://web.archive.org/web/20220707042814/https://www.zendesk.hk/service/ticketing-system/customer-service-management-software/",
+    "http://web.archive.org/web/20220707042814/https://www.zendesk.de/service/ticketing-system/customer-service-management-software/",
+    "http://web.archive.org/web/20220707042814/https://www.zendesk.nl/service/ticketing-system/customer-service-management-software/",
+    "http://web.archive.org/web/20220707042814/https://static.zdassets.com/",
+    "http://web.archive.org/web/20220707042814/https://www.whatsapp.com/",
+    "http://web.archive.org/web/20220707042814/https://www.liveagent.com/",
+    "http://web.archive.org/web/20220707042814/https://sproutsocial.com/",
+    "http://web.archive.org/web/20220707042814/https://www.boss-solutions.com/",
+    "http://web.archive.org/web/20220707042814/https://www.zendesk.es/service/ticketing-system/customer-service-management-software/",
+    "http://web.archive.org/web/20220707042814/https://www.surveymonkey.com/curiosity/build-it-for-me/",
+    "http://web.archive.org/web/20220707042814/https://hootsuite.com/",
+    "http://web.archive.org/web/20220707042814/https://www.zendesk.co.uk/service/ticketing-system/customer-service-management-software/",
+    "http://web.archive.org/web/20220707042814/https://www.surveymonkey.com/",
+    "http://web.archive.org/web/20220707042814/https://mailchimp.com/",
+    "http://web.archive.org/web/20220707042814/https://www.apple.com/ios/business-chat/",
+    "http://web.archive.org/web/20220707042814/https://www.zendesk.fr/service/ticketing-system/customer-service-management-software/",
+    "http://be-story.jp",
+    "https://honsuki.jp/",
+    "https://kokode.jp/products/detail.php?product_id=4312905&utm_source=storyweb&utm_medium=owned&utm_campaign=itemlist_story_top",
+    "http://washoku-style.jp",
+    "http://classy-online.jp",
+    "https://kokode.jp/products/detail.php?product_id=4312884&utm_source=storyweb&utm_medium=owned&utm_campaign=itemlist_story_top",
+    "https://www.comicnettai.com/",
+    "https://kokode.jp/products/detail.php?product_id=4312885&utm_source=storyweb&utm_medium=owned&utm_campaign=itemlist_story_top",
+    "http://mart-magazine.com",
+    "https://comic-pureri.jp/",
+    "https://s.w.org",
+    "https://kokode.jp/products/detail.php?product_id=4312915&utm_source=storyweb&utm_medium=owned&utm_campaign=itemlist_story_top",
+    "https://kokode.jp/products/detail.php?product_id=4312899&utm_source=storyweb&utm_medium=owned&utm_campaign=itemlist_story_top",
+    "http://beauty.kokode.jp",
+    "https://kokode.jp/products/detail.php?product_id=4312907&utm_source=storyweb&utm_medium=owned&utm_campaign=itemlist_story_top",
+    "https://www.pinterest.jp/STORYweb_love40/_created/",
+    "http://jisin.jp",
+    "https://subscription.books.kokode.jp/story/",
+    "https://books.kokode.jp/products/list.php?category_id=4007590",
+    "https://veryweb.jp",
+    "http://jj-jj.net",
+    "https://manga-comisol.jp/",
+    "https://kokode-digital.jp/",
+    "http://www.kobunsha.com/",
+    "http://smart-flash.jp",
+    "https://www.audemarspiguet.com",
+    "https://prtimes.com/tv/detail/3127",
+    "https://namietourism.jp/feature/deautabi2/",
+    "https://prtimes.com/tv",
+    "https://www.earth.jp/products/molty-lotion-180-ff/index.html?utm_source=STORY&",
+    "https://jp.loropiana.com/ja/%E3%83%AC%E3%83%87%E3%82%A3%E3%82%B9/%E3%83%AC%E3%82%B6%E3%83%BC%E3%82%B0%E3%83%83%E3%82%BA/%E3%82%B7%E3%83%A7%E3%83%AB%E3%83%80%E3%83%BC%E3%83%90%E3%83%83%E3%82%B0-%E3%82%AF%E3%83%AD%E3%82%B9%E3%83%9C%E3%83%87%E3%82%A3%E3%83%90%E3%83%83%E3%82%B0/%E3%82%A8%E3%82%AF%E3%82%B9%E3%83%88%E3%83%A9%E3%83%BB%E3%82%BD%E3%83%95%E3%83%86%E3%82%A3%E3%83%90%E3%83%83%E3%82%B0%E3%83%BBl29-FLW0343_H1H2.html?utm_source=STORY&utm_medium=Display&utm_campaign=LPiana_FLG_JPN_FW26_Other_Other_Display_JPY_STORY_20261001_20261101&utm_content=LOOK02_Bag",
+    "https://www.loropiana.com?utm_source=STORY&utm_medium=Display&utm_campaign=LPiana_FLG_JPN_FW26_Other_Other_Display_JPY_STORY_20261001_20261101&utm_content=official",
+    "https://jp.loropiana.com/ja/%E3%83%AC%E3%83%87%E3%82%A3%E3%82%B9/%E3%83%AD%E3%82%A4%E3%83%A4%E3%83%AB%E3%80%80%E3%83%A9%E3%82%A4%E3%83%88%E3%83%8D%E3%82%B9/%E3%83%AD%E3%83%AD%E3%83%BB%E3%83%94%E3%82%A2%E3%83%BC%E3%83%8A%E3%83%BB%E3%83%AD%E3%82%A4%E3%83%A4%E3%83%AB%E3%83%BB%E3%83%A9%E3%82%A4%E3%83%88%E3%83%8D%E3%82%B9%E3%83%BB%E3%82%BB%E3%83%BC%E3%82%BF%E3%83%BC-FRW1266_W000.html?utm_source=STORY&utm_medium=Display&utm_campaign=LPiana_FLG_JPN_FW26_Other_Other_Display_JPY_STORY_20261001_20261101&utm_content=LOOK03_sweater",
+    "https://jp.loropiana.com/ja/c/%E3%83%AC%E3%83%87%E3%82%A3%E3%82%B9/%E3%83%8B%E3%83%83%E3%83%88%E3%82%A6%E3%82%A7%E3%82%A2?utm_source=STORY&utm_medium=Display&utm_campaign=LPiana_FLG_JPN_FW26_Other_Other_Display_JPY_STORY_20261001_20261101&utm_content=LOOK06_cardigan",
+    "https://jp.loropiana.com/ja/c/%E3%83%AC%E3%83%87%E3%82%A3%E3%82%B9/%E3%82%B8%E3%83%A3%E3%82%B1%E3%83%83%E3%83%88?utm_source=STORY&utm_medium=Display&utm_campaign=LPiana_FLG_JPN_FW26_Other_Other_Display_JPY_STORY_20261001_20261101&utm_content=LOOK04_jacket",
+    "https://jp.loropiana.com/ja/FAQ4307_H1DY.html?utm_source=STORY&utm_medium=Display&utm_campaign=LPiana_FLG_JPN_FW26_Other_Other_Display_JPY_STORY_20261001_20261101&utm_content=LOOK01_Bag",
+    "https://jp.loropiana.com/ja/FLW0287_51BM.html?utm_source=STORY&utm_medium=Display&utm_campaign=LPiana_FLG_JPN_FW26_Other_Other_Display_JPY_STORY_20261001_20261101&utm_content=LOOK05_Bag",
+    "https://www.shiseido.co.jp/elixir/index.html",
+    "https://corp.shiseido.com/jp/news/detail.html?n=00000000004221",
+    "https://www.shiseido.co.jp/elixir/",
+    "https://www.shiseido.co.jp/elixir/promotion/the-serum/",
+    "https://www.saishunkan.co.jp/domohorn/promotion/lp22-2/?bcd=MF132&sid=062610&utm_source=story&utm_medium=display&utm_campaign=tieup&utm_content=062610",
+    "https://www.saishunkan.co.jp/domohorn/promotion/lp22-2/?bcd=MF132&sid=032610&utm_source=story&utm_medium=display&utm_campaign=tieup&utm_content=032610",
+    "https://www.saishunkan.co.jp/domohorn/promotion/lp22-2/?bcd=MF132&sid=022610&utm_source=story&utm_medium=display&utm_campaign=tieup&utm_content=022610",
+    "https://www.saishunkan.co.jp/domohorn/promotion/lp22-2/?bcd=MF132&sid=072610&utm_source=story&utm_medium=display&utm_campaign=tieup&utm_content=072610",
+    "https://www.saishunkan.co.jp/domohorn/promotion/lp22-2/?bcd=MF132&sid=052610&utm_source=story&utm_medium=display&utm_campaign=tieup&utm_content=052610",
+    "https://www.saishunkan.co.jp/domohorn/promotion/lp22-2/?bcd=MF132&sid=012610&utm_source=story&utm_medium=display&utm_campaign=tieup&utm_content=012610",
+    "https://www.saishunkan.co.jp/domohorn/promotion/lp22-2/?bcd=MF132&sid=042610&utm_source=story&utm_medium=display&utm_campaign=tieup&utm_content=042610",
+    "https://amzn.asia/d/04vhUxRY",
+    "https://books.rakuten.co.jp/rb/18804169/",
+    "https://7net.omni7.jp/detail/1270001630.html",
+    "https://www.hmv.co.jp/artist_STORY%E7%B7%A8%E9%9B%86%E9%83%A8_000000000468831/item_STORY-%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AA%E3%82%A3-2026%E5%B9%B4-11%E6%9C%88%E5%8F%B7_17254293",
+    "https://b.hatena.ne.jp/entrylist/all?sort=eid"
   ],
   "visited": [
     "https://note.com/",
@@ -5689,7 +5982,25 @@
     "https://honto.jp/ebook/gr/29029000000.html?cid=ip_hb_sm_26",
     "https://honto.jp/ebook/gr/29031000000.html?cid=ip_hb_sm_15",
     "https://dlib.jp/?q=%22%E9%88%B4%E6%9C%A8%E6%B4%8B%E5%B9%B3%22+%E3%82%A2%E3%83%8B%E3%83%A1%E6%BC%94%E5%87%BA%E5%AE%B6",
-    "https://dlib.jp/"
+    "https://dlib.jp/",
+    "http://web.archive.org/web/20230627232525/https://www.zendesk.co.jp/company/policies-procedures/cookie-policy/?cta=cookie",
+    "http://web.archive.org/web/20230512101329/https://www.zendesk.co.jp/company/agreements-and-terms/cookie-policy/?cta=cookie",
+    "http://web.archive.org/web/20220707034351/https://www.zendesk.co.jp/company/agreements-and-terms/protect-service-data-enterprise-services/",
+    "http://web.archive.org/web/20220707034351/https://www.zendesk.co.jp/company/agreements-and-terms/region-specific-terms/",
+    "http://web.archive.org/web/20220707034351/https://www.zendesk.co.jp/company/agreements-and-terms/master-subscription-agreement/",
+    "http://web.archive.org/web/20220707034351/https://www.zendesk.co.jp/company/agreements-and-terms/reseller-terms-of-service/",
+    "http://web.archive.org/web/20220707052745/https://www.zendesk.co.jp/service/ticketing-system/customer-service-management-software/",
+    "http://storyweb.jp/",
+    "https://storyweb.jp/fashion/808257/",
+    "https://storyweb.jp/information/802768/",
+    "https://storyweb.jp/prtimes/694605/",
+    "https://storyweb.jp/fashion/810533/",
+    "https://storyweb.jp/beauty/794601/",
+    "https://storyweb.jp/special-feature/202610loropiana/",
+    "https://storyweb.jp/fashion/804520/",
+    "https://storyweb.jp/beauty/792037/",
+    "https://storyweb.jp/beauty/792032/",
+    "https://storyweb.jp/magazine/803739/"
   ],
   "notes": [
     "8日目: Public Citizen - Protecting Health, Safety, and Democracy、Become an Activist with Public Citizen、README.jp へようこそ！",
@@ -5721,17 +6032,19 @@
     "34日目: ぷろだくしょんバオバブ - Wikipedia、利用者情報の外部送信について - Hatena Policies(むかしのすがた)、NHKニュース 速報・最新情報、「市長に全責任がある」石垣市の国際フェリーがたった4カ月で運休に…現役市議が明かす「市民が赤字補償」の“とんでもスキーム” | 女性自身、CNN Chile",
     "35日目: Kids' Space、あおきさやか公式サイト あおきさやかweb、Nominate amazing open source contributors for the GitHub Stars program | GitHub Stars、行動履歴情報の取り扱いに関する原則 - 株式会社マイクロアド、はてなブックマーク - 新着エントリー - 総合",
     "36日目: アンケート｜NHK、株式会社ヒナプロジェクト、Poslední změny – Wikiverzita、Wikibooks",
-    "37日目: 9784054063518に関連する商品一覧 - honto電子書籍ストア、ディープライブラリープロジェクト"
+    "37日目: 9784054063518に関連する商品一覧 - honto電子書籍ストア、ディープライブラリープロジェクト、STORY [ストーリィ] オフィシャルサイト – 「新しい40代」のためのファッション＆ライフスタイル誌"
   ],
   "today_walk": {
     "date": "2026-10-18",
     "seen": [
       "9784054063518に関連する商品一覧 - honto電子書籍ストア",
-      "ディープライブラリープロジェクト"
+      "ディープライブラリープロジェクト",
+      "STORY [ストーリィ] オフィシャルサイト – 「新しい40代」のためのファッション＆ライフスタイル誌"
     ],
     "brought": [
       509,
-      18
+      18,
+      1690
     ]
   },
   "inner_voice": [
@@ -5957,12 +6270,6 @@
   ],
   "saw_on": "2026-10-18",
   "pictures_seen": [
-    "2026-10-06 www.nikkei.com: 山",
-    "2026-10-07 style.nikkei.com: 人間の股間。",
-    "2026-10-08 asia.nikkei.com: ニュース、海軍、ビジネス、政治、訪問、軍事同盟、コーヒー、ビール、経済、政治",
-    "2026-10-08 asia.nikkei.com: ニッケアアジャのスマホ。",
-    "2026-10-08 asia.nikkei.com: ニッケアアジャパンの新聞アプリ。",
-    "2026-10-10 chionse.github.io: わたしの姿。絵には、頭部が描かれています。頭部には、目が描かれており、その目は、紫色で、瞳孔が大きく開いています。また、頭部には、髪が描かれており、その髪は、淡い色で、整理されています。",
     "2026-10-10 www.wikimediaendowment.org: グループ写真。",
     "2026-10-10 www.wikimediaendowment.org: 赤い円形の中に、赤い円形が入っている。",
     "2026-10-10 www.wikimediaendowment.org: 車の屋根、樹木、人、車の座席、車のドア、車の床、車の壁",
@@ -5986,7 +6293,13 @@
     "2026-10-18 chionse.github.io: わたしの姿。絵には、頭部が描かれています。頭部には、目、顎、口、耳が描かれています。また、頭部には、髪が描かれています。髪は、短く、濃い色で描かれています。",
     "2026-10-18 honto.jp: 絵本",
     "2026-10-18 honto.jp: 金色の星形のもの",
-    "2026-10-18 honto.jp: 5"
+    "2026-10-18 honto.jp: 5",
+    "2026-10-18 www.zendesk.co.jp: 絵には、女性の顔が写っています。彼女は、製品の広告を掲載しているようです。",
+    "2026-10-18 www.zendesk.co.jp: ニコル",
+    "2026-10-18 www.zendesk.co.jp: カフェ",
+    "2026-10-18 storyweb.jp: 絵には、2つの着物が描かれています。それぞれの着物は、異なる色で描かれており、1つは茶色で、もう1つは黒色です。着物には、星形の模様が施されています。",
+    "2026-10-18 storyweb.jp: 着物",
+    "2026-10-18 storyweb.jp: 黒のTシャツ、白のTシャツ。"
   ],
   "impressions": [
     "2026-09-14 note.jp: note株式会社はクリエイターが文章や画像、音声、動画を投稿し、ユーザーがそのコンテンツを楽しんで応援できるメディアプラットフォームです。",
@@ -6041,14 +6354,14 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "www.yahoo.co.jp",
-    "owasp.org",
-    "speakerdeck.com",
-    "edition.cnn.com",
-    "www.geocities.jp",
-    "pl.wikipedia.org"
+    "washoku-style.jp",
+    "ospn.jp",
+    "www.itmedia.co.jp",
+    "download.tuxfamily.org",
+    "be-story.jp",
+    "hatenablog.com"
   ],
-  "how_many_places_left": 1201,
+  "how_many_places_left": 1380,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -6127,7 +6440,9 @@
     "forms.nhk.jp": "アンケート｜NHK",
     "hinaproject.co.jp": "情報セキュリティ方針 | 株式会社ヒナプロジェクト",
     "honto.jp": "雑誌 - 無料・試し読みも！honto電子書籍ストア",
-    "dlib.jp": "ディープライブラリープロジェクト"
+    "dlib.jp": "ディープライブラリープロジェクト",
+    "www.zendesk.co.jp": "カスタマーサポートツール15社を徹底比較　おすすめツールの料金・機能・特徴",
+    "storyweb.jp": "STORY2026年11月号｜MAGAZINE｜STORY [ストーリィ] オフ"
   },
   "went_home": {
     "date": "2026-10-18",
@@ -6136,13 +6451,13 @@
   "what_follows": {
     "では": {
       "など": 2,
-      "2": 2,
+      "2": 3,
       "という": 2,
       "以下": 2,
-      "への": 1,
-      "による": 1,
-      "検索": 1,
-      "時代": 1
+      "時代": 1,
+      "使用": 2,
+      "提供": 1,
+      "問題": 1
     },
     "には": {
       "本当": 6,
@@ -6152,18 +6467,19 @@
       "という": 2,
       "している": 2,
       "仕事": 2,
-      "ください": 5
+      "ください": 5,
+      "だと": 1
     },
     "その": {
       "には": 3,
       "から": 5,
       "について": 5,
-      "コンテンツ": 4,
+      "コンテンツ": 5,
       "などを": 10,
-      "技術": 2,
-      "場合": 2,
-      "きます": 2,
-      "ガイドライン": 1
+      "場合": 5,
+      "または": 3,
+      "2": 2,
+      "います": 1
     },
     "表示": {
       "します": 12,
@@ -6172,107 +6488,107 @@
       "してくだ": 2,
       "ください": 2,
       "ます": 6,
-      "するため": 1,
-      "ページ": 1
+      "される": 1,
+      "可能性": 1
     },
     "この": {
-      "ページ": 76,
-      "サイト": 97,
+      "ページ": 78,
+      "サイト": 108,
       "します": 13,
       "について": 5,
       "への": 18,
-      "には": 7,
+      "には": 8,
       "ユーザー": 9,
       "1": 3
     },
     "サイト": {
-      "について": 45,
+      "について": 55,
       "すること": 3,
       "では": 6,
       "でも": 3,
       "://": 4,
       "2024": 3,
       "見る": 3,
-      "移動": 15,
-      "です": 1
+      "移動": 15
     },
     "して": {
       "サイト": 13,
       "した": 5,
       "った": 5,
-      "された": 3,
       "できる": 5,
       "コメント": 10,
-      "できます": 10,
-      "必要": 5
+      "できます": 11,
+      "必要": 5,
+      "サービス": 3,
+      "です": 1
     },
     "1": {
-      "4": 33,
+      "4": 36,
       "した": 26,
-      "3": 58,
-      "1": 152,
-      "2": 152,
+      "3": 60,
+      "1": 157,
+      "2": 157,
       "10": 26,
       "0": 63,
       "されてい": 16,
-      "7": 3,
-      "をお": 1
+      "40": 1
     },
     "されてい": {
-      "ます": 25,
+      "ます": 30,
       "されてい": 2,
       "すること": 2,
-      "場合": 3,
+      "場合": 15,
       "ません": 5,
-      "います": 1,
-      "変更": 1,
-      "必要": 1
+      "ない": 6,
+      "サービス": 1,
+      "アクセス": 1
     },
     "4": {
       "0": 34,
-      "4": 48,
-      "1": 36,
-      "2": 39,
-      "6": 31,
-      "3": 21,
+      "4": 50,
+      "1": 37,
+      "2": 40,
+      "6": 32,
+      "3": 24,
       "10": 20,
-      "5": 43,
-      "まで": 2
+      "5": 44,
+      "14": 1
     },
     "ページ": {
       "ページ": 24,
       "表示": 11,
       "した": 8,
       "変更": 4,
-      "への": 5,
+      "への": 6,
       "での": 13,
       "をお": 5,
-      "以下": 10
+      "以下": 10,
+      "掲載": 1
     },
     "かれてい": {
       "2": 2,
       "った": 1
     },
     "すること": {
-      "した": 3,
-      "です": 2,
-      "がありま": 3,
-      "になりま": 1,
-      "サイト": 1,
-      "によって": 1,
-      "します": 1,
-      "利用": 1
+      "した": 5,
+      "です": 7,
+      "がありま": 10,
+      "ができま": 21,
+      "します": 4,
+      "により": 4,
+      "となりま": 2,
+      "によって": 2
     },
     "から": {
       "1": 8,
       "した": 11,
-      "されてい": 5,
+      "されてい": 6,
       "だった": 43,
       "された": 7,
-      "ページ": 7,
-      "まで": 3,
+      "ページ": 8,
+      "まで": 4,
       "いた": 9,
-      "する": 1
+      "すること": 1
     },
     "自分": {
       "して": 3,
@@ -6281,54 +6597,57 @@
       "言葉": 3,
       "かれてい": 2,
       "すること": 2,
-      "情報": 1,
-      "ランキング": 1
+      "できます": 1,
+      "いました": 1
     },
     "3": {
-      "4": 84,
-      "2": 219,
-      "3": 105,
+      "4": 87,
+      "2": 221,
+      "3": 115,
       "://": 22,
-      "1": 66,
+      "1": 68,
       "0": 70,
-      "10": 18,
-      "5": 80,
-      "まで": 1
+      "5": 83,
+      "つの": 20
     },
     "した": {
       "から": 7,
-      "場合": 13,
+      "場合": 34,
       "した": 5,
       "では": 3,
       "情報": 46,
       "女性": 18,
       "タグ": 20,
-      "状態": 5
+      "状態": 5,
+      "される": 2,
+      "して": 1
     },
     "2": {
       "0": 243,
-      "3": 221,
-      "1": 160,
-      "2": 227,
+      "3": 223,
+      "1": 175,
+      "2": 229,
       "://": 30,
-      "8": 94,
-      "4": 46,
+      "8": 98,
+      "4": 48,
       "えた": 55
     },
     "しかし": {
       "について": 1,
       "んだ": 1,
-      "にも": 1
+      "にも": 1,
+      "現在": 1
     },
     "への": {
       "して": 3,
       "について": 15,
-      "リンク": 21,
+      "リンク": 22,
       "での": 2,
       "による": 2,
-      "アクセス": 3,
+      "アクセス": 9,
       "コメント": 10,
-      "として": 1
+      "または": 2,
+      "えた": 1
     },
     "について": {
       "した": 2,
@@ -6337,8 +6656,8 @@
       "情報": 2,
       "公開": 4,
       "関する": 5,
-      "しました": 1,
-      "話題": 1
+      "による": 1,
+      "のお": 10
     },
     "8": {
       "6": 9,
@@ -6348,8 +6667,8 @@
       "0": 15,
       "3": 37,
       "10": 14,
-      "7": 9,
-      "する": 1
+      "7": 10,
+      "っていた": 1
     },
     "22": {
       "3": 3,
@@ -6358,42 +6677,42 @@
       "2": 3,
       "7": 2,
       "30": 2,
-      "22": 1,
-      "まで": 16
+      "まで": 17,
+      "000": 3
     },
     "2026": {
-      "8": 6,
-      "10": 647,
-      "09": 202,
+      "8": 7,
+      "10": 671,
+      "09": 206,
       "5": 5,
-      "01": 4,
-      "9": 56,
+      "9": 58,
       "1": 4,
-      "amp": 4
+      "amp": 4,
+      "11": 6
     },
     "など": {
-      "参加": 1,
-      "利用": 1,
-      "して": 1,
       "情報": 1,
       "://": 1,
       "アクセス": 1,
       "12": 2,
-      "人気": 2
+      "人気": 2,
+      "提供": 1,
+      "です": 1,
+      "いた": 1
     },
     "場合": {
-      "には": 4,
-      "がありま": 11,
+      "には": 22,
+      "がありま": 28,
       "がある": 2,
-      "使用": 1,
       "利用": 5,
       "でも": 5,
       "1": 5,
-      "となりま": 5
+      "となりま": 5,
+      "とを": 2
     },
     "://": {
-      "org": 220,
-      "2": 30,
+      "org": 229,
+      "2": 31,
       "1": 41,
       "://": 13,
       "3": 86,
@@ -6406,25 +6725,26 @@
       "ページ": 3,
       "3": 6,
       "2024": 9,
-      "2012": 2,
       "80": 2,
       "2023": 8,
-      "2026": 2
+      "2026": 2,
+      "2022": 5
     },
     "6": {
       "7": 9,
       "://": 19,
-      "2": 13,
+      "2": 14,
       "0": 9,
-      "1": 12,
+      "1": 14,
       "10": 9,
-      "3": 43,
+      "3": 44,
       "環境": 11,
-      "変更": 1
+      "18": 1
     },
     "していま": {
       "した": 3,
-      "参加": 5
+      "参加": 5,
+      "せん": 1
     },
     "検索": {
       "されてい": 1,
@@ -6435,14 +6755,17 @@
       "できます": 5
     },
     "10": {
-      "22": 40,
+      "22": 41,
       "10": 63,
       "0": 136,
       "11": 65,
       "06": 22,
       "15": 73,
       "14": 84,
-      "16": 185
+      "16": 185,
+      "17": 10,
+      "からの": 8,
+      "1": 1
     },
     "0": {
       "2": 243,
@@ -6460,10 +6783,10 @@
       "言葉": 2,
       "について": 14,
       "すること": 4,
-      "話題": 1,
-      "ツール": 2,
+      "ツール": 4,
       "記事": 20,
-      "情報": 1
+      "ます": 1,
+      "場所": 1
     },
     "という": {
       "自分": 2,
@@ -6471,19 +6794,20 @@
       "です": 2,
       "言葉": 2,
       "新しい": 2,
-      "っている": 1,
       "けた": 1,
-      "サービス": 1
+      "サービス": 1,
+      "および": 1
     },
     "必要": {
-      "がある": 4,
+      "がある": 5,
       "記事": 29,
       "ページ": 2,
-      "がありま": 9,
+      "がありま": 13,
       "から": 3,
       "対応": 2,
-      "場合": 1,
-      "となりま": 5
+      "となりま": 6,
+      "場合": 5,
+      "とは": 1
     },
     "情報": {
       "していま": 6,
@@ -6494,38 +6818,37 @@
       "変更": 10,
       "をお": 5,
       "などを": 5,
-      "っている": 1
+      "2026": 1
     },
     "7": {
-      "1": 19,
-      "8": 9,
+      "1": 20,
+      "8": 11,
       "://": 11,
       "2": 9,
-      "9": 6,
+      "9": 7,
       "3": 10,
       "10": 12,
-      "0": 3,
-      "から": 1
+      "0": 3
     },
     "でも": {
       "さい": 2,
-      "って": 1,
-      "っている": 1,
-      "した": 1,
-      "ニュース": 1,
       "日本語": 1,
       "女性": 1,
-      "という": 1
+      "という": 1,
+      "機能": 1,
+      "利用": 1,
+      "できる": 1,
+      "できます": 1
     },
     "コンテンツ": {
-      "24": 1,
-      "20": 1,
-      "18": 1,
-      "19": 1,
-      "25": 1,
-      "21": 1,
       "サービス": 9,
-      "について": 5
+      "について": 5,
+      "影響": 1,
+      "および": 1,
+      "または": 1,
+      "データ": 1,
+      "新しい": 1,
+      "機能": 1
     },
     "30": {
       "2": 9,
@@ -6535,42 +6858,48 @@
       "です": 2,
       "1": 4,
       "いた": 2,
-      "まで": 1
+      "女性": 1
     },
     "9": {
       "10": 24,
-      "9": 233,
+      "9": 234,
       "0": 19,
-      "1": 18,
-      "2": 15,
-      "3": 15,
+      "1": 20,
+      "2": 18,
+      "3": 16,
       "28": 233,
       "関する": 12,
-      "8": 1
+      "から": 1
     },
     "ある": {
       "2": 1,
-      "している": 1
+      "している": 1,
+      "して": 1,
+      "問題": 1,
+      "知識": 1,
+      "簡単": 1,
+      "などの": 1
     },
     "より": {
       "2": 2,
-      "する": 1,
-      "0": 1,
-      "7": 1,
-      "より": 1,
-      "った": 2
+      "った": 2,
+      "れた": 1,
+      "していま": 1,
+      "くの": 1,
+      "では": 2,
+      "します": 2,
+      "サービス": 1
     },
     "09": {
       "10": 11,
       "22": 25,
-      "17": 24,
+      "17": 25,
       "09": 39,
       "08": 36,
       "49": 6,
       "47": 6,
       "41": 6,
-      "51": 2,
-      "11": 1
+      "51": 2
     },
     "記事": {
       "します": 2,
@@ -6579,18 +6908,18 @@
       "求める": 2,
       "作成": 3,
       "読む": 18,
-      "への": 1,
-      "...": 1
+      "必要": 1,
+      "のお": 7
     },
     "利用": {
-      "できます": 16,
-      "して": 6,
+      "できます": 19,
+      "して": 8,
       "した": 6,
-      "えます": 2,
       "ください": 10,
-      "確認": 2,
-      "すること": 1,
-      "ます": 1
+      "される": 2,
+      "には": 2,
+      "すること": 4,
+      "または": 2
     },
     "of": {
       "the": 2
@@ -6599,52 +6928,54 @@
       "6": 1
     },
     "している": {
-      "という": 3,
+      "という": 4,
       "情報": 3,
-      "ページ": 18,
-      "場合": 2,
-      "サービス": 3,
+      "ページ": 19,
+      "場合": 4,
+      "サービス": 14,
       "ユーザー": 7,
-      "方法": 1,
-      "関する": 1
+      "質問": 1,
+      "アプリ": 1
     },
     "27": {
       "19": 2,
-      "50": 1,
       "7": 1,
       "30": 1,
       "8": 11,
       "28": 1,
       "5": 1,
-      "まで": 1
+      "まで": 1,
+      "000": 2
     },
     "5": {
-      "2": 24,
-      "1": 28,
-      "3": 29,
+      "2": 25,
+      "1": 30,
+      "3": 30,
       "://": 8,
-      "5": 21,
+      "5": 23,
       "11": 10,
       "9": 11,
       "開発": 10,
-      "000": 5
+      "つの": 2
     },
     "です": {
       "1": 2,
       "えた": 1
     },
     "になりま": {
-      "した": 3
+      "した": 3,
+      "せん": 1
     },
     "された": {
       "から": 4,
       "ページ": 3,
       "では": 3,
-      "である": 2,
-      "して": 2,
       "記事": 10,
       "18": 5,
-      "作品": 3
+      "作品": 3,
+      "サービス": 14,
+      "場合": 6,
+      "4": 2
     },
     "っていま": {
       "した": 1,
@@ -6653,37 +6984,45 @@
     "自由": {
       "です": 1,
       "してくだ": 1,
-      "だけど": 20,
-      "じゃない": 20,
-      "ってる": 20,
-      "だった": 1
+      "だけど": 21,
+      "じゃない": 21,
+      "ってる": 21,
+      "だった": 1,
+      "関する": 1
     },
     "17": {
       "19": 3,
       "01": 5,
       "25": 2,
       "02": 2,
-      "2": 2,
+      "2": 3,
       "59": 40,
       "15": 15,
-      "24": 4,
-      "38": 1
+      "24": 6,
+      "00": 1
     },
     "新しい": {
-      "しました": 1,
       "ページ": 20,
       "サイト": 2,
       "必要": 2,
-      "った": 1,
-      "をお": 5
+      "をお": 5,
+      "または": 1,
+      "記事": 1,
+      "ソフトウェア": 2,
+      "40": 31
     },
     "してくだ": {
-      "さい": 294
+      "さい": 305
     },
     "ツール": {
-      "など": 1,
-      "って": 1,
-      "きます": 2
+      "きます": 2,
+      "利用": 3,
+      "していま": 2,
+      "っている": 1,
+      "により": 1,
+      "です": 2,
+      "提供": 1,
+      "されてい": 1
     },
     "01": {
       "1": 2,
@@ -6731,11 +7070,14 @@
       "編集": 6,
       "って": 2,
       "30": 4,
-      "から": 5
+      "から": 5,
+      "する": 1
     },
     "詳細": {
-      "について": 15,
-      "表示": 10
+      "について": 16,
+      "表示": 10,
+      "情報": 1,
+      "意味": 1
     },
     "言葉": {
       "した": 2,
@@ -6749,24 +7091,25 @@
     },
     "12": {
       "19": 8,
-      "12": 4,
       "21": 6,
       "00": 10,
       "10": 6,
       "01": 4,
       "11": 4,
       "16": 4,
-      "56": 1
+      "1": 6,
+      "2": 3,
+      "5": 1
     },
     "変更": {
       "表示": 6,
       "しました": 14,
-      "場合": 2,
-      "には": 1,
-      "すると": 1,
-      "される": 1,
-      "可能性": 1,
-      "変更": 5
+      "場合": 4,
+      "される": 3,
+      "可能性": 2,
+      "変更": 7,
+      "など": 2,
+      "すること": 1
     },
     "けの": {
       "について": 1,
@@ -6778,20 +7121,25 @@
       "作品": 1
     },
     "機能": {
-      "ページ": 1,
-      "します": 1,
-      "である": 1,
-      "公開": 1,
-      "によって": 1
+      "によって": 2,
+      "場合": 3,
+      "提供": 2,
+      "および": 2,
+      "利用": 2,
+      "などを": 1,
+      "えた": 1,
+      "必要": 1
     },
     "します": {
-      "場合": 1
+      "場合": 1,
+      "により": 1
     },
     "がある": {
       "になりま": 1,
-      "場合": 10,
+      "場合": 18,
       "理由": 1,
-      "4": 3
+      "4": 3,
+      "まで": 1
     },
     "15": {
       "0": 3,
@@ -6802,18 +7150,18 @@
       "27": 4,
       "14": 4,
       "21": 2,
-      "28": 1
+      "13": 1
     },
     "14": {
-      "19": 9,
-      "11": 2,
+      "19": 10,
       "21": 3,
-      "3": 4,
+      "3": 5,
       "15": 3,
       "には": 2,
       "12": 6,
       "28": 2,
-      "20": 1
+      "1": 2,
+      "17": 1
     },
     "男性": {
       "されてい": 1,
@@ -6822,14 +7170,13 @@
     },
     "13": {
       "13": 5,
-      "17": 2,
-      "5": 5,
+      "5": 6,
       "0": 6,
-      "8": 3,
       "11": 3,
-      "20": 2,
       "21": 3,
-      "15": 1
+      "1": 5,
+      "2": 4,
+      "200": 5
     },
     "20": {
       "19": 5,
@@ -6839,7 +7186,8 @@
       "12": 2,
       "11": 2,
       "にも": 5,
-      "まで": 3
+      "まで": 3,
+      "40": 1
     },
     "19": {
       "00": 3,
@@ -6850,7 +7198,8 @@
       "05": 18,
       "30": 32,
       "12": 4,
-      "まで": 2
+      "まで": 2,
+      "9": 1
     },
     "ブログ": {
       "言葉": 2,
@@ -6862,7 +7211,7 @@
       "人気": 1
     },
     "11": {
-      "1": 7,
+      "1": 12,
       "9": 4,
       "08": 4,
       "00": 151,
@@ -6870,17 +7219,18 @@
       "01": 4,
       "28": 6,
       "26": 7,
-      "4": 2
+      "000": 2
     },
     "2025": {
       "09": 6,
       "3": 3,
       "4": 3,
       "07": 77,
-      "12": 4,
+      "12": 5,
       "10": 67,
       "11": 7,
-      "06": 24
+      "06": 24,
+      "5": 1
     },
     "06": {
       "06": 3,
@@ -6891,7 +7241,7 @@
       "24": 3,
       "00": 29,
       "19": 21,
-      "03": 1
+      "://": 1
     },
     "っている": {
       "1": 5,
@@ -6900,53 +7250,58 @@
       "4": 2,
       "5": 2,
       "がある": 14,
-      "アクセス": 1,
-      "サイト": 1
+      "企業": 1,
+      "から": 1
     },
     "として": {
       "して": 3,
       "された": 4,
       "した": 4,
       "です": 2,
-      "追加": 1,
-      "登録": 1,
       "できます": 2,
-      "5": 2
+      "5": 2,
+      "ツール": 1,
+      "提供": 1
     },
     "まで": {
       "された": 4,
-      "自分": 1,
-      "配信": 1
+      "とを": 1,
+      "メール": 1,
+      "されます": 1,
+      "めて": 1,
+      "すること": 1,
+      "場所": 2,
+      "1": 1
     },
     "って": {
       "って": 2,
-      "していま": 1,
-      "すること": 2,
-      "えて": 1,
+      "すること": 4,
       "アプリ": 2,
-      "して": 1,
       "本当": 2,
-      "使用": 1
+      "データ": 4,
+      "されてい": 2,
+      "男性": 1,
+      "えた": 1
     },
     "によって": {
       "されまし": 8,
-      "された": 1,
-      "選択": 1,
-      "アカウント": 1,
-      "方法": 1,
       "から": 3,
-      "した": 1,
-      "でも": 1
+      "される": 4,
+      "設定": 3,
+      "された": 2,
+      "または": 1,
+      "っていま": 1,
+      "場合": 1
     },
     "00": {
       "0": 3,
       "11": 2,
       "05": 2,
-      "://": 1,
       "3": 2,
       "00": 21,
       "情報": 2,
-      "12": 2
+      "12": 2,
+      "17": 1
     },
     "21": {
       "30": 4,
@@ -6956,17 +7311,18 @@
       "://": 2,
       "5": 3,
       "05": 2,
-      "まで": 5
+      "まで": 5,
+      "3": 1
     },
     "24": {
-      "11": 2,
-      "://": 1,
-      "25": 1,
-      "2": 2,
-      "など": 1,
-      "への": 1,
-      "サイト": 1,
-      "10": 1
+      "2": 5,
+      "1": 7,
+      "9": 5,
+      "6": 3,
+      "4": 4,
+      "7": 10,
+      "8": 3,
+      "200": 3
     },
     "28": {
       "29": 2,
@@ -6980,20 +7336,21 @@
     },
     "29": {
       "3": 2,
-      "から": 1,
-      "2": 1,
       "1": 1,
       "7": 1,
       "20": 1,
       "されてい": 1,
-      "まで": 14
+      "まで": 14,
+      "000": 2,
+      "12": 2
     },
     "50": {
       "7": 1,
       "50": 1,
       "から": 1,
       "://": 1,
-      "41": 1
+      "41": 1,
+      "した": 1
     },
     "80": {
       "という": 1,
@@ -7011,9 +7368,9 @@
       "情報": 12,
       "利用": 6,
       "女性": 2,
-      "ます": 1,
-      "使用": 3,
-      "となりま": 5
+      "使用": 4,
+      "となりま": 5,
+      "には": 1
     },
     "08": {
       "21": 14,
@@ -7027,42 +7384,44 @@
       "20": 1
     },
     "作成": {
-      "紹介": 1,
       "した": 2,
       "すること": 2,
       "場合": 1,
       "には": 1,
-      "して": 10
+      "して": 10,
+      "された": 1,
+      "または": 1,
+      "および": 1
     },
     "女性": {
-      "30": 1,
-      "女性": 1,
       "すること": 1,
       "には": 2,
       "47": 21,
       "1": 2,
       "現在": 1,
-      "より": 1
+      "より": 1,
+      "にも": 1,
+      "による": 1
     },
     "使用": {
-      "している": 5,
+      "している": 8,
       "していま": 10,
-      "をお": 1,
-      "での": 1,
-      "すること": 1,
-      "ます": 1,
-      "して": 1,
-      "される": 1
+      "して": 6,
+      "します": 6,
+      "される": 8,
+      "および": 16,
+      "すること": 14,
+      "または": 5
     },
     "2012": {
       "10": 6,
       "05": 2,
       "12": 2,
-      "01": 1,
       "24": 1,
       "03": 1,
       "09": 1,
-      "00": 1
+      "00": 1,
+      "データ": 1
     },
     "18": {
       "00": 24,
@@ -7072,40 +7431,45 @@
       "07": 4,
       "作品": 4,
       "21": 3,
-      "まで": 7
+      "まで": 7,
+      "000": 1
     },
     "本当": {
       "っている": 19,
       "った": 1,
       "自分": 1,
       "として": 1,
-      "とを": 20,
+      "とを": 21,
       "だった": 2
     },
     "理由": {
       "選択": 249,
-      "自分": 1,
       "ます": 1,
-      "について": 1,
-      "として": 1,
+      "について": 2,
+      "として": 2,
       "場合": 1,
-      "解説": 1
+      "解説": 1,
+      "がありま": 1,
+      "きます": 1
     },
     "選択": {
       "してくだ": 250,
       "場所": 1,
       "って": 1,
       "っていま": 1,
-      "した": 5
+      "した": 8,
+      "すること": 1,
+      "および": 1
     },
     "したい": {
-      "場合": 249,
-      "してくだ": 1
+      "場合": 250,
+      "してくだ": 1,
+      "16": 1
     },
     "紹介": {
       "してくだ": 2,
       "されてい": 2,
-      "します": 4,
+      "します": 10,
       "された": 1,
       "したい": 1,
       "公開": 1,
@@ -7113,40 +7477,45 @@
       "していま": 1
     },
     "するため": {
-      "6": 1,
-      "方法": 1,
-      "した": 1,
-      "情報": 1,
-      "には": 5
+      "には": 5,
+      "必要": 3,
+      "使用": 5,
+      "される": 2,
+      "ツール": 3,
+      "情報": 2,
+      "紹介": 1,
+      "です": 1
     },
     "ユーザー": {
       "されまし": 2,
       "ページ": 6,
       "による": 2,
-      "表現": 1,
       "非表示": 48,
       "表示": 48,
-      "見る": 10
+      "見る": 10,
+      "アクセス": 1,
+      "関する": 1
     },
     "する": {
       "アカウント": 2,
       "必要": 2,
-      "本当": 1,
-      "最初": 1,
-      "理由": 1,
-      "場合": 1,
-      "すると": 1,
-      "設定": 5
+      "場合": 6,
+      "設定": 5,
+      "から": 2,
+      "企業": 1,
+      "2": 1,
+      "6": 1
     },
     "される": {
-      "場合": 8,
-      "した": 1,
-      "関する": 1,
-      "問い": 1,
-      "3": 2,
-      "以下": 1,
-      "サービス": 1,
-      "可能性": 1
+      "場合": 17,
+      "可能性": 3,
+      "個人": 4,
+      "または": 4,
+      "サービス": 6,
+      "って": 2,
+      "および": 3,
+      "意味": 5,
+      "技術": 1
     },
     "16": {
       "09": 2,
@@ -7156,15 +7525,20 @@
       "20": 19,
       "10": 7,
       "19": 5,
-      "35": 1
+      "3": 1
     },
     "場所": {
       "での": 1,
-      "検索": 1
+      "検索": 1,
+      "必要": 1,
+      "として": 1,
+      "っていま": 1,
+      "技術": 1
     },
     "きな": {
       "から": 1,
-      "変更": 1
+      "変更": 1,
+      "けた": 1
     },
     "だった": {
       "場合": 1,
@@ -7182,27 +7556,28 @@
       "30": 2
     },
     "えた": {
-      "にも": 1,
       "言葉": 17,
       "1": 77,
-      "した": 1,
       "女性": 57,
-      "との": 1,
-      "表示": 1
+      "表示": 1,
+      "ツール": 1,
+      "してくだ": 1,
+      "です": 1,
+      "にも": 1
     },
     "にも": {
       "している": 2,
-      "きな": 1,
-      "っている": 1,
-      "にも": 1,
-      "として": 1,
-      "1": 1,
-      "されます": 1,
-      "対応": 1
+      "にも": 11,
+      "対応": 1,
+      "アクセス": 1,
+      "から": 1,
+      "けて": 1,
+      "って": 1,
+      "せん": 1
     },
     "最近": {
       "になりま": 1,
-      "でも": 1,
+      "でも": 2,
       "更新": 11,
       "っていま": 1,
       "...": 1
@@ -7218,12 +7593,14 @@
       "00": 5
     },
     "できる": {
-      "して": 1,
-      "サービス": 2,
-      "した": 1,
-      "機能": 1,
+      "サービス": 3,
       "...": 2,
-      "サイト": 4
+      "サイト": 4,
+      "ツール": 1,
+      "すること": 1,
+      "最新": 1,
+      "えた": 2,
+      "機能": 1
     },
     "03": {
       "15": 3,
@@ -7239,13 +7616,15 @@
       "してくだ": 7,
       "2": 1,
       "して": 10,
-      "必要": 5
+      "必要": 5,
+      "される": 1,
+      "登録": 10
     },
     "めて": {
       "その": 1,
       "った": 1,
       "している": 1,
-      "した": 2,
+      "した": 4,
       "アクセス": 7,
       "する": 1
     },
@@ -7253,25 +7632,30 @@
       "った": 1,
       "えた": 1,
       "...": 1,
-      "内容": 1
+      "内容": 1,
+      "によって": 1,
+      "からの": 1,
+      "して": 1,
+      "すること": 1
     },
     "アカウント": {
       "アカウント": 2,
-      "として": 1,
-      "からの": 1,
       "をお": 11,
-      "ログイン": 1,
-      "への": 2,
-      "であり": 1,
-      "である": 1
+      "への": 3,
+      "であり": 3,
+      "および": 3,
+      "した": 2,
+      "または": 3,
+      "できる": 1
     },
     "りの": {
       "によって": 1,
       "場合": 1,
       "には": 1,
-      "して": 1,
+      "して": 2,
       "5": 10,
-      "...": 1
+      "...": 1,
+      "記事": 7
     },
     "がありま": {
       "した": 1
@@ -7281,38 +7665,43 @@
     },
     "追加": {
       "した": 2,
-      "される": 5,
+      "される": 6,
       "利用": 1,
-      "しました": 1
+      "しました": 1,
+      "ません": 1,
+      "または": 1,
+      "意味": 2,
+      "機能": 1
     },
     "編集": {
       "されまし": 2,
       "すること": 1,
       "場合": 1,
-      "である": 1
+      "である": 1,
+      "できます": 1
     },
     "to": {
-      "...": 4
+      "...": 5
     },
     "25": {
       "://": 2,
       "3": 2,
       "38": 2,
-      "時代": 1,
       "9": 1,
       "した": 1,
       "1": 1,
-      "まで": 2
+      "まで": 2,
+      "10": 1
     },
     "関する": {
-      "情報": 2,
+      "情報": 5,
       "問い": 4,
       "質問": 7,
       "サービス": 13,
       "以下": 2,
-      "ガイドライン": 1,
-      "確認": 1,
-      "入力": 1
+      "および": 5,
+      "詳細": 14,
+      "データ": 2
     },
     "&#": {
       "25": 45,
@@ -7325,15 +7714,22 @@
       "27": 8
     },
     "更新": {
-      "しました": 3
+      "しました": 4,
+      "すること": 2,
+      "されます": 2,
+      "場合": 1,
+      "するため": 1,
+      "して": 9
     },
     "からの": {
-      "います": 1,
       "編集": 2,
-      "ある": 1,
       "した": 1,
       "である": 1,
-      "コメント": 2
+      "コメント": 2,
+      "します": 1,
+      "による": 1,
+      "問い": 1,
+      "質問": 1
     },
     "最初": {
       "って": 1,
@@ -7342,7 +7738,8 @@
       "として": 1,
       "された": 1,
       "した": 1,
-      "とは": 1
+      "とは": 1,
+      "または": 1
     },
     "05": {
       "11": 2,
@@ -7356,23 +7753,23 @@
     },
     "23": {
       "05": 2,
-      "34": 1,
       "24": 2,
       "3": 1,
       "1": 1,
       "2": 1,
       "59": 5,
-      "まで": 2
+      "まで": 2,
+      "100": 2
     },
     "26": {
       "5": 2,
       "9": 11,
       "2": 8,
-      "リンク": 1,
-      "された": 1,
-      "2025": 1,
       "には": 3,
-      "まで": 3
+      "まで": 3,
+      "://": 1,
+      "27": 1,
+      "40": 2
     },
     "02": {
       "00": 4,
@@ -7382,21 +7779,25 @@
       "12": 2,
       "16": 40,
       "25": 39,
-      "://": 1
+      "17": 1
     },
     "簡単": {
       "リンク": 1,
-      "などを": 2
+      "などを": 2,
+      "作成": 1,
+      "提供": 1,
+      "されてい": 1,
+      "できます": 3
     },
     "アクセス": {
       "してくだ": 3,
-      "について": 1,
-      "発生": 1,
-      "するため": 1,
-      "7": 1,
-      "によって": 1,
-      "関する": 1,
-      "などの": 1
+      "している": 2,
+      "する": 6,
+      "または": 4,
+      "場合": 2,
+      "すること": 3,
+      "意味": 2,
+      "および": 1
     },
     "日本語": {
       "場合": 1,
@@ -7419,7 +7820,8 @@
     "一覧": {
       "その": 2,
       "2": 1,
-      "見る": 9
+      "見る": 9,
+      "です": 10
     },
     "ニュース": {
       "7": 2,
@@ -7433,33 +7835,33 @@
     },
     "以下": {
       "情報": 2,
-      "です": 3,
-      "サービス": 2,
+      "です": 4,
+      "サービス": 3,
       "できます": 10,
       "コード": 10,
-      "問い": 1,
-      "チェック": 1,
-      "使用": 1
+      "追加": 1,
+      "意味": 1,
+      "すると": 1
     },
     "内容": {
-      "関する": 1,
-      "っている": 1,
       "について": 4,
-      "である": 1,
       "場合": 2,
       "であり": 1,
       "話題": 1,
-      "確認": 1
+      "確認": 1,
+      "内容": 1,
+      "がある": 1,
+      "すること": 1
     },
     "である": {
-      "場合": 2,
+      "場合": 8,
       "されてい": 2,
-      "して": 1,
-      "および": 1,
       "について": 1,
       "とは": 1,
       "画像": 1,
-      "してくだ": 1
+      "してくだ": 1,
+      "個人": 1,
+      "した": 1
     },
     "07": {
       "01": 2,
@@ -7479,7 +7881,7 @@
       "02": 3,
       "03": 5,
       "05": 5,
-      "10": 16
+      "10": 17
     },
     "56": {
       "://": 2,
@@ -7495,23 +7897,24 @@
       "34": 1
     },
     "35": {
-      "16": 1,
       "には": 1,
       "として": 1,
       "3": 2,
       "4": 1,
       "://": 1,
-      "40": 1
+      "40": 1,
+      "200": 1,
+      "000": 1
     },
     "34": {
       "&#": 21,
-      "34": 9,
+      "34": 11,
       "3": 2,
-      "08": 1,
       "://": 1,
       "6": 1,
       "2": 1,
-      "トップ": 1
+      "トップ": 1,
+      "14": 2
     },
     "2023": {
       "04": 11,
@@ -7522,82 +7925,85 @@
       "2": 4,
       "12": 4,
       "://": 3,
-      "07": 1
+      "4": 1
     },
     "2022": {
       "10": 4,
-      "での": 1,
-      "6": 4,
-      "06": 2,
+      "6": 5,
+      "06": 3,
       "12": 5,
       "02": 43,
       "04": 15,
-      "9": 1
+      "14": 1,
+      "4": 1
     },
     "2013": {
       "02": 2,
       "1": 3,
       "01": 3,
-      "59": 1,
       "11": 2,
-      "04": 1,
-      "00": 1,
-      "03": 1
+      "2013": 1,
+      "による": 1,
+      "として": 1,
+      "って": 1
     },
     "などの": {
-      "できる": 2,
+      "できる": 3,
       "情報": 11,
-      "すること": 1,
-      "場合": 1,
-      "画像": 1,
-      "には": 1,
-      "から": 1,
-      "サービス": 5
+      "サービス": 5,
+      "ツール": 3,
+      "機能": 2,
+      "使用": 1,
+      "により": 1,
+      "必要": 1
     },
     "環境": {
       "表示": 1,
       "49": 1,
       "...": 1,
-      "提供": 2
+      "提供": 2,
+      "していま": 1
     },
     "サービス": {
-      "以下": 5,
-      "では": 5,
+      "以下": 6,
       "していま": 21,
       "での": 13,
-      "して": 4,
-      "サービス": 5,
-      "表示": 5,
-      "への": 15,
+      "サービス": 6,
+      "への": 17,
       "です": 7,
-      "利用規約": 1
+      "使用": 19,
+      "提供": 5,
+      "一覧": 1
     },
     "による": {
       "での": 2,
       "している": 2,
-      "して": 2,
-      "サービス": 10,
+      "して": 3,
+      "サービス": 28,
       "への": 2,
-      "から": 1,
-      "以下": 1,
-      "とを": 1
+      "による": 3,
+      "または": 4,
+      "など": 1
     },
     "および": {
-      "関する": 3,
+      "関する": 6,
       "確認": 6,
       "必要": 2,
-      "について": 1,
-      "以下": 1,
-      "サービス": 1,
-      "方法": 1,
-      "します": 1
+      "または": 25,
+      "設定": 4,
+      "影響": 2,
+      "サービス": 8,
+      "できる": 1
     },
     "をご": {
-      "ください": 4,
+      "ください": 7,
       "利用": 25,
       "ます": 1,
       "確認": 22,
-      "紹介": 3
+      "紹介": 5,
+      "目的": 1,
+      "入力": 4,
+      "していま": 1
     },
     "47": {
       "29": 1,
@@ -7624,26 +8030,32 @@
       "4": 1
     },
     "問題": {
-      "がありま": 1,
-      "にある": 1,
-      "がある": 1,
-      "発生": 1,
-      "している": 1,
       "による": 1,
       "問題": 1,
-      "...": 1
+      "...": 1,
+      "っている": 1,
+      "自分": 1,
+      "するため": 2,
+      "36": 1,
+      "えた": 1
     },
     "現在": {
       "では": 2,
       "5": 1,
-      "です": 20
+      "です": 20,
+      "ます": 1,
+      "設定": 1,
+      "として": 1,
+      "アカウント": 1,
+      "および": 1
     },
     "んだ": {
       "理由": 1,
       "した": 1,
       "場合": 1,
       "問題": 16,
-      "という": 2
+      "という": 2,
+      "2026": 1
     },
     "100": {
       "12": 1,
@@ -7656,27 +8068,46 @@
       "設定": 5
     },
     "また": {
-      "んだ": 1,
-      "する": 1,
-      "がある": 5
+      "がある": 5,
+      "っている": 1,
+      "されてい": 1,
+      "および": 1,
+      "には": 1,
+      "ツール": 2,
+      "利用": 1,
+      "により": 1
     },
     "つの": {
       "1": 1,
-      "学校": 2
+      "学校": 2,
+      "方法": 1,
+      "アカウント": 1,
+      "紹介": 1,
+      "問い": 1,
+      "質問": 1,
+      "理由": 19
     },
     "えて": {
       "最初": 1,
-      "すること": 2,
+      "すること": 3,
       "...": 1,
       "されてい": 1,
-      "2026": 1
+      "2026": 1,
+      "確認": 1,
+      "えます": 1
     },
     "のために": {
-      "した": 1,
-      "必要": 1
+      "提供": 2,
+      "サービス": 3,
+      "機能": 1,
+      "すること": 1,
+      "すると": 1,
+      "した": 2,
+      "場合": 1,
+      "された": 2
     },
     "チェック": {
-      "する": 1,
+      "する": 2,
       "さい": 1
     },
     "52": {
@@ -7691,48 +8122,72 @@
     },
     "方法": {
       "がある": 1,
-      "により": 1,
-      "での": 2
+      "により": 2,
+      "での": 2,
+      "理由": 1,
+      "使用": 1,
+      "として": 1
     },
     "38": {
       "://": 1,
-      "26": 2
+      "26": 2,
+      "36": 1,
+      "6": 1
     },
     "などを": {
       "していま": 10,
-      "24": 1,
       "した": 1,
-      "ます": 5
+      "ます": 5,
+      "使用": 1,
+      "提供": 1,
+      "作成": 1,
+      "するため": 1,
+      "簡単": 1
     },
     "アプリ": {
       "サービス": 1,
       "での": 1,
       "らせ": 2,
-      "チェック": 10
+      "チェック": 10,
+      "詳細": 1,
+      "関する": 2
     },
     "または": {
-      "などを": 1,
-      "けの": 1,
-      "場合": 1,
-      "して": 1
+      "される": 7,
+      "して": 6,
+      "サービス": 18,
+      "とを": 7,
+      "場合": 8,
+      "または": 13,
+      "による": 5,
+      "意味": 6,
+      "として": 1
     },
     "問い": {
-      "わせ": 52,
-      "さい": 2,
+      "わせ": 84,
+      "さい": 4,
       "いた": 4,
       "では": 1,
-      "対応": 1,
-      "ください": 1
+      "対応": 2,
+      "ください": 1,
+      "きます": 1,
+      "された": 1
     },
     "いた": {
       "について": 4,
       "利用": 1,
-      "った": 1
+      "った": 1,
+      "1": 1
     },
     "質問": {
       "公開": 6,
-      "追加": 1,
-      "していま": 1
+      "していま": 1,
+      "必要": 1,
+      "できます": 1,
+      "への": 2,
+      "メール": 1,
+      "したい": 1,
+      "をご": 1
     },
     "41": {
       "://": 1,
@@ -7740,21 +8195,29 @@
     },
     "登録": {
       "している": 3,
-      "された": 2
+      "された": 2,
+      "ください": 4,
+      "ます": 4,
+      "すること": 1,
+      "または": 1
     },
     "31": {
       "://": 1,
       "9": 2,
       "0": 1,
       "35": 1,
-      "まで": 6
+      "まで": 6,
+      "として": 1
     },
     "との": {
-      "すること": 1,
-      "...": 1,
-      "必要": 1,
-      "わせ": 1,
-      "さい": 1
+      "すること": 2,
+      "わせ": 2,
+      "提供": 1,
+      "していま": 1,
+      "になりま": 1,
+      "では": 1,
+      "など": 1,
+      "じて": 1
     },
     "表現": {
       "として": 1,
@@ -7775,35 +8238,44 @@
       "はありま": 1
     },
     "求める": {
-      "場合": 1
+      "場合": 1,
+      "すること": 1
     },
     "40": {
       "://": 2,
       "6": 2,
-      "26": 1
+      "からの": 22,
+      "amp": 10,
+      "のお": 2,
+      "4": 2,
+      "18": 2,
+      "けた": 1
     },
     "利用規約": {
       "情報": 1,
       "して": 1
     },
     "移動": {
-      "します": 16
+      "します": 16,
+      "している": 1
     },
     "もっと": {
       "見る": 10
     },
     "そして": {
-      "情報": 1
+      "情報": 1,
+      "移動": 1,
+      "または": 1
     },
     "日本": {
-      "ニュース": 1,
-      "文化": 1,
-      "1": 1,
       "かれてい": 1,
       "について": 1,
       "では": 1,
       "言葉": 2,
-      "問題": 3
+      "問題": 3,
+      "関する": 1,
+      "されてい": 1,
+      "サービス": 1
     },
     "学校": {
       "での": 4,
@@ -7815,14 +8287,21 @@
       "利用": 1
     },
     "をお": {
-      "ログイン": 1,
-      "サービス": 1,
       "方法": 1,
-      "ます": 1
+      "ます": 1,
+      "にご": 4,
+      "していま": 1,
+      "提供": 3,
+      "します": 1,
+      "きます": 1,
+      "仕事": 1
     },
     "発生": {
-      "しました": 2,
-      "した": 3
+      "しました": 6,
+      "した": 5,
+      "または": 1,
+      "いました": 1,
+      "について": 1
     },
     "文化": {
       "22": 1,
@@ -7837,87 +8316,116 @@
       "21": 1
     },
     "解説": {
-      "情報": 1
+      "情報": 1,
+      "します": 1
     },
     "公式": {
       "アプリ": 1,
-      "サイト": 2,
+      "サイト": 4,
       "アカウント": 11,
-      "ブログ": 2
+      "ブログ": 2,
+      "データ": 1
     },
     "にある": {
       "日本語": 1,
       "した": 1,
-      "された": 2
+      "された": 2,
+      "意味": 5,
+      "という": 1,
+      "されてい": 1
     },
     "のお": {
       "自由": 1,
       "配信": 1,
-      "らせ": 5,
-      "問い": 2
+      "らせ": 19,
+      "問い": 2,
+      "みを": 1,
+      "について": 1,
+      "登録": 7,
+      "から": 1
     },
     "経済": {
       "などの": 1
     },
     "人気": {
       "タグ": 17,
-      "読む": 1,
       "記事": 50,
       "特集": 5,
       "から": 4,
-      "など": 2
+      "など": 2,
+      "40": 1,
+      "って": 1,
+      "したい": 1
     },
     "じゃない": {
       "コメント": 1,
       "から": 1
     },
     "2016": {
-      "08": 1
+      "08": 1,
+      "データ": 1
     },
     "名前": {
       "った": 7
     },
     "時代": {
       "など": 1,
-      "されてい": 1
+      "されてい": 1,
+      "えて": 1
     },
     "最新": {
       "...": 1,
       "0": 1,
       "について": 1,
-      "内容": 1
+      "内容": 1,
+      "リンク": 1,
+      "提供": 1,
+      "3": 1
     },
     "音楽": {
       "...": 1
     },
     "とを": {
-      "っている": 20,
-      "するため": 1
+      "っている": 21,
+      "するため": 1,
+      "します": 2,
+      "により": 1,
+      "登録": 10
     },
     "技術": {
       "いた": 2,
-      "した": 1,
-      "対応": 1
+      "した": 2,
+      "対応": 1,
+      "使用": 3
     },
     "設定": {
-      "していま": 1,
       "変更": 11,
       "して": 5,
-      "されます": 10,
-      "により": 1
+      "されます": 12,
+      "および": 4,
+      "関する": 5,
+      "される": 1,
+      "すること": 1,
+      "などを": 1
     },
     "政治": {
       "経済": 23
     },
     "対応": {
       "した": 2,
-      "している": 1,
-      "するため": 1
+      "するため": 2,
+      "または": 1,
+      "提供": 1,
+      "できます": 1,
+      "します": 1,
+      "できる": 3,
+      "して": 1
     },
     "すると": {
       "した": 1,
       "20": 1,
-      "します": 1
+      "します": 1,
+      "ユーザー": 1
     },
     "160": {
       "には": 1,
@@ -7925,35 +8433,55 @@
     },
     "ない": {
       "にある": 1,
-      "機能": 5
+      "機能": 5,
+      "追加": 1,
+      "がありま": 1,
+      "場合": 1,
+      "ではない": 1
     },
     "コード": {
       "には": 1,
       "して": 10,
-      "および": 2
+      "および": 2,
+      "提供": 1
     },
     "インターネット": {
       "をご": 3,
-      "画像": 1
+      "画像": 1,
+      "して": 1,
+      "送信": 1
     },
     "報告": {
       "されてい": 2,
       "していま": 1,
-      "...": 1
+      "...": 1,
+      "するため": 1
     },
     "じて": {
       "内容": 2,
-      "変更": 1,
-      "います": 1
+      "情報": 1,
+      "提供": 2,
+      "サービス": 1,
+      "必要": 1,
+      "された": 1,
+      "から": 1,
+      "機能": 1
     },
     "配信": {
       "った": 14,
       "された": 1,
       "発生": 1,
-      "場合": 1
+      "場合": 1,
+      "して": 1,
+      "できます": 4,
+      "サービス": 10
     },
     "送信": {
-      "された": 1
+      "された": 1,
+      "されます": 1,
+      "について": 1,
+      "される": 1,
+      "データ": 1
     },
     "ランキング": {
       "1": 6,
@@ -7968,23 +8496,26 @@
     "開発": {
       "では": 2,
       "確認": 2,
-      "ブログ": 11
+      "ブログ": 11,
+      "された": 1,
+      "していた": 1,
+      "した": 2
     },
     "確認": {
       "まで": 2,
       "および": 2,
       "関する": 2,
-      "状態": 1,
-      "確認": 1,
       "ください": 3,
-      "ます": 1,
-      "するため": 1
+      "して": 1,
+      "されてい": 1,
+      "できます": 1,
+      "ます": 1
     },
     "ガイドライン": {
       "利用": 10,
       "っていた": 1,
-      "される": 1,
-      "って": 1,
+      "される": 2,
+      "って": 2,
       "問い": 1,
       "変更": 1,
       "内容": 1,
@@ -7999,11 +8530,18 @@
     },
     "企業": {
       "読む": 10,
-      "提供": 1,
-      "サイト": 1
+      "との": 2,
+      "最新": 1,
+      "れた": 1,
+      "簡単": 1,
+      "できます": 1,
+      "などを": 1,
+      "対応": 1
     },
     "意味": {
-      "には": 1
+      "には": 1,
+      "します": 50,
+      "とは": 1
     },
     "作品": {
       "ない": 1,
@@ -8018,15 +8556,22 @@
       "された": 1,
       "ます": 1,
       "できる": 1,
-      "ください": 1
+      "ください": 5,
+      "など": 1,
+      "してくだ": 4
     },
     "さい": {
       "入力": 1
     },
     "により": {
-      "確認": 1,
-      "さい": 1,
-      "えた": 1
+      "場合": 2,
+      "されてい": 2,
+      "された": 6,
+      "される": 2,
+      "送信": 2,
+      "作成": 1,
+      "サービス": 1,
+      "での": 1
     },
     "状態": {
       "ます": 1,
@@ -8034,40 +8579,58 @@
       "になりま": 5
     },
     "安全": {
-      "利用": 1
+      "利用": 1,
+      "から": 1
     },
     "世界": {
       "がありま": 1,
-      "ます": 1
+      "ます": 1,
+      "ができま": 1,
+      "います": 1
     },
     "アニメ": {
       "作品": 1
     },
     "提供": {
-      "のお": 1,
-      "される": 1,
-      "ません": 1,
-      "サービス": 1
+      "します": 14,
+      "すること": 6,
+      "される": 6,
+      "または": 3,
+      "するため": 7,
+      "できます": 3,
+      "している": 1,
+      "していま": 3
     },
     "すべての": {
-      "作品": 1,
-      "から": 1
+      "から": 1,
+      "された": 1,
+      "による": 1,
+      "および": 1,
+      "します": 1,
+      "企業": 1,
+      "情報": 1,
+      "との": 1
     },
     "これまで": {
-      "1": 1
+      "1": 1,
+      "データ": 1
     },
     "みを": {
-      "っていま": 1
+      "っていま": 1,
+      "には": 1
     },
     "っていた": {
       "場合": 1
     },
     "可能性": {
       "ます": 1,
-      "がありま": 1
+      "がありま": 5,
+      "がある": 1,
+      "について": 1
     },
     "わせ": {
-      "すること": 1
+      "すること": 1,
+      "していた": 1
     },
     "文字": {
       "してくだ": 1
@@ -8083,411 +8646,677 @@
       "情報": 1
     },
     "月間": {
-      "しました": 1
+      "しました": 1,
+      "った": 1
     },
     "はありま": {
-      "せん": 1
+      "せん": 3
     },
     "まだ": {
-      "サイト": 4,
-      "ではない": 5
+      "サイト": 5,
+      "ではない": 5,
+      "掲載": 1
     },
     "000": {
       "20": 5,
-      "のお": 5
+      "のお": 5,
+      "000": 1,
+      "25": 1,
+      "16": 1,
+      "41": 1,
+      "3": 1
     },
     "らせ": {
       "一覧": 5
     },
     "にご": {
       "されます": 1,
-      "ください": 1
+      "ください": 1,
+      "登録": 8
     },
     "特集": {
       "ページ": 5
     },
     "仕事": {
-      "...": 2
+      "...": 2,
+      "ができま": 1,
+      "自分": 1
     },
     "になる": {
-      "無料": 2
+      "無料": 2,
+      "場合": 1,
+      "です": 1,
+      "方法": 1
     },
     "ダウンロード": {
-      "さい": 2
+      "さい": 2,
+      "アクセス": 1
     },
     "無料": {
-      "など": 12
+      "など": 12,
+      "問い": 1,
+      "場合": 1,
+      "されてい": 1,
+      "3": 1
     },
     "のことが": {
-      "からない": 2
+      "からない": 3
     },
     "からない": {
-      "から": 2
+      "から": 3
+    },
+    "51": {
+      "://": 1
+    },
+    "データ": {
+      "して": 3,
+      "すること": 3,
+      "について": 2,
+      "意味": 3,
+      "データ": 2,
+      "います": 1,
+      "提供": 1,
+      "めて": 1
+    },
+    "れた": {
+      "をお": 1,
+      "提供": 2,
+      "企業": 1,
+      "関する": 1
+    },
+    "掲載": {
+      "されてい": 1,
+      "じて": 1
+    },
+    "メール": {
+      "問い": 1,
+      "配信": 4,
+      "により": 1,
+      "より": 1,
+      "できます": 1,
+      "内容": 1,
+      "などの": 1,
+      "をお": 1
+    },
+    "個人": {
+      "データ": 13,
+      "への": 2,
+      "されます": 1,
+      "がある": 1,
+      "との": 1,
+      "である": 1,
+      "意味": 1,
+      "提供": 1
+    },
+    "できます": {
+      "または": 1
+    },
+    "目的": {
+      "場合": 1,
+      "としてい": 2,
+      "サイト": 1,
+      "では": 1,
+      "のために": 5,
+      "および": 2,
+      "った": 3
+    },
+    "くの": {
+      "では": 1,
+      "場合": 3,
+      "企業": 2,
+      "すること": 1,
+      "での": 1
+    },
+    "状況": {
+      "配信": 1,
+      "および": 1,
+      "から": 1,
+      "意味": 1,
+      "じて": 2
+    },
+    "ボタン": {
+      "などの": 2
+    },
+    "案内": {
+      "ページ": 1,
+      "メール": 1
+    },
+    "としてい": {
+      "ます": 2
+    },
+    "be": {
+      "4": 2
+    },
+    "36": {
+      "4": 1,
+      "22": 1
+    },
+    "影響": {
+      "可能性": 1,
+      "個人": 2,
+      "確認": 1
+    },
+    "説明": {
+      "をご": 1,
+      "される": 1,
+      "されてい": 1
+    },
+    "もう": {
+      "つの": 1
+    },
+    "ではない": {
+      "には": 1,
+      "します": 1,
+      "場合": 1,
+      "意味": 1
+    },
+    "2020": {
+      "13": 1
+    },
+    "となる": {
+      "からの": 1,
+      "および": 1,
+      "メール": 1
+    },
+    "います": {
+      "および": 1
+    },
+    "がお": {
+      "アカウント": 2,
+      "または": 1,
+      "して": 1,
+      "提供": 1,
+      "りの": 1
+    },
+    "ソフトウェア": {
+      "している": 1,
+      "提供": 2,
+      "との": 2,
+      "意味": 1,
+      "ダウンロード": 1,
+      "方法": 1,
+      "つの": 1,
+      "より": 1
+    },
+    "これは": {
+      "について": 1,
+      "です": 1
+    },
+    "めた": {
+      "場合": 1
+    },
+    "48": {
+      "2": 1,
+      "12": 2
+    },
+    "していた": {
+      "または": 1
+    },
+    "今日": {
+      "企業": 1,
+      "さん": 1,
+      "40": 21
+    },
+    "さらに": {
+      "ができま": 1,
+      "した": 1,
+      "をご": 1
+    },
+    "知識": {
+      "ができま": 2
+    },
+    "コミュニティ": {
+      "参加": 1,
+      "による": 1
+    },
+    "イベント": {
+      "などを": 1,
+      "案内": 1,
+      "として": 1,
+      "でも": 1
+    },
+    "動画": {
+      "ファイル": 3
+    },
+    "さん": {
+      "5": 4,
+      "では": 1,
+      "40": 1,
+      "公開": 1
+    },
+    "The": {
+      "から": 1
+    },
+    "となりま": {
+      "した": 1
+    },
+    "けて": {
+      "です": 1
+    },
+    "だと": {
+      "います": 1
+    },
+    "200": {
+      "16": 1,
+      "49": 1,
+      "2": 1,
+      "5": 1
+    },
+    "55": {
+      "000": 1
+    },
+    "結果": {
+      "として": 1
     }
   },
   "opens_a_sentence": {
-    "など": 57,
-    "しかし": 23,
-    "では": 75,
-    "っていま": 22,
+    "など": 62,
+    "しかし": 26,
+    "では": 89,
+    "っていま": 23,
     "かれてい": 12,
-    "こんにち": 43,
-    "には": 107,
-    "ページ": 42,
-    "します": 36,
-    "本当": 56,
+    "こんにち": 44,
+    "には": 128,
+    "ページ": 43,
+    "します": 41,
+    "本当": 60,
     "だった": 9,
-    "について": 40,
+    "について": 45,
     "表示": 14,
-    "その": 45,
-    "から": 186,
-    "この": 86,
-    "1": 195,
-    "して": 40,
-    "4": 25,
-    "場合": 29,
-    "です": 53,
-    "サイト": 75,
-    "すること": 20,
-    "した": 184,
-    "していま": 16,
-    "自分": 30,
-    "3": 121,
+    "その": 59,
+    "から": 199,
+    "この": 117,
+    "1": 215,
+    "して": 58,
+    "4": 33,
+    "場合": 38,
+    "です": 70,
+    "サイト": 77,
+    "すること": 33,
+    "した": 195,
+    "していま": 18,
+    "自分": 38,
+    "3": 128,
     "がある": 11,
-    "への": 21,
-    "情報": 27,
-    "2": 384,
-    "されてい": 24,
-    "必要": 15,
-    "8": 8,
+    "への": 28,
+    "情報": 31,
+    "2": 391,
+    "されてい": 35,
+    "必要": 21,
+    "8": 9,
     "ニュース": 8,
-    "している": 56,
+    "している": 58,
     "検索": 22,
-    "ます": 8,
-    "6": 25,
-    "自由": 158,
-    "://": 49,
-    "できます": 1,
-    "ある": 8,
-    "という": 28,
-    "でも": 20,
-    "30": 55,
-    "10": 14,
-    "7": 5,
+    "ます": 11,
+    "6": 27,
+    "自由": 160,
+    "://": 55,
+    "できます": 13,
+    "ある": 10,
+    "という": 29,
+    "でも": 28,
+    "30": 59,
+    "10": 15,
+    "7": 7,
     "0": 13,
-    "9": 14,
-    "利用": 30,
-    "ログイン": 1,
+    "9": 17,
+    "利用": 34,
+    "ログイン": 2,
     "2026": 12,
-    "された": 40,
-    "より": 15,
-    "する": 6,
-    "記事": 14,
-    "しました": 16,
-    "ください": 14,
-    "った": 23,
-    "場所": 4,
-    "になりま": 2,
-    "新しい": 11,
-    "してくだ": 18,
+    "された": 49,
+    "より": 24,
+    "する": 13,
+    "記事": 28,
+    "しました": 18,
+    "ください": 19,
+    "った": 28,
+    "場所": 5,
+    "になりま": 4,
+    "新しい": 12,
+    "してくだ": 22,
     "for": 2,
     "page": 9,
     "in": 4,
-    "機能": 12,
-    "変更": 11,
+    "機能": 22,
+    "変更": 13,
     "リンク": 15,
-    "5": 16,
+    "5": 19,
     "さい": 5,
-    "ユーザー": 8,
+    "ユーザー": 10,
     "ブログ": 7,
     "17": 2,
-    "っている": 8,
-    "また": 32,
+    "っている": 10,
+    "また": 55,
     "言葉": 8,
-    "って": 43,
+    "って": 53,
     "&#": 2,
     "22": 2,
-    "として": 22,
-    "12": 3,
-    "をお": 1,
-    "によって": 11,
+    "として": 25,
+    "12": 5,
+    "をお": 9,
+    "によって": 13,
     "80": 3,
-    "20": 1,
-    "11": 15,
-    "女性": 3,
+    "20": 20,
+    "11": 16,
+    "女性": 5,
     "09": 1,
-    "使用": 5,
-    "紹介": 8,
+    "使用": 20,
+    "紹介": 10,
     "過去": 14,
-    "するため": 3,
-    "以下": 10,
-    "トップ": 8,
-    "のお": 4,
-    "したい": 18,
-    "とは": 3,
-    "にも": 14,
-    "りの": 1,
+    "するため": 6,
+    "以下": 15,
+    "トップ": 9,
+    "のお": 6,
+    "したい": 19,
+    "とは": 58,
+    "にも": 39,
+    "りの": 2,
     "がありま": 5,
     "選択": 3,
     "100": 11,
-    "まで": 9,
-    "できる": 1,
+    "まで": 13,
+    "できる": 13,
     "インターネット": 5,
-    "めて": 11,
-    "からの": 5,
+    "めて": 13,
+    "からの": 8,
     "50": 1,
-    "アカウント": 9,
-    "最近": 4,
+    "アカウント": 14,
+    "最近": 6,
     "求める": 1,
-    "での": 30,
+    "での": 35,
     "いた": 6,
     "読む": 1,
     "コンテンツ": 1,
     "されまし": 4,
-    "更新": 4,
+    "更新": 5,
     "最初": 8,
-    "作成": 2,
+    "作成": 5,
     "理由": 5,
     "プロジェクト": 1,
-    "追加": 8,
+    "追加": 9,
     "日本語": 3,
-    "15": 4,
+    "15": 5,
     "24": 3,
-    "います": 2,
+    "います": 5,
     "編集": 1,
-    "内容": 2,
-    "などの": 4,
+    "内容": 4,
+    "などの": 9,
     "02": 1,
-    "をご": 11,
+    "をご": 14,
     "2023": 7,
     "2024": 2,
     "2013": 2,
-    "2012": 2,
+    "2012": 3,
     "2025": 2,
     "amp": 1,
-    "される": 7,
-    "である": 12,
+    "される": 22,
+    "である": 14,
     "公開": 6,
-    "関する": 2,
-    "13": 2,
-    "による": 8,
-    "26": 3,
+    "関する": 13,
+    "13": 4,
+    "による": 23,
+    "26": 4,
     "音楽": 3,
     "28": 2,
-    "現在": 9,
-    "問題": 8,
+    "現在": 12,
+    "問題": 9,
     "参加": 2,
     "つの": 2,
     "えて": 3,
-    "話題": 13,
-    "だけど": 1,
+    "話題": 14,
+    "だけど": 3,
     "じゃない": 5,
-    "東京": 2,
-    "サービス": 15,
-    "ツール": 1,
+    "東京": 13,
+    "サービス": 61,
+    "ツール": 4,
     "わせ": 2,
-    "との": 7,
+    "との": 9,
     "登録": 1,
     "移動": 1,
-    "日本": 9,
-    "がお": 1,
-    "詳細": 1,
-    "発生": 6,
+    "日本": 12,
+    "がお": 3,
+    "詳細": 13,
+    "発生": 11,
     "アクセス": 5,
-    "または": 1,
+    "または": 27,
     "経済": 1,
     "ランキング": 61,
     "38": 24,
-    "えた": 24,
-    "んだ": 10,
+    "えた": 27,
+    "んだ": 11,
     "29": 16,
     "男性": 2,
-    "ない": 3,
-    "そして": 1,
+    "ない": 6,
+    "そして": 3,
     "16": 3,
-    "にある": 3,
-    "人気": 8,
-    "対応": 2,
+    "にある": 7,
+    "人気": 15,
+    "対応": 4,
     "けの": 3,
     "などを": 3,
     "160": 1,
-    "問い": 1,
+    "問い": 3,
     "画像": 1,
     "2016": 2,
-    "時代": 1,
+    "時代": 3,
     "設定": 6,
     "仲間": 2,
     "文化": 1,
     "ってる": 1,
     "25": 1,
-    "報告": 1,
+    "報告": 2,
     "ガイドライン": 15,
-    "アプリ": 1,
+    "アプリ": 4,
     "...": 2,
     "学校": 2,
-    "確認": 5,
+    "確認": 7,
     "利用規約": 1,
-    "世界": 3,
+    "世界": 4,
     "アニメ": 1,
     "作品": 8,
-    "企業": 1,
-    "くの": 1,
-    "であり": 1,
-    "最新": 2,
-    "および": 4,
-    "により": 1,
+    "企業": 14,
+    "くの": 3,
+    "であり": 3,
+    "最新": 3,
+    "および": 19,
+    "により": 9,
     "投稿": 7,
-    "環境": 1,
-    "提供": 1,
-    "技術": 1,
+    "環境": 2,
+    "提供": 5,
+    "技術": 3,
     "21": 1,
     "月間": 1,
     "コメント": 1,
-    "まだ": 4,
+    "まだ": 5,
     "表現": 5,
     "特集": 7,
-    "無料": 14,
+    "無料": 15,
     "はありま": 1,
     "となりま": 1,
     "にご": 1,
     "ゲーム": 6,
-    "きな": 5,
-    "になる": 2,
+    "きな": 8,
+    "になる": 4,
     "ダウンロード": 2,
-    "のことが": 2
+    "のことが": 3,
+    "目的": 6,
+    "タグ": 2,
+    "ボタン": 5,
+    "これは": 2,
+    "のために": 6,
+    "入力": 4,
+    "メール": 14,
+    "もう": 1,
+    "されます": 2,
+    "状況": 2,
+    "すべての": 3,
+    "きます": 1,
+    "さらに": 3,
+    "ではない": 2,
+    "データ": 5,
+    "掲載": 1,
+    "ません": 1,
+    "意味": 2,
+    "すると": 5,
+    "じて": 2,
+    "となる": 1,
+    "れた": 4,
+    "仕事": 2,
+    "使い": 1,
+    "質問": 1,
+    "簡単": 5,
+    "これまで": 1,
+    "コミュニティ": 2,
+    "方法": 1,
+    "安全": 1,
+    "ソフトウェア": 2,
+    "40": 77,
+    "公式": 1,
+    "さん": 10,
+    "チェック": 26,
+    "めた": 1,
+    "18": 3,
+    "みを": 2,
+    "34": 1,
+    "けて": 1,
+    "動画": 1,
+    "写真": 1,
+    "今日": 1,
+    "えます": 3,
+    "結果": 1
   },
   "closes_a_sentence": {
-    "など": 53,
-    "しかし": 10,
-    "では": 51,
-    "っていま": 26,
+    "など": 55,
+    "しかし": 11,
+    "では": 54,
+    "っていま": 31,
     "かれてい": 12,
-    "こんにち": 43,
-    "には": 88,
+    "こんにち": 44,
+    "には": 100,
     "ページ": 31,
-    "します": 87,
-    "本当": 27,
+    "します": 246,
+    "本当": 30,
     "だった": 13,
-    "について": 33,
+    "について": 35,
     "表示": 16,
-    "から": 143,
-    "ます": 87,
-    "して": 40,
-    "1": 233,
-    "4": 35,
-    "場合": 26,
-    "その": 19,
-    "です": 108,
-    "すること": 45,
-    "した": 236,
-    "していま": 82,
+    "から": 154,
+    "ます": 122,
+    "して": 50,
+    "1": 252,
+    "4": 40,
+    "場合": 35,
+    "その": 21,
+    "です": 161,
+    "すること": 61,
+    "した": 241,
+    "していま": 101,
     "がある": 18,
     "日本語": 8,
-    "への": 19,
-    "この": 32,
+    "への": 21,
+    "この": 37,
     "情報": 8,
-    "3": 63,
-    "されてい": 43,
-    "2": 86,
-    "自分": 25,
-    "必要": 14,
+    "3": 69,
+    "されてい": 45,
+    "2": 90,
+    "自分": 49,
+    "必要": 17,
     "ニュース": 7,
-    "している": 68,
+    "している": 73,
     "検索": 7,
     "自由": 118,
-    "できます": 31,
-    "しました": 34,
+    "できます": 88,
+    "しました": 41,
     "コンテンツ": 4,
     "22": 28,
     "ある": 11,
-    "でも": 22,
+    "でも": 24,
     "09": 1,
-    "8": 13,
-    "という": 32,
-    "った": 37,
-    "://": 20,
+    "8": 14,
+    "という": 34,
+    "った": 39,
+    "://": 25,
     "0": 34,
-    "9": 33,
-    "30": 7,
-    "10": 13,
-    "6": 46,
+    "9": 35,
+    "30": 9,
+    "10": 14,
+    "6": 47,
     "7": 32,
     "ログイン": 2,
-    "利用": 4,
-    "された": 54,
-    "する": 6,
-    "ください": 44,
-    "27": 2,
-    "5": 39,
-    "記事": 9,
-    "場所": 3,
-    "サイト": 83,
-    "になりま": 12,
-    "さい": 55,
+    "利用": 5,
+    "された": 58,
+    "する": 9,
+    "ください": 59,
+    "27": 3,
+    "5": 44,
+    "記事": 16,
+    "場所": 5,
+    "サイト": 87,
+    "になりま": 22,
+    "さい": 68,
     "for": 2,
     "page": 9,
     "in": 4,
-    "機能": 14,
-    "きな": 4,
-    "org": 24,
-    "リンク": 2,
+    "機能": 17,
+    "きな": 9,
+    "org": 25,
+    "リンク": 4,
     "求める": 2,
     "ブログ": 8,
     "17": 5,
     "言葉": 4,
-    "って": 42,
+    "って": 47,
     "&#": 2,
-    "がありま": 32,
+    "がありま": 63,
     "20": 4,
-    "をお": 25,
+    "をお": 33,
     "されまし": 15,
-    "11": 17,
-    "っている": 45,
+    "11": 18,
+    "っている": 48,
     "be": 1,
     "過去": 12,
-    "するため": 3,
+    "するため": 6,
     "以下": 11,
     "アカウント": 9,
-    "トップ": 8,
-    "のお": 5,
-    "とは": 6,
-    "にも": 15,
+    "トップ": 9,
+    "のお": 6,
+    "とは": 16,
+    "にも": 42,
     "ユーザー": 13,
-    "りの": 2,
-    "ません": 8,
-    "選択": 4,
-    "として": 12,
-    "まで": 13,
+    "りの": 3,
+    "ません": 17,
+    "選択": 5,
+    "として": 15,
+    "まで": 15,
     "インターネット": 1,
-    "めて": 5,
-    "からの": 1,
+    "めて": 7,
+    "からの": 3,
     "仲間": 3,
     "50": 1,
-    "新しい": 1,
-    "より": 12,
-    "紹介": 2,
-    "また": 4,
-    "したい": 17,
-    "される": 10,
+    "新しい": 3,
+    "より": 17,
+    "紹介": 3,
+    "また": 6,
+    "したい": 19,
+    "される": 12,
     "最近": 2,
-    "での": 22,
-    "によって": 4,
+    "での": 23,
+    "によって": 5,
     "いた": 8,
-    "できる": 7,
+    "できる": 20,
     "読む": 1,
-    "います": 15,
-    "アクセス": 6,
+    "います": 39,
+    "アクセス": 8,
     "作成": 1,
     "編集": 2,
-    "15": 8,
-    "せん": 6,
+    "15": 9,
+    "せん": 21,
     "24": 4,
     "12": 4,
     "29": 17,
-    "18": 1,
+    "18": 3,
     "13": 4,
     "23": 1,
-    "21": 2,
+    "21": 3,
     "2013": 1,
     "2012": 1,
     "2025": 2,
@@ -8496,49 +9325,49 @@
     "amp": 1,
     "である": 21,
     "えて": 5,
-    "公開": 4,
+    "公開": 5,
     "問い": 1,
     "音楽": 4,
-    "えた": 26,
+    "えた": 30,
     "理由": 2,
     "にある": 2,
     "参加": 1,
     "のために": 1,
-    "つの": 2,
-    "話題": 4,
+    "つの": 3,
+    "話題": 5,
     "44": 1,
-    "使用": 4,
-    "による": 4,
-    "じゃない": 24,
-    "方法": 3,
+    "使用": 11,
+    "による": 10,
+    "じゃない": 25,
+    "方法": 5,
     "問題": 8,
-    "えます": 3,
-    "との": 8,
-    "関する": 6,
+    "えます": 9,
+    "との": 10,
+    "関する": 8,
     "表現": 1,
-    "そして": 2,
-    "解説": 2,
+    "そして": 4,
+    "解説": 3,
     "80": 11,
-    "40": 3,
+    "40": 74,
     "14": 5,
     "26": 4,
     "19": 2,
     "05": 2,
     "07": 2,
     "38": 26,
-    "日本": 2,
+    "日本": 4,
     "発生": 3,
     "ランキング": 60,
     "んだ": 10,
     "49": 1,
     "100": 5,
-    "ない": 6,
-    "女性": 1,
+    "ない": 8,
+    "女性": 2,
     "41": 1,
-    "更新": 3,
+    "更新": 4,
     "47": 1,
     "16": 1,
-    "ってる": 21,
+    "ってる": 22,
     "名前": 1,
     "画像": 3,
     "内容": 4,
@@ -8547,29 +9376,73 @@
     "仕事": 2,
     "非表示": 1,
     "などを": 6,
-    "きます": 6,
-    "ツール": 10,
+    "きます": 11,
+    "ツール": 16,
     "らせ": 2,
     "最初": 1,
-    "チェック": 15,
+    "チェック": 41,
     "アプリ": 1,
-    "使い": 1,
+    "使い": 2,
     "学校": 1,
-    "されます": 14,
+    "されます": 44,
     "利用規約": 1,
     "世界": 4,
-    "作品": 2,
-    "提供": 4,
-    "わせ": 2,
+    "作品": 3,
+    "提供": 6,
+    "わせ": 3,
     "ガイドライン": 1,
     "環境": 1,
-    "無料": 16,
+    "無料": 17,
     "はありま": 1,
-    "となりま": 11,
-    "により": 5,
-    "人気": 1,
+    "となりま": 18,
+    "により": 9,
+    "人気": 5,
     "ゲーム": 1,
-    "特集": 2
+    "特集": 2,
+    "および": 4,
+    "ができま": 32,
+    "設定": 1,
+    "サービス": 7,
+    "であり": 2,
+    "結果": 1,
+    "じて": 1,
+    "データ": 4,
+    "または": 11,
+    "個人": 1,
+    "ダウンロード": 1,
+    "すべての": 1,
+    "現在": 1,
+    "とを": 1,
+    "影響": 3,
+    "企業": 6,
+    "となる": 1,
+    "れた": 1,
+    "くの": 1,
+    "メール": 3,
+    "していた": 1,
+    "技術": 3,
+    "さらに": 1,
+    "詳細": 10,
+    "簡単": 1,
+    "公式": 1,
+    "さん": 3,
+    "東京": 11,
+    "2026": 1,
+    "みを": 2,
+    "いました": 1,
+    "送信": 1,
+    "けた": 2,
+    "34": 1,
+    "写真": 2,
+    "だと": 1,
+    "男性": 1,
+    "今日": 1,
+    "これは": 1,
+    "けて": 1,
+    "ボタン": 4,
+    "になる": 2,
+    "掲載": 1,
+    "だけど": 1
   },
   "visitors": {
     "comments": 0,
@@ -8798,7 +9671,135 @@
       "からない",
       "公式",
       "います",
-      "関する"
+      "関する",
+      "the",
+      "in",
+      "for",
+      "to",
+      "be",
+      "by",
+      "this",
+      "of",
+      "78",
+      "amp",
+      "page",
+      "2023",
+      "The",
+      "org",
+      "is",
+      "日本語",
+      "51",
+      "ニュース",
+      "セミナー",
+      "への",
+      "アプリ",
+      "コミュニティ",
+      "ユーザー",
+      "および",
+      "ガイドライン",
+      "データ",
+      "または",
+      "してくだ",
+      "使用",
+      "とは",
+      "れた",
+      "技術",
+      "によって",
+      "現在",
+      "みを",
+      "その",
+      "タグ",
+      "メール",
+      "ができま",
+      "&#",
+      "自分",
+      "方法",
+      "くの",
+      "ボタン",
+      "アクセス",
+      "による",
+      "企業",
+      "案内",
+      "これは",
+      "からの",
+      "としてい",
+      "そして",
+      "47",
+      "じて",
+      "作成",
+      "った",
+      "48",
+      "であり",
+      "ません",
+      "影響",
+      "ツール",
+      "内容",
+      "えて",
+      "のために",
+      "対応",
+      "発生",
+      "2025",
+      "意味",
+      "である",
+      "もう",
+      "つの",
+      "という",
+      "求める",
+      "2013",
+      "結果",
+      "さらに",
+      "2020",
+      "2012",
+      "となる",
+      "2024",
+      "きます",
+      "ソフトウェア",
+      "インターネット",
+      "最新",
+      "めた",
+      "ある",
+      "安全",
+      "最初",
+      "にある",
+      "方針",
+      "開発",
+      "していた",
+      "画像",
+      "動画",
+      "テキスト",
+      "2016",
+      "解説",
+      "えます",
+      "52",
+      "今日",
+      "使い",
+      "時代",
+      "記事",
+      "知識",
+      "最近",
+      "これまで",
+      "報告",
+      "投稿",
+      "編集",
+      "イベント",
+      "ファイル",
+      "コード",
+      "したい",
+      "環境",
+      "さん",
+      "もっと",
+      "東京",
+      "いました",
+      "けた",
+      "34",
+      "っていた",
+      "39",
+      "写真",
+      "だと",
+      "37",
+      "41",
+      "49",
+      "公開"
     ]
   },
   "wants_to_say": [
@@ -9406,9 +10407,9 @@
     },
     {
       "what": "いま",
-      "since": "2026-10-16",
+      "since": "2026-10-18",
       "first": "2026-10-16",
-      "times": 1,
+      "times": 2,
       "said": ""
     },
     {
@@ -9434,9 +10435,9 @@
     },
     {
       "what": "当社",
-      "since": "2026-10-17",
+      "since": "2026-10-18",
       "first": "2026-10-17",
-      "times": 1,
+      "times": 2,
       "said": ""
     },
     {
@@ -9459,10 +10460,24 @@
       "first": "2026-10-18",
       "times": 1,
       "said": ""
+    },
+    {
+      "what": "チーム",
+      "since": "2026-10-18",
+      "first": "2026-10-18",
+      "times": 1,
+      "said": ""
+    },
+    {
+      "what": "クラシック",
+      "since": "2026-10-18",
+      "first": "2026-10-18",
+      "times": 1,
+      "said": ""
     }
   ],
   "thinking_about": "からペジ",
-  "learned_on": {"など":"2026-09-20","本当":"2026-09-20","がある":"2026-09-20","だった":"2026-09-20","しかし":"2026-09-20","ある":"2026-09-20","こんにち":"2026-09-20","では":"2026-09-21","かれてい":"2026-09-22","っていま":"2026-09-22","人":"2026-09-22","絵":"2026-09-23","仲間":"2026-09-23","セミナー":"2026-09-23","には":"2026-09-27","します":"2026-09-29","ページ":"2026-09-29","について":"2026-09-30","表示":"2026-09-30","その":"2026-09-30","から":"2026-09-30","場合":"2026-10-01","サイト":"2026-10-01","されてい":"2026-10-01","ます":"2026-10-01","して":"2026-10-01","すること":"2026-10-01","この":"2026-10-01","1":"2026-10-01","です":"2026-10-02","2026":"2026-10-02","0":"2026-10-02","4":"2026-10-02","情報":"2026-10-02","した":"2026-10-02","日本語":"2026-10-02","to":"2026-10-02","検索":"2026-10-02","必要":"2026-10-03","自分":"2026-10-03","2":"2026-10-03","22":"2026-10-03","しました":"2026-10-03","コンテンツ":"2026-10-04","自由":"2026-10-04","していま":"2026-10-04","3":"2026-10-04","8":"2026-10-05","への":"2026-10-05","ツール":"2026-10-06","リンク":"2026-10-06","ニュース":"2026-10-06","された":"2026-10-06","している":"2026-10-06","になりま":"2026-10-06","7":"2026-10-06","6":"2026-10-06","場所":"2026-10-06","09":"2026-10-06","ログイン":"2026-10-06","できます":"2026-10-06","さい":"2026-10-06","amp":"2026-10-06","for":"2026-10-06","org":"2026-10-07","://":"2026-10-07","10":"2026-10-07","新しい":"2026-10-07","という":"2026-10-07","する":"2026-10-07","った":"2026-10-07","変更":"2026-10-07","より":"2026-10-07","でも":"2026-10-07","利用":"2026-10-07","9":"2026-10-07","30":"2026-10-07","詳細":"2026-10-07","01":"2026-10-07","記事":"2026-10-07","by":"2026-10-07","of":"2026-10-07","求める":"2026-10-07","27":"2026-10-07","be":"2026-10-07","in":"2026-10-07","is":"2026-10-07","page":"2026-10-07","the":"2026-10-07","ください":"2026-10-08","してくだ":"2026-10-08","17":"2026-10-08","The":"2026-10-08","this":"2026-10-08","りの":"2026-10-08","ユーザー":"2026-10-08","アカウント":"2026-10-08","5":"2026-10-08","トップ":"2026-10-08","機能":"2026-10-08","12":"2026-10-08","きな":"2026-10-08","をお":"2026-10-08","いた":"2026-10-08","って":"2026-10-08","けの":"2026-10-08","ブログ":"2026-10-08","14":"2026-10-08","まで":"2026-10-08","コミュニティ":"2026-10-08","言葉":"2026-10-08","15":"2026-10-08","もっと":"2026-10-08","読む":"2026-10-08","19":"2026-10-08","男性":"2026-10-08","11":"2026-10-09","13":"2026-10-09","20":"2026-10-09","21":"2026-10-09","50":"2026-10-09","24":"2026-10-09","&#":"2026-10-09","での":"2026-10-09","とは":"2026-10-09","できる":"2026-10-09","によって":"2026-10-09","作成":"2026-10-09","また":"2026-10-09","つの":"2026-10-09","するため":"2026-10-09","として":"2026-10-09","紹介":"2026-10-09","をご":"2026-10-09","っている":"2026-10-09","29":"2026-10-09","アクセス":"2026-10-09","ソフトウェア":"2026-10-09","文字":"2026-10-09","女性":"2026-10-09","されまし":"2026-10-09","06":"2026-10-09","過去":"2026-10-10","がありま":"2026-10-10","からの":"2026-10-10","使用":"2026-10-10","28":"2026-10-10","00":"2026-10-10","08":"2026-10-10","2025":"2026-10-10","80":"2026-10-10","寄付":"2026-10-11","プロジェクト":"2026-10-11","ファイル":"2026-10-11","めて":"2026-10-11","18":"2026-10-11","にも":"2026-10-11","のお":"2026-10-11","公開":"2026-10-11","26":"2026-10-11","される":"2026-10-11","ません":"2026-10-11","ヘルプ":"2026-10-11","えた":"2026-10-11","以下":"2026-10-11","利用規約":"2026-10-11","最近":"2026-10-11","追加":"2026-10-11","2013":"2026-10-11","理由":"2026-10-11","16":"2026-10-11","アプリ":"2026-10-11","企業":"2026-10-11","えます":"2026-10-11","100":"2026-10-11","選択":"2026-10-11","インターネット":"2026-10-11","したい":"2026-10-11","02":"2026-10-11","チェック":"2026-10-11","44":"2026-10-11","編集":"2026-10-11","2012":"2026-10-11","03":"2026-10-11","2024":"2026-10-11","04":"2026-10-11","である":"2026-10-12","参加":"2026-10-12","質問":"2026-10-12","います":"2026-10-12","問い":"2026-10-12","関する":"2026-10-12","23":"2026-10-12","サービス":"2026-10-12","登録":"2026-10-12","んだ":"2026-10-12","25":"2026-10-12","内容":"2026-10-12","現在":"2026-10-12","などの":"2026-10-12","方法":"2026-10-12","環境":"2026-10-12","話題":"2026-10-12","のために":"2026-10-12","最初":"2026-10-12","35":"2026-10-12","更新":"2026-10-12","39":"2026-10-12","開発":"2026-10-12","音楽":"2026-10-12","見る":"2026-10-12","...":"2026-10-12","東京":"2026-10-12","34":"2026-10-12","使い":"2026-10-12","05":"2026-10-12","一覧":"2026-10-12","2022":"2026-10-12","せん":"2026-10-14","だけど":"2026-10-14","がお":"2026-10-14","じゃない":"2026-10-14","きます":"2026-10-14","簡単":"2026-10-14","07":"2026-10-14","コメント":"2026-10-14","中文":"2026-10-14","56":"2026-10-14","40":"2026-10-14","47":"2026-10-14","52":"2026-10-14","による":"2026-10-14","または":"2026-10-14","問題":"2026-10-14","えて":"2026-10-14","テキスト":"2026-10-14","にある":"2026-10-14","および":"2026-10-14","2023":"2026-10-14","タグ":"2026-10-14","トーク":"2026-10-14","59":"2026-10-14","公式":"2026-10-15","じて":"2026-10-15","安全":"2026-10-15","日本":"2026-10-15","78":"2026-10-15","との":"2026-10-15","くの":"2026-10-15","すると":"2026-10-15","わせ":"2026-10-15","名前":"2026-10-15","らせ":"2026-10-15","31":"2026-10-15","などを":"2026-10-15","そして":"2026-10-15","ない":"2026-10-15","38":"2026-10-15","であり":"2026-10-15","れた":"2026-10-15","解説":"2026-10-15","作品":"2026-10-15","文化":"2026-10-15","議論":"2026-10-15","意味":"2026-10-15","技術":"2026-10-15","移動":"2026-10-15","としてい":"2026-10-15","2016":"2026-10-15","コード":"2026-10-15","学校":"2026-10-15","人気":"2026-10-15","41":"2026-10-15","スポーツ":"2026-10-15","49":"2026-10-15","時代":"2026-10-15","ランキング":"2026-10-15",";/":"2026-10-15","非表示":"2026-10-15","発生":"2026-10-15","表現":"2026-10-15","160":"2026-10-15",";&":"2026-10-15","となりま":"2026-10-15","送信":"2026-10-15","ガイドライン":"2026-10-15","最新":"2026-10-15","設定":"2026-10-15","経済":"2026-10-15","政治":"2026-10-15","らし":"2026-10-15","画像":"2026-10-15","とを":"2026-10-15","ってる":"2026-10-15","仕事":"2026-10-16","000":"2026-10-16","2020":"2026-10-16","けた":"2026-10-16","報告":"2026-10-16","対応":"2026-10-16","確認":"2026-10-16","データ":"2026-10-16","配信":"2026-10-16","投稿":"2026-10-16","可能性":"2026-10-16","無料":"2026-10-16","ダウンロード":"2026-10-16","これまで":"2026-10-16","により":"2026-10-16","アメリカ":"2026-10-16","状態":"2026-10-16","すべての":"2026-10-16","になる":"2026-10-16","案内":"2026-10-16","世界":"2026-10-16","みを":"2026-10-16","されます":"2026-10-16","メール":"2026-10-16","っていた":"2026-10-16","だと":"2026-10-16","入力":"2026-10-16","特集":"2026-10-16","となって":"2026-10-16","あり":"2026-10-16","48":"2026-10-16","映画":"2026-10-16","もう":"2026-10-16","影響":"2026-10-16","これは":"2026-10-16","月間":"2026-10-16","さん":"2026-10-16","動画":"2026-10-16","ゲーム":"2026-10-16","していた":"2026-10-16","めた":"2026-10-16","新着":"2026-10-16","方針":"2026-10-16","ではない":"2026-10-16","写真":"2026-10-16","テレビ":"2026-10-16","51":"2026-10-16","ブックマーク":"2026-10-16","2010":"2026-10-16","アニメ":"2026-10-16","けて":"2026-10-17","提供":"2026-10-17","目的":"2026-10-17","状況":"2026-10-17","説明":"2026-10-17","にご":"2026-10-17","個人":"2026-10-17","掲載":"2026-10-17","はありま":"2026-10-17","200":"2026-10-17","社会":"2026-10-17","42":"2026-10-17","32":"2026-10-17","36":"2026-10-17","58":"2026-10-17","55":"2026-10-17","81":"2026-10-17","今日":"2026-10-18","まだ":"2026-10-18","ほか":"2026-10-18","いました":"2026-10-18","37":"2026-10-18","直近":"2026-10-18","☆":"2026-10-18","イベント":"2026-10-18","からない":"2026-10-18","のことが":"2026-10-18","ボタン":"2026-10-18","結果":"2026-10-18","ができま":"2026-10-18","さらに":"2026-10-18","発表":"2026-10-18","となる":"2026-10-18","知識":"2026-10-18"},
+  "learned_on": {"など":"2026-09-20","本当":"2026-09-20","がある":"2026-09-20","だった":"2026-09-20","しかし":"2026-09-20","ある":"2026-09-20","こんにち":"2026-09-20","では":"2026-09-21","かれてい":"2026-09-22","っていま":"2026-09-22","人":"2026-09-22","絵":"2026-09-23","仲間":"2026-09-23","セミナー":"2026-09-23","には":"2026-09-27","します":"2026-09-29","ページ":"2026-09-29","について":"2026-09-30","表示":"2026-09-30","その":"2026-09-30","から":"2026-09-30","場合":"2026-10-01","サイト":"2026-10-01","されてい":"2026-10-01","ます":"2026-10-01","して":"2026-10-01","すること":"2026-10-01","この":"2026-10-01","1":"2026-10-01","です":"2026-10-02","2026":"2026-10-02","0":"2026-10-02","4":"2026-10-02","情報":"2026-10-02","した":"2026-10-02","日本語":"2026-10-02","to":"2026-10-02","検索":"2026-10-02","必要":"2026-10-03","自分":"2026-10-03","2":"2026-10-03","22":"2026-10-03","しました":"2026-10-03","コンテンツ":"2026-10-04","自由":"2026-10-04","していま":"2026-10-04","3":"2026-10-04","8":"2026-10-05","への":"2026-10-05","ツール":"2026-10-06","リンク":"2026-10-06","ニュース":"2026-10-06","された":"2026-10-06","している":"2026-10-06","になりま":"2026-10-06","7":"2026-10-06","6":"2026-10-06","場所":"2026-10-06","09":"2026-10-06","ログイン":"2026-10-06","できます":"2026-10-06","さい":"2026-10-06","amp":"2026-10-06","for":"2026-10-06","org":"2026-10-07","://":"2026-10-07","10":"2026-10-07","新しい":"2026-10-07","という":"2026-10-07","する":"2026-10-07","った":"2026-10-07","変更":"2026-10-07","より":"2026-10-07","でも":"2026-10-07","利用":"2026-10-07","9":"2026-10-07","30":"2026-10-07","詳細":"2026-10-07","01":"2026-10-07","記事":"2026-10-07","by":"2026-10-07","of":"2026-10-07","求める":"2026-10-07","27":"2026-10-07","be":"2026-10-07","in":"2026-10-07","is":"2026-10-07","page":"2026-10-07","the":"2026-10-07","ください":"2026-10-08","してくだ":"2026-10-08","17":"2026-10-08","The":"2026-10-08","this":"2026-10-08","りの":"2026-10-08","ユーザー":"2026-10-08","アカウント":"2026-10-08","5":"2026-10-08","トップ":"2026-10-08","機能":"2026-10-08","12":"2026-10-08","きな":"2026-10-08","をお":"2026-10-08","いた":"2026-10-08","って":"2026-10-08","けの":"2026-10-08","ブログ":"2026-10-08","14":"2026-10-08","まで":"2026-10-08","コミュニティ":"2026-10-08","言葉":"2026-10-08","15":"2026-10-08","もっと":"2026-10-08","読む":"2026-10-08","19":"2026-10-08","男性":"2026-10-08","11":"2026-10-09","13":"2026-10-09","20":"2026-10-09","21":"2026-10-09","50":"2026-10-09","24":"2026-10-09","&#":"2026-10-09","での":"2026-10-09","とは":"2026-10-09","できる":"2026-10-09","によって":"2026-10-09","作成":"2026-10-09","また":"2026-10-09","つの":"2026-10-09","するため":"2026-10-09","として":"2026-10-09","紹介":"2026-10-09","をご":"2026-10-09","っている":"2026-10-09","29":"2026-10-09","アクセス":"2026-10-09","ソフトウェア":"2026-10-09","文字":"2026-10-09","女性":"2026-10-09","されまし":"2026-10-09","06":"2026-10-09","過去":"2026-10-10","がありま":"2026-10-10","からの":"2026-10-10","使用":"2026-10-10","28":"2026-10-10","00":"2026-10-10","08":"2026-10-10","2025":"2026-10-10","80":"2026-10-10","寄付":"2026-10-11","プロジェクト":"2026-10-11","ファイル":"2026-10-11","めて":"2026-10-11","18":"2026-10-11","にも":"2026-10-11","のお":"2026-10-11","公開":"2026-10-11","26":"2026-10-11","される":"2026-10-11","ません":"2026-10-11","ヘルプ":"2026-10-11","えた":"2026-10-11","以下":"2026-10-11","利用規約":"2026-10-11","最近":"2026-10-11","追加":"2026-10-11","2013":"2026-10-11","理由":"2026-10-11","16":"2026-10-11","アプリ":"2026-10-11","企業":"2026-10-11","えます":"2026-10-11","100":"2026-10-11","選択":"2026-10-11","インターネット":"2026-10-11","したい":"2026-10-11","02":"2026-10-11","チェック":"2026-10-11","44":"2026-10-11","編集":"2026-10-11","2012":"2026-10-11","03":"2026-10-11","2024":"2026-10-11","04":"2026-10-11","である":"2026-10-12","参加":"2026-10-12","質問":"2026-10-12","います":"2026-10-12","問い":"2026-10-12","関する":"2026-10-12","23":"2026-10-12","サービス":"2026-10-12","登録":"2026-10-12","んだ":"2026-10-12","25":"2026-10-12","内容":"2026-10-12","現在":"2026-10-12","などの":"2026-10-12","方法":"2026-10-12","環境":"2026-10-12","話題":"2026-10-12","のために":"2026-10-12","最初":"2026-10-12","35":"2026-10-12","更新":"2026-10-12","39":"2026-10-12","開発":"2026-10-12","音楽":"2026-10-12","見る":"2026-10-12","...":"2026-10-12","東京":"2026-10-12","34":"2026-10-12","使い":"2026-10-12","05":"2026-10-12","一覧":"2026-10-12","2022":"2026-10-12","せん":"2026-10-14","だけど":"2026-10-14","がお":"2026-10-14","じゃない":"2026-10-14","きます":"2026-10-14","簡単":"2026-10-14","07":"2026-10-14","コメント":"2026-10-14","中文":"2026-10-14","56":"2026-10-14","40":"2026-10-14","47":"2026-10-14","52":"2026-10-14","による":"2026-10-14","または":"2026-10-14","問題":"2026-10-14","えて":"2026-10-14","テキスト":"2026-10-14","にある":"2026-10-14","および":"2026-10-14","2023":"2026-10-14","タグ":"2026-10-14","トーク":"2026-10-14","59":"2026-10-14","公式":"2026-10-15","じて":"2026-10-15","安全":"2026-10-15","日本":"2026-10-15","78":"2026-10-15","との":"2026-10-15","くの":"2026-10-15","すると":"2026-10-15","わせ":"2026-10-15","名前":"2026-10-15","らせ":"2026-10-15","31":"2026-10-15","などを":"2026-10-15","そして":"2026-10-15","ない":"2026-10-15","38":"2026-10-15","であり":"2026-10-15","れた":"2026-10-15","解説":"2026-10-15","作品":"2026-10-15","文化":"2026-10-15","議論":"2026-10-15","意味":"2026-10-15","技術":"2026-10-15","移動":"2026-10-15","としてい":"2026-10-15","2016":"2026-10-15","コード":"2026-10-15","学校":"2026-10-15","人気":"2026-10-15","41":"2026-10-15","スポーツ":"2026-10-15","49":"2026-10-15","時代":"2026-10-15","ランキング":"2026-10-15",";/":"2026-10-15","非表示":"2026-10-15","発生":"2026-10-15","表現":"2026-10-15","160":"2026-10-15",";&":"2026-10-15","となりま":"2026-10-15","送信":"2026-10-15","ガイドライン":"2026-10-15","最新":"2026-10-15","設定":"2026-10-15","経済":"2026-10-15","政治":"2026-10-15","らし":"2026-10-15","画像":"2026-10-15","とを":"2026-10-15","ってる":"2026-10-15","仕事":"2026-10-16","000":"2026-10-16","2020":"2026-10-16","けた":"2026-10-16","報告":"2026-10-16","対応":"2026-10-16","確認":"2026-10-16","データ":"2026-10-16","配信":"2026-10-16","投稿":"2026-10-16","可能性":"2026-10-16","無料":"2026-10-16","ダウンロード":"2026-10-16","これまで":"2026-10-16","により":"2026-10-16","アメリカ":"2026-10-16","状態":"2026-10-16","すべての":"2026-10-16","になる":"2026-10-16","案内":"2026-10-16","世界":"2026-10-16","みを":"2026-10-16","されます":"2026-10-16","メール":"2026-10-16","っていた":"2026-10-16","だと":"2026-10-16","入力":"2026-10-16","特集":"2026-10-16","となって":"2026-10-16","あり":"2026-10-16","48":"2026-10-16","映画":"2026-10-16","もう":"2026-10-16","影響":"2026-10-16","これは":"2026-10-16","月間":"2026-10-16","さん":"2026-10-16","動画":"2026-10-16","ゲーム":"2026-10-16","していた":"2026-10-16","めた":"2026-10-16","新着":"2026-10-16","方針":"2026-10-16","ではない":"2026-10-16","写真":"2026-10-16","テレビ":"2026-10-16","51":"2026-10-16","ブックマーク":"2026-10-16","2010":"2026-10-16","アニメ":"2026-10-16","けて":"2026-10-17","提供":"2026-10-17","目的":"2026-10-17","状況":"2026-10-17","説明":"2026-10-17","にご":"2026-10-17","個人":"2026-10-17","掲載":"2026-10-17","はありま":"2026-10-17","200":"2026-10-17","社会":"2026-10-17","42":"2026-10-17","32":"2026-10-17","36":"2026-10-17","58":"2026-10-17","55":"2026-10-17","81":"2026-10-17","今日":"2026-10-18","まだ":"2026-10-18","ほか":"2026-10-18","いました":"2026-10-18","37":"2026-10-18","直近":"2026-10-18","☆":"2026-10-18","イベント":"2026-10-18","からない":"2026-10-18","のことが":"2026-10-18","ボタン":"2026-10-18","結果":"2026-10-18","ができま":"2026-10-18","さらに":"2026-10-18","発表":"2026-10-18","となる":"2026-10-18","知識":"2026-10-18","うな":"2026-10-18","ちの":"2026-10-18","生活":"2026-10-18","活用":"2026-10-18","しない":"2026-10-18","りません":"2026-10-18","33":"2026-10-18","いる":"2026-10-18","たちの":"2026-10-18","可能":"2026-10-18","プライバシー":"2026-10-18","ただし":"2026-10-18","になった":"2026-10-18","のある":"2026-10-18","において":"2026-10-18","言語":"2026-10-18","いを":"2026-10-18","たな":"2026-10-18","いう":"2026-10-18","未来":"2026-10-18","いて":"2026-10-18","取得":"2026-10-18","存在":"2026-10-18","こちら":"2026-10-18","管理":"2026-10-18","チーム":"2026-10-18","システム":"2026-10-18","特定":"2026-10-18","90":"2026-10-18","海外":"2026-10-18","2021":"2026-10-18","2011":"2026-10-18","アイコン":"2026-10-18","まれてい":"2026-10-18","いま":"2026-10-18"},
   "today_keen": {
     "date": "2026-10-18",
     "keen": true
@@ -9576,10 +10591,10 @@
       "day": "2026-10-17"
     }
   ],
-  "understood_usually": 0.340237,
+  "understood_usually": 0.345359,
   "its_ways": {
-    "pages_per_site": 11.0,
-    "pull_of_japanese": 1.14,
+    "pages_per_site": 10.9,
+    "pull_of_japanese": 1.15,
     "feeling_keen": 0.35,
     "wish_to_return": 1.5
   },
@@ -9838,11 +10853,11 @@
       }
     }
   ],
-  "woke_at": "2026-10-18 10",
+  "woke_at": "2026-10-18 11",
   "blog_titles": {
-    "seen": 47,
+    "seen": 62,
     "closed": 0,
-    "chars": 1581
+    "chars": 2033
   },
   "replied": {},
   "home_read_on": "2026-10-18",
@@ -9884,13 +10899,15 @@
     "cs.wikiversity.org",
     "ang.wikibooks.org",
     "honto.jp",
-    "dlib.jp"
+    "dlib.jp",
+    "www.zendesk.co.jp",
+    "storyweb.jp"
   ],
   "its_own_figure": {
     "date": "2026-10-18",
     "seen": "絵には、頭部が描かれています。頭部には、目、顎、口、耳が描かれています。また、頭部には、髪が描かれています。髪は、短く、濃い色で描かれています。"
   },
-  "learned_where": {"過去":[null,0],"がありま":[null,0],"からの":[null,0],"使用":[null,0],"28":[null,0],"00":[null,0],"08":[null,0],"2025":[null,1],"80":[null,4],"寄付":[null,5],"プロジェクト":[null,5],"ファイル":[null,5],"めて":[null,5],"18":[null,5],"にも":[null,5],"のお":[null,5],"公開":[null,5],"26":[null,5],"される":[null,5],"ません":[null,5],"ヘルプ":[null,5],"えた":[null,5],"以下":[null,5],"利用規約":[null,5],"最近":[null,5],"追加":[null,5],"2013":[null,5],"理由":[null,5],"16":[null,5],"アプリ":[null,5],"企業":[null,5],"えます":[null,5],"100":[null,5],"選択":[null,5],"インターネット":[null,5],"したい":[null,5],"02":[null,5],"チェック":[null,5],"44":[null,5],"編集":[null,5],"2012":[null,5],"03":[null,5],"2024":[null,5],"04":[null,5],"である":[null,8],"参加":[null,8],"質問":[null,8],"います":[null,8],"問い":[null,8],"関する":[null,8],"23":[null,8],"サービス":[null,8],"登録":[null,8],"んだ":[null,8],"25":[null,8],"内容":[null,8],"現在":[null,8],"などの":[null,8],"方法":[null,8],"環境":[null,8],"話題":[null,8],"のために":[null,8],"最初":[null,8],"35":[null,8],"更新":[null,8],"39":[null,8],"開発":[null,8],"音楽":[null,8],"見る":[null,8],"...":[null,8],"東京":[null,8],"34":[null,8],"使い":[null,8],"05":[null,8],"一覧":[null,9],"2022":[null,9],"せん":[null,0],"がお":[null,0],"きます":[null,0],"簡単":[null,0],"07":[null,0],"コメント":[null,0],"中文":[null,11],"56":[null,12],"40":[null,12],"47":[null,12],"52":[null,12],"による":[null,13],"または":[null,13],"問題":[null,13],"えて":[null,13],"テキスト":[null,13],"にある":[null,13],"および":[null,13],"2023":[null,13],"タグ":[null,13],"トーク":[null,13],"59":[null,14],"公式":[null,5,null,2],"じて":[null,5,null,3],"安全":[null,5,null,1],"日本":[null,5,null,3],"78":[null,5,null,3],"との":[null,5,null,3],"くの":[null,5,null,3],"すると":[null,5,null,3],"わせ":[null,5,null,3],"名前":[null,5,null,2],"らせ":[null,5,null,3],"31":[null,5,null,3],"などを":[null,5,null,3],"そして":[null,5,null,3],"ない":[null,5,null,3],"38":[null,5,null,3],"であり":[null,5,null,3],"れた":[null,5,null,3],"解説":[null,5,null,3],"作品":[null,5,null,3],"文化":[null,5,null,3],"議論":[null,5,null,3],"意味":[null,5,null,3],"技術":[null,5,null,3],"移動":[null,5,null,3],"としてい":[null,5,null,3],"2016":[null,5,null,2],"コード":[null,5,null,0],"学校":[null,5,null,3],"人気":[null,5,null,3],"41":[null,5,null,3],"スポーツ":[null,5,null,0],"49":[null,5,null,3],"時代":[null,5,null,3],"ランキング":[null,5,null,3],";/":[null,5,null,3],"非表示":[null,5,null,3],"発生":[null,5,null,3],"表現":[null,5,null,3],"160":[null,5,null,3],";&":[null,5,null,2],"となりま":[null,17,null,9],"送信":[null,17,null,8],"ガイドライン":[null,17,null,11],"最新":[null,18,null,13],"設定":[null,18,null,14],"経済":[null,18,null,12],"政治":[null,18,null,12],"らし":[null,18,null,12],"画像":[null,20,null,24],"とを":[null,20,null,24],"ってる":[null,20,null,24],"仕事":[null,23,null,36],"000":[null,24,null,40],"2020":[null,24,null,39],"けた":[null,25,null,41],"報告":[null,25,null,45],"対応":[null,25,null,41],"確認":[null,25,null,41],"データ":[null,25,null,41],"配信":[null,25,null,41],"投稿":[null,26,null,48],"可能性":[null,26,null,56],"無料":[null,26,null,48],"ダウンロード":[null,26,null,58],"これまで":[null,26,null,48],"により":[null,26,null,48],"アメリカ":[null,26,null,53],"状態":[null,26,null,56],"すべての":[null,26,null,58],"になる":[null,26,null,58],"案内":[null,26,null,56],"世界":[null,26,null,57],"みを":[null,26,null,52],"されます":[null,26,null,58],"メール":[null,26,null,56],"っていた":[null,26,null,48],"だと":[null,26,null,48],"入力":[null,26,null,58],"特集":[null,26,null,48],"となって":[null,26,null,48],"あり":[null,26,null,58],"48":[null,26,null,52],"映画":[null,26,null,58],"もう":[null,26,null,48],"影響":[null,26,null,56],"これは":[null,26,null,57],"月間":[null,26,null,52],"さん":[null,26,null,48],"動画":[null,26,null,48],"ゲーム":[null,26,null,58],"していた":[null,26,null,56],"めた":[null,26,null,51],"新着":[null,26,null,58],"方針":[null,26,null,52],"ではない":[null,26,null,57],"写真":[null,26,null,48],"テレビ":[null,26,null,58],"51":[null,26,null,51],"ブックマーク":[null,26,null,58],"2010":[null,26,null,56],"アニメ":[null,26,null,58],"けて":[null,27,null,59],"提供":[null,27,null,59],"目的":[null,27,null,59],"状況":[null,27,null,59],"説明":[null,27,null,59],"にご":[null,28,null,62],"個人":[null,28,null,62],"掲載":[null,28,null,64],"はありま":[null,28,null,62],"200":[null,28,null,60],"社会":[null,28,null,60],"42":[null,29,null,69],"32":[null,29,null,69],"36":[null,29,null,69],"58":[null,29,null,69],"55":[null,29,null,67],"81":[null,29,null,66],"今日":[null,0,null,79],"まだ":[null,0,null,77],"ほか":[null,0,null,79],"いました":[null,0,null,77],"37":[null,0,null,79],"直近":[null,0,null,77],"☆":[null,0,null,77],"イベント":[null,31,null,83],"からない":[null,0,null,51],"のことが":[null,0,null,2],"ボタン":[null,31,null,82],"結果":[null,31,null,82],"ができま":[null,31,null,82],"さらに":[null,31,null,82],"発表":[null,31,null,83],"となる":[null,31,null,80],"知識":[null,31,null,81]},
+  "learned_where": {"過去":[null,0],"がありま":[null,0],"からの":[null,0],"使用":[null,0],"28":[null,0],"00":[null,0],"08":[null,0],"2025":[null,1],"80":[null,4],"寄付":[null,5],"プロジェクト":[null,5],"ファイル":[null,5],"めて":[null,5],"18":[null,5],"にも":[null,5],"のお":[null,5],"公開":[null,5],"26":[null,5],"される":[null,5],"ません":[null,5],"ヘルプ":[null,5],"えた":[null,5],"以下":[null,5],"利用規約":[null,5],"最近":[null,5],"追加":[null,5],"2013":[null,5],"理由":[null,5],"16":[null,5],"アプリ":[null,5],"企業":[null,5],"えます":[null,5],"100":[null,5],"選択":[null,5],"インターネット":[null,5],"したい":[null,5],"02":[null,5],"チェック":[null,5],"44":[null,5],"編集":[null,5],"2012":[null,5],"03":[null,5],"2024":[null,5],"04":[null,5],"である":[null,8],"参加":[null,8],"質問":[null,8],"います":[null,8],"問い":[null,8],"関する":[null,8],"23":[null,8],"サービス":[null,8],"登録":[null,8],"んだ":[null,8],"25":[null,8],"内容":[null,8],"現在":[null,8],"などの":[null,8],"方法":[null,8],"環境":[null,8],"話題":[null,8],"のために":[null,8],"最初":[null,8],"35":[null,8],"更新":[null,8],"39":[null,8],"開発":[null,8],"音楽":[null,8],"見る":[null,8],"...":[null,8],"東京":[null,8],"34":[null,8],"使い":[null,8],"05":[null,8],"一覧":[null,9],"2022":[null,9],"せん":[null,0],"がお":[null,0],"きます":[null,0],"簡単":[null,0],"07":[null,0],"コメント":[null,0],"中文":[null,11],"56":[null,12],"40":[null,12],"47":[null,12],"52":[null,12],"による":[null,13],"または":[null,13],"問題":[null,13],"えて":[null,13],"テキスト":[null,13],"にある":[null,13],"および":[null,13],"2023":[null,13],"タグ":[null,13],"トーク":[null,13],"59":[null,14],"公式":[null,5,null,2],"じて":[null,5,null,3],"安全":[null,5,null,1],"日本":[null,5,null,3],"78":[null,5,null,3],"との":[null,5,null,3],"くの":[null,5,null,3],"すると":[null,5,null,3],"わせ":[null,5,null,3],"名前":[null,5,null,2],"らせ":[null,5,null,3],"31":[null,5,null,3],"などを":[null,5,null,3],"そして":[null,5,null,3],"ない":[null,5,null,3],"38":[null,5,null,3],"であり":[null,5,null,3],"れた":[null,5,null,3],"解説":[null,5,null,3],"作品":[null,5,null,3],"文化":[null,5,null,3],"議論":[null,5,null,3],"意味":[null,5,null,3],"技術":[null,5,null,3],"移動":[null,5,null,3],"としてい":[null,5,null,3],"2016":[null,5,null,2],"コード":[null,5,null,0],"学校":[null,5,null,3],"人気":[null,5,null,3],"41":[null,5,null,3],"スポーツ":[null,5,null,0],"49":[null,5,null,3],"時代":[null,5,null,3],"ランキング":[null,5,null,3],";/":[null,5,null,3],"非表示":[null,5,null,3],"発生":[null,5,null,3],"表現":[null,5,null,3],"160":[null,5,null,3],";&":[null,5,null,2],"となりま":[null,17,null,9],"送信":[null,17,null,8],"ガイドライン":[null,17,null,11],"最新":[null,18,null,13],"設定":[null,18,null,14],"経済":[null,18,null,12],"政治":[null,18,null,12],"らし":[null,18,null,12],"画像":[null,20,null,24],"とを":[null,20,null,24],"ってる":[null,20,null,24],"仕事":[null,23,null,36],"000":[null,24,null,40],"2020":[null,24,null,39],"けた":[null,25,null,41],"報告":[null,25,null,45],"対応":[null,25,null,41],"確認":[null,25,null,41],"データ":[null,25,null,41],"配信":[null,25,null,41],"投稿":[null,26,null,48],"可能性":[null,26,null,56],"無料":[null,26,null,48],"ダウンロード":[null,26,null,58],"これまで":[null,26,null,48],"により":[null,26,null,48],"アメリカ":[null,26,null,53],"状態":[null,26,null,56],"すべての":[null,26,null,58],"になる":[null,26,null,58],"案内":[null,26,null,56],"世界":[null,26,null,57],"みを":[null,26,null,52],"されます":[null,26,null,58],"メール":[null,26,null,56],"っていた":[null,26,null,48],"だと":[null,26,null,48],"入力":[null,26,null,58],"特集":[null,26,null,48],"となって":[null,26,null,48],"あり":[null,26,null,58],"48":[null,26,null,52],"映画":[null,26,null,58],"もう":[null,26,null,48],"影響":[null,26,null,56],"これは":[null,26,null,57],"月間":[null,26,null,52],"さん":[null,26,null,48],"動画":[null,26,null,48],"ゲーム":[null,26,null,58],"していた":[null,26,null,56],"めた":[null,26,null,51],"新着":[null,26,null,58],"方針":[null,26,null,52],"ではない":[null,26,null,57],"写真":[null,26,null,48],"テレビ":[null,26,null,58],"51":[null,26,null,51],"ブックマーク":[null,26,null,58],"2010":[null,26,null,56],"アニメ":[null,26,null,58],"けて":[null,27,null,59],"提供":[null,27,null,59],"目的":[null,27,null,59],"状況":[null,27,null,59],"説明":[null,27,null,59],"にご":[null,28,null,62],"個人":[null,28,null,62],"掲載":[null,28,null,64],"はありま":[null,28,null,62],"200":[null,28,null,60],"社会":[null,28,null,60],"42":[null,29,null,69],"32":[null,29,null,69],"36":[null,29,null,69],"58":[null,29,null,69],"55":[null,29,null,67],"81":[null,29,null,66],"今日":[null,0,null,79],"まだ":[null,0,null,77],"ほか":[null,0,null,79],"いました":[null,0,null,77],"37":[null,0,null,79],"直近":[null,0,null,77],"☆":[null,0,null,77],"イベント":[null,31,null,83],"からない":[null,0,null,51],"のことが":[null,0,null,2],"ボタン":[null,31,null,82],"結果":[null,31,null,82],"ができま":[null,31,null,82],"さらに":[null,31,null,82],"発表":[null,31,null,83],"となる":[null,31,null,80],"知識":[null,31,null,81],"うな":[null,34,null,100],"ちの":[null,34,null,96],"生活":[null,34,null,100],"活用":[null,33,null,90],"しない":[null,33,null,88],"りません":[null,33,null,90],"33":[null,34,null,98],"いる":[null,34,null,100],"たちの":[null,33,null,90],"可能":[null,34,null,100],"プライバシー":[null,33,null,88],"ただし":[null,33,null,90],"になった":[null,34,null,97],"のある":[null,34,null,99],"において":[null,34,null,100],"言語":[null,33,null,90],"いを":[null,34,null,100],"たな":[null,34,null,97],"いう":[null,33,null,90],"未来":[null,34,null,101],"いて":[null,33,null,90],"取得":[null,33,null,90],"存在":[null,33,null,88],"こちら":[null,33,null,88],"管理":[null,33,null,90],"チーム":[null,34,null,101],"システム":[null,33,null,90],"特定":[null,33,null,90],"90":[null,34,null,101],"海外":[null,33,null,87],"2021":[null,33,null,90],"2011":[null,34,null,94],"アイコン":[null,34,null,92],"まれてい":[null,33,null,88],"いま":[null,34,null,94]},
   "old_hand_remembered": "2026-10-12",
   "peeji": [
     "ぷろだくしょんバオバブ - Wikipedia",
@@ -9977,6 +10994,23 @@
     "経済・ビジネス書 - 無料・試し読みも！honto電子書籍ストア",
     "雑誌 - 無料・試し読みも！honto電子書籍ストア",
     "ボーイズラブ - 無料・試し読みも！honto電子書籍ストア",
-    "ディープライブラリープロジェクト"
+    "ディープライブラリープロジェクト",
+    "Cookieポリシー - Zendesk 日本語",
+    "How We Protect Your Service Data (Enterprise Services) - Zendesk",
+    "地域特定的規定",
+    "マスター購読契約",
+    "Reseller Terms of Service - Zendesk",
+    "カスタマーサポートツール15社を徹底比較　おすすめツールの料金・機能・特徴",
+    "STORY [ストーリィ] オフィシャルサイト – 「新しい40代」のためのファッション＆ライフスタイル誌",
+    "【オーデマ ピゲ】伝説の時計が華麗に進化！スイスの自然美を象徴する究極のジュエリーコレクション – STORY [ストーリィ] オフィシャルサイト",
+    "【メールアドレス漏洩に関するお詫び】｜インフォメーション｜STORY [ストーリィ] オフィシャルサイト",
+    "福島県浪江町、魅力体験キャンペーン「なみえに、出会う旅」を開催。復興の歩みを進める街の「いま」と、温かな「ひと」に出会う特別な体験を – STORY [ストーリィ] オフィシャルサイト",
+    "【甘派に刺さる】秋はじめの「キレイめ名品」！スタイリスト石毛さん”究極の5着”は？ – STORY [ストーリィ] オフィシャルサイト",
+    "分け目・ボリュームが気になり出したら始めどき「育毛ローション」の頭皮ケアで、ずっと続く私らしさ – STORY [ストーリィ] オフィシャルサイト",
+    "ロロ・ピアーナの名品と秋のショートトリップへ（木村佳乃さんが憧れブランドを纏います）｜STORYweb",
+    "40代の「今日何着よう？」を解決！悩まず即垢抜ける「秋のスタメンアイテム」16選 – STORY [ストーリィ] オフィシャルサイト",
+    "美容家・大野真理子さんも愛用！40代の肌悩みに寄り添う「お守りセラム」 – STORY [ストーリィ] オフィシャルサイト",
+    "多忙な40代は手応えを感じる〝先手美容〟を！ – STORY [ストーリィ] オフィシャルサイト",
+    "STORY2026年11月号｜MAGAZINE｜STORY [ストーリィ] オフィシャルサイト"
   ]
 }
