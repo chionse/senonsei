@@ -4248,7 +4248,6 @@
     "http://web.archive.org/web/20160325051041/http://www.chapitre.com/frame_rec.asp?donnee_appel=PRINTGOOGLE&titre=Recueil+tombeaux+des+quatre+cimeti%C3%A8res+Paris+avec+leurs+%C3%A9pitaphes+et+leurs+inscriptions,+mesur%C3%A9s+et+dessin%C3%A9s+par+C.P.+Arnaud",
     "http://web.archive.org/web/20160325051041/https://mail.google.com/mail/?tab=pm",
     "http://web.archive.org/web/20160325051041/https://www.google.fr/intl/fr/options/",
-    "http://web.archive.org/web/20160325051041/https://www.google.fr/search?hl=fr&pg=PA139&tbo=u&tbm=vid&source=og&sa=N&tab=pv",
     "http://web.archive.org/web/20160325051041/https://www.google.fr/search?hl=fr&pg=PA139&sa=N&tab=pw",
     "http://web.archive.org/web/20160322043459/https://www.google.com/googlebooks/tos.html",
     "http://web.archive.org/web/20160322043459/https://books.google.com/",
@@ -4716,7 +4715,6 @@
     "http://nikkei.d1.sc.omtrdc.net",
     "http://web.archive.org/web/20220523054533/http://www.omniture.com/",
     "http://penta.a.one.impact-ad.jp",
-    "http://rt.rtoaster.jp",
     "http://web.archive.org/web/20220525165551/http://www.omniture.com/",
     "http://players.brightcove.net/",
     "http://edge.api.brightcove.com/",
@@ -4837,7 +4835,6 @@
     "https://www.jstage.jst.go.jp/result/global/-char/ja?globalSearchKey=%22%E9%88%B4%E6%9C%A8%E6%B4%8B%E5%B9%B3%22+%E3%82%A2%E3%83%8B%E3%83%A1%E6%BC%94%E5%87%BA%E5%AE%B6",
     "https://mantan-web.jp/article/20241209dog00m200062000c.html",
     "https://ndlsearch.ndl.go.jp/api/openurl?any=%22%E9%88%B4%E6%9C%A8%E6%B4%8B%E5%B9%B3%22+%E3%82%A2%E3%83%8B%E3%83%A1%E6%BC%94%E5%87%BA%E5%AE%B6",
-    "https://dlib.jp/?q=%22%E9%88%B4%E6%9C%A8%E6%B4%8B%E5%B9%B3%22+%E3%82%A2%E3%83%8B%E3%83%A1%E6%BC%94%E5%87%BA%E5%AE%B6",
     "http://uqholder.jp/",
     "https://id.oclc.org/worldcat/entity/E39PBJjd9JCJfXycYc9GHhhj4q",
     "https://viaf.org/viaf/7153953214005561701",
@@ -5173,7 +5170,17 @@
     "https://donate.wikimedia.org/?wmf_source=donate&wmf_medium=sidebar&wmf_campaign=ang.wikibooks.org&uselang=ang",
     "https://7net.omni7.jp/top?utm_source=honto&utm_medium=referral&utm_campaign=honto_reciprocallink",
     "https://www.maruzenjunkudo.co.jp/",
-    "https://www.e-hon.ne.jp/bec/EB/Top?refHpStenCode=92005"
+    "https://www.e-hon.ne.jp/bec/EB/Top?refHpStenCode=92005",
+    "http://www.jsla.or.jp/",
+    "http://blog.dlib.jp/entry/about",
+    "http://iss.ndl.go.jp/api/openurl?&any=%22%E9%88%B4%E6%9C%A8%E6%B4%8B%E5%B9%B3%22%2B%E3%82%A2%E3%83%8B%E3%83%A1%E6%BC%94%E5%87%BA%E5%AE%B6",
+    "https://calil.jp/",
+    "http://ci.nii.ac.jp/search?q=%22%E9%88%B4%E6%9C%A8%E6%B4%8B%E5%B9%B3%22%2B%E3%82%A2%E3%83%8B%E3%83%A1%E6%BC%94%E5%87%BA%E5%AE%B6",
+    "https://unitrad.calil.jp/",
+    "http://blog.dlib.jp/",
+    "http://www.jspmi.or.jp/biclibrary/",
+    "http://iss.ndl.go.jp/api/openurl?",
+    "http://ci.nii.ac.jp/openurl/query?url_ver=z39.88-2004&ctx_ver=z39.88-2004"
   ],
   "visited": [
     "https://note.com/",
@@ -5680,7 +5687,9 @@
     "https://honto.jp/ebook/gr/29007000000.html?cid=ip_hb_sm_11",
     "https://honto.jp/ebook/gr/29031000000.html?cid=ip_hb_usm_07",
     "https://honto.jp/ebook/gr/29029000000.html?cid=ip_hb_sm_26",
-    "https://honto.jp/ebook/gr/29031000000.html?cid=ip_hb_sm_15"
+    "https://honto.jp/ebook/gr/29031000000.html?cid=ip_hb_sm_15",
+    "https://dlib.jp/?q=%22%E9%88%B4%E6%9C%A8%E6%B4%8B%E5%B9%B3%22+%E3%82%A2%E3%83%8B%E3%83%A1%E6%BC%94%E5%87%BA%E5%AE%B6",
+    "https://dlib.jp/"
   ],
   "notes": [
     "8日目: Public Citizen - Protecting Health, Safety, and Democracy、Become an Activist with Public Citizen、README.jp へようこそ！",
@@ -5712,15 +5721,17 @@
     "34日目: ぷろだくしょんバオバブ - Wikipedia、利用者情報の外部送信について - Hatena Policies(むかしのすがた)、NHKニュース 速報・最新情報、「市長に全責任がある」石垣市の国際フェリーがたった4カ月で運休に…現役市議が明かす「市民が赤字補償」の“とんでもスキーム” | 女性自身、CNN Chile",
     "35日目: Kids' Space、あおきさやか公式サイト あおきさやかweb、Nominate amazing open source contributors for the GitHub Stars program | GitHub Stars、行動履歴情報の取り扱いに関する原則 - 株式会社マイクロアド、はてなブックマーク - 新着エントリー - 総合",
     "36日目: アンケート｜NHK、株式会社ヒナプロジェクト、Poslední změny – Wikiverzita、Wikibooks",
-    "37日目: 9784054063518に関連する商品一覧 - honto電子書籍ストア"
+    "37日目: 9784054063518に関連する商品一覧 - honto電子書籍ストア、ディープライブラリープロジェクト"
   ],
   "today_walk": {
     "date": "2026-10-18",
     "seen": [
-      "9784054063518に関連する商品一覧 - honto電子書籍ストア"
+      "9784054063518に関連する商品一覧 - honto電子書籍ストア",
+      "ディープライブラリープロジェクト"
     ],
     "brought": [
-      509
+      509,
+      18
     ]
   },
   "inner_voice": [
@@ -6030,14 +6041,14 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "anond.hatelabo.jp",
-    "stmgt.web.nhk",
-    "booksearch.blogspot.com",
-    "addition.com",
-    "www.mot-art-museum.jp",
-    "www.nikkei.co.jp"
+    "www.yahoo.co.jp",
+    "owasp.org",
+    "speakerdeck.com",
+    "edition.cnn.com",
+    "www.geocities.jp",
+    "pl.wikipedia.org"
   ],
-  "how_many_places_left": 1194,
+  "how_many_places_left": 1201,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -6115,7 +6126,8 @@
     "www.microad.co.jp": "IR資料 - 株式会社マイクロアド",
     "forms.nhk.jp": "アンケート｜NHK",
     "hinaproject.co.jp": "情報セキュリティ方針 | 株式会社ヒナプロジェクト",
-    "honto.jp": "雑誌 - 無料・試し読みも！honto電子書籍ストア"
+    "honto.jp": "雑誌 - 無料・試し読みも！honto電子書籍ストア",
+    "dlib.jp": "ディープライブラリープロジェクト"
   },
   "went_home": {
     "date": "2026-10-18",
@@ -6156,7 +6168,7 @@
     "表示": {
       "します": 12,
       "場合": 2,
-      "していま": 4,
+      "していま": 5,
       "してくだ": 2,
       "ください": 2,
       "ます": 6,
@@ -6165,7 +6177,7 @@
     },
     "この": {
       "ページ": 76,
-      "サイト": 96,
+      "サイト": 97,
       "します": 13,
       "について": 5,
       "への": 18,
@@ -6181,7 +6193,8 @@
       "://": 4,
       "2024": 3,
       "見る": 3,
-      "移動": 15
+      "移動": 15,
+      "です": 1
     },
     "して": {
       "サイト": 13,
@@ -6480,7 +6493,8 @@
       "関する": 10,
       "変更": 10,
       "をお": 5,
-      "などを": 5
+      "などを": 5,
+      "っている": 1
     },
     "7": {
       "1": 19,
@@ -6586,13 +6600,13 @@
     },
     "している": {
       "という": 3,
-      "情報": 2,
+      "情報": 3,
       "ページ": 18,
       "場合": 2,
       "サービス": 3,
       "ユーザー": 7,
-      "けの": 1,
-      "方法": 1
+      "方法": 1,
+      "関する": 1
     },
     "27": {
       "19": 2,
@@ -6639,9 +6653,9 @@
     "自由": {
       "です": 1,
       "してくだ": 1,
-      "だけど": 19,
-      "じゃない": 19,
-      "ってる": 19,
+      "だけど": 20,
+      "じゃない": 20,
+      "ってる": 20,
       "だった": 1
     },
     "17": {
@@ -6886,8 +6900,8 @@
       "4": 2,
       "5": 2,
       "がある": 14,
-      "がありま": 1,
-      "アクセス": 1
+      "アクセス": 1,
+      "サイト": 1
     },
     "として": {
       "して": 3,
@@ -7065,7 +7079,7 @@
       "った": 1,
       "自分": 1,
       "として": 1,
-      "とを": 19,
+      "とを": 20,
       "だった": 2
     },
     "理由": {
@@ -7173,7 +7187,8 @@
       "1": 77,
       "した": 1,
       "女性": 57,
-      "との": 1
+      "との": 1,
+      "表示": 1
     },
     "にも": {
       "している": 2,
@@ -7294,10 +7309,10 @@
       "問い": 4,
       "質問": 7,
       "サービス": 13,
-      "および": 1,
       "以下": 2,
       "ガイドライン": 1,
-      "確認": 1
+      "確認": 1,
+      "入力": 1
     },
     "&#": {
       "25": 45,
@@ -7827,7 +7842,8 @@
     "公式": {
       "アプリ": 1,
       "サイト": 2,
-      "アカウント": 11
+      "アカウント": 11,
+      "ブログ": 2
     },
     "にある": {
       "日本語": 1,
@@ -7875,7 +7891,7 @@
       "...": 1
     },
     "とを": {
-      "っている": 19,
+      "っている": 20,
       "するため": 1
     },
     "技術": {
@@ -7887,7 +7903,8 @@
       "していま": 1,
       "変更": 11,
       "して": 5,
-      "されます": 10
+      "されます": 10,
+      "により": 1
     },
     "政治": {
       "経済": 23
@@ -8000,14 +8017,16 @@
       "して": 1,
       "された": 1,
       "ます": 1,
-      "できる": 1
+      "できる": 1,
+      "ください": 1
     },
     "さい": {
       "入力": 1
     },
     "により": {
       "確認": 1,
-      "さい": 1
+      "さい": 1,
+      "えた": 1
     },
     "状態": {
       "ます": 1,
@@ -8070,7 +8089,7 @@
       "せん": 1
     },
     "まだ": {
-      "サイト": 3,
+      "サイト": 4,
       "ではない": 5
     },
     "000": {
@@ -8100,10 +8119,10 @@
       "など": 12
     },
     "のことが": {
-      "からない": 1
+      "からない": 2
     },
     "からない": {
-      "から": 1
+      "から": 2
     }
   },
   "opens_a_sentence": {
@@ -8112,18 +8131,18 @@
     "では": 75,
     "っていま": 22,
     "かれてい": 12,
-    "こんにち": 42,
+    "こんにち": 43,
     "には": 107,
     "ページ": 42,
     "します": 36,
-    "本当": 55,
+    "本当": 56,
     "だった": 9,
     "について": 40,
     "表示": 14,
     "その": 45,
     "から": 186,
     "この": 86,
-    "1": 194,
+    "1": 195,
     "して": 40,
     "4": 25,
     "場合": 29,
@@ -8142,11 +8161,11 @@
     "必要": 15,
     "8": 8,
     "ニュース": 8,
-    "している": 54,
+    "している": 56,
     "検索": 22,
     "ます": 8,
     "6": 25,
-    "自由": 156,
+    "自由": 158,
     "://": 49,
     "できます": 1,
     "ある": 8,
@@ -8234,7 +8253,7 @@
     "日本語": 3,
     "15": 4,
     "24": 3,
-    "います": 1,
+    "います": 2,
     "編集": 1,
     "内容": 2,
     "などの": 4,
@@ -8324,7 +8343,7 @@
     "21": 1,
     "月間": 1,
     "コメント": 1,
-    "まだ": 3,
+    "まだ": 4,
     "表現": 5,
     "特集": 7,
     "無料": 14,
@@ -8335,7 +8354,7 @@
     "きな": 5,
     "になる": 2,
     "ダウンロード": 2,
-    "のことが": 1
+    "のことが": 2
   },
   "closes_a_sentence": {
     "など": 53,
@@ -8343,7 +8362,7 @@
     "では": 51,
     "っていま": 26,
     "かれてい": 12,
-    "こんにち": 42,
+    "こんにち": 43,
     "には": 88,
     "ページ": 31,
     "します": 87,
@@ -8351,14 +8370,14 @@
     "だった": 13,
     "について": 33,
     "表示": 16,
-    "から": 142,
+    "から": 143,
     "ます": 87,
     "して": 40,
     "1": 233,
     "4": 35,
     "場合": 26,
     "その": 19,
-    "です": 107,
+    "です": 108,
     "すること": 45,
     "した": 236,
     "していま": 82,
@@ -8397,12 +8416,12 @@
     "利用": 4,
     "された": 54,
     "する": 6,
-    "ください": 43,
+    "ください": 44,
     "27": 2,
     "5": 39,
     "記事": 9,
     "場所": 3,
-    "サイト": 81,
+    "サイト": 83,
     "になりま": 12,
     "さい": 55,
     "for": 2,
@@ -8423,7 +8442,7 @@
     "をお": 25,
     "されまし": 15,
     "11": 17,
-    "っている": 44,
+    "っている": 45,
     "be": 1,
     "過去": 12,
     "するため": 3,
@@ -8456,7 +8475,7 @@
     "いた": 8,
     "できる": 7,
     "読む": 1,
-    "います": 14,
+    "います": 15,
     "アクセス": 6,
     "作成": 1,
     "編集": 2,
@@ -8490,7 +8509,7 @@
     "44": 1,
     "使用": 4,
     "による": 4,
-    "じゃない": 23,
+    "じゃない": 24,
     "方法": 3,
     "問題": 8,
     "えます": 3,
@@ -8519,7 +8538,7 @@
     "更新": 3,
     "47": 1,
     "16": 1,
-    "ってる": 20,
+    "ってる": 21,
     "名前": 1,
     "画像": 3,
     "内容": 4,
@@ -8776,7 +8795,10 @@
       "される",
       "ほか",
       "のことが",
-      "からない"
+      "からない",
+      "公式",
+      "います",
+      "関する"
     ]
   },
   "wants_to_say": [
@@ -9554,10 +9576,10 @@
       "day": "2026-10-17"
     }
   ],
-  "understood_usually": 0.340825,
+  "understood_usually": 0.340237,
   "its_ways": {
     "pages_per_site": 11.0,
-    "pull_of_japanese": 1.15,
+    "pull_of_japanese": 1.14,
     "feeling_keen": 0.35,
     "wish_to_return": 1.5
   },
@@ -9816,7 +9838,7 @@
       }
     }
   ],
-  "woke_at": "2026-10-18 09",
+  "woke_at": "2026-10-18 10",
   "blog_titles": {
     "seen": 47,
     "closed": 0,
@@ -9861,7 +9883,8 @@
     "hinaproject.co.jp",
     "cs.wikiversity.org",
     "ang.wikibooks.org",
-    "honto.jp"
+    "honto.jp",
+    "dlib.jp"
   ],
   "its_own_figure": {
     "date": "2026-10-18",
@@ -9953,6 +9976,7 @@
     "9784054063518に関連する商品一覧 - honto電子書籍ストア",
     "経済・ビジネス書 - 無料・試し読みも！honto電子書籍ストア",
     "雑誌 - 無料・試し読みも！honto電子書籍ストア",
-    "ボーイズラブ - 無料・試し読みも！honto電子書籍ストア"
+    "ボーイズラブ - 無料・試し読みも！honto電子書籍ストア",
+    "ディープライブラリープロジェクト"
   ]
 }
