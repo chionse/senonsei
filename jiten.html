@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <title>語彙辞典</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="stylesheet" href="sen.css?v=3913005480" />
+<link rel="stylesheet" href="sen.css?v=1047212265" />
   <script id="keshiki-script">
     (function () {
       var kusa = ["kusa/kusa-1.webp", "kusa/kusa-2.webp", "kusa/kusa-3.webp", "kusa/kusa-4.webp", "kusa/kusa-5.webp", "kusa/kusa-6.webp", "kusa/kusa-7.webp", "kusa/kusa-8.webp", "kusa/kusa-9.webp", "kusa/kusa-10.webp"];
@@ -223,8 +223,8 @@
       var UNKNOWN = "場所の特定をすることができませんでした";
       var READING_TITLE = "千遠生の日本語訳";
       var READING_UNKNOWN = "まだ訳がありません";
-      // 並びは、すべて・日本語・アルファベット・その他の文字・四字熟語・数字・記号
-      // (2026-10-18、彼女が決めた)。日本語とアルファベットは最初からある。
+      // 並びは、すべて・日本語・アルファベット・その他の文字・四字熟語・数字・記号・絵文字
+      // (2026-10-18、彼女が決めた。絵文字は同じ日にあとから足した)。日本語とアルファベットは最初からある。
       // ほかの字は、その字の言葉を初めて覚えた日から、一つの選ぶ欄にまとめて覚えた順に並べる。
       // 覚えるまでは欄も無い
       var SCRIPTS = ["日本語", "アルファベット"];
@@ -236,7 +236,7 @@
       var MORE_ROWS = 8;
       var menuOpen = false;
       var FRONT = ["すべて"].concat(SCRIPTS);
-      var BACK = ["四字熟語", "数字", "記号"];
+      var BACK = ["四字熟語", "数字", "記号", "絵文字"];
       var isScript = function (k) { return SCRIPTS.indexOf(k) >= 0 || MORE.indexOf(k) >= 0; };
       var fits = function (d, k) {
         if (k === "すべて") { return true; }
