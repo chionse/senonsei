@@ -1097,13 +1097,14 @@ article.yomimono .article-head {
 .memo-body .mitai {
   position: relative;
   padding: 0;
-  background: #e8edff;
+  /* 濃い青に、薄い青の ▶(2026-10-19、彼女が決めた) */
+  background: var(--main-color);
   cursor: pointer;
 }
 
 .memo-body .mitai:hover,
 .memo-body .mitai:focus-visible {
-  background: #dce3ff;
+  background: #1a3fc0;
 }
 
 /* 真ん中の ▶ */
@@ -1114,7 +1115,7 @@ article.yomimono .article-head {
   top: 50%;
   border-style: solid;
   border-width: 22px 0 22px 36px;
-  border-color: transparent transparent transparent var(--main-color);
+  border-color: transparent transparent transparent #e8edff;
   transform: translate(-38%, -50%);
 }
 
