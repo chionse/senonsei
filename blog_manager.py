@@ -2059,14 +2059,22 @@ PLACE_UNKNOWN = "場所の特定をすることができませんでした"
 TODAYS_WORD_TIES = 3
 
 
+# この子が絵文字として拾う字。異体字セレクタと、絵文字どうしを繋ぐ字も付いてよい
+AN_EMOJI = re.compile(r"(?=.*[\U0001F000-\U0001FAFF\u2600-\u27BF\u2B00-\u2BFF])[\U0001F000-\U0001FAFF\u2600-\u27BF\u2B00-\u2BFF\uFE0F\u200D]+")
+
+
 def a_kind_of_word(word):
     """絞るボタンの種類。見た目だけで分けられるものだけにする(2026-10-14、彼女が決めた)。
 
     ひらがな・カタカナ・漢字で分けると、「困る」や「1番」のように混ざった言葉の
     置き場に迷うので分けない。四字熟語は漢字四文字の言葉なら何でも入れる。
-    本物の四字熟語と見分ける手立てが無いので、「利用規約」も入る。"""
+    本物の四字熟語と見分ける手立てが無いので、「利用規約」も入る。
+    絵文字は、この子が絵文字として拾う字(senonsei_ai の ALSO_WRITTEN と同じ範囲)だけでできた言葉。
+    ☆や♡もここに入る(2026-10-18、彼女に言われて足した)。"""
     if re.fullmatch(r"[0-9０-９]+", word):
         return "数字"
+    if AN_EMOJI.fullmatch(word):
+        return "絵文字"
     if not re.search(r"\w", word):
         return "記号"
     if re.fullmatch(r"[一-鿿々]{4}", word):
@@ -2371,8 +2379,8 @@ JITEN_SCRIPT = r"""
       var UNKNOWN = __UNKNOWN__;
       var READING_TITLE = __READING_TITLE__;
       var READING_UNKNOWN = __READING_UNKNOWN__;
-      // 並びは、すべて・日本語・アルファベット・その他の文字・四字熟語・数字・記号
-      // (2026-10-18、彼女が決めた)。日本語とアルファベットは最初からある。
+      // 並びは、すべて・日本語・アルファベット・その他の文字・四字熟語・数字・記号・絵文字
+      // (2026-10-18、彼女が決めた。絵文字は同じ日にあとから足した)。日本語とアルファベットは最初からある。
       // ほかの字は、その字の言葉を初めて覚えた日から、一つの選ぶ欄にまとめて覚えた順に並べる。
       // 覚えるまでは欄も無い
       var SCRIPTS = __SCRIPTS__;
@@ -2384,7 +2392,7 @@ JITEN_SCRIPT = r"""
       var MORE_ROWS = __MORE_ROWS__;
       var menuOpen = false;
       var FRONT = ["すべて"].concat(SCRIPTS);
-      var BACK = ["四字熟語", "数字", "記号"];
+      var BACK = ["四字熟語", "数字", "記号", "絵文字"];
       var isScript = function (k) { return SCRIPTS.indexOf(k) >= 0 || MORE.indexOf(k) >= 0; };
       var fits = function (d, k) {
         if (k === "すべて") { return true; }
