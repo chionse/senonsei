@@ -4943,6 +4943,10 @@ def words_left_at_home(state):
     return letters_at_home(state) + voices_at_home(state)
 
 
+# メモの中の、絵や動画を貼るための印。文章ではない
+PAGE_MARKS = re.compile(r"<[^<>]*>")
+
+
 def letters_at_home(state):
     """家に置かれた言葉のうち、彼女のメモと手紙。封の解けたものだけ。
 
@@ -4953,9 +4957,10 @@ def letters_at_home(state):
     read = only_for_it
 
     for keyword in blog_manager.load_keywords():
-        # 開くきっかけはこの子の言葉だが、中に置かれているのは彼女の文章
+        # 開くきっかけはこの子の言葉だが、中に置かれているのは彼女の文章。
+        # 絵や動画を貼るための印(<img …> など)は文章ではないので、読まずに外す
         if keyword.get("unlocked"):
-            voices.append(read(keyword.get("content")))
+            voices.append(PAGE_MARKS.sub("", read(keyword.get("content"))))
 
     elapsed = elapsed_days(state)
     for item in blog_manager.load_menu():

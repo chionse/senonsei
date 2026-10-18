@@ -879,6 +879,12 @@ def render_unlockable_list(entries, prefix, per_page=None):
     return listed, pages_html, "sheets"
 
 
+# 押してから見る動画の、確かめの言葉。彼女の言葉のまま(2026-10-19)
+MITAI_ASK = "本当に見ますか？"
+MITAI_YES = "はい"
+MITAI_NO = "いいえ"
+
+
 def generate_memo_html(keywords, menu_items, articles):
     """メモ1とメモ2を1つのページに入れ、上のタブで切り替えられるようにする。"""
     keywords = stamp_when(keywords, save_keywords)
@@ -972,6 +978,15 @@ def generate_memo_html(keywords, menu_items, articles):
 {keyword_pages}{menu_pages}  <div id="look-closer" hidden onclick="closeCloser()">
     <img id="closer-image" src="" alt="" />
   </div>
+  <div id="mitai-kakunin" hidden>
+    <div class="mk-win" role="dialog" aria-modal="true" aria-labelledby="mk-q">
+      <p id="mk-q">{MITAI_ASK}</p>
+      <div class="mk-btns">
+        <button type="button" id="mk-hai">{MITAI_YES}</button>
+        <button type="button" id="mk-iie">{MITAI_NO}</button>
+      </div>
+    </div>
+  </div>
 
   <script>
     // メモの中の絵を押すと、画面いっぱいに大きくして見せる
@@ -993,8 +1008,48 @@ def generate_memo_html(keywords, menu_items, articles):
       }}
     }});
     document.addEventListener('keydown', function (event) {{
-      if (event.key === 'Escape') {{ closeCloser(); }}
+      if (event.key === 'Escape') {{ closeCloser(); closeMitai(); }}
     }});
+
+    // 押してから見る動画(2026-10-19、彼女が決めた)。押すまでは中を見せず、
+    // 「本当に見ますか？」に「はい」と答えた時だけ、その場で流す
+    var mitaiNow = null;
+    function askMitai(box) {{
+      mitaiNow = box;
+      document.getElementById('mitai-kakunin').hidden = false;
+      document.getElementById('mk-iie').focus();
+    }}
+    function closeMitai() {{
+      var ask = document.getElementById('mitai-kakunin');
+      if (ask.hidden) {{ return; }}
+      ask.hidden = true;
+      if (mitaiNow) {{ mitaiNow.focus(); }}
+      mitaiNow = null;
+    }}
+    function showMitai() {{
+      var box = mitaiNow;
+      closeMitai();
+      if (!box) {{ return; }}
+      var video = document.createElement('video');
+      video.className = 'mitai-douga';
+      video.src = box.getAttribute('data-src');
+      video.controls = true;
+      video.muted = true;
+      video.autoplay = true;
+      video.setAttribute('playsinline', '');
+      box.parentNode.replaceChild(video, box);
+      var playing = video.play();
+      if (playing && playing.catch) {{ playing.catch(function () {{}}); }}
+    }}
+    document.addEventListener('click', function (event) {{
+      var box = event.target.closest && event.target.closest('.mitai');
+      if (box) {{ askMitai(box); }}
+    }});
+    document.getElementById('mk-hai').onclick = showMitai;
+    document.getElementById('mk-iie').onclick = closeMitai;
+    document.getElementById('mitai-kakunin').onclick = function (event) {{
+      if (event.target === this) {{ closeMitai(); }}
+    }};
 
     // 一覧をめくる。並び順は変えないので、何ページ目に何があるかは
     // どの画面でも同じ
@@ -1042,6 +1097,7 @@ def generate_memo_html(keywords, menu_items, articles):
     }}
     window.addEventListener('hashchange', function () {{
       closeCloser();
+      closeMitai();
       showWhatTheAddressSays();
     }});
     // 開いたメモの紙の外を押したら、一覧に戻る(2026-10-11、彼女が決めた)。
@@ -1050,6 +1106,7 @@ def generate_memo_html(keywords, menu_items, articles):
     document.addEventListener('click', function (event) {{
       var open = document.querySelector('.memo-page:not([hidden])');
       if (!open || !document.getElementById('look-closer').hidden) {{ return; }}
+      if (!document.getElementById('mitai-kakunin').hidden) {{ return; }}
       if (event.target.closest('.memo-page')) {{ return; }}
       event.preventDefault();
       event.stopPropagation();

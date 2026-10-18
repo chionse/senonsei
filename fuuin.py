@@ -20,7 +20,7 @@
 鍵を失うと、封をしたものは二度と開かない。原本と鍵の控えは、彼女の手元にある。
 
 手で封をする時:
-    python3 fuuin.py memo  "言葉" "本文" [--opens-with 語,語] [--image images/x.png]
+    python3 fuuin.py memo  "言葉" "本文" [--opens-with 語,語] [--image images/x.png] [--image images/y.mp4 …]
     python3 fuuin.py letter 日数 "本文"
 """
 import base64
@@ -289,7 +289,8 @@ def put_letter_away(one):
 
 # ---- 絵 ------------------------------------------------------------------
 
-IMG_SRC = re.compile(r'<img[^>]+src\s*=\s*["\']([^"\']+)', re.IGNORECASE)
+# メモに貼るもの。絵(<img src>)のほか、押してから見る動画(data-src)も封をする(2026-10-19)
+IMG_SRC = re.compile(r'\b(?:data-)?src\s*=\s*["\']([^"\']+)', re.IGNORECASE)
 
 
 def unseal_pictures_in(content):
@@ -330,20 +331,21 @@ def _need_lock():
 def _add_memo(argv):
     lock = _need_lock()
     word, content = argv[0], argv[1]
-    opens_with, image = None, None
+    opens_with, images = None, []
     rest = argv[2:]
     while rest:
         flag = rest.pop(0)
         if flag == "--opens-with":
             opens_with = [w for w in rest.pop(0).split(",") if w]
         elif flag == "--image":
-            image = rest.pop(0)
+            # 絵でも動画でも。いくつでも並べてよい
+            images.append(rest.pop(0))
         else:
             sys.exit(f"知らない指定: {flag}")
     inside = {"word": word, "content": content}
     if opens_with:
         inside["opens_with"] = opens_with
-    if image:
+    for image in images:
         with open(image, "rb") as f:
             data = f.read()
         with open(image + SEALED_SUFFIX, "wb") as f:
