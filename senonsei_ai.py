@@ -442,8 +442,9 @@ OTHER_TONGUES_PER_PAGE = 60  # 一つの記事から結びつける別の言葉�
 FOREIGN_INTEREST_BEGINS = 20000
 FOREIGN_HARDER = 10  # 興味の無いうちは、覚えるまでにこれだけ倍の日がかかる
 # 興味が育ちきっても、日本語への興味は超えない(2026-10-08、彼女が決めた)。
-# よその言葉は、いちばん興味のある時でも、日本語の倍の日がかかる
-FOREIGN_AT_BEST = 2
+# よその言葉は、いちばん興味のある時でも、日本語の一・五倍の日がかかる。
+# はじめは倍にしていた。2026-10-18 に彼女が一・五倍に決めた(二十日なら三十日)
+FOREIGN_AT_BEST = 1.5
 INTEREST_GROWS_A_DAY = 1 / 200  # その字の言葉に出会った日ごとに、興味がこれだけ育つ(二百日で育ちきる)
 INTEREST_TO_CARE = 0.3  # 興味がこれだけ育った字の言葉は、強く出会い、思い、自分で訳して読む
 TONGUES_READ_AS_JAPANESE = {"ja", "zh", "zh-yue", "zh-classical", "lzh", "wuu", "gan", "zh-min-nan", "cdo", "hak"}
