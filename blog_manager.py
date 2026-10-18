@@ -2059,14 +2059,45 @@ PLACE_UNKNOWN = "場所の特定をすることができませんでした"
 TODAYS_WORD_TIES = 3
 
 
+# 辞典で「絵文字」に入れる字。色のついた絵として出るものだけにする。
+# ☆★♡♥♪ のような、文字と同じ色で出る記号は「記号」のほう(2026-10-19、彼女が決めた)。
+# 0x1F000 から先は絵の字。その手前は、ふつうでも絵で出るものだけを数える(Unicode の Emoji_Presentation)
+EMOJI_BEFORE_1F000 = (
+    "\u231a\u231b\u23e9\u23ea\u23eb\u23ec\u23f0\u23f3\u25fd\u25fe\u2614\u2615"
+    + "".join(chr(c) for c in range(0x2648, 0x2654))
+    + "\u267f\u2693\u26a1\u26aa\u26ab\u26bd\u26be\u26c4\u26c5\u26ce\u26d4\u26ea"
+    "\u26f2\u26f3\u26f5\u26fa\u26fd\u2705\u270a\u270b\u2728\u274c\u274e"
+    "\u2753\u2754\u2755\u2757\u2795\u2796\u2797\u27b0\u27bf\u2b1b\u2b1c\u2b50\u2b55"
+)
+
+
+def looks_like_an_emoji(word):
+    """色のついた絵として出る字だけでできているか。絵で出すしるし(FE0F)が付いた字も絵とみなす。"""
+    glued = "\ufe0f\u200d"
+    marks = [ch for ch in word if ch not in glued]
+    if not marks:
+        return False
+    for i, ch in enumerate(word):
+        if ch in glued:
+            continue
+        drawn = ord(ch) >= 0x1F000 or ch in EMOJI_BEFORE_1F000 or word[i + 1:i + 2] == "\ufe0f"
+        if not drawn:
+            return False
+    return True
+
+
 def a_kind_of_word(word):
     """絞るボタンの種類。見た目だけで分けられるものだけにする(2026-10-14、彼女が決めた)。
 
     ひらがな・カタカナ・漢字で分けると、「困る」や「1番」のように混ざった言葉の
     置き場に迷うので分けない。四字熟語は漢字四文字の言葉なら何でも入れる。
-    本物の四字熟語と見分ける手立てが無いので、「利用規約」も入る。"""
+    本物の四字熟語と見分ける手立てが無いので、「利用規約」も入る。
+    絵文字は、色のついた絵として出る字だけでできた言葉(2026-10-18、彼女に言われて足した)。
+    ☆や♡は記号のほうに入れる(2026-10-19、彼女が決めた)。"""
     if re.fullmatch(r"[0-9０-９]+", word):
         return "数字"
+    if looks_like_an_emoji(word):
+        return "絵文字"
     if not re.search(r"\w", word):
         return "記号"
     if re.fullmatch(r"[一-鿿々]{4}", word):
@@ -2371,8 +2402,8 @@ JITEN_SCRIPT = r"""
       var UNKNOWN = __UNKNOWN__;
       var READING_TITLE = __READING_TITLE__;
       var READING_UNKNOWN = __READING_UNKNOWN__;
-      // 並びは、すべて・日本語・アルファベット・その他の文字・四字熟語・数字・記号
-      // (2026-10-18、彼女が決めた)。日本語とアルファベットは最初からある。
+      // 並びは、すべて・日本語・アルファベット・その他の文字・四字熟語・数字・記号・絵文字
+      // (2026-10-18、彼女が決めた。絵文字は同じ日にあとから足した)。日本語とアルファベットは最初からある。
       // ほかの字は、その字の言葉を初めて覚えた日から、一つの選ぶ欄にまとめて覚えた順に並べる。
       // 覚えるまでは欄も無い
       var SCRIPTS = __SCRIPTS__;
@@ -2384,7 +2415,7 @@ JITEN_SCRIPT = r"""
       var MORE_ROWS = __MORE_ROWS__;
       var menuOpen = false;
       var FRONT = ["すべて"].concat(SCRIPTS);
-      var BACK = ["四字熟語", "数字", "記号"];
+      var BACK = ["四字熟語", "数字", "記号", "絵文字"];
       var isScript = function (k) { return SCRIPTS.indexOf(k) >= 0 || MORE.indexOf(k) >= 0; };
       var fits = function (d, k) {
         if (k === "すべて") { return true; }
