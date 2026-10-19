@@ -622,6 +622,17 @@ article .today-head .article-title {
   text-decoration: none;
 }
 
+/* 日時の箱は全体を薄くしているので、題まで八割の濃さになっていた。
+   題は過去のブログの題と同じ濃さにして、♡と日付だけを薄くする(2026-10-19、彼女が決めた) */
+article .date.today-head {
+  opacity: 1;
+}
+
+article .today-head .iine,
+article .today-head .today-when {
+  opacity: 0.8;
+}
+
 article .today-head .article-title:hover {
   text-decoration: underline;
 }
