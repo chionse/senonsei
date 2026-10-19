@@ -246,11 +246,16 @@ WAYS_OF_WRITING = (
 # 西洋の言葉の書き方。latin-1 はどんなバイトの並びも最後まで読めてしまい、
 # cp1252 もほとんどそう。日本語のページでも勝ってしまうことがある
 WESTERN = ("cp1252", "windows_1252", "latin_1", "latin1", "iso_8859_1", "iso8859_1", "l1")
-# 日本語の読み方で読んで、ひらがながこれだけ出てくれば日本語のページとみなす。
-# 西洋の文字を日本語の読み方で読むと、漢字の化けは出てもひらがなはまず出ない
-HIRAGANA_SAYS_JAPANESE = 5
 # ひらがなとカタカナ。漢字は中国語にもあるので、日本語かどうかはこれで見る
 KANA = re.compile(r"[ぁ-んァ-ヶ]")
+# 日本語の読み方で読んで、かながこれだけ出てくれば日本語のページとみなす。
+# 西洋の文字を日本語の読み方で読むと、漢字の化けは出てもかなはまず出ない。
+#
+# 前はひらがなだけを数えていた。カタカナばかりのページ(昔の
+# Yahoo!ジオシティーズのゲームの一覧など)はひらがながほとんど無く、
+# 帯が少し混ざって詰まっただけで西洋の読み方に負け、
+# 「Yahoo!¥¸¥ª¥·¥Æ¥£¡¼¥º」のような名前で覚えていた(2026-10-19)
+KANA_SAYS_JAPANESE = 5
 # 西洋の読み方で読んで、ö や é が英字に挟まれてこれだけ出てくれば、
 # 西洋の言葉のページとみなす。日本語を西洋の読み方で読むと、
 # 出てくるのは ¥ や ¡ のような記号の並びで、言葉の中には収まらない
@@ -835,6 +840,7 @@ def load_state():
         state.setdefault("on_its_mind", [])
         state.setdefault("learned_on", {})
         rescue_thoughts_already_here(state)
+        read_the_names_again(state)
     else:
         state = {
             "started_date": today_in_japan().isoformat(),
@@ -1885,19 +1891,19 @@ def read_as_japanese(raw, content_type):
     # 同じ点なら先に試したほうを採る(並べた順が、そのまま頼る順)
     best = max(readings, key=lambda one: one[0])
     if best[1] == "western":
-        # 西洋の読み方が勝った。けれど日本語の読み方で、ひらがながちゃんと
+        # 西洋の読み方が勝った。けれど日本語の読み方で、かながちゃんと
         # 出てくるものがあるなら、それは日本語のページ。
         # Internet Archive が差し込む帯や、①のような文字が少し混ざって
         # 詰まっただけで、日本語の少ないページは西洋の読み方に負けていた
         japanese = [
             one for one in readings
             if one[1] != "western"
-            and len(HIRAGANA.findall(one[2])) >= HIRAGANA_SAYS_JAPANESE
+            and len(KANA.findall(one[2])) >= KANA_SAYS_JAPANESE
         ]
         if japanese:
             best = max(japanese, key=lambda one: one[0])
-    elif best[1] == "japanese" and len(HIRAGANA.findall(best[2])) < HIRAGANA_SAYS_JAPANESE:
-        # 日本語の読み方が勝ったが、ひらがながほとんど無い。
+    elif best[1] == "japanese" and len(KANA.findall(best[2])) < KANA_SAYS_JAPANESE:
+        # 日本語の読み方が勝ったが、かながほとんど無い。
         # 西洋の読み方で ö や é が言葉の中に並ぶなら、西洋のページを
         # 日本語の読み方で読んで漢字に化けさせているだけ。
         #
@@ -3858,6 +3864,54 @@ def where_it_will_go(state, how_many=PLACES_SHOWN):
         if len(shown) >= how_many:
             break
     return shown
+
+
+def read_the_name_again(name):
+    """読み方を間違えて、化けたまま覚えた名前を読み直す。
+
+    化けた名前は、元のバイトを間違った読み方で文字にしたもの。
+    同じ読み方で文字をバイトに戻せば、元の並びがそのまま戻ってくる。
+
+    一つは UTF-8 を Shift_JIS で読んだもの(「•」が「窶｢」になる)。
+    戻したバイトが UTF-8 として最後まで読めた時だけ直す。
+    正しく覚えた日本語の名前を Shift_JIS のバイトに戻しても、
+    UTF-8 としてはまず読めない。
+
+    もう一つは日本語を西洋の読み方で読んだもの(「¥¸¥ª」のような並び)。
+    読み直して、かなが出てこなければ、元から西洋の名前なのでそのままにする。"""
+    if not name or KANA.search(name):
+        return name
+    try:
+        again = name.encode("cp932").decode("utf-8")
+    except (UnicodeEncodeError, UnicodeDecodeError):
+        again = name
+    if again != name:
+        return again
+    for western in ("latin-1", "cp1252"):
+        try:
+            raw = name.encode(western)
+        except UnicodeEncodeError:
+            continue
+        if max(raw, default=0) < 0x80:
+            return name
+        again = read_as_japanese(raw, "")
+        if KANA.search(again) and "\ufffd" not in again:
+            return again
+    return name
+
+
+def read_the_names_again(state):
+    """覚えている場所の名前のうち、化けたままのものを読み直す。
+
+    読み方の間違いを直しても(2026-10-19)、前に覚えた名前は化けたまま残る。
+    その場所にまた行くまで直らないので、起きるたびに見直す。
+    行き先の並び(where_it_will_go)は、歩いたあとにこの名前から作り直される。"""
+    named = state.get("places_known") or {}
+    for place, name in list(named.items()):
+        again = read_the_name_again(name)
+        if again != name:
+            named[place] = again
+            print(f"化けていた場所の名前を読み直しました: {again}")
 
 
 def remember_the_name(state, url, title):
