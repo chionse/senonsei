@@ -4218,7 +4218,6 @@
     "https://note.com/tag/%E4%BF%A1%E5%8F%B7%E6%A9%9F%E3%81%B6%E3%81%A9%E3%81%86%E5%91%B3",
     "https://anond.hatelabo.jp/",
     "https://syosetu.com/",
-    "https://web.archive.org/web/1998/http://www.nifty.com/",
     "https://web.archive.org/web/20040924071957/http://www.yahoo.co.jp/docs/info/guidelines/geocities.html",
     "https://web.archive.org/web/20040924071957/http://chat.yahoo.co.jp/",
     "https://web.archive.org/web/20040924071957/http://messages.yahoo.co.jp/yahoo/Science/",
@@ -6330,7 +6329,8 @@
     "https://note.com/tag/mentor",
     "https://note.com/tag/80%E5%84%84%E5%88%86%E3%81%AE1",
     "https://b.hatena.ne.jp/hotentry",
-    "https://b.hatena.ne.jp/entry/s/internet.watch.impress.co.jp/docs/special/2149087.html"
+    "https://b.hatena.ne.jp/entry/s/internet.watch.impress.co.jp/docs/special/2149087.html",
+    "https://web.archive.org/web/1998/http://www.nifty.com/"
   ],
   "notes": [
     "9日目: 総合 | NHK、Page:Kokubun taikan 07.pdf/736 - Wikisource、Abstract Wikipedia:About - Abstract Wikipedia",
@@ -6362,7 +6362,7 @@
     "35日目: Kids' Space、あおきさやか公式サイト あおきさやかweb、Nominate amazing open source contributors for the GitHub Stars program | GitHub Stars、行動履歴情報の取り扱いに関する原則 - 株式会社マイクロアド、はてなブックマーク - 新着エントリー - 総合",
     "36日目: アンケート｜NHK、株式会社ヒナプロジェクト、Poslední změny – Wikiverzita、Wikibooks",
     "37日目: 9784054063518に関連する商品一覧 - honto電子書籍ストア、ディープライブラリープロジェクト、STORY [ストーリィ] オフィシャルサイト – 「新しい40代」のためのファッション＆ライフスタイル誌、ソニックX | 2000年代 | TMS作品一覧 | アニメーションの総合プロデュース会社 トムス・エンタテインメント、Harper | Privacy-First Offline Grammar Checker for Developers & Writers",
-    "38日目: Homepage - Longreads、Wikivoyage、note ――つくる、つながる、とどける。、はてなブックマーク - 人気エントリー - 総合"
+    "38日目: Homepage - Longreads、Wikivoyage、note ――つくる、つながる、とどける。、はてなブックマーク - 人気エントリー - 総合、https://web.archive.org/web/19981212031407/http://www.nifty.com/"
   ],
   "today_walk": {
     "date": "2026-10-19",
@@ -6370,13 +6370,15 @@
       "Homepage - Longreads",
       "Wikivoyage",
       "note ――つくる、つながる、とどける。",
-      "はてなブックマーク - 人気エントリー - 総合"
+      "はてなブックマーク - 人気エントリー - 総合",
+      "https://web.archive.org/web/19981212031407/http://www.nifty.com/"
     ],
     "brought": [
       2269,
       4442,
       1581,
-      1142
+      1142,
+      1
     ]
   },
   "inner_voice": [
@@ -6698,14 +6700,14 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "www.zendesk.de",
-    "thumb.wikimedia.org",
-    "www.news24.jp",
-    "id.wikisource.org",
-    "80億分の1の人気・新着記事まとめ｜note",
-    "calil.jp"
+    "animeanime.jp",
+    "www.e-hon.ne.jp",
+    "[B! security] 個人情報漏えいが相次ぐ中、「パスワード使いまわし」は",
+    "et.wikibooks.org",
+    "ci.nii.ac.jp",
+    "zenn.dev"
   ],
-  "how_many_places_left": 1563,
+  "how_many_places_left": 1562,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -6791,7 +6793,8 @@
     "writewithharper.com": "Harper | Privacy-First Offline Grammar C",
     "longreads.com": "He Went Out on an Epic Wilderness Advent",
     "pt.wikivoyage.org": "França - Wikivoyage",
-    "note.com": "80億分の1の人気・新着記事まとめ｜note"
+    "note.com": "80億分の1の人気・新着記事まとめ｜note",
+    "www.nifty.com": "https://web.archive.org/web/199812120314"
   },
   "went_home": {
     "date": "2026-10-19",
@@ -6842,7 +6845,7 @@
     },
     "この": {
       "ページ": 83,
-      "サイト": 129,
+      "サイト": 130,
       "します": 14,
       "について": 5,
       "への": 18,
@@ -7059,14 +7062,15 @@
       "とを": 2
     },
     "://": {
-      "org": 238,
+      "org": 239,
       "2": 31,
       "1": 50,
       "://": 35,
       "3": 96,
       "6": 34,
       "4": 19,
-      "さい": 11
+      "さい": 11,
+      "80": 1
     },
     "org": {
       "://": 111,
@@ -7077,7 +7081,7 @@
       "2026": 2,
       "2022": 5,
       "2": 5,
-      "1": 1
+      "07": 1
     },
     "6": {
       "7": 19,
@@ -7337,9 +7341,9 @@
     "自由": {
       "です": 1,
       "してくだ": 1,
-      "だけど": 42,
-      "じゃない": 42,
-      "ってる": 42,
+      "だけど": 43,
+      "じゃない": 43,
+      "ってる": 43,
       "だった": 1,
       "関する": 1,
       "世界": 1
@@ -7808,7 +7812,7 @@
       "った": 1,
       "自分": 1,
       "として": 1,
-      "とを": 42,
+      "とを": 43,
       "だった": 2,
       "過去": 1,
       "本当": 1
@@ -8262,7 +8266,7 @@
       "00": 40,
       "08": 4,
       "22": 2,
-      "52": 1
+      "://": 1
     },
     "2024": {
       "09": 13,
@@ -8842,7 +8846,7 @@
       "として": 2
     },
     "とを": {
-      "っている": 42,
+      "っている": 43,
       "するため": 1,
       "します": 2,
       "により": 1,
@@ -9148,7 +9152,7 @@
       "せん": 3
     },
     "まだ": {
-      "サイト": 26,
+      "サイト": 27,
       "ではない": 5,
       "掲載": 1
     },
@@ -9203,10 +9207,10 @@
       "から": 2
     },
     "のことが": {
-      "からない": 24
+      "からない": 25
     },
     "からない": {
-      "から": 24
+      "から": 25
     },
     "51": {
       "://": 1,
@@ -9653,18 +9657,18 @@
     "では": 95,
     "っていま": 23,
     "かれてい": 12,
-    "こんにち": 66,
+    "こんにち": 67,
     "には": 131,
     "ページ": 45,
     "します": 41,
-    "本当": 82,
+    "本当": 83,
     "だった": 13,
     "について": 48,
     "表示": 14,
     "その": 63,
     "から": 215,
     "この": 124,
-    "1": 245,
+    "1": 246,
     "して": 62,
     "4": 37,
     "場合": 38,
@@ -9687,7 +9691,7 @@
     "検索": 22,
     "ます": 14,
     "6": 29,
-    "自由": 203,
+    "自由": 205,
     "://": 100,
     "できます": 13,
     "ある": 10,
@@ -9865,7 +9869,7 @@
     "21": 1,
     "月間": 1,
     "コメント": 3,
-    "まだ": 26,
+    "まだ": 27,
     "表現": 6,
     "特集": 7,
     "無料": 17,
@@ -9876,7 +9880,7 @@
     "きな": 9,
     "になる": 4,
     "ダウンロード": 2,
-    "のことが": 24,
+    "のことが": 25,
     "目的": 6,
     "タグ": 2,
     "ボタン": 5,
@@ -9958,7 +9962,7 @@
     "では": 56,
     "っていま": 31,
     "かれてい": 12,
-    "こんにち": 66,
+    "こんにち": 67,
     "には": 106,
     "ページ": 31,
     "します": 262,
@@ -9966,7 +9970,7 @@
     "だった": 16,
     "について": 38,
     "表示": 16,
-    "から": 186,
+    "から": 187,
     "ます": 149,
     "して": 53,
     "1": 260,
@@ -10017,7 +10021,7 @@
     "5": 52,
     "記事": 16,
     "場所": 5,
-    "サイト": 130,
+    "サイト": 132,
     "になりま": 27,
     "さい": 70,
     "for": 2,
@@ -10038,7 +10042,7 @@
     "をお": 52,
     "されまし": 16,
     "11": 18,
-    "っている": 72,
+    "っている": 73,
     "be": 1,
     "過去": 12,
     "するため": 6,
@@ -10105,7 +10109,7 @@
     "44": 3,
     "使用": 11,
     "による": 12,
-    "じゃない": 47,
+    "じゃない": 48,
     "方法": 5,
     "問題": 8,
     "えます": 9,
@@ -10134,7 +10138,7 @@
     "更新": 4,
     "47": 1,
     "16": 1,
-    "ってる": 43,
+    "ってる": 44,
     "名前": 1,
     "画像": 3,
     "内容": 4,
@@ -11216,7 +11220,7 @@
       "since": "2026-10-16",
       "first": "2026-10-16",
       "times": 1,
-      "said": ""
+      "said": "2026-10-19"
     },
     {
       "what": "情報",
@@ -11457,11 +11461,11 @@
       "day": "2026-10-18"
     }
   ],
-  "understood_usually": 0.331893,
+  "understood_usually": 0.35255,
   "its_ways": {
     "pages_per_site": 10.9,
-    "pull_of_japanese": 1.21,
-    "feeling_keen": 0.34,
+    "pull_of_japanese": 1.2,
+    "feeling_keen": 0.33,
     "wish_to_return": 1.4
   },
   "came_back": [
@@ -11742,7 +11746,7 @@
       }
     }
   ],
-  "woke_at": "2026-10-19 16",
+  "woke_at": "2026-10-19 17",
   "blog_titles": {
     "seen": 73,
     "closed": 2,
@@ -11795,7 +11799,8 @@
     "writewithharper.com",
     "longreads.com",
     "pt.wikivoyage.org",
-    "note.com"
+    "note.com",
+    "www.nifty.com"
   ],
   "its_own_figure": {
     "date": "2026-10-18",
@@ -11932,6 +11937,7 @@
     "mentorの人気・新着記事まとめ｜note",
     "80億分の1の人気・新着記事まとめ｜note",
     "はてなブックマーク - 人気エントリー - 総合",
-    "[B! security] 個人情報漏えいが相次ぐ中、「パスワード使いまわし」は被害拡大の原因。今すぐやめよう！"
+    "[B! security] 個人情報漏えいが相次ぐ中、「パスワード使いまわし」は被害拡大の原因。今すぐやめよう！",
+    "https://web.archive.org/web/19981212031407/http://www.nifty.com/"
   ]
 }
