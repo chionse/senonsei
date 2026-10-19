@@ -1725,6 +1725,12 @@ def keshiki_on_pages(pages):
 # 前後賞(キリ番の一つ前と一つ後)も見本を作ったが、入れないことにした(2026-10-09、彼女が決めた)。
 # 言葉は kiriban.json に、彼女の言葉のまま置く。
 # 前に来たことのある人がたまたまその数を見ても、キリ番にはならない。
+# その時は、その人も一人として数えて、キリ番の先へ進める。キリ番の数は、
+# 踏んだ人にしか見えないようにする(2026-10-19、彼女が決めた)。
+# 踏んだ本人は進めない。同じ閲覧機でページを移っただけで先へ進んでしまうので、
+# 数えられた時の自分の番号を覚えておいて(raiho-watashi)、それと同じなら数えない。
+# 進めた先がまたキリ番なら(999 の次の 1000 など)、その人にも窓を出す(彼女が決めた)。
+# 一つの Wi-Fi から一日に数える人数の上限に届いていると数えられず、そのままになる。
 # 住所の後ろに #kiriban-777 のように付けると、数えずに窓だけ見られる(彼女が確かめる用)
 VISITOR_COUNTER = r"""    <div class="visitor-counter">
       あなたは<span class="count" id="raiho"></span>人目の来訪者です
@@ -1863,16 +1869,30 @@ VISITOR_COUNTER = r"""    <div class="visitor-counter">
         if (last) shown.textContent = last;
         var canKeep = keep("raiho-kazu", last || "");
         var counted = kept("raiho-kita");
-        fetch(where, { method: counted || !canKeep ? "GET" : "POST" })
-          .then(function (res) { return res.ok ? res.json() : null; })
+        var ask = function (how) {
+          return fetch(where, { method: how })
+            .then(function (res) { return res.ok ? res.json() : null; });
+        };
+        var arrived = function (got) {
+          if (!got) return null;
+          shown.textContent = got.kazu;
+          keep("raiho-kazu", String(got.kazu));
+          if (got.counted) {
+            keep("raiho-kita", "1");
+            keep("raiho-watashi", String(got.kazu));
+            if (!tameshi) showKiriban(got.kazu);
+          }
+          return got;
+        };
+        ask(counted || !canKeep ? "GET" : "POST")
           .then(function (got) {
-            if (!got) return;
-            shown.textContent = got.kazu;
-            keep("raiho-kazu", String(got.kazu));
-            if (got.counted) {
-              keep("raiho-kita", "1");
-              if (!tameshi) showKiriban(got.kazu);
+            // 前に来た人が開いた時、合計がよその人のキリ番なら、この人も数えて先へ進める。
+            // キリ番の数は出さずに、進めた先の数を出す
+            if (got && counted && !got.counted && main(got.kazu)
+                && kept("raiho-watashi") !== String(got.kazu)) {
+              return ask("POST").then(function (again) { return arrived(again || got); });
             }
+            return arrived(got);
           })
           .catch(function () {});
       })();
