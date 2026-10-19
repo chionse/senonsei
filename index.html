@@ -45,7 +45,7 @@
         var main = function (n) {
           var said = String(n);
           if (/^7{2,}$/.test(said)) return "nana";
-          if (n >= 100 && (/^(\d)\1+$/.test(said) || /^[15]0+$/.test(said))) return "futsuu";
+          if (n >= 100 && (/^(\d)\1+$/.test(said) || /^[1-9]0+$/.test(said))) return "futsuu";
           if (said.length >= 3 && "123456789".indexOf(said) === 0) return "futsuu";
           // 語呂合わせ。サンキュー、よろしく、ニコニコ
           if (["3939", "4649", "2525"].indexOf(said) >= 0) return "futsuu";
