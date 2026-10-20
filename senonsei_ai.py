@@ -740,6 +740,16 @@ WIKIPEDIA_FAMILY = re.compile(
 )
 # 引いた記事のうち、まだ読みに行っていないものは、行き先を選ぶ時いつも候補に入れる
 LOOKED_UP_KEPT = 3
+# 日本語の Wikipedia のトップページ。行き先の候補にいつも混ぜる(2026-10-20、彼女と決めた)。
+# そこから今日の記事や新しい記事へ、気の向くまま入っていく
+WIKIPEDIA_TOP = "https://ja.wikipedia.org/wiki/%E3%83%A1%E3%82%A4%E3%83%B3%E3%83%9A%E3%83%BC%E3%82%B8"
+# 気になっていることや覚えた言葉の記事も、毎回 0 からこれだけの数を、ばらばらに候補に混ぜる
+WIKIPEDIA_WORDS_AT_MOST = 2
+# そのために一度に窓口へ「記事があるか」を訊く言葉の数(一度訊けば足りるように多めに)
+WIKIPEDIA_WORDS_TRIED = 8
+# 記事を引く言葉は、カタカナか漢字を含むものだけ。覚えた言葉には「からの」「となって」の
+# ような、ひらがなだけの切れ端も多い。それで引くと、言葉の記事ではないものに行ってしまう
+NOT_ONLY_HIRAGANA = re.compile(r"[\u30a0-\u30ff\u3400-\u9fff]")
 # 引いた記事を、次に歩く時に読みに行く割合。知りたい気持ちで上下する
 READ_WHAT_IT_LOOKED_UP = 0.5
 # 探しに行く時、言葉を頼りにせず Wikipedia の「おまかせ表示」を開く割合。退屈なほど開きたくなる。
@@ -1458,8 +1468,14 @@ def wiki_backstage(url):
     title = path[len("/wiki/"):]
     if WIKI_RANDOM_ARTICLE.match(title) or ":" not in title:
         return False
-    before = title.split(":", 1)[0].lower()
-    return any(one in WIKI_BACKSTAGE_NAMES for one in re.split(r"[\s_‐-]+", before) if one)
+    # 「ja:Wikipedia:良質な記事」のように、頭に言葉の印(ja: や en:)が付いた住所もある。
+    # いちばん前の区切りだけを見ていた頃は、印のほうを見てすり抜けていた(2026-10-20)
+    return any(
+        one in WIKI_BACKSTAGE_NAMES
+        for before in title.lower().split(":")[:-1]
+        for one in re.split(r"[\s_‐-]+", before)
+        if one
+    )
 
 
 def is_walkable(url):
@@ -2234,20 +2250,22 @@ def tidy_frontier(state):
 def spread_out_choices(state, frontier, how_many):
     """見せる候補を、いろいろな場所から少しずつ集める。
     同じサイトばかりが並んでいると、選べるものが実質ひとつしか無くなってしまう。
-    選ぶのは千遠生。ここでやるのは、その目の前を狭めないことだけ。"""
-    been_to = {place_of(url) for url in state.get("visited", [])}
+    選ぶのは千遠生。ここでやるのは、その目の前を狭めないことだけ。
+
+    行ったことのある場所も、ない場所も、同じように並べる(2026-10-20、彼女と決めた)。
+    前はまだ行ったことのない場所を先に並べていた。行き先の束には行ったことのない
+    場所が何百もあるので、行ったことのある場所は候補に一度も出てこなかった
+    (三百回並べて零)。Wikipedia にも、気に入った場所にも戻れず、
+    場所を好きになる気持ちも使われていなかった。
+    初めての場所へ行きたくなるかどうかは、選ぶ時の気持ち(退屈さ)が決める。"""
     by_place = {}
     for url in frontier:
         by_place.setdefault(place_of(url), []).append(url)
     for urls in by_place.values():
         random.shuffle(urls)
 
-    # まだ行ったことのない場所を先に並べる
-    unfamiliar = [p for p in by_place if p not in been_to]
-    familiar = [p for p in by_place if p in been_to]
-    random.shuffle(unfamiliar)
-    random.shuffle(familiar)
-    order = unfamiliar + familiar
+    order = list(by_place)
+    random.shuffle(order)
 
     chosen = []
     depth = 0
@@ -2310,15 +2328,66 @@ def article_in(answer):
     return next((p for p in pages if not p.get("missing") and not p.get("invalid")), None)
 
 
+def wikipedia_article(title):
+    """日本語の Wikipedia の、その題の記事の住所。"""
+    return WIKIPEDIA_ARTICLE.format(
+        urllib.parse.quote(title.replace(" ", "_"), safe=";@$!*(),/~:")
+    )
+
+
+def wikipedia_to_choose_from(state):
+    """行き先の候補に混ぜる、日本語の Wikipedia(2026-10-20、彼女と決めた)。
+
+    トップページは毎回。気になっていることや覚えた言葉の記事は、
+    毎回 0〜WIKIPEDIA_WORDS_AT_MOST 個、どの言葉になるかもばらばらに混ぜる。
+    「何回に一回」とは決めない。行くかどうかは、ほかの候補と同じく
+    その時の惹かれ方で決まる(彼女は、もっとランダムにと言った)。
+
+    記事があるかは窓口で確かめてから混ぜる。無い記事を候補にすると、
+    行ってみて「無くなっていた」と思い、Wikipedia そのものに惹かれなくなってしまう。"""
+    found = [WIKIPEDIA_TOP]
+    how_many = random.randint(0, WIKIPEDIA_WORDS_AT_MOST)
+    if not how_many:
+        return found
+    minding = [one.get("what", "") for one in state.get("on_its_mind") or []]
+    words = [
+        word
+        for word in dict.fromkeys(minding + list(state.get("learned_words") or []))
+        if len(word) >= 2 and NOT_ONLY_HIRAGANA.search(word) and a_word_to_go_by(word)
+    ]
+    if not words:
+        return found
+    tried = random.sample(words, min(WIKIPEDIA_WORDS_TRIED, len(words)))
+    try:
+        answer = ask_wikipedia(action="query", titles="|".join(tried), redirects="1")
+    except Exception as error:
+        print(f"Wikipedia に記事があるか確かめられませんでした({str(error)[:50]})")
+        return found
+    pages = (answer.get("query") or {}).get("pages") or []
+    titles = [
+        page["title"]
+        for page in pages
+        if page.get("title") and not page.get("missing") and not page.get("invalid")
+        and page.get("ns", 0) == 0
+    ]
+    random.shuffle(titles)
+    been = set(state.get("visited") or [])
+    for title in titles:
+        article = wikipedia_article(title)
+        if article not in been and article not in found:
+            found.append(article)
+        if len(found) > how_many:
+            break
+    return found
+
+
 def paths_out_of(page):
     """記事の住所と、記事から外へ続く道。
 
     記事の中の道のうち、Wikipedia の仲間へ続くものは持ち帰らない。
     外部リンクや出典は記事の終わりのほうにあって、長い記事だと
     ページを読み切る前に切れてしまうので、窓口に一覧で出してもらったものを使う。"""
-    article = WIKIPEDIA_ARTICLE.format(
-        urllib.parse.quote(page["title"].replace(" ", "_"), safe=";@$!*(),/~:")
-    )
+    article = wikipedia_article(page["title"])
     # 出典の足りない記事には「出典を探す」ための検索の道が並ぶ(Google、CiNii など)。
     # どれも記事の名前を "" で囲んで探す道で、場所ではないので持ち帰らない
     searching_for_it = f'"{page["title"]}"'
@@ -2638,6 +2707,10 @@ def choose_destination(state):
     # いつも候補に入っている
     for entrance in list((state.get("wants_to_return") or {}).values()) + looked_up:
         if entrance in frontier and entrance not in candidates:
+            candidates.append(entrance)
+    # 日本語の Wikipedia も、いつも候補に混ぜる。行くかどうかはほかと同じく惹かれ方しだい
+    for entrance in wikipedia_to_choose_from(state):
+        if entrance not in candidates:
             candidates.append(entrance)
     # 選ぶのはこの子。持っているものから決める。
     # 借りた頭に選ばせていたので、行き先だけは他人が決めていた
