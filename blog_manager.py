@@ -1662,6 +1662,12 @@ KESHIKI_SCRIPT = re.compile(
 )
 
 
+# 草が紙よりゆっくり動く速さ(スクロールしたぶんの何倍か)と、上がりきる高さ(画面の高さの何倍か)。
+# 2026-10-20、彼女が選んだ
+KUSA_SPEED = 0.2
+KUSA_RISES_AT_MOST = 0.4
+
+
 def put_keshiki(html, pictures):
     """来るたびに、草の絵を一枚選んで背景に敷く。
 
@@ -1687,6 +1693,23 @@ def put_keshiki(html, pictures):
       if (typeof it.chiheisen === "number") root.setProperty("--kusa-horizon", String(it.chiheisen));
       if (typeof it.shita === "string") root.setProperty("--kusa-under", it.shita);
       if (typeof it.kusa_ue === "number") root.setProperty("--kusa-top", String(it.kusa_ue));
+      // 草は紙よりゆっくり動く(sen.css の html::after)。動きを減らす設定なら動かさない
+      if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      var waiting = false;
+      var lift = function () {{
+        waiting = false;
+        var y = Math.min(window.scrollY * {KUSA_SPEED}, window.innerHeight * {KUSA_RISES_AT_MOST});
+        root.setProperty("--yukkuri", Math.max(0, y).toFixed(1) + "px");
+      }};
+      var later = function () {{
+        if (!waiting) {{
+          waiting = true;
+          requestAnimationFrame(lift);
+        }}
+      }};
+      addEventListener("scroll", later, {{ passive: true }});
+      addEventListener("resize", later);
+      lift();
     }})();
   </script>
 """
