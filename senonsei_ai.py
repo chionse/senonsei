@@ -34,6 +34,7 @@ from html import unescape
 
 import atama
 import blog_manager
+import pdf_yomu
 
 STATE_FILE = "senonsei_state.json"
 USER_AGENT = "senonsei-blog/1.0 (https://chionse.github.io/senonsei/)"
@@ -301,7 +302,7 @@ AVOID = re.compile(
     re.IGNORECASE,
 )
 NOT_A_PAGE = re.compile(
-    r"\.(jpg|jpeg|png|gif|webp|svg|ico|css|js|zip|gz|pdf|mp[34]|mov|avi|exe|dmg)($|\?)",
+    r"\.(jpg|jpeg|png|gif|webp|svg|ico|css|js|zip|gz|mp[34]|mov|avi|exe|dmg)($|\?)",
     re.IGNORECASE,
 )
 # 場所ではなく、ページを動かすための裏方。行っても読むものが無い
@@ -603,6 +604,8 @@ BOOKS_READ_KEPT = 100  # 読み終えた本を、これだけ覚えておく
 # 一枚のページを受け取るのはここまで。本の本文だけは長いので、もっと受け取る
 PAGE_BYTES_AT_MOST = 400000
 BOOK_BYTES_AT_MOST = 3000000
+# PDF は絵や字の形も一緒に入っているので大きい。論文ならたいていこれに収まる
+PDF_BYTES_AT_MOST = 10000000
 # 青空文庫の入口は、トップではなく作品名の一覧のどこかにする。トップから入ると、
 # 一覧と案内を見ているうちにおでかけが終わり、本文に届かなかった
 AOZORA_FRONT = "https://www.aozora.gr.jp/"
@@ -2084,6 +2087,43 @@ def other_tongues_in(html):
     return found
 
 
+def read_a_pdf(raw, url):
+    """PDF の中の字を読む(pdf_yomu)。返り値は open_page と同じ形。PDF の中の絵は見ない。
+
+    鍵がかかっていたり、字が絵になっていたりして読めない時は、空の文を返す。
+    開いてはみたが読めなかった、ということになる(眺めただけ)。"""
+    try:
+        title, text = pdf_yomu.read(raw)
+    except pdf_yomu.NotReadable as why:
+        print(f"PDF を開けませんでした({why})")
+        title, text = "", ""
+    except Exception as error:
+        print(f"PDF を読めませんでした({str(error)[:60]})")
+        title, text = "", ""
+    links = [one for one in pdf_yomu.links_in(raw) if is_walkable(one)]
+    return a_name_for_the_pdf(title, text, url), text, links, []
+
+
+# PDF の題に入っていても、題にならないもの。作った道具が勝手に入れる
+PDF_TITLE_NOISE = re.compile(
+    r"^(untitled|無題|no title|document\d*|slide\s*\d*|powerpoint プレゼンテーション)$"
+    r"|^microsoft (word|powerpoint|excel) - ",
+    re.IGNORECASE,
+)
+
+
+def a_name_for_the_pdf(title, text, url):
+    """PDF の名前。中に書いてある題、なければ一行目、それもなければファイルの名前。"""
+    title = re.sub(r"\.(docx?|pptx?|xlsx?|pdf)$", "", PDF_TITLE_NOISE.sub("", (title or "").strip()), flags=re.I)
+    if title and not PDF_TITLE_NOISE.match(title):
+        return title[:A_TITLE_AT_MOST]
+    for line in (text or "").splitlines():
+        if line.strip():
+            return line.strip()[:A_TITLE_AT_MOST]
+    name = urllib.parse.unquote(urllib.parse.urlparse(url).path.rsplit("/", 1)[-1])
+    return name or url
+
+
 def open_page(url, most=PAGE_BYTES_AT_MOST):
     """ページを開いて、そこにある文章と、そこから伸びているリンクを受け取る。
 
@@ -2095,12 +2135,21 @@ def open_page(url, most=PAGE_BYTES_AT_MOST):
     request = urllib.request.Request(as_openable(url), headers={"User-Agent": USER_AGENT})
     with urllib.request.urlopen(request, timeout=25) as response:
         content_type = response.headers.get("Content-Type", "")
-        if "html" not in content_type and "xml" not in content_type:
-            raise ValueError("読める形をしていない")
         final_url = response.geturl()
+        # PDF も読む(2026-10-20、彼女と決めた)。名前が .pdf で、種類が「ただのバイト」と届くこともある
+        is_pdf = "pdf" in content_type.lower() or (
+            "octet-stream" in content_type.lower()
+            and urllib.parse.urlparse(final_url).path.lower().endswith(".pdf")
+        )
+        if not is_pdf and "html" not in content_type and "xml" not in content_type:
+            raise ValueError("読める形をしていない")
         if place_of(final_url) != place_of(url) and not may_enter(final_url):
             raise PermissionError("連れて行かれた先の robots.txt で断られている")
-        raw = read_up_to(response, most)
+        raw = read_up_to(response, PDF_BYTES_AT_MOST if is_pdf else most)
+
+    if is_pdf:
+        OTHER_TONGUES[0] = []
+        return read_a_pdf(raw, final_url)
 
     html = read_as_japanese(raw, content_type)
     # 昔の姿(web.archive.org)は、その頃の紙がそのまま残っているので借りない
