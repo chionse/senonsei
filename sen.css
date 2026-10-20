@@ -43,7 +43,7 @@
 }
 
 /* 景色。草の絵は地平線から上が透けているので、そこに空の色が見える。
-   絵は画面に留めておき、紙だけが上を流れていく。
+   空は画面に留めておき、草は紙よりゆっくり上へ流れていく(下の html::after)。
    どの草が出るかは、ページの頭で一枚選ぶ(keshiki-script)。
    選べない閲覧機では一枚目が出る。
 
@@ -61,11 +61,31 @@ html {
   background: var(--sky-bottom);
 }
 
+/* 空。画面に留めておく */
 html::before {
   content: "";
   position: fixed;
   inset: 0;
   z-index: -1;
+  background: linear-gradient(var(--sky-top), var(--sky-bottom));
+}
+
+/* 草。紙よりゆっくり動く(2026-10-20、彼女が選んだ)。
+   スクロールしたぶんの五分の一だけ上がり、遠くの景色のように少しずつせり上がってくる。
+   上がるのは画面の高さの四割まで。空がいつも上のほうに残るように。
+   どれだけ上げるかは keshiki-script が --yukkuri に置く。動きを減らす設定の閲覧機では動かさない。
+   上げたぶん、絵の下に地面の色(絵ごとの「下の色」、kusa.json)が続く */
+html::after {
+  content: "";
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 150vh;
+  z-index: -1;
+  pointer-events: none;
+  will-change: transform;
+  transform: translate3d(0, calc(-1 * var(--yukkuri, 0px)), 0);
   /* 絵の高さ。横いっぱい(縦は横の 1920/1080 倍)と、画面の高さの大きいほう */
   --kusa-h: max(177.78vw, 100vh);
   /* 草の先が出てよいところ。画面の下の端から 200px と、紙の上の端の、低いほう。
@@ -74,14 +94,16 @@ html::before {
     calc(100vh - 200px),
     calc(56px + 54px + min(560px, 100vw - 96px) * 456 / 1374 + 32px)
   );
+  /* 絵の上の端 */
+  --kusa-y: max(
+    calc(100vh - var(--kusa-h)),
+    calc(62vh - var(--kusa-horizon, 0.62) * var(--kusa-h)),
+    calc(var(--kusa-from) - var(--kusa-top, 0.58) * var(--kusa-h))
+  );
   background:
-    var(--kusa, url("kusa/kusa-1.webp"))
-      center max(
-        calc(100vh - var(--kusa-h)),
-        calc(62vh - var(--kusa-horizon, 0.62) * var(--kusa-h)),
-        calc(var(--kusa-from) - var(--kusa-top, 0.58) * var(--kusa-h))
-      ) / auto var(--kusa-h) no-repeat,
-    linear-gradient(var(--sky-top), var(--sky-bottom));
+    var(--kusa, url("kusa/kusa-1.webp")) center var(--kusa-y) / auto var(--kusa-h) no-repeat,
+    linear-gradient(var(--kusa-under, #297103), var(--kusa-under, #297103))
+      0 calc(var(--kusa-y) + var(--kusa-h) - 1px) / 100% 150vh no-repeat;
 }
 
 /* 紙(下の header と .frame)を景色の上に浮かべる。
