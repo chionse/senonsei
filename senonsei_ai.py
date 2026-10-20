@@ -588,6 +588,25 @@ READ_FOR_UNDERSTANDING = 20000
 REMEMBERING_A_PLACE_CHANCE = 0.3
 # 思い出した場所へ行きたい気持ちの強さ(何も引っかからない道を 1 として)
 PULL_OF_A_PLACE_TO_RETURN = 10
+# 本を読む(2026-10-20、彼女と決めた)。青空文庫の本文は、一つの作品がまるごと一枚に入っている。
+# いっぺんには読まず、ひと休みするまでの分だけ読んで、しおりを挟む。
+# しおりを挟んだ本には、思い出した場所と同じくらい「続きが読みたい」と惹かれる
+AOZORA_TEXT = re.compile(r"^https?://(www\.)?aozora\.gr\.jp/cards/\d+/files/[^/?#]+\.html?$", re.IGNORECASE)
+READ_AT_ONCE = 8000  # 一度に読む字の数。原稿用紙二十枚くらい。『羅生門』なら一度で読み終わる
+BOOKS_HELD = 3  # しおりを挟んでおける本の数
+PULL_OF_A_BOOK = 10  # 続きが読みたい気持ちの強さ(何も引っかからない道を 1 として)
+# 読んだところが、ふだんの分かり方よりよく分かれば続きを読みたい気持ちが強まり、分からなければ少し弱まる
+BOOK_GROWS_ON_IT = 1.2
+BOOK_LOSES_IT = 0.85
+BOOK_WANT_RANGE = (0.3, 2.0)
+BOOKS_READ_KEPT = 100  # 読み終えた本を、これだけ覚えておく
+# 一枚のページを受け取るのはここまで。本の本文だけは長いので、もっと受け取る
+PAGE_BYTES_AT_MOST = 400000
+BOOK_BYTES_AT_MOST = 3000000
+# 青空文庫の入口は、トップではなく作品名の一覧のどこかにする。トップから入ると、
+# 一覧と案内を見ているうちにおでかけが終わり、本文に届かなかった
+AOZORA_FRONT = "https://www.aozora.gr.jp/"
+AOZORA_ROWS = ("a", "ka", "sa", "ta", "na", "ha", "ma", "ya", "ra", "wa")
 # 日本語で書かれていそうな場所に、少しだけ多く惹かれる(何も引っかからない道を 1 として)
 PULL_OF_JAPANESE = 1
 # 行きたいと思い出した場所を、これだけまで抱えておく
@@ -2065,7 +2084,7 @@ def other_tongues_in(html):
     return found
 
 
-def open_page(url):
+def open_page(url, most=PAGE_BYTES_AT_MOST):
     """ページを開いて、そこにある文章と、そこから伸びているリンクを受け取る。
 
     サイトの持ち主が robots.txt で断っているページには入らない。
@@ -2081,7 +2100,7 @@ def open_page(url):
         final_url = response.geturl()
         if place_of(final_url) != place_of(url) and not may_enter(final_url):
             raise PermissionError("連れて行かれた先の robots.txt で断られている")
-        raw = read_up_to(response, 400000)
+        raw = read_up_to(response, most)
 
     html = read_as_japanese(raw, content_type)
     # 昔の姿(web.archive.org)は、その頃の紙がそのまま残っているので借りない
@@ -2237,7 +2256,7 @@ def tidy_frontier(state):
 
     # 入口が全部使われてしまうと、どこにも広がれなくなる。ときどき戻れるようにしておく
     if random.random() < RETURN_TO_ENTRANCE_CHANCE:
-        entrance = random.choice(SEEDS)
+        entrance = a_door(random.choice(SEEDS))
         if entrance not in tidied:
             tidied.append(entrance)
 
@@ -2650,7 +2669,12 @@ def what_draws_it(state, url, close=None):
     been_there = place in (state.get("places_understood") or {})
     drawn = max(0.2, drawn + atama.place_pull(state.get("atama"), place, been_there))
     # いろんな場所で何度も見かける場所には、だんだん惹かれなくなる
-    return drawn * how_rare(state, place)
+    drawn *= how_rare(state, place)
+    # 読みかけの本。続きが読みたい気持ちは、その場所がよく見かける場所かどうかとは関わりがない
+    book = (state.get("shiori") or {}).get(url)
+    if book:
+        drawn += PULL_OF_A_BOOK * book.get("want", 1)
+    return drawn
 
 
 def looks_japanese(url, named=""):
@@ -2700,7 +2724,7 @@ def choose_destination(state):
     lately = families_walked_lately(state)
     if random.random() < FRESH_START_CHANCE:
         fresh = [one for one in SEEDS if family_of(place_of(one)) not in lately] or list(SEEDS)
-        return random.choice(fresh), False
+        return a_door(random.choice(fresh)), False
 
     candidates = spread_out_choices(state, frontier, CHOICES_SHOWN)
     # もう一度行きたいと思い出した場所と、引いてまだ読んでいない記事は、
@@ -2708,6 +2732,10 @@ def choose_destination(state):
     for entrance in list((state.get("wants_to_return") or {}).values()) + looked_up:
         if entrance in frontier and entrance not in candidates:
             candidates.append(entrance)
+    # しおりを挟んだ本も、いつも候補に入っている
+    for book in state.get("shiori") or {}:
+        if book not in candidates:
+            candidates.append(book)
     # 日本語の Wikipedia も、いつも候補に混ぜる。行くかどうかはほかと同じく惹かれ方しだい
     for entrance in wikipedia_to_choose_from(state):
         if entrance not in candidates:
@@ -2720,10 +2748,9 @@ def choose_destination(state):
         what_draws_it(state, url, close) * (AWAY_FROM_RECENT if family_of(place_of(url)) in lately else 1)
         for url in candidates
     ]
-    return (
-        random.choices(candidates, weights=weights)[0],
-        random.random() < WANTING_THE_PAST,
-    )
+    chosen = random.choices(candidates, weights=weights)[0]
+    # 本の続きは、今の姿で読む。昔の写しにはしおりが挟めない
+    return chosen, random.random() < WANTING_THE_PAST and not is_a_book(chosen)
 
 
 def seen_linked_from_here(state, places):
@@ -3360,6 +3387,95 @@ def translate_on_its_own(state, text):
     return found
 
 
+def a_door(url):
+    """入口から入る時の、本当の入口。青空文庫だけは、作品名の一覧のどこかから入る。"""
+    if url == AOZORA_FRONT:
+        return f"https://www.aozora.gr.jp/index_pages/sakuhin_{random.choice(AOZORA_ROWS)}1.html"
+    return url
+
+
+def is_a_book(url):
+    """青空文庫の本文のページか。昔の姿の写しは除く。"""
+    return bool(AOZORA_TEXT.match(url or ""))
+
+
+def the_work_itself(text):
+    """本文のページから、作品のところだけ。終わりの「底本：」からは、本の出どころの書き付け。
+
+    空白の並びは一つにまとめる。しおりの位置が、開くたびにずれないように。"""
+    text = re.sub(r"[ \t\u3000]*\n[\s\u3000]*", "\n", text)
+    text = re.sub(r"[ \t]+", " ", text).strip()
+    ends = text.rfind("底本：")
+    return text[:ends].rstrip() if ends > 0 else text
+
+
+def a_good_place_to_stop(work, around):
+    """きりのいいところ。そのあたりで、文の終わりか段落の終わりを探す。"""
+    if around >= len(work):
+        return len(work)
+    found = [at for at in (work.find("。", around), work.find("\n", around)) if 0 <= at < around + 400]
+    return min(found) + 1 if found else around
+
+
+def a_portion_of_the_book(state, url, title, text):
+    """本の、しおりのところから、ひと休みするまでの分(2026-10-20、彼女と決めた)。
+
+    読み終わったらしおりを外して、読み終えた本として覚えておく。
+    読みかけなら、読んだところまでにしおりを挟む。挟める本は BOOKS_HELD 冊まで。
+    いっぱいの時は、いちばん続きを読みたくない本のしおりを抜く。"""
+    work = the_work_itself(text)
+    shelf = state.setdefault("shiori", {})
+    held = shelf.get(url) or {}
+    start = held.get("at", 0)
+    if start >= len(work):
+        start = 0  # 本が書き換わって短くなっていた
+    end = a_good_place_to_stop(work, start + READ_AT_ONCE)
+    if end >= len(work):
+        shelf.pop(url, None)
+        finished = state.setdefault("books_read", [])
+        finished.append({"title": title, "url": url, "on": today_in_japan().isoformat()})
+        state["books_read"] = finished[-BOOKS_READ_KEPT:]
+        print(f"『{title}』を読み終えました")
+    else:
+        if url not in shelf and len(shelf) >= BOOKS_HELD:
+            least = min(shelf, key=lambda one: shelf[one].get("want", 1))
+            print(f"『{shelf[least].get('title')}』のしおりを抜きました")
+            shelf.pop(least)
+        shelf[url] = {
+            "title": title,
+            "at": end,
+            "of": len(work),
+            "since": held.get("since") or today_in_japan().isoformat(),
+            "times": held.get("times", 0) + 1,
+            "want": held.get("want", 1.0),
+        }
+        print(f"『{title}』を{end}字まで読んで、しおりを挟みました(全部で{len(work)}字)")
+    return work[start:end]
+
+
+def usual_understanding(state):
+    """ふだん、行った場所の言葉をどれくらい分かっているか。最近行った場所のならし。"""
+    visits = sorted(
+        (one.get("last") or {} for one in (state.get("places_understood") or {}).values()),
+        key=lambda visit: visit.get("day", 0),
+    )[-20:]
+    known = [how_well(visit) for visit in visits if visit.get("of")]
+    return sum(known) / len(known) if known else 0.3
+
+
+def felt_about_the_book(state, url, portion):
+    """読んだところが、ふだんよりよく分かったら続きをもっと読みたくなる。分からなければ少し気が引ける。"""
+    held = (state.get("shiori") or {}).get(url)
+    if not held:
+        return  # 読み終えた
+    words = set(WORD_CANDIDATE.findall(portion))
+    known = known_words_in(state, portion)
+    this_time = len(known) / len(words) if words else 0
+    least, most = BOOK_WANT_RANGE
+    leaning = BOOK_GROWS_ON_IT if this_time >= usual_understanding(state) else BOOK_LOSES_IT
+    held["want"] = round(min(most, max(least, held.get("want", 1.0) * leaning)), 3)
+
+
 def look_around_site(state, entrance, wants_the_past):
     """ひとつの場所を、入口から中まで見て回る。
 
@@ -3396,7 +3512,9 @@ def look_around_site(state, entrance, wants_the_past):
                 title, text, links, pictures = visit_the_past(url)
                 title = f"{title}(むかしのすがた)"
             else:
-                title, text, links, pictures = open_page(url)
+                title, text, links, pictures = open_page(
+                    url, BOOK_BYTES_AT_MOST if is_a_book(url) else PAGE_BYTES_AT_MOST
+                )
         except Exception as error:
             print(f"{url} には行けませんでした: {error}")
             if url in state["frontier"]:
@@ -3426,6 +3544,11 @@ def look_around_site(state, entrance, wants_the_past):
         # その言い回しをこの子の言葉として覚えてしまっていた(2026-10-08、彼女と決めた)。
         # 人の子どもが英語の「OK」や「page」を意味を知らないまま覚えるのと同じ。
         # 自分で訳せるようになることと、ほかの字の言葉も拾えるようになることは、やることリストにある
+        # 本の本文なら、しおりのところから、ひと休みするまでの分だけを読む
+        reading_a_book = is_a_book(url) and not (wants_the_past and url == entrance)
+        if reading_a_book:
+            text = a_portion_of_the_book(state, url, title, text)
+
         japanese = bool(JAPANESE.search(text))
         if not japanese:
             atama.feel(head, "疲れ", 0.02)  # よその言葉を読むのは、少し骨が折れる
@@ -3452,6 +3575,12 @@ def look_around_site(state, entrance, wants_the_past):
                     state["translated_lately"] = (lately + [f"{f} → {j}" for f, j in own])[-30:]
         else:
             unread += 1  # 拾える形の字がほとんど無い。眺めただけ
+
+        if reading_a_book:
+            felt_about_the_book(state, url, text)
+            # 今日歩いたところには、通ってきた一覧ではなく、読んだ本の名前で残す
+            site_title = title
+            break  # 本を読んだら、そのおでかけはそこまで。ひと休みして帰る
 
         if pictures_left > 0 and pictures:
             try:
@@ -3488,7 +3617,11 @@ def look_around_site(state, entrance, wants_the_past):
         # 同じくらいの道どうしは、そのときの気分の順のまま残る
         random.shuffle(deeper)
         deeper.sort(key=worth_reading, reverse=True)
-        inside.extend(deeper[:as_deep_as])
+        # 作品の紹介まで来たら、まっすぐ本文へ。後ろに並べていた頃は、
+        # ほかの作品の紹介を見て回るうちにおでかけが終わり、本文に一度も届かなかった
+        texts = [ln for ln in deeper if is_a_book(ln)]
+        inside[:0] = texts[:1]
+        inside.extend([ln for ln in deeper if ln not in texts][:as_deep_as])
 
         # もう少しいたいかどうかは、その時の気持ちで変わる。たのしいと長くいて、疲れると早く帰る
         if pages > 1 and random.random() > atama.lingers(head, LINGER_CHANCE):
