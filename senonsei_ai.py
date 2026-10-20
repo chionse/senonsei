@@ -747,6 +747,9 @@ WIKIPEDIA_TOP = "https://ja.wikipedia.org/wiki/%E3%83%A1%E3%82%A4%E3%83%B3%E3%83
 WIKIPEDIA_WORDS_AT_MOST = 2
 # そのために一度に窓口へ「記事があるか」を訊く言葉の数(一度訊けば足りるように多めに)
 WIKIPEDIA_WORDS_TRIED = 8
+# 記事を引く言葉は、カタカナか漢字を含むものだけ。覚えた言葉には「からの」「となって」の
+# ような、ひらがなだけの切れ端も多い。それで引くと、言葉の記事ではないものに行ってしまう
+NOT_ONLY_HIRAGANA = re.compile(r"[\u30a0-\u30ff\u3400-\u9fff]")
 # 引いた記事を、次に歩く時に読みに行く割合。知りたい気持ちで上下する
 READ_WHAT_IT_LOOKED_UP = 0.5
 # 探しに行く時、言葉を頼りにせず Wikipedia の「おまかせ表示」を開く割合。退屈なほど開きたくなる。
@@ -2350,7 +2353,7 @@ def wikipedia_to_choose_from(state):
     words = [
         word
         for word in dict.fromkeys(minding + list(state.get("learned_words") or []))
-        if len(word) >= 2 and JAPANESE.search(word) and a_word_to_go_by(word)
+        if len(word) >= 2 and NOT_ONLY_HIRAGANA.search(word) and a_word_to_go_by(word)
     ]
     if not words:
         return found
