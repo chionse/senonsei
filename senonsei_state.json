@@ -7285,12 +7285,12 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "pro-baobab.jp",
-    "www.it2l.com",
-    "Wikisource:Wikisourceについて - Wikisource",
-    "www.city.yokohama.jp",
-    "act.citizen.org",
-    "www.tele.soumu.go.jp"
+    "www.nikkei-hall.com",
+    "www.jiji.com",
+    "www.usatoday.com",
+    "[B! security] 個人情報漏えいが相次ぐ中、「パスワード使いまわし」は",
+    "ci.nii.ac.jp",
+    "www.xda-developers.com"
   ],
   "how_many_places_left": 1802,
   "places_known": {
@@ -13131,7 +13131,7 @@
       }
     }
   ],
-  "woke_at": "2026-10-22 01",
+  "woke_at": "2026-10-22 02",
   "blog_titles": {
     "seen": 80,
     "closed": 2,
