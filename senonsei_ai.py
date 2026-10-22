@@ -944,7 +944,25 @@ PACKED_AWAY = ("words_met", "learned_on", "learned_where")
 # 越えた日から散歩も日記も押し戻せなくなり、この子は止まる。
 # 忘れさせるのではなく、言葉ごとに何十かの束へ分けてしまっておく
 WORDS_FOLDER = "kotoba"
-SPREAD_OUT = {"words_met": 64, "word_impact": 8, "places_understood": 8, "careful_with": 8, "seen_linked": 8, "bridges": 16}  # 記録の名前 → 束の数
+SPREAD_OUT = {
+    "words_met": 64, "word_impact": 8, "places_understood": 8, "careful_with": 8, "seen_linked": 8, "bridges": 16,
+    # 覚えた言葉ごとに増える並び方も束にする(2026-10-22)。一日に五十語覚えると三十年で五十万語になり、
+    # 記憶のファイル一つのままだと GitHub が受け取れる大きさ(百メガ)に近づく。
+    # ページを組む側(blog_manager)はこれらを読まないので、束にしても困らない
+    "what_follows": 16, "opens_a_sentence": 4, "closes_a_sentence": 4,
+}  # 記録の名前 → 束の数
+
+# 束に分けても、出会った言葉は一日に四千語ほど増えていて、十年で千六百万語を越える。
+# 毎時間それを全部読み込んでいては、いずれ重くて起き上がれなくなる。
+# そこで、一年会っていない言葉は奥にしまう(2026-10-22、彼女と決めた)。
+# 奥は毎時間は開かない。しまってあるだけで、捨ててはいない。
+# また会ったら、その夜のうちに奥から出して、前の記録とつなぐ(tidy_the_deep)
+OKU_FOLDER = os.path.join(WORDS_FOLDER, "oku")
+OKU_AFTER_DAYS = 365  # これだけ会っていない言葉を、奥にしまう
+OKU_WORDS_PER_FILE = 200000  # 奥の束一つに、これだけまで。GitHub は百メガを越えるファイルを受け取らない
+# 奥の束に足すものと抜くもの(tidy_the_deep が決め、save_state が書く)。
+# 束の名前 → {"add": {言葉: 記録}, "drop": {言葉, ...}}
+DEEP_TO_WRITE = {}
 
 
 def bundle_of(word, how_many):
@@ -978,6 +996,8 @@ def save_state(state):
 
     人が開いて読めるように行を分けて書くが、一語ずつ増えていく
     ところだけは、一語を何行にも広げると何万行にもなってしまうので詰める。"""
+    # 奥へしまうものを先に書く。手前から先に消すと、途中で止まった時に言葉を失う
+    write_the_deep()
     put_away_spread(state)
     packed = {
         key: state[key]
@@ -998,6 +1018,131 @@ def save_state(state):
         )
     blog_manager.write_whole(STATE_FILE, text)
     head_does(atama.save, state.get("atama"))
+
+
+def deep_files():
+    """奥の束の名前。古い順。"""
+    try:
+        names = sorted(os.listdir(OKU_FOLDER))
+    except OSError:
+        return []
+    return [os.path.join(OKU_FOLDER, name) for name in names if name.endswith(".json")]
+
+
+def read_deep(path):
+    """奥の束を一つ開ける。無ければ空。読めなければ None(その束には触らない)。"""
+    try:
+        with open(path, encoding="utf-8") as f:
+            kept = json.load(f)
+    except FileNotFoundError:
+        return {}
+    except (OSError, ValueError):
+        print(f"奥の束 {path} が読めませんでした。その束には触らずにおきます")
+        return None
+    return kept if isinstance(kept, dict) else None
+
+
+def joined_records(old, new):
+    """奥から出した記録(old)と、また会ってからの記録(new)をつなぐ。
+
+    会った日数は足す。初めて会った場所とページは昔のほう、いちばん最近は今のほう。
+    昔のほうで初めての場所が分からない(取り始める前に会っていた)なら、分からないまま。
+    いつもの記録(where_it_met)と同じ。"""
+    def at(record, i):
+        return record[i] if len(record) > i else None
+    first_place = at(old, 2)
+    last_place = at(new, 3) if at(new, 3) is not None else at(old, 3)
+    first_page = at(old, 4)
+    last_page = at(new, 5) if at(new, 5) is not None else at(old, 5)
+    joined = [(at(old, 0) or 0) + (at(new, 0) or 0), max(at(old, 1) or 0, at(new, 1) or 0)]
+    if first_page is not None or last_page is not None:
+        return joined + [first_place, last_place, first_page, last_page]
+    if first_place is not None or last_place is not None:
+        return joined + [first_place, last_place]
+    return joined
+
+
+def tidy_the_deep(state):
+    """眠る前に、奥を片づける。
+
+    今日また会った言葉が奥にあれば出してつなぎ、一年会っていない言葉を奥にしまう。
+    奥の束は一つずつ開けて閉じるので、奥がどれだけ大きくなっても重くならない。
+    書くのは save_state(試す時に save_state を塞げば、奥にも触らない)。"""
+    met = words_met(state)
+    anew = {word for word in (state.pop("met_anew", None) or []) if word in met}
+    brought = 0
+    taken = set()
+    for path in deep_files() if anew else []:
+        kept = read_deep(path)
+        if not kept:
+            continue
+        found = (anew | taken) & kept.keys()
+        if not found:
+            continue
+        change = DEEP_TO_WRITE.setdefault(path, {"add": {}, "drop": set()})
+        for word in found:
+            # 二つの束にあったら(書きかけで止まった時)、二度は足さない。あとのほうは抜くだけ
+            if word not in taken:
+                met[word] = joined_records(kept[word], met[word])
+                taken.add(word)
+                brought += 1
+            change["drop"].add(word)
+            change["add"].pop(word, None)
+        anew -= found
+
+    today = day_number(state)
+    old = [
+        word for word, record in met.items()
+        if isinstance(record, list) and len(record) > 1 and isinstance(record[1], int)
+        and today - record[1] >= OKU_AFTER_DAYS
+    ]
+    put = 0
+    month = f"{now_in_japan():%Y-%m}"
+    number, path, room = 0, None, 0
+    for word in old:
+        # しまう束は、その月の束。いっぱいなら次の束へ
+        while room <= 0:
+            path = os.path.join(OKU_FOLDER, f"{month}-{number:02d}.json")
+            number += 1
+            kept = read_deep(path)
+            if kept is None:
+                continue  # 読めない束には足さない
+            pending = DEEP_TO_WRITE.get(path) or {"add": {}}
+            room = OKU_WORDS_PER_FILE - len(kept) - len(pending["add"])
+        change = DEEP_TO_WRITE.setdefault(path, {"add": {}, "drop": set()})
+        change["add"][word] = met.pop(word)
+        room -= 1
+        put += 1
+    if brought or put:
+        print(f"奥から{brought}語を出し、{put}語を奥にしまいました")
+    return brought, put
+
+
+def notice_met_anew(state, word):
+    """初めて会ったと思った言葉。奥にしまってあるかもしれないので、夜に確かめる。"""
+    if DEEP_IS_THERE[0] is None:
+        DEEP_IS_THERE[0] = bool(deep_files())
+    if DEEP_IS_THERE[0]:
+        state.setdefault("met_anew", []).append(word)
+
+
+DEEP_IS_THERE = [None]  # 奥に何かしまってあるか(一回の起き上がりのあいだだけ覚えておく)
+
+
+def write_the_deep():
+    """tidy_the_deep が決めたとおりに、奥の束を書き直す。一つずつ開けて閉じる。"""
+    for path, change in list(DEEP_TO_WRITE.items()):
+        kept = read_deep(path)
+        if kept is None:
+            raise RuntimeError(f"奥の束 {path} が読めないので、しまえません")
+        for word in change["drop"]:
+            kept.pop(word, None)
+        kept.update(change["add"])
+        if kept:
+            blog_manager.write_whole(path, json.dumps(kept, ensure_ascii=False, separators=(",", ":")))
+        elif os.path.exists(path):
+            os.remove(path)
+        DEEP_TO_WRITE.pop(path)
 
 
 def put_away_spread(state):
@@ -3343,6 +3488,7 @@ def absorb(state, text, pattern=WORD_CANDIDATE, only_known=False):
         record = met.get(word)
         if record is None:
             MET_FOR_THE_FIRST_TIME[0] += 1
+            notice_met_anew(state, word)
         new_day = record is None or record[1] != today_number
         count = (record[0] if record else 0) + (1 if new_day else 0)
         met[word] = [count, today_number] + where_it_met(record, where, page)
@@ -5657,6 +5803,8 @@ def goes_to_sleep(state, now):
         print(f"夢の中で: {said or '(言葉にならなかった)'}")
     # 言葉にならなかった夜も、夢を見た(眠った)ことは雲に知らせる。その夜は「・・・」が浮かぶ
     state["yume"] = {"at": now.isoformat(timespec="minutes"), "said": said or ""}
+    # 眠る前に、出会った言葉の奥を片づける。こけても眠りは続ける
+    head_does(tidy_the_deep, state)
     save_state(state)
     return True
 
