@@ -61,9 +61,34 @@ def as_it_was(path, mark):
         return None
 
 
+def changed_since(mark):
+    """その印の時から中身が変わったもの(まだ一度も送っていない新しいものも)。
+
+    記憶は何十年かけて大きくなる(奥にしまった言葉は毎年増える)。毎回ぜんぶを
+    読み直すと、それだけで時間がかかるようになるので、変わったものだけを見る
+    (2026-10-22)。変わっていないものは、その印の時にもう確かめてある。
+    分からなければ None(その時はぜんぶ見る)。"""
+    try:
+        changed = subprocess.run(
+            ["git", "diff", "--name-only", "-z", mark, "--"],
+            check=True, capture_output=True,
+        ).stdout
+        fresh = subprocess.run(
+            ["git", "ls-files", "--others", "--exclude-standard", "-z"],
+            check=True, capture_output=True,
+        ).stdout
+    except (subprocess.CalledProcessError, OSError):
+        return None
+    return {name.decode("utf-8", "replace") for name in (changed + fresh).split(b"\0") if name}
+
+
 def main():
     mark = sys.argv[1] if len(sys.argv) > 1 else None
-    broken = [path for path in everything() if not readable(path)]
+    paths = everything()
+    changed = changed_since(mark) if mark else None
+    if changed is not None:
+        paths = [path for path in paths if path in changed]
+    broken = [path for path in paths if not readable(path)]
     if not broken:
         print("記憶はどれも読めます")
         return

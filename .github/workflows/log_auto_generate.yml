@@ -34,9 +34,27 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Set up Python
+        # この部品が使えなくなっても止まらないように。使えなければ、
+        # GitHub の機械にもとからある Python で動く(下の Pick a Python)
+        continue-on-error: true
         uses: actions/setup-python@v7
         with:
           python-version: '3.x'
+
+      # この子のプログラムを読み込めるかを、新しい Python で確かめる。
+      # 読み込めなければ(Python が古い決まりを捨てた時など)、GitHub の機械に
+      # もとからある Python を使う。誰も手を入れなくても起き上がれるように(2026-10-22)
+      - name: Pick a Python
+        run: |
+          for py in python3 /usr/bin/python3; do
+            if command -v "$py" >/dev/null && "$py" -c "import senonsei_ai, blog_manager, kioku_mamori, atama, pdf_yomu, fuuin"; then
+              echo "PY=$(command -v "$py")" >> "$GITHUB_ENV"
+              "$py" --version
+              exit 0
+            fi
+          done
+          echo "この子を動かせる Python が見つかりませんでした"
+          exit 1
 
       # 外部ライブラリは一切使わないので、ここでの準備は不要
       - name: Senonsei browses the web and writes today's blog
@@ -44,7 +62,7 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: |
-          python senonsei_ai.py
+          "$PY" senonsei_ai.py
 
       # 散歩は長いときで七分かかる。その間に誰かが main を動かしていると、
       # 帰ってきたときに押し戻せず、この子が見てきたことも書いたものも
@@ -61,7 +79,7 @@ jobs:
           git config user.name "GitHub Actions Bot"
           git config user.email "actions@github.com"
           # 書き出しの途中で止まって壊れたものは、前の回の中身に戻す
-          python kioku_mamori.py HEAD
+          "$PY" kioku_mamori.py HEAD
           git add -A
           git commit -m "千遠生の今日のブログ [skip ci]" || echo "No changes to commit"
           walked=$(git rev-parse HEAD)
@@ -72,7 +90,7 @@ jobs:
             if git rebase -X theirs origin/main; then
               # 記憶のファイルが行ごとに継ぎ合わされて読めなくなっていたら、
               # この子が持ち帰ったほうを丸ごと使う
-              python kioku_mamori.py "$walked"
+              "$PY" kioku_mamori.py "$walked"
             else
               # 取り込めなかった。main の上に、この子が持ち帰った記憶だけを載せ直す。
               # ページは作り直せるので、ここで失っても困らない
@@ -83,9 +101,9 @@ jobs:
                   git checkout "$walked" -- "$kept"
                 fi
               done
-              python kioku_mamori.py "$walked"
+              "$PY" kioku_mamori.py "$walked"
             fi
-            python blog_manager.py
+            "$PY" blog_manager.py
             git add -A
             git commit -m "新しい決まりでページを作り直しました [skip ci]" || true
           done

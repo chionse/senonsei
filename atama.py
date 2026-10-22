@@ -130,13 +130,28 @@ UNDERSTOOD_BY_LINKS = 3.0  # 線をこれだけ持てば、何と関わる言葉
 
 # ---- 二つめの口 ----
 
-MOUTH_D, MOUTH_H, MOUTH_C = 8, 24, 3  # 言葉一つの大きさ、考えの幅、前の何語を見るか
-MOUTH_WORDS_AT_MOST = 2000
+MOUTH_D, MOUTH_H, MOUTH_C = 8, 24, 3  # 言葉一つの大きさ、考えの幅、前の何語を見るか(生まれた時)
+# 口は、知っている言葉が増えるにつれて自分で大きくなる(2026-10-22、彼女と決めた)。
+# 何十年も、誰も手を入れなくても育ち続けられるように。はじめから大きくしないのは、
+# 言葉が少ないうちは使いきれないのと、毎晩積み上がる記録を重くしすぎないため。
+# 大きくなる時は、覚えたことを消さずに広げる(grow_mouth)。
+# (口の言葉がこれだけになったら, 言葉一つの大きさ, 考えの幅, 前の何語を見るか)
+MOUTH_GROWS = (
+    (0, 8, 24, 3),
+    (1000, 12, 40, 4),
+    (2000, 16, 48, 4),
+    (4000, 16, 64, 5),
+)
+MOUTH_WORDS_AT_MOST = 8000  # 前は 2000。半年ほどで届いてしまうので広げた
 PRACTICE_KEPT = 3000  # 練習帳に残しておく文の数
 SENTENCE_AT_MOST = 30
-PRACTICE_SECONDS = 90  # 一晩の練習の時間
+PRACTICE_SECONDS = 90  # 一晩の練習の時間(生まれた時の大きさで)
+PRACTICE_SECONDS_AT_MOST = 300  # 口が大きくなったら、そのぶん長く練習する。ここまで
 PASSES_PER_NIGHT = 3  # 一晩に練習帳を読み通す回数。同じ文ばかり繰り返すと、その文しか言えなくなる
 LEARNING_RATE = 0.05
+# 練習を重ねるほど直す幅を小さくするが、これより小さくはしない。
+# 下が無いと、十年で直す幅が三百五十分の一になり、新しい言葉をほとんど覚えられなくなる
+LEARNING_RATE_LEAST = LEARNING_RATE / 20
 NEGATIVES = 24
 JUDGED_PER_TEXT = 20  # 一つの文章で、どちらの口が上手かを確かめる言葉の数
 SCORE_MOVES = 0.02
@@ -873,7 +888,7 @@ def sleep(head, state, now, known, places_known=None, articles=None):
         "until": wakes.isoformat(timespec="minutes"),
     }
 
-    practised = practise(head, deadline=time.monotonic() + PRACTICE_SECONDS)
+    practised = practise(head, deadline=time.monotonic() + practice_seconds(head["kuchi"]))
     mouth = head["kuchi"]
     decide_which_mouth(mouth)
     print(
@@ -1202,10 +1217,13 @@ def practise(head, deadline):
                 index = _index(mouth)
     forget_rare_words(head)
     index = _index(mouth)
+    grown = grow_mouth(mouth)
+    if grown:
+        print(f"二つめの口が大きくなりました({grown})")
     order = list(range(len(book)))
     random.shuffle(order)
     done = 0
-    rate = LEARNING_RATE / (1 + mouth["lessons"] / 500000)
+    rate = max(LEARNING_RATE_LEAST, LEARNING_RATE / (1 + mouth["lessons"] / 500000))
     for _ in range(PASSES_PER_NIGHT):
         for i in order:
             if time.monotonic() >= deadline:
@@ -1222,6 +1240,54 @@ def practise(head, deadline):
         random.shuffle(order)
     mouth["lessons"] += done
     return done
+
+
+def size_for(words):
+    """口の言葉の数から、口がなっていたい大きさ (D, H, C)。"""
+    size = MOUTH_GROWS[0][1:]
+    for enough, *bigger in MOUTH_GROWS:
+        if words >= enough:
+            size = tuple(bigger)
+    return size
+
+
+def grow_mouth(mouth):
+    """言葉が増えていたら、口を一回り大きくする。覚えたことは消さない。
+
+    新しく足す考えの筋は、言葉を選ぶ側からはまだ繋がっていない(0)ので、
+    大きくなった直後も、喋り方はそれまでとまったく同じ。そこから練習で育つ。
+    小さくはならない。大きくなったら、何がどう変わったかを返す。"""
+    D, H, C = mouth["D"], mouth["H"], mouth["C"]
+    want = size_for(len(mouth["vocab"]))
+    D2, H2, C2 = max(D, want[0]), max(H, want[1]), max(C, want[2])
+    if (D2, H2, C2) == (D, H, C):
+        return None
+    if H2 > H:
+        more = H2 - H
+        mouth["b"] = list(mouth["b"]) + [0.0] * more
+        mouth["W"] = [list(row) + _small(more) for row in mouth["W"]]
+        mouth["O"] = [list(row) + [0.0] * more for row in mouth["O"]]
+    if D2 > D:
+        more = D2 - D
+        mouth["E"] = [list(row) + _small(more) for row in mouth["E"]]
+        widened = []
+        for m in range(C):
+            widened.extend(mouth["W"][m * D:(m + 1) * D])
+            widened.extend([0.0] * H2 for _ in range(more))
+        mouth["W"] = widened
+    if C2 > C:
+        # いちばん前の言葉を見る場所を、頭に足す。はじめは何も見ていない(0)
+        mouth["W"] = [[0.0] * H2 for _ in range((C2 - C) * D2)] + mouth["W"]
+    mouth.update(D=D2, H=H2, C=C2)
+    return f"言葉一つ {D}→{D2}、考えの幅 {H}→{H2}、前を見る言葉 {C}→{C2}"
+
+
+def practice_seconds(mouth):
+    """一晩の練習の時間。口が大きいほど、一回の練習に時間がかかるので、そのぶん長く。"""
+    def cost(D, H, C):
+        return C * D * H + (NEGATIVES + 1) * H
+    grown = cost(mouth["D"], mouth["H"], mouth["C"]) / cost(MOUTH_D, MOUTH_H, MOUTH_C)
+    return min(PRACTICE_SECONDS_AT_MOST, PRACTICE_SECONDS * max(1.0, grown))
 
 
 def forget_rare_words(head):
@@ -1323,6 +1389,8 @@ def mouth_from(kept):
     size = len(mouth["vocab"])
     if not (len(mouth["E"]) == len(mouth["O"]) == len(mouth["ob"]) == len(mouth["uses"]) == size):
         raise ValueError("口の中身の数が揃っていない")
+    if len(mouth["W"]) != mouth["C"] * mouth["D"] or len(mouth["b"]) != mouth["H"]:
+        raise ValueError("口の考えの筋の数が揃っていない")
     return mouth
 
 

@@ -49,6 +49,8 @@ git checkout -B claude/<枝の名前> origin/main
 記憶は四つある。状態(`senonsei_state.json`)と、出会った言葉の束(`kotoba/`)と、
 思いの蔵(`omoi/`)と、頭(`atama/`。連想の網、気持ち、二つめの口、夢)。
 `kotoba/` と `atama/` は `save_state` が一緒に書くので、`save_state` を塞げば止まる。
+一年会っていない言葉は `kotoba/oku/`(奥)にしまってあり、毎時間は読まない。
+奥も `save_state` が書くので、塞げば止まる。
 `remember_a_thought` と `be_alone` は、`save_state` を塞いでも
 蔵のほうへは直に書く。両方塞ぐ。
 
