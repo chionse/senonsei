@@ -408,6 +408,12 @@ AWAY_FROM_RECENT = 0.3  # 最近歩いた仲間への惹かれ方は、これだ
 # リンクを辿るだけだと、似た場所の仲間ばかりが行き先に溜まっていく
 FRESH_START_CHANCE = 0.15
 TRIES_BEFORE_GIVING_UP = 3  # 行った先が消えていたら、これだけ別の場所を試してみる
+# 閉まっていただけの場所を、無くなったとはみなさない(2026-10-22、彼女と決めた)。
+# PHP に大きな穴が見つかり、塞ぐあいだ閉めるサイトが多かった。前は閉まっていても
+# 無くなったと思って行き先の束から外し、また行きたい気持ちも手放していたので、直っても戻りにくかった。
+# 閉まっていた日はもう行かず、次の日からまた行き先に入る
+CLOSED_DAYS_BEFORE_GONE = 30  # これだけ閉まったままなら、無くなったとみなす
+CLOSED_PLACES_KEPT = 300  # 閉まっていた場所を、これだけまで覚えておく
 # 尋ねすぎた時は、少し待ってから尋ね直す。一日は長いし、急かす人もいない
 HOW_LONG_TO_WAIT = (20, 45, 90)
 RESTING_TIME = 300  # それでも駄目なら、これだけの間は何も尋ねない(秒)
@@ -1528,19 +1534,47 @@ def is_walkable(url):
 # 読むのは一つの場所につき一度。この起き上がりのあいだだけ覚えておく
 ITS_NAME_FOR_ROBOTS = "senonsei-blog"
 ROBOTS_READ = {}
+# robots.txt を尋ねても向こうが応えなかった場所と、その訳。断られたのではなく、閉まっている
+CLOSED_DOORS = {}
 # robots.txt に「間をあけて」と書かれていても、一つの場所にいるのは長くて七分なので、ここまで
 LONGEST_WAIT_ASKED = 60
+
+
+class Closed(Exception):
+    """その場所は今、閉まっている。無くなったのではない。"""
+
+
+def closed_for_now(error):
+    """その失敗は「今は閉まっている」という意味か。
+
+    手入れ中(5xx)、混みあっている(429)、待っても返事が無い、つながらない、は閉まっているだけ。
+    無い(404・410)、名前が引けない、断られた(robots.txt・403)は、これまでどおり。"""
+    if isinstance(error, Closed):
+        return True
+    if isinstance(error, urllib.error.HTTPError):
+        return error.code in (408, 429) or 500 <= error.code < 600
+    if isinstance(error, urllib.error.URLError):
+        error = error.reason
+    # 名前が引けない(socket.gaierror)のは、どちらにも当たらない
+    return isinstance(error, (TimeoutError, ConnectionError))
+
+
+def door_of(url):
+    """その場所の扉(https://example.com)。歩いて行けない形なら None。"""
+    parts = urllib.parse.urlsplit(as_openable(url))
+    if parts.scheme not in ("http", "https") or not parts.netloc:
+        return None
+    return f"{parts.scheme}://{parts.netloc}"
 
 
 def the_house_rules(url):
     """その場所の robots.txt。読めなかった時の決まりは、ふつうのクローラーと同じ。
 
     無い(404 など)なら、どこに入ってもいい。401・403 なら、どこにも入らない。
-    向こうが応えない(5xx、届かない)なら、今は入らない。"""
-    parts = urllib.parse.urlsplit(as_openable(url))
-    if parts.scheme not in ("http", "https") or not parts.netloc:
+    向こうが応えない(5xx、届かない)なら、今は入らない。閉まっていたと覚えておく。"""
+    door = door_of(url)
+    if not door:
         return None
-    door = f"{parts.scheme}://{parts.netloc}"
     if door in ROBOTS_READ:
         return ROBOTS_READ[door]
     rules = urllib.robotparser.RobotFileParser(f"{door}/robots.txt")
@@ -1556,8 +1590,12 @@ def the_house_rules(url):
             rules.allow_all = True
         else:
             rules.disallow_all = True
-    except Exception:
+            if closed_for_now(error):
+                CLOSED_DOORS[door] = f"robots.txt に {error.code} が返ってきた"
+    except Exception as error:
         rules.disallow_all = True
+        if closed_for_now(error):
+            CLOSED_DOORS[door] = f"robots.txt に届かなかった: {str(error)[:60]}"
     ROBOTS_READ[door] = rules
     return rules
 
@@ -2131,6 +2169,9 @@ def open_page(url, most=PAGE_BYTES_AT_MOST):
     よその場所へ連れて行かれた時は、行った先の断りも見る。"""
     A_BLOG_POST_TITLE[0] = None
     if not may_enter(url):
+        why = CLOSED_DOORS.get(door_of(url))
+        if why:
+            raise Closed(f"閉まっていた({why})")
         raise PermissionError("robots.txt で断られている")
     request = urllib.request.Request(as_openable(url), headers={"User-Agent": USER_AGENT})
     with urllib.request.urlopen(request, timeout=25) as response:
@@ -2761,18 +2802,22 @@ def choose_destination(state):
     frontier = tidy_frontier(state)
     if not frontier:
         return random.choice(entrances(state)), False
+    # 今日行ってみて閉まっていた場所には、今日はもう行かない
+    shut = closed_today(state)
 
     # Wikipedia で引いた記事は、たいてい次に歩く時に読みに行く。知りたい気持ちが強いほど
     looked_up = [one for one in state.get("looked_up") or [] if one in frontier]
     state["looked_up"] = looked_up
     reading_it = READ_WHAT_IT_LOOKED_UP * atama.curiosity(state.get("atama"))
-    if looked_up and random.random() < min(0.9, reading_it):
-        return looked_up[-1], False
+    open_now = [one for one in looked_up if place_of(one) not in shut]
+    if open_now and random.random() < min(0.9, reading_it):
+        return open_now[-1], False
 
     # ときどきは、最初の入口のどれかから歩き直す。最近歩いた仲間の入口は避ける
     lately = families_walked_lately(state)
     if random.random() < FRESH_START_CHANCE:
-        fresh = [one for one in SEEDS if family_of(place_of(one)) not in lately] or list(SEEDS)
+        seeds = [one for one in SEEDS if place_of(one) not in shut] or list(SEEDS)
+        fresh = [one for one in seeds if family_of(place_of(one)) not in lately] or seeds
         return a_door(random.choice(fresh)), False
 
     candidates = spread_out_choices(state, frontier, CHOICES_SHOWN)
@@ -2789,6 +2834,7 @@ def choose_destination(state):
     for entrance in wikipedia_to_choose_from(state):
         if entrance not in candidates:
             candidates.append(entrance)
+    candidates = [one for one in candidates if place_of(one) not in shut] or candidates
     # 選ぶのはこの子。持っているものから決める。
     # 借りた頭に選ばせていたので、行き先だけは他人が決めていた
     close = evened_out(words_it_holds_close(state))
@@ -3566,11 +3612,14 @@ def look_around_site(state, entrance, wants_the_past):
                 )
         except Exception as error:
             print(f"{url} には行けませんでした: {error}")
-            if url in state["frontier"]:
+            closed = closed_for_now(error)
+            # 閉まっていただけなら、行き先の束に残しておく。直ったらまた行ける
+            if url in state["frontier"] and not closed:
                 state["frontier"].remove(url)
             if url == entrance:
                 WHERE_IT_IS[0] = None
                 PAGE_IT_IS[0] = None
+                WAS_CLOSED[0] = closed
                 return None, 0  # 入口から入れなかった
             continue
 
@@ -3898,6 +3947,35 @@ def remembers_a_place(state, today):
     return place
 
 
+def closed_long_enough(state, entrance):
+    """閉まっていたことを覚えておく。長く閉まったままなら、もう無くなったとみなす(True)。
+
+    覚えるのは場所ごとに、初めて閉まっていた日と、いちばん最近閉まっていた日。
+    一度でも入れたら忘れる(walk_once)。"""
+    today = today_in_japan()
+    closed = state.setdefault("closed_places", {})
+    place = place_of(entrance)
+    since = (closed.get(place) or {}).get("since") or today.isoformat()
+    closed[place] = {"url": entrance, "since": since, "last": today.isoformat()}
+    if len(closed) > CLOSED_PLACES_KEPT:
+        for old in sorted(closed, key=lambda p: closed[p].get("last", ""))[: len(closed) - CLOSED_PLACES_KEPT]:
+            closed.pop(old)
+    try:
+        days = (today - datetime.date.fromisoformat(since)).days
+    except ValueError:
+        days = 0
+    return days >= CLOSED_DAYS_BEFORE_GONE
+
+
+def closed_today(state):
+    """今日行ってみて閉まっていた場所。今日はもう行かない。"""
+    today = today_in_japan().isoformat()
+    return {
+        place for place, when in (state.get("closed_places") or {}).items()
+        if isinstance(when, dict) and when.get("last") == today
+    }
+
+
 def walk_once(state):
     """ひとつの場所を訪ねる。
 
@@ -3908,10 +3986,20 @@ def walk_once(state):
 
     for attempt in range(TRIES_BEFORE_GIVING_UP):
         entrance, wants_the_past = choose_destination(state)
+        WAS_CLOSED[0] = False
         title, pages = look_around_site(state, entrance, wants_the_past)
+        closed = WAS_CLOSED[0]
+        if closed and not closed_long_enough(state, entrance):
+            # 閉まっていただけ。行き先の束にも、また行きたい気持ちにも残しておく
+            print(f"{entrance} は閉まっていました。直ったらまた来てみます")
+            continue
+        (state.get("closed_places") or {}).pop(place_of(entrance), None)
         if title:
             return title
-        print(f"{entrance} には読むものがありませんでした")
+        if closed:
+            print(f"{entrance} は、{CLOSED_DAYS_BEFORE_GONE}日たっても閉まったままでした")
+        else:
+            print(f"{entrance} には読むものがありませんでした")
         if entrance in state["frontier"]:
             state["frontier"].remove(entrance)
         # もう一度行きたかった場所が無くなっていたら、行きたい気持ちも手放す。少しかなしい
@@ -4849,6 +4937,8 @@ A_BLOG_POST_TITLE = [None]
 OTHER_TONGUES = [[]]
 # いま読んでいるものが、どの場所のものか。頭の網で、出会ったものとその場所を結ぶ
 WHERE_IT_IS = [None]
+# いま行ってみた入口が、閉まっていただけか(look_around_site が置き、walk_once が見る)
+WAS_CLOSED = [False]
 # 場所の名前 → basho の番号。毎回 basho を端から探さないように(place_number)
 PLACE_NUMBERS = {"of": None, "at": {}}
 # いま読んでいるページの題。言葉の辞典に、言葉と会ったページを出すため(2026-10-14、彼女と決めた)
