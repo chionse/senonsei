@@ -1,5 +1,6 @@
 import calendar
 import datetime
+import hashlib
 import json
 import os
 import re
@@ -2153,6 +2154,15 @@ def generate_kakodogu_html(articles):
 JITEN_PAGE = "jiten.html"
 JITEN_NAME = "語彙辞典"
 JITEN_LINKS_SHOWN = 8  # 言葉ごとに並べる、つながっているもの
+# 辞典は、言葉が何万になっても開けるように分けて置く(2026-10-23、彼女と決めた)。
+# 前は覚えた言葉のすべてをページの中に書いていて、十万語で二十メガほどになり、スマホで開けなくなる。
+# ページには一覧に要るもの(言葉、種類、覚えた日、日記で使った数、つながりの数)だけを置き、
+# 一語を開いた時に出すもの(場所、つながっている言葉、訳)は束にして、開いた時に読みに行く
+JITEN_FOLDER = "jiten"
+JITEN_WORDS_PER_FILE = 500  # 束一つに入れる言葉の数
+JITEN_PLACES = os.path.join(JITEN_FOLDER, "basho.json")  # 場所で引く時に読みに行く一覧
+# 日記で何回使ったかの数え置き。「_」で始まる名前は、サイトには載らない
+JITEN_COUNTS = os.path.join(JITEN_FOLDER, "_kazu.json")
 # どこで会ったか分からない時の文。彼女の言葉のまま(2026-10-14)。
 # 場所の記録は 2026-10-10 から。それより前に会っていた言葉は、初めて会った場所が分からない
 PLACE_UNKNOWN = "場所の特定をすることができませんでした"
@@ -2411,6 +2421,58 @@ def written_as_a_date(day):
     return f"{when.year}年{when.month}月{when.day}日"
 
 
+def write_if_changed(path, text):
+    """中身が変わった時だけ書く。変わらないものを書き直して、記録を積まないように。"""
+    try:
+        with open(path, encoding="utf-8") as f:
+            if f.read() == text:
+                return False
+    except OSError:
+        pass
+    write_whole(path, text)
+    return True
+
+
+def a_mark_of_diaries(diaries):
+    """日記の中身を表す印。一字でも変われば変わる。"""
+    return hashlib.sha1("\u0000".join(diaries).encode("utf-8")).hexdigest()
+
+
+def uses_in_diaries(words, diaries):
+    """言葉ごとに、日記の何日ぶんに出てきたか。
+
+    前は毎回、言葉と日記のすべての組を確かめていた。言葉が十万、日記が一万を越えると
+    それだけで何分もかかり、毎時間ページを作るのが追いつかなくなる。
+    数えたぶんは置いておき、新しい日記と新しい言葉のぶんだけ数え足す(2026-10-23)。
+    前に数えた日記の中身が変わっていたら、はじめから数え直す。"""
+    try:
+        with open(JITEN_COUNTS, encoding="utf-8") as f:
+            kept = json.load(f)
+    except (OSError, ValueError):
+        kept = {}
+    if not isinstance(kept, dict):
+        kept = {}
+    done, counted = kept.get("diaries"), kept.get("u")
+    if (
+        not isinstance(done, int) or not isinstance(counted, dict) or done > len(diaries)
+        or kept.get("mark") != a_mark_of_diaries(diaries[:done])
+    ):
+        done, counted = 0, {}
+    fresh = diaries[done:]
+    uses = {}
+    for word in words:
+        before = counted.get(word)
+        if isinstance(before, int):
+            uses[word] = before + sum(1 for one in fresh if word in one)
+        else:
+            uses[word] = sum(1 for one in diaries if word in one)
+    write_if_changed(JITEN_COUNTS, json.dumps(
+        {"diaries": len(diaries), "mark": a_mark_of_diaries(diaries), "u": uses},
+        ensure_ascii=False, separators=(",", ":"), sort_keys=True,
+    ))
+    return uses
+
+
 def words_for_the_dictionary(state, articles):
     """辞典に載せる、覚えた言葉ぜんぶ。言葉ごとに、引いた時に出すものを添える。
 
@@ -2434,6 +2496,7 @@ def words_for_the_dictionary(state, articles):
     net = the_net()
     readings = the_readings()
     diaries = [(one.get("title") or "") + "\n" + (one.get("content") or "") for one in articles]
+    uses = uses_in_diaries(learned, diaries)
 
     # 会ったページが分かればその題を、分からなければサイトの名前だけを出す。
     # サイトに覚えてある題(places_known)は、そのサイトで最後に読んだページのもので、
@@ -2480,7 +2543,7 @@ def words_for_the_dictionary(state, articles):
             "o": order,
             "d": written_as_a_date(day),
             "n": nth,
-            "u": sum(1 for one in diaries if word in one),
+            "u": uses.get(word, 0),
             "t": ties,
             "l": links,
             "f": place(first, first_page),
@@ -2499,7 +2562,12 @@ def words_for_the_dictionary(state, articles):
 JITEN_SCRIPT = r"""
   <script>
     (function () {
-      var DATA = JSON.parse(document.getElementById("jt-data").textContent);
+      // ページにあるのは目次だけ。一語を開いた時に出すものは jiten/ の束にあり、開いた時に読みに行く。
+      // 場所で引く時の一覧も、初めて引いた時に読みに行く(2026-10-23。十万語でも開けるように)
+      var INDEX = JSON.parse(document.getElementById("jt-data").textContent);
+      var DATA = INDEX.i.map(function (r, i) {
+        return { w: r[0], k: INDEX.K[r[1]], s: INDEX.S[r[2]], o: i, d: INDEX.D[r[3]], u: r[4], t: r[5] };
+      });
       var UNKNOWN = __UNKNOWN__;
       var READING_TITLE = __READING_TITLE__;
       var READING_UNKNOWN = __READING_UNKNOWN__;
@@ -2562,6 +2630,43 @@ JITEN_SCRIPT = r"""
         if (state.sort === "ties") { rows.sort(function (a, b) { return b.t - a.t || b.o - a.o; }); }
         return rows;
       };
+      // 一語ぶんの、開いた時に出すもの。束ごとに一度だけ読みに行く。読めなかった束は、次に開いた時に読み直す
+      var parts = {}, waiting = {};
+      var detailOf = function (word, then) {
+        var d = byWord[word];
+        if (!d) { then(null); return; }
+        var n = Math.floor(d.o / INDEX.N);
+        var give = function () { then(parts[n] ? (parts[n][word] || {}) : null); };
+        if (parts[n]) { give(); return; }
+        if (waiting[n]) { waiting[n].push(give); return; }
+        waiting[n] = [give];
+        fetch("jiten/" + ("000" + n).slice(-4) + ".json?v=" + INDEX.V[n])
+          .then(function (res) { return res.ok ? res.json() : null; })
+          .catch(function () { return null; })
+          .then(function (got) {
+            if (got) { parts[n] = got; }
+            var calls = waiting[n]; delete waiting[n];
+            calls.forEach(function (c) { c(); });
+          });
+      };
+      // 場所で引く時の一覧。読めるまでは、言葉だけで引く
+      var placesAsked = false;
+      var askPlaces = function () {
+        if (placesAsked) { return; }
+        placesAsked = true;
+        fetch("jiten/basho.json?v=" + INDEX.B)
+          .then(function (res) { return res.ok ? res.json() : null; })
+          .catch(function () { return null; })
+          .then(function (got) {
+            if (!got) { placesAsked = false; return; }
+            DATA.forEach(function (d, i) {
+              var p = got.w[i] || [-1, -1];
+              d.f = p[0] >= 0 ? got.p[p[0]] : null;
+              d.h = p[1] >= 0 ? got.p[p[1]] : null;
+            });
+            if (state.q) { list(); }
+          });
+      };
       var byPlace = function (d) {
         return (d.f && d.f.indexOf(state.q) >= 0) || (d.h && d.h.indexOf(state.q) >= 0);
       };
@@ -2616,24 +2721,59 @@ JITEN_SCRIPT = r"""
         box.style.left = Math.max(0, Math.min(r.left - hero.left, hero.width - box.offsetWidth)) + "px";
         box.style.top = (r.bottom - hero.top + 6) + "px";
       };
+      // 一覧は三百語ずつ描く。下まで見に来たら、続きを足す。何万語を一度に描くと、スマホが止まる
+      var STEP = 300, rowsNow = [], drawn = 0;
+      var watcher = "IntersectionObserver" in window ? new IntersectionObserver(function (seen) {
+        if (seen.some(function (e) { return e.isIntersecting; })) { watcher.disconnect(); more(); }
+      }, { rootMargin: "600px 0px" }) : null;
+      var row = function (d) {
+        var w = esc(d.w);
+        if (state.q) { w = w.split(esc(state.q)).join("<mark>" + esc(state.q) + "</mark>"); }
+        var why = state.q && d.w.indexOf(state.q) < 0 ? '<em class="jt-why">場所で一致</em>' : "";
+        return '<li class="jt-row' + (d.w === state.sel ? " on" : "") + '" data-w="' + esc(d.w) + '">' +
+          '<span class="jt-row-w">' + w + why + '</span><span class="jt-row-d">' + side(d) + '</span></li>';
+      };
+      var more = function () {
+        var end = watcher ? Math.min(rowsNow.length, drawn + STEP) : rowsNow.length, html = "";
+        for (var i = drawn; i < end; i++) { html += row(rowsNow[i]); }
+        drawn = end;
+        var tail = $("jt-tail");
+        if (tail) { tail.parentNode.removeChild(tail); }
+        if (drawn < rowsNow.length) { html += '<li id="jt-tail" aria-hidden="true" style="height:1px"></li>'; }
+        $("jt-list").insertAdjacentHTML("beforeend", html);
+        if (drawn < rowsNow.length) { watcher.observe($("jt-tail")); }
+      };
       var list = function () {
-        var rows = shown(), html = "";
-        rows.forEach(function (d) {
-          var w = esc(d.w);
-          if (state.q) { w = w.split(esc(state.q)).join("<mark>" + esc(state.q) + "</mark>"); }
-          var why = state.q && d.w.indexOf(state.q) < 0 ? '<em class="jt-why">場所で一致</em>' : "";
-          html += '<li class="jt-row' + (d.w === state.sel ? " on" : "") + '" data-w="' + esc(d.w) + '">' +
-            '<span class="jt-row-w">' + w + why + '</span><span class="jt-row-d">' + side(d) + '</span></li>';
-        });
-        $("jt-list").innerHTML = html || '<li class="jt-none">見つかりませんでした</li>';
-        $("jt-count").textContent = state.q ? "「" + state.q + "」で " + rows.length + "語" : rows.length + "語";
+        if (watcher) { watcher.disconnect(); }
+        rowsNow = shown(); drawn = 0;
+        $("jt-list").innerHTML = rowsNow.length ? "" : '<li class="jt-none">見つかりませんでした</li>';
+        if (rowsNow.length) { more(); }
+        $("jt-count").textContent = state.q ? "「" + state.q + "」で " + rowsNow.length + "語" : rowsNow.length + "語";
+      };
+      // 選んだ言葉の印だけを付け替える。一覧を描き直すと、続きを足したぶんが消えて上へ戻ってしまう
+      var mark = function () {
+        var rows = $("jt-list").querySelectorAll(".jt-row");
+        for (var i = 0; i < rows.length; i++) {
+          rows[i].classList.toggle("on", rows[i].getAttribute("data-w") === state.sel);
+        }
       };
       var place = function (name) {
         return name ? '<p class="jt-place">' + esc(name) + '</p>' : '<p class="jt-place jt-unknown">' + esc(UNKNOWN) + '</p>';
       };
       var entry = function () {
-        var d = byWord[state.sel];
-        if (!d) { $("jt-entry").hidden = true; return; }
+        var word = state.sel, base = byWord[word];
+        if (!base) { $("jt-entry").hidden = true; return; }
+        detailOf(word, function (extra) {
+          if (state.sel !== word) { return; }  // 読みに行っているあいだに、別の言葉が選ばれた
+          draw(base, extra || {});
+        });
+      };
+      var draw = function (base, extra) {
+        var d = {};
+        for (var key in base) { d[key] = base[key]; }
+        for (var key2 in extra) { d[key2] = extra[key2]; }
+        if (d.n === undefined) { d.n = null; }
+        if (!d.l) { d.l = []; }
         $("jt-entry").hidden = false;
         var links = d.l.length ? d.l.map(function (l) {
           return l[1] ? '<button type="button" class="jt-link known" data-w="' + esc(l[0]) + '">' + esc(l[0]) + '</button>'
@@ -2671,7 +2811,7 @@ JITEN_SCRIPT = r"""
       var pick = function (word) {
         state.sel = word; state.greet = false;
         if (history.replaceState) { history.replaceState(null, "", "#w=" + encodeURIComponent(word)); }
-        list(); entry(); today();
+        mark(); entry(); today();
         if (phone) { open(); }
       };
 
@@ -2692,6 +2832,7 @@ JITEN_SCRIPT = r"""
       });
       $("jt-q").addEventListener("input", function (e) {
         document.body.classList.remove("jt-open");
+        askPlaces();
         state.q = e.target.value.trim(); list();
         document.querySelector(".jt-listscroll").scrollTop = 0;
       });
@@ -2727,15 +2868,66 @@ JITEN_SCRIPT = r"""
   </script>"""
 
 
+def dictionary_in_parts(words):
+    """辞典を、ページに置く目次と、開いた時に読みに行く束と、場所で引く一覧に分ける。
+
+    目次は一語につき [言葉, 種類, 字, 覚えた日, 日記で使った数, つながりの数]。
+    種類・字・日付は、同じものが何度も並ぶので、表にして番号で指す。
+    束と一覧は jiten/ に書く。変わったものだけ書き直す。返すのは目次。"""
+    tables = {"K": {}, "S": {}, "D": {}}
+
+    def number(table, value):
+        held = tables[table]
+        if value not in held:
+            held[value] = len(held)
+        return held[value]
+
+    rows = [[one["w"], number("K", one["k"]), number("S", one["s"]), number("D", one["d"]), one["u"], one["t"]]
+            for one in words]
+    marks = []
+    for start in range(0, len(words), JITEN_WORDS_PER_FILE):
+        part = {
+            one["w"]: {key: one[key] for key in ("n", "f", "h", "l", "y") if key in one}
+            for one in words[start:start + JITEN_WORDS_PER_FILE]
+        }
+        path = os.path.join(JITEN_FOLDER, f"{start // JITEN_WORDS_PER_FILE:04d}.json")
+        write_if_changed(path, json.dumps(part, ensure_ascii=False, separators=(",", ":")))
+        marks.append(mark_of(path))
+    # 言葉が減ることは無いが、束の分け方が変わった時のために、使わなくなった束は片づける
+    wanted = {f"{n:04d}.json" for n in range(len(marks))}
+    for name in os.listdir(JITEN_FOLDER) if os.path.isdir(JITEN_FOLDER) else []:
+        if re.fullmatch(r"\d{4}\.json", name) and name not in wanted:
+            os.remove(os.path.join(JITEN_FOLDER, name))
+
+    places = {}
+
+    def place_number(name):
+        if not name:
+            return -1
+        if name not in places:
+            places[name] = len(places)
+        return places[name]
+
+    pairs = [[place_number(one["f"]), place_number(one["h"])] for one in words]
+    write_if_changed(JITEN_PLACES, json.dumps(
+        {"p": list(places), "w": pairs}, ensure_ascii=False, separators=(",", ":"),
+    ))
+    return {
+        "i": rows,
+        "K": list(tables["K"]), "S": list(tables["S"]), "D": list(tables["D"]),
+        "N": JITEN_WORDS_PER_FILE, "V": marks, "B": mark_of(JITEN_PLACES),
+    }
+
+
 def generate_jiten_html(state, articles):
     """語彙辞典のページ。覚えた言葉を引いて、一語ずつ開ける。
 
     このページだけは、スマホでは画面の幅で組む(2026-10-11、彼女と決めた)。
     一覧と説明を並べるので、左右の欄は置かず、真ん中の列を広く使う。"""
     words = words_for_the_dictionary(state or {}, articles)
-    # ページの中に置く言葉の一覧。言葉は外の世界から来たものなので、
+    # ページの中に置く言葉の一覧(目次)。言葉は外の世界から来たものなので、
     # </script> を閉じてしまう並びが入らないよう、< をそのまま書かない
-    data = json.dumps(words, ensure_ascii=False, separators=(",", ":")).replace("<", "\\u003c")
+    data = json.dumps(dictionary_in_parts(words), ensure_ascii=False, separators=(",", ":")).replace("<", "\\u003c")
     script = (JITEN_SCRIPT
               .replace("__UNKNOWN__", json.dumps(PLACE_UNKNOWN, ensure_ascii=False))
               .replace("__READING_TITLE__", json.dumps(READING_TITLE, ensure_ascii=False))
