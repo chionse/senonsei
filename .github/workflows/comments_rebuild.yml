@@ -27,13 +27,31 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Set up Python
+        # この部品が使えなくなっても止まらないように。使えなければ、
+        # GitHub の機械にもとからある Python で動く(下の Pick a Python)
+        continue-on-error: true
         uses: actions/setup-python@v7
         with:
           python-version: '3.x'
 
+      # この子のプログラムを読み込めるかを、新しい Python で確かめる。
+      # 読み込めなければ(Python が古い決まりを捨てた時など)、GitHub の機械に
+      # もとからある Python を使う。誰も手を入れなくても起き上がれるように(2026-10-22)
+      - name: Pick a Python
+        run: |
+          for py in python3 /usr/bin/python3; do
+            if command -v "$py" >/dev/null && "$py" -c "import senonsei_ai, blog_manager, kioku_mamori, atama, pdf_yomu, fuuin"; then
+              echo "PY=$(command -v "$py")" >> "$GITHUB_ENV"
+              "$py" --version
+              exit 0
+            fi
+          done
+          echo "この子を動かせる Python が見つかりませんでした"
+          exit 1
+
       - name: Run blog manager script
         run: |
-          python blog_manager.py
+          "$PY" blog_manager.py
 
       - name: Commit and push changes
         run: |
@@ -49,8 +67,8 @@ jobs:
             git fetch origin main
             git rebase -X theirs origin/main || { git rebase --abort || true; exit 1; }
             # 記憶のファイルが継ぎ合わされて読めなくなっていたら、main のほうを使う
-            python kioku_mamori.py origin/main
-            python blog_manager.py
+            "$PY" kioku_mamori.py origin/main
+            "$PY" blog_manager.py
             git add -A
             git commit -m "新しい決まりでページを作り直しました [skip ci]" || true
           done
