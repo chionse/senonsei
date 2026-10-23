@@ -6350,7 +6350,6 @@
     "https://wikisource.org/wiki/",
     "https://web.archive.org/web/20250226171418/https://ssd.jpl.nasa.gov/horizons_batch.cgi?batch=1&COMMAND=%272024+YR4%27&START_TIME=%272032-12-22%2008:31:55%27&STOP_TIME=%272032-12-22%2008:32:05%27&STEP_SIZE=%2720%27&QUANTITIES=%2720,39%27",
     "https://web.archive.org/web/20250217160251/https://ssd.jpl.nasa.gov/horizons_batch.cgi?batch=1&COMMAND=%272024+YR4%27&START_TIME=%272032-12-22%2011:03:45%27&STOP_TIME=%272032-12-22%2011:03:55%27&STEP_SIZE=%2720%27&QUANTITIES=%2720,39%27",
-    "https://iawn.net/documents/20250204_20th_Vienna/ESA-S2P-PD-HO-0262.pdf",
     "https://web.archive.org/web/20250218145247/https://ssd.jpl.nasa.gov/horizons_batch.cgi?batch=1&COMMAND=%272024+YR4%27&START_TIME=%272032-12-22%2011:35:35%27&STOP_TIME=%272032-12-22%2011:35:45%27&STEP_SIZE=%2720%27&QUANTITIES=%2720,39%27",
     "https://web.archive.org/web/20250211021157/https://ssd.jpl.nasa.gov/horizons_batch.cgi?batch=1&COMMAND=%272024+YR4%27&START_TIME=%272032-12-22%2010:39:50%27&STOP_TIME=%272032-12-23%27&STEP_SIZE=%272%20day%27&QUANTITIES=%2720,39%27",
     "https://web.archive.org/web/20250201213054/https://ssd.jpl.nasa.gov/horizons_batch.cgi?batch=1&COMMAND=%272024+YR4%27&START_TIME=%272032-12-22%2015:41%27&STOP_TIME=%272032-12-23%27&STEP_SIZE=%272%20day%27&QUANTITIES=%2720,39%27",
@@ -7062,7 +7061,8 @@
     "https://forest.watch.impress.co.jp/docs/serial/yajiuma/2140676.html",
     "https://forest.watch.impress.co.jp/docs/special/2104573.html",
     "https://forest.watch.impress.co.jp/docs/digest/2150466.html",
-    "https://forest.watch.impress.co.jp/docs/special/2147221.html"
+    "https://forest.watch.impress.co.jp/docs/special/2147221.html",
+    "https://iawn.net/documents/20250204_20th_Vienna/ESA-S2P-PD-HO-0262.pdf"
   ],
   "notes": [
     "13日目: Yahoo!¥¸¥ª¥·¥Æ¥£¡¼¥º: \n    ¥²¡¼¥à、NHK ONEのご利用と受信契約 | 利用案内 | NHK ONE インフォメーション、GitHub Changelog",
@@ -7094,15 +7094,17 @@
     "39日目: コトバンク [ 辞書・百科事典・各種データベースを一度に検索 ]、インターネットアーカイブに10万円寄付した - FIRE: 投資でセミリタイアする九条日記、XP・エクストリームプログラミングの始め方を専門家が語る｜セミナーレポート - Agile Journey、小説家になろう - みんなのための小説投稿サイト",
     "40日目: Accueil、ジオシティーズ ジャパン - 日本最大のコミュニティサイト、Wikipedia、README.jp へようこそ！",
     "41日目: VideoPress – The finest video for WordPress、はてなブックマーク - 新着エントリー - 総合",
-    "42日目: PCからAndroidを操作できるGUIアプリ「Escrcpy」v3.3.1、既存の全機能が無償に - 窓の杜"
+    "42日目: PCからAndroidを操作できるGUIアプリ「Escrcpy」v3.3.1、既存の全機能が無償に - 窓の杜、ESA-S2P-PD-HO-0262"
   ],
   "today_walk": {
     "date": "2026-10-23",
     "seen": [
-      "PCからAndroidを操作できるGUIアプリ「Escrcpy」v3.3.1、既存の全機能が無償に - 窓の杜"
+      "PCからAndroidを操作できるGUIアプリ「Escrcpy」v3.3.1、既存の全機能が無償に - 窓の杜",
+      "ESA-S2P-PD-HO-0262"
     ],
     "brought": [
-      1177
+      1177,
+      139
     ]
   },
   "inner_voice": [
@@ -7436,14 +7438,14 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "pro-baobab.jp",
-    "depot.zdnet.co.jp",
-    "Yahoo!ジオシティーズ: \n    ゲーム",
-    "www.cosmopolitan.com",
-    "gooday.nikkei.co.jp",
-    "www.47news.jp"
+    "static.zdassets.com",
+    "다언어 포털: 일본 생활과 방재 정보　がいこくごの 生活と防災の情報 - 코",
+    "cookiepedia.co.uk",
+    "opac.sbn.it",
+    "neocities.org",
+    "Frequently asked questions – Wikimedia F"
   ],
-  "how_many_places_left": 1880,
+  "how_many_places_left": 1879,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -7536,7 +7538,8 @@
     "agilejourney.uzabase.com": "北國銀行はアジャイル開発で何を変えたのか - Agile Journey",
     "syosetu.com": "世界最強の魔女、始めました ~私だけ『攻略サイト』を見れる世界で自由に生きます~",
     "www.geocities.co.jp": "ジオシティーズ ジャパン - 日本最大のコミュニティサイト",
-    "forest.watch.impress.co.jp": "AI好きの仲間に出会える渋谷の「文化祭」に進化！ 2026年の「AIフェスティバ"
+    "forest.watch.impress.co.jp": "AI好きの仲間に出会える渋谷の「文化祭」に進化！ 2026年の「AIフェスティバ",
+    "iawn.net": "ESA-S2P-PD-HO-0262"
   },
   "went_home": {
     "date": "2026-10-23",
@@ -7870,7 +7873,16 @@
       "目的",
       "っていた",
       "投稿",
-      "めた"
+      "めた",
+      "33",
+      "02",
+      "52",
+      "35",
+      "this",
+      "The",
+      "is",
+      "be",
+      "40"
     ]
   },
   "wants_to_say": [
@@ -8812,10 +8824,10 @@
       "day": "2026-10-22"
     }
   ],
-  "understood_usually": 0.400682,
+  "understood_usually": 0.389185,
   "its_ways": {
     "pages_per_site": 11.0,
-    "pull_of_japanese": 1.21,
+    "pull_of_japanese": 1.22,
     "feeling_keen": 0.33,
     "wish_to_return": 1.6
   },
@@ -9189,7 +9201,7 @@
       }
     }
   ],
-  "woke_at": "2026-10-23 15",
+  "woke_at": "2026-10-23 16",
   "blog_titles": {
     "seen": 90,
     "closed": 2,
@@ -9253,7 +9265,8 @@
     "www.geocities.co.jp",
     "www.readme.jp",
     "v0.wordpress.com",
-    "forest.watch.impress.co.jp"
+    "forest.watch.impress.co.jp",
+    "iawn.net"
   ],
   "its_own_figure": {
     "date": "2026-10-18",
@@ -9445,6 +9458,7 @@
     "ローカルアカウントで「Windows 11 Home」をセットアップする超簡単な方法【令和8年最新版】 - やじうまの杜 - 窓の杜",
     "最新のWindowsでアプリのインストール先はどこにすべき？ Windowsのフォルダー構成を正しく理解しよう【特集・集中企画】 - 窓の杜",
     "AI対応で操作が可能で2D図面から3Dモデル作成できる「JDesignCAD」v1.1.0　ほか - ダイジェストニュース - 窓の杜",
-    "AI好きの仲間に出会える渋谷の「文化祭」に進化！ 2026年の「AIフェスティバル」は“見に行く”ではなく“参加して交流”したい【特集・集中企画】 - 窓の杜"
+    "AI好きの仲間に出会える渋谷の「文化祭」に進化！ 2026年の「AIフェスティバル」は“見に行く”ではなく“参加して交流”したい【特集・集中企画】 - 窓の杜",
+    "ESA-S2P-PD-HO-0262"
   ]
 }
