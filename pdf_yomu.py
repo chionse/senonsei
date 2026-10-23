@@ -29,10 +29,23 @@ import zlib
 PAGES_AT_MOST = 80
 CHARS_AT_MOST = 200000
 SECONDS_AT_MOST = 30
+# ほどいた後の大きさにも上限を置く(2026-10-23)。わざと小さく固めた PDF(圧縮爆弾)は、
+# 数メガでもほどくと何ギガにもなり、読もうとしたこの子の起き上がりごと止まってしまう
+STREAM_BYTES_AT_MOST = 16 * 1024 * 1024  # 一つの流れをほどいた大きさ
+UNPACKED_AT_MOST = 64 * 1024 * 1024  # 一つの PDF でほどく大きさの合計
 
 
 class NotReadable(Exception):
     """この PDF は読めない(鍵がかかっている、壊れている、など)。"""
+
+
+class TooBig(NotReadable):
+    """ほどくと大きすぎる。読まない。"""
+
+
+def _within(out, most=STREAM_BYTES_AT_MOST):
+    if len(out) > most:
+        raise TooBig("ほどくと大きすぎる")
 
 
 class Name(str):
@@ -221,19 +234,23 @@ def _skip(buf, pos):
 # ---- 圧縮をほどく ----
 
 def _flate(data):
+    # ほどく大きさに上限を付けてほどく。上限を越えるものは読まない
     for wbits in (zlib.MAX_WBITS, -zlib.MAX_WBITS):
         try:
-            return zlib.decompressobj(wbits).decompress(data)
+            out = zlib.decompressobj(wbits).decompress(data, STREAM_BYTES_AT_MOST + 1)
         except zlib.error:
             continue
+        _within(out)
+        return out
     # 途中で壊れていても、ほどけたところまでは使う
     out = bytearray()
     d = zlib.decompressobj()
     for i in range(0, len(data), 256):
         try:
-            out += d.decompress(data[i:i + 256])
+            out += d.decompress(data[i:i + 256], STREAM_BYTES_AT_MOST + 1 - len(out))
         except zlib.error:
             break
+        _within(out)
     return bytes(out)
 
 
@@ -254,6 +271,7 @@ def _ascii85(data):
     for c in data:
         if c == ord("z") and not group:
             out += b"\0\0\0\0"
+            _within(out)
             continue
         if not 33 <= c <= 117:
             continue
@@ -303,6 +321,7 @@ def _lzw(data, early=1):
                 entry = previous + previous[:1]
                 table.append(entry)
             out += entry
+            _within(out)
             previous = entry
             if len(table) + early >= (1 << bits) and bits < 12:
                 bits += 1
@@ -322,6 +341,7 @@ def _run_length(data):
         else:
             out += data[i + 1:i + 2] * (257 - n)
             i += 2
+        _within(out)
     return bytes(out)
 
 
@@ -611,6 +631,7 @@ class Pdf:
             self.offsets[int(m.group(1))] = m.end()
         self.cache = {}
         self.packed = None  # 箱(ObjStm)に詰められた部品
+        self.unpacked = 0  # ここまでにほどいた大きさの合計
         self.fonts = {}
         if re.search(rb"/Encrypt[\x00\t\n\x0c\r ]*(\d+[\x00\t\n\x0c\r ]+\d+[\x00\t\n\x0c\r ]+R|<<)", data):
             raise NotReadable("鍵がかかっている")
@@ -725,6 +746,9 @@ class Pdf:
                     data = _unpredict(data, parm if isinstance(parm, dict) else None)
             else:
                 return b""  # 絵の圧縮など。字は入っていない
+        self.unpacked += len(data)
+        if self.unpacked > UNPACKED_AT_MOST:
+            raise TooBig("ほどくと大きすぎる")
         return data
 
     # 目次

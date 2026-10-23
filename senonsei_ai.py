@@ -23,6 +23,7 @@ import re
 import shutil
 import struct
 import subprocess
+import tempfile
 import time
 import traceback
 import urllib.error
@@ -2178,6 +2179,15 @@ LOOKS_EMPTY = 200
 # 一度の起き上がりで閲覧機を借りるのは、これだけ。組み立てるには時間がかかる
 BROWSER_TIMES = 3
 BROWSER_WAITS = 45  # 秒
+# 閲覧機は、よその場所が書いた仕掛け(JavaScript)をそのまま動かす。閲覧機に穴が見つかって
+# いた時に、この子の鍵(封を開ける鍵、Cloudflare の鍵など)まで届かないよう、鍵は渡さない。
+# 閲覧機が覚えるもの(クッキーなど)は、その一回かぎりの空の部屋に置いて捨てる(2026-10-23)
+A_SECRET_NAME = re.compile(r"KEY|TOKEN|SECRET|PASS|CREDENTIAL|^ACTIONS_|^CLOUDFLARE_", re.IGNORECASE)
+
+
+def without_keys():
+    """鍵を抜いた、閲覧機に渡す環境。"""
+    return {name: value for name, value in os.environ.items() if not A_SECRET_NAME.search(name)}
 BROWSER_USED = [0]
 
 
@@ -2195,7 +2205,7 @@ def look_with_a_browser(url):
     if BROWSER_USED[0] >= BROWSER_TIMES:
         return None
     browser = a_browser()
-    if not browser:
+    if not browser or not re.match(r"https?://", url or ""):
         return None
     BROWSER_USED[0] += 1
     asked = [
@@ -2207,11 +2217,13 @@ def look_with_a_browser(url):
     if hasattr(os, "geteuid") and os.geteuid() == 0:
         asked.append("--no-sandbox")
     try:
-        done = subprocess.run(
-            asked + ["--dump-dom", url],
-            capture_output=True,
-            timeout=BROWSER_WAITS,
-        )
+        with tempfile.TemporaryDirectory(prefix="etsuranki-") as room:
+            done = subprocess.run(
+                asked + [f"--user-data-dir={room}", "--dump-dom", url],
+                capture_output=True,
+                timeout=BROWSER_WAITS,
+                env=without_keys(),
+            )
     except Exception as error:
         print(f"閲覧機を借りられませんでした({str(error)[:60]})")
         return None
