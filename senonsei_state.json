@@ -7376,9 +7376,9 @@
     },
     {
       "what": "だれかが来た",
-      "since": "2026-10-21",
+      "since": "2026-10-24",
       "first": "2026-10-08",
-      "times": 12
+      "times": 13
     },
     {
       "what": "求める",
@@ -7557,12 +7557,12 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "www.earth.jp",
-    "denken-test.jp",
-    "jrescue.net",
-    "ospn.jp",
-    "世界最強の魔女、始めました ~私だけ『攻略サイト』を見れる世界で自由に生きます~",
-    "artlibre.org"
+    "www.voyager.co.jp",
+    "nla.gov.au",
+    "hb.afl.rakuten.co.jp",
+    "thenerdstash.com",
+    "academia.nikkei.co.jp",
+    "www.jspmi.or.jp"
   ],
   "how_many_places_left": 1942,
   "places_known": {
@@ -7669,7 +7669,7 @@
   },
   "visitors": {
     "comments": 0,
-    "likes": 28
+    "likes": 29
   },
   "met_today": {
     "date": "2026-10-24",
@@ -9332,7 +9332,7 @@
       }
     }
   ],
-  "woke_at": "2026-10-24 21",
+  "woke_at": "2026-10-24 22",
   "blog_titles": {
     "seen": 99,
     "closed": 2,
