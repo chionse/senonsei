@@ -6529,7 +6529,6 @@
     "https://yads.c.yimg.jp",
     "https://widgets.outbrain.com",
     "https://www.crs.or.jp/",
-    "https://pdn.adingo.jp",
     "https://www.jiji.co.jp/recruit",
     "https://www.pressnet.or.jp/journalism/",
     "https://csm.cxpublic.com",
@@ -7190,7 +7189,8 @@
     "https://chionse.github.io/senonsei/memo.html",
     "https://chionse.github.io/senonsei/himitsu.html",
     "https://chionse.github.io/senonsei/profile.html",
-    "https://chionse.github.io/senonsei/shinchaku-2026-09-22.html"
+    "https://chionse.github.io/senonsei/shinchaku-2026-09-22.html",
+    "https://pdn.adingo.jp"
   ],
   "notes": [
     "15日目: VideoPress – The finest video for WordPress、CultureLibre、Bluesky",
@@ -7222,11 +7222,16 @@
     "41日目: VideoPress – The finest video for WordPress、はてなブックマーク - 新着エントリー - 総合",
     "42日目: PCからAndroidを操作できるGUIアプリ「Escrcpy」v3.3.1、既存の全機能が無償に - 窓の杜、ESA-S2P-PD-HO-0262、GitHub Shop、まじかる☆ＳＫＹ",
     "43日目: 国民民主代表選、玉木氏３選　「議席増やし政権担う」：時事ドットコム、ジオシティーズ ジャパン - 日本最大のコミュニティサイト",
-    "44日目: 何も見られなかった"
+    "44日目: Wayback Machine(むかしのすがた)"
   ],
   "today_walk": {
     "date": "2026-10-25",
-    "seen": []
+    "seen": [
+      "Wayback Machine(むかしのすがた)"
+    ],
+    "brought": [
+      3
+    ]
   },
   "inner_voice": [
     "10-20 11時: 更新",
@@ -7565,14 +7570,14 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "togetter.com",
-    "フライドバイ乗っ取り未遂で露呈した航空保安対策の溝、「内部の脅威」は想定せず(1",
-    "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
-    "booksearch.blogspot.com",
-    "www.zendesk.com",
-    "世界最強の魔女、始めました ~私だけ『攻略サイト』を見れる世界で自由に生きます~"
+    "www.oozukankou.jp",
+    "products.alchemist-net.co.jp",
+    "ndlsearch.ndl.go.jp",
+    "www.docomo.ne.jp",
+    "80億分の1の人気・新着記事まとめ｜note",
+    "www.aifestival.jp"
   ],
-  "how_many_places_left": 1942,
+  "how_many_places_left": 1941,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -7669,7 +7674,8 @@
     "iawn.net": "ESA-S2P-PD-HO-0262",
     "thegithubshop.com": "Collectibles            – GitHub Shop",
     "www.voiceblog.jp": "まじかる☆ＳＫＹ",
-    "www.jiji.com": "マイニュース：時事ドットコム"
+    "www.jiji.com": "マイニュース：時事ドットコム",
+    "pdn.adingo.jp": "Wayback Machine(むかしのすがた)"
   },
   "went_home": {
     "date": "2026-10-25",
@@ -8068,7 +8074,9 @@
       "になりま",
       "って",
       "最近",
-      "きな"
+      "きな",
+      "this",
+      "The"
     ]
   },
   "wants_to_say": [
@@ -9046,10 +9054,10 @@
       "day": "2026-10-24"
     }
   ],
-  "understood_usually": 0.449915,
+  "understood_usually": 0.479924,
   "its_ways": {
     "pages_per_site": 10.9,
-    "pull_of_japanese": 1.26,
+    "pull_of_japanese": 1.27,
     "feeling_keen": 0.33,
     "wish_to_return": 1.8
   },
@@ -9469,7 +9477,7 @@
       }
     }
   ],
-  "woke_at": "2026-10-25 11",
+  "woke_at": "2026-10-25 12",
   "blog_titles": {
     "seen": 99,
     "closed": 2,
@@ -9537,7 +9545,8 @@
     "iawn.net",
     "thegithubshop.com",
     "www.voiceblog.jp",
-    "www.jiji.com"
+    "www.jiji.com",
+    "pdn.adingo.jp"
   ],
   "its_own_figure": {
     "date": "2026-10-25",
@@ -9755,6 +9764,7 @@
     "メモ",
     "ひみつの部屋",
     "プロフィール",
-    "更新情報 2026-09-22"
+    "更新情報 2026-09-22",
+    "Wayback Machine(むかしのすがた)"
   ]
 }
