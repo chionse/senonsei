@@ -4754,7 +4754,9 @@
     "❤",
     "檳",
     "榔",
-    "簾"
+    "簾",
+    "",
+    ""
   ],
   "learned_words": [
     "など",
@@ -6526,7 +6528,6 @@
     "https://eparet.net/",
     "https://cs.wiktionary.org/wiki/U%C5%BEivatel:Kusurija",
     "https://donate.wikimedia.org/?wmf_source=donate&wmf_medium=sidebar&wmf_campaign=cs.wikiversity.org&uselang=cs",
-    "https://www.fi.muni.cz/usr/pelikan/ARCHIT/TEXTY/VNEUM.HTML",
     "http://statnice.dqd.cz/home:prog:ap2",
     "https://chatgpt.com/",
     "https://la.wikibooks.org/wiki/Pagina_prima",
@@ -6867,7 +6868,6 @@
     "http://www.wizzair.com/",
     "http://www.orange.fr/",
     "http://pro-note-7066882.hs-sites.com/notepro_guide?utm_medium=wp_notepro_guide&utm_source=noteprolist",
-    "https://note.sekisuijushi.co.jp",
     "https://note.kobayashi.co.jp",
     "https://note.morisawa.co.jp",
     "https://neat-japan.com",
@@ -8322,7 +8322,9 @@
     "https://ja.wikipedia.org/wiki/太陽",
     "https://note-kirinbrewery.kirin.co.jp",
     "https://note-kirinbrewery.kirin.co.jp/m/m0d92b4ba617a",
-    "https://note-kirinbrewery.kirin.co.jp/m/ma6d980b53c0c"
+    "https://note-kirinbrewery.kirin.co.jp/m/ma6d980b53c0c",
+    "https://www.fi.muni.cz/usr/pelikan/ARCHIT/TEXTY/VNEUM.HTML",
+    "https://www.fi.muni.cz/usr/pelikan/ARCHIT/TEXTY/ZPOJMY.HTML"
   ],
   "notes": [
     "18日目: Wikibooks:General disclaimer - Wikibooks, open books for an open world、NHKプラスからの移行手続きをされる方へ | NHK ONE 設定",
@@ -8354,17 +8356,19 @@
     "44日目: Wayback Machine(むかしのすがた)、募集職種一覧_2026/10更新｜note株式会社、コトバンク [ 辞書・百科事典・各種データベースを一度に検索 ]、本がすき。、セッソ・マット - Wikipedia",
     "45日目: メインページ - Wikipedia(むかしのすがた)",
     "46日目: 人力検索はてな、ゲームしゅがーぽっと、Notice de personne \"Giannini, Giancarlo (1942-....)\" | Accueil | Catalogue général | BnF- Bibliothèque nationale de France、いえもん、チーム - Wikipedia",
-    "47日目: Wikipedia、KIRIN"
+    "47日目: Wikipedia、KIRIN、Von Neumannovo schéma"
   ],
   "today_walk": {
     "date": "2026-10-28",
     "seen": [
       "Wikipedia",
-      "KIRIN"
+      "KIRIN",
+      "Von Neumannovo schéma"
     ],
     "brought": [
       6908,
-      1143
+      1143,
+      528
     ]
   },
   "inner_voice": [
@@ -8722,14 +8726,14 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "www.omniture.com",
-    "www.jsme.or.jp",
-    "www.seibuen-amusement-park.jp",
-    "honsuki.publication.network",
-    "magazine.atavist.com",
-    "share.hsforms.com"
+    "windows.microsoft.com",
+    "hb.afl.rakuten.co.jp",
+    "ci.nii.ac.jp",
+    "www.cosmopolitan.com",
+    "www.shiseido.co.jp",
+    "dictionary.goo.ne.jp"
   ],
-  "how_many_places_left": 2201,
+  "how_many_places_left": 2199,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -8833,7 +8837,8 @@
     "q.hatena.ne.jp": "虫ピンを使ってるところありますか？ 私の職場はお金を締めると… - 人力検索はて",
     "catalogue.bnf.fr": "Accueil | Catalogue général | BnF",
     "note.iemong.com": "我が子のフィギュアを作ってみた｜いえもん",
-    "note-kirinbrewery.kirin.co.jp": "https://note-kirinbrewery.kirin.co.jp/m/"
+    "note-kirinbrewery.kirin.co.jp": "https://note-kirinbrewery.kirin.co.jp/m/",
+    "www.fi.muni.cz": "Základní pojmy"
   },
   "went_home": {
     "date": "2026-10-28",
@@ -8846,8 +8851,6 @@
   "met_today": {
     "date": "2026-10-28",
     "words": [
-      "できない",
-      "64",
       "65",
       "66",
       "がお",
@@ -9245,7 +9248,9 @@
       "こちら",
       "にお",
       "2023",
-      "グルメ"
+      "グルメ",
+      "...",
+      ")."
     ]
   },
   "wants_to_say": [
@@ -10322,10 +10327,10 @@
       "day": "2026-10-28"
     }
   ],
-  "understood_usually": 0.466293,
+  "understood_usually": 0.431634,
   "its_ways": {
     "pages_per_site": 10.8,
-    "pull_of_japanese": 1.33,
+    "pull_of_japanese": 1.34,
     "feeling_keen": 0.35,
     "wish_to_return": 1.7
   },
@@ -10929,7 +10934,7 @@
       }
     }
   ],
-  "woke_at": "2026-10-28 21",
+  "woke_at": "2026-10-28 22",
   "blog_titles": {
     "seen": 70,
     "closed": 2,
@@ -11004,7 +11009,8 @@
     "q.hatena.ne.jp",
     "catalogue.bnf.fr",
     "note.iemong.com",
-    "note-kirinbrewery.kirin.co.jp"
+    "note-kirinbrewery.kirin.co.jp",
+    "www.fi.muni.cz"
   ],
   "its_own_figure": {
     "date": "2026-10-28",
@@ -11288,6 +11294,8 @@
     "太陽 - Wikipedia",
     "KIRIN",
     "https://note-kirinbrewery.kirin.co.jp/m/m0d92b4ba617a?gs=33e9648190d911ce9c263a59f16f0f37",
-    "https://note-kirinbrewery.kirin.co.jp/m/ma6d980b53c0c?gs=4ea0c981e5232d663838fb881cfe3551"
+    "https://note-kirinbrewery.kirin.co.jp/m/ma6d980b53c0c?gs=4ea0c981e5232d663838fb881cfe3551",
+    "Von Neumannovo schéma",
+    "Základní pojmy"
   ]
 }
