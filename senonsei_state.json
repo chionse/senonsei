@@ -8363,7 +8363,6 @@
     "seen": []
   },
   "inner_voice": [
-    "10-24 08時: かれてい",
     "10-24 10時: 文 人",
     "10-24 12時: このページ",
     "10-24 13時: ではから。",
@@ -8422,7 +8421,8 @@
     "10-29 08時: アイン",
     "10-29 09時: 記 った",
     "10-29 10時: 人 カラメ",
-    "10-29 12時: 人"
+    "10-29 12時: 人",
+    "10-29 13時: 人"
   ],
   "thought_on": "2026-10-08",
   "on_its_mind": [
@@ -8717,12 +8717,12 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "www.yahoo.co.jp",
-    "js.monitor.azure.com",
-    "www.kirin.co.jp",
-    "note-cu.central-uni.co.jp",
-    "hb.afl.rakuten.co.jp",
-    "www.itmedia.co.jp"
+    "pt.wikipedia.com",
+    "techjob.zdnet.co.jp",
+    "note.kobayashi.co.jp",
+    "www.statista.com",
+    "dspace.nplg.gov.ge",
+    "artlibre.org"
   ],
   "how_many_places_left": 2199,
   "places_known": {
@@ -10925,7 +10925,7 @@
       }
     }
   ],
-  "woke_at": "2026-10-29 12",
+  "woke_at": "2026-10-29 13",
   "blog_titles": {
     "seen": 70,
     "closed": 2,
