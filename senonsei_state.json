@@ -8886,12 +8886,12 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "shn.wikivoyage.org",
-    "www.gnu.org",
-    "books.kokode.jp",
-    "www.arena.ne.jp",
-    "keizai-dousureba.hatenablog.jp",
-    "jp.loropiana.com"
+    "www.animatetimes.com",
+    "yads.c.yimg.jp",
+    "www.houjin-bangou.nta.go.jp",
+    "financial.jiji.com",
+    "en.gravatar.com",
+    "business.timesonline.co.uk"
   ],
   "how_many_places_left": 2276,
   "places_known": {
@@ -9567,7 +9567,7 @@
       "since": "2026-09-25",
       "first": "2026-09-25",
       "times": 1,
-      "said": "2026-10-27"
+      "said": "2026-10-29"
     },
     {
       "what": "laws",
@@ -9588,7 +9588,7 @@
       "since": "2026-10-18",
       "first": "2026-09-26",
       "times": 6,
-      "said": "2026-10-27"
+      "said": "2026-10-29"
     },
     {
       "what": "2026",
@@ -9826,7 +9826,7 @@
       "since": "2026-10-22",
       "first": "2026-10-08",
       "times": 5,
-      "said": "2026-10-28"
+      "said": "2026-10-29"
     },
     {
       "what": "06",
@@ -10008,7 +10008,7 @@
       "since": "2026-10-16",
       "first": "2026-10-16",
       "times": 1,
-      "said": "2026-10-27"
+      "said": "2026-10-29"
     },
     {
       "what": "情報",
@@ -10029,7 +10029,7 @@
       "since": "2026-10-18",
       "first": "2026-10-17",
       "times": 2,
-      "said": "2026-10-22"
+      "said": "2026-10-29"
     },
     {
       "what": "利用",
@@ -10232,7 +10232,7 @@
       "since": "2026-10-29",
       "first": "2026-10-24",
       "times": 2,
-      "said": "2026-10-26"
+      "said": "2026-10-29"
     },
     {
       "what": "イヤな人事部、いい人事部",
@@ -10394,11 +10394,6 @@
   },
   "slips": [
     {
-      "meant": "など",
-      "wrote": "ななど",
-      "day": "2026-10-06"
-    },
-    {
       "meant": "必要",
       "wrote": "必",
       "day": "2026-10-06"
@@ -10492,6 +10487,11 @@
       "meant": "新しい",
       "wrote": "新い",
       "day": "2026-10-28"
+    },
+    {
+      "meant": "場合",
+      "wrote": "場場合",
+      "day": "2026-10-29"
     }
   ],
   "understood_usually": 0.391098,
@@ -11147,7 +11147,7 @@
       }
     }
   ],
-  "woke_at": "2026-10-29 20",
+  "woke_at": "2026-10-29 21",
   "blog_titles": {
     "seen": 81,
     "closed": 2,
