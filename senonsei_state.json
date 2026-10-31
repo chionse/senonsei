@@ -8900,7 +8900,6 @@
     ]
   },
   "inner_voice": [
-    "10-26 16時: 人 テレビ",
     "10-26 18時: 記 も 仕",
     "10-26 19時: 仕事開 介紹",
     "10-26 20時: メインページ",
@@ -8959,7 +8958,8 @@
     "10-31 14時: のお わ",
     "10-31 15時: の",
     "10-31 21時: 男性 人",
-    "10-31 22時: のお わる"
+    "10-31 22時: のお わる",
+    "11-01 06時: 休むつもりだったけれど、14時に書くことにした。"
   ],
   "thought_on": "2026-10-08",
   "on_its_mind": [
@@ -9260,12 +9260,12 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "blogs.wsj.com",
-    "www.hanken.impress.jp",
-    "chat.yahoo.co.jp",
-    "hbb.afl.rakuten.co.jp",
-    "musée%20de%20l",
-    "hatena-announce.hatenastaff.com"
+    "www.kinokuniya.co.jp",
+    "static.zdassets.com",
+    "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
+    "hers-web.jp",
+    "www.it2l.com",
+    "classy-online.jp"
   ],
   "how_many_places_left": 2523,
   "places_known": {
@@ -10767,8 +10767,8 @@
   },
   "today_plan": {
     "date": "2026-11-01",
-    "resting": true,
-    "hour": 11
+    "resting": false,
+    "hour": 14
   },
   "restlessness": {
     "date": "2026-11-01",
@@ -11576,7 +11576,7 @@
       }
     }
   ],
-  "woke_at": "2026-11-01 05",
+  "woke_at": "2026-11-01 06",
   "blog_titles": {
     "seen": 92,
     "closed": 2,
