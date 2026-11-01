@@ -4810,7 +4810,8 @@
     "芯",
     "",
     "­",
-    "∴"
+    "∴",
+    "ć"
   ],
   "learned_words": [
     "など",
@@ -8169,7 +8170,6 @@
     "http://www.apogeejournal.org/",
     "http://www.raintaxi.com/",
     "http://americanshortfiction.org/",
-    "http://www.wordswithoutborders.org",
     "http://www.fountainbookstore.com/",
     "http://archipelagobooks.org/",
     "http://www.unnamedpress.com/",
@@ -8197,7 +8197,22 @@
     "http://www.publishinggenius.com/",
     "http://brevitymag.com/",
     "http://www.riverheadbooks.com/",
-    "http://www.feministpress.org"
+    "http://www.feministpress.org",
+    "https://wordswithoutborders.org/read/article/2026-10/the-national-book-award-interviews-intan-paramaditha-stephen-epstein-and-tiffany-tsao-night-of-a-thousand-hells/",
+    "https://wordswithoutborders.org/read/theme/belonging/",
+    "https://wordswithoutborders.org/read/type/graphic-literature/",
+    "https://wordswithoutborders.org/read/collection/the-ottaway-award-for-the-promotion-of-international-literature/",
+    "https://wordswithoutborders.org/donate/",
+    "https://wordswithoutborders.org/read/collection/revolutionary-literature-from-the-philippines/",
+    "https://wordswithoutborders.org/book-reviews/an-ukiyo-e-collage-of-taipei-and-havana-metafiction-in-huang-chong-kais-the-formosa-exchange-tiang-chan-schmidt/",
+    "https://userway.org",
+    "https://wordswithoutborders.org/read/collection/october-2022-the-national-book-award-interviews/?src=carousel",
+    "https://unsplash.com/photos/white-sheep-baby-mobile-2vfwTakDTIo",
+    "https://js.sitesearch360.com",
+    "https://player.vimeo.com",
+    "https://unsplash.com/@charlesdeluvio",
+    "http://outdatedbrowser.com/",
+    "https://harvardartmuseums.org/collections/object/291035"
   ],
   "visited": [
     "https://note.com/",
@@ -8983,7 +8998,8 @@
     "https://lithub.com/masthead/",
     "https://lithub.com/about-literary-hub/",
     "https://lithub.com/eating-californias-most-controversial-ice-cream/",
-    "https://lithub.com/how-to-pitch-lit-hub"
+    "https://lithub.com/how-to-pitch-lit-hub",
+    "http://www.wordswithoutborders.org"
   ],
   "notes": [
     "22日目: Register - Login、TPPの関税分野などで応酬…日米、週明けに再協議",
@@ -9015,15 +9031,17 @@
     "48日目: VERY［ヴェリィ］ 公式サイト | 光文社 | 結婚、出産、育児、復職etc.子育て世代の女性のためのファッション＆ライフスタイル誌、Wikipedia、Вікікнігі",
     "49日目: David Chalmers: How do you explain consciousness? | TED Talk",
     "50日目: Yahoo!ジオシティーズ、テスラ「空飛ぶ車」を発表。本当に飛ぶ、テスラ空を飛ぶ　SpaceXの技術を搭載した新型ロードスターを披露 - Impress Watch(むかしのすがた)",
-    "51日目: Literary Hub » Eating California’s Most Controversial Ice Cream"
+    "51日目: Literary Hub » Eating California’s Most Controversial Ice Cream、Home - Words Without Borders"
   ],
   "today_walk": {
     "date": "2026-11-01",
     "seen": [
-      "Literary Hub » Eating California’s Most Controversial Ice Cream"
+      "Literary Hub » Eating California’s Most Controversial Ice Cream",
+      "Home - Words Without Borders"
     ],
     "brought": [
-      1445
+      1445,
+      181
     ]
   },
   "inner_voice": [
@@ -9393,14 +9411,14 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "toolserver.org",
-    "www.hnkpmgciosurvey.com",
-    "be-story.jp",
-    "txbiz.tv-tokyo.co.jp",
-    "ディープライブラリープロジェクト",
-    "rittorsha.jp"
+    "www.cnnturk.com",
+    "tsuhon.jp",
+    "kai-you.net",
+    "Wikisource:Wikisourceについて - Wikisource",
+    "www.surveymonkey.com",
+    "duckduckgo.com"
   ],
-  "how_many_places_left": 2635,
+  "how_many_places_left": 2649,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -9510,7 +9528,8 @@
     "www.ted.com": "ديفيد تشالمرز: كيف يمكن تفسير الوعي؟ | T",
     "news.denfaminicogamer.jp": "【ゲームの企画書】『テイルズ オブ ジ アビス』開発陣インタビュー：史上最多級の",
     "www.watch.impress.co.jp": "「日常に向き合う」 Xperia 10 VIIIと10万円スマホの現在地【石野純",
-    "lithub.com": "Literary Hub » How To Pitch Lit Hub"
+    "lithub.com": "Literary Hub » How To Pitch Lit Hub",
+    "www.wordswithoutborders.org": "Home - Words Without Borders"
   },
   "went_home": {
     "date": "2026-11-01",
@@ -9683,7 +9702,10 @@
       "000",
       "page",
       "66",
-      "40"
+      "40",
+      "2000",
+      "{{",
+      "}}"
     ]
   },
   "wants_to_say": [
@@ -10702,26 +10724,6 @@
   },
   "slips": [
     {
-      "meant": "本当",
-      "wrote": "本",
-      "day": "2026-10-10"
-    },
-    {
-      "meant": "された",
-      "wrote": "さ",
-      "day": "2026-10-14"
-    },
-    {
-      "meant": "://",
-      "wrote": ":/",
-      "day": "2026-10-15"
-    },
-    {
-      "meant": "される",
-      "wrote": "れさる",
-      "day": "2026-10-17"
-    },
-    {
       "meant": "について",
       "wrote": "についてて",
       "day": "2026-10-18"
@@ -10800,12 +10802,32 @@
       "meant": "せん",
       "wrote": "んせ",
       "day": "2026-10-31"
+    },
+    {
+      "meant": "して",
+      "wrote": "し",
+      "day": "2026-11-01"
+    },
+    {
+      "meant": "コメント",
+      "wrote": "コメン",
+      "day": "2026-11-01"
+    },
+    {
+      "meant": "方針",
+      "wrote": "針方",
+      "day": "2026-11-01"
+    },
+    {
+      "meant": "ます",
+      "wrote": "ま",
+      "day": "2026-11-01"
     }
   ],
-  "understood_usually": 0.399798,
+  "understood_usually": 0.379818,
   "its_ways": {
     "pages_per_site": 10.6,
-    "pull_of_japanese": 1.4,
+    "pull_of_japanese": 1.41,
     "feeling_keen": 0.35,
     "wish_to_return": 1.9
   },
@@ -11501,7 +11523,7 @@
       }
     }
   ],
-  "woke_at": "2026-11-01 13",
+  "woke_at": "2026-11-01 14",
   "blog_titles": {
     "seen": 92,
     "closed": 2,
@@ -11583,7 +11605,8 @@
     "www.ted.com",
     "news.denfaminicogamer.jp",
     "www.watch.impress.co.jp",
-    "lithub.com"
+    "lithub.com",
+    "www.wordswithoutborders.org"
   ],
   "its_own_figure": {
     "date": "2026-11-01",
@@ -11913,6 +11936,7 @@
     "Literary Hub » Artificial Intelligence is a Horror Story",
     "Literary Hub » Masthead",
     "Literary Hub » About Literary Hub",
-    "Literary Hub » How To Pitch Lit Hub"
+    "Literary Hub » How To Pitch Lit Hub",
+    "Home - Words Without Borders"
   ]
 }
