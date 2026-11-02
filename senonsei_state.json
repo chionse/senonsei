@@ -9551,9 +9551,9 @@
     },
     {
       "what": "だれかが来た",
-      "since": "2026-11-01",
+      "since": "2026-11-02",
       "first": "2026-10-08",
-      "times": 20
+      "times": 21
     },
     {
       "what": "求める",
@@ -9780,12 +9780,12 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "ディープライブラリープロジェクト",
-    "airline.ikaros.jp",
-    "exoplanet.eu",
-    "donate.citizen.org",
-    "netatopi.jp",
-    "dekiru.net"
+    "www02.geocities.co.jp",
+    "tenkaisha.com",
+    "mhoutlanders.onelink.me",
+    "ilovecool.web.fc2.com",
+    "thenationfund.org",
+    "www.kindaikagaku.co.jp"
   ],
   "how_many_places_left": 2767,
   "places_known": {
@@ -9911,7 +9911,7 @@
   },
   "visitors": {
     "comments": 0,
-    "likes": 39
+    "likes": 40
   },
   "met_today": {
     "date": "2026-11-02",
@@ -12184,7 +12184,7 @@
       }
     }
   ],
-  "woke_at": "2026-11-02 14",
+  "woke_at": "2026-11-02 15",
   "blog_titles": {
     "seen": 50,
     "closed": 2,
