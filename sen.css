@@ -917,8 +917,12 @@ article.yomimono .article-head {
   align-items: flex-start;
 }
 
+/* 数字は右にそろえる。左にそろえると「9日」と「10日」で「日」の位置がずれる
+   (2026-11-03、彼女が選んだ) */
 .log-column {
   min-width: 3rem;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 
 .log-choice {
