@@ -190,8 +190,11 @@ THING_IN_A_PICTURE = re.compile(
 A_NAME_IN_BRACKETS = re.compile(r"[『「]([^』」『「\n]{2,20})[』」]")
 # 句点や疑問符が入っているものは、名前ではなく文
 A_SENTENCE = re.compile(r"[。！？!?…]")
-TAG = re.compile(r"<[^>]+>")
-SCRIPT_OR_STYLE = re.compile(r"<(script|style)[^>]*>.*?</\1>", re.DOTALL | re.IGNORECASE)
+# しるしの中の値(属性)に「>」が入っていても、しるしの終わりと見まちがえない。
+# 見まちがえると、値の残り(Wikipedia のページの裏の書き方「{{」「[[」「":"」など)が
+# 文字として漏れ出し、この子は毎日それに会って言葉として覚えていた(2026-11-03)
+TAG = re.compile(r"<(?:\"[^\"]*\"|'[^']*'|[^'\">])+>")
+SCRIPT_OR_STYLE = re.compile(r"<(script|style)\b(?:\"[^\"]*\"|'[^']*'|[^'\">])*>.*?</\1>", re.DOTALL | re.IGNORECASE)
 TITLE_TAG = re.compile(r"<title[^>]*>(.*?)</title>", re.DOTALL | re.IGNORECASE)
 # 誰かが書いたブログの一記事らしいページ。記事の作りをしていて、書いた日付がある
 AN_ARTICLE = re.compile(
@@ -4694,6 +4697,13 @@ def interest_grows(state, words):
             interest[script] = min(1.0, round(interest.get(script, 0.0) + INTEREST_GROWS_A_DAY, 4))
 
 
+# 数字だけの言葉は、もう覚えない(2026-11-03、彼女と決めた)。
+# 覚えかけていた数字は「2946」「8217」のような何かの番号ばかりで、言葉というより記号だった。
+# 日記に「602000」のような数字の並びが続くのも、覚えた数字をつなげていたから。
+# 会ったことは、ほかの言葉と同じように覚えかけの記録に残る。辞典の「数字」と同じ決まり
+ONLY_DIGITS = re.compile(r"[0-9０-９]+")
+
+
 def days_needed_for(state, word):
     """その言葉を覚えるまでに、あと何日ぶん必要か。
 
@@ -4720,7 +4730,8 @@ def learn(state):
     learned = [
         word
         for word in words_met(state)
-        if word not in known and days_held(state, word) >= days_needed_for(state, word)
+        if word not in known and not ONLY_DIGITS.fullmatch(word)
+        and days_held(state, word) >= days_needed_for(state, word)
     ]
     learned.sort(key=lambda w: days_held(state, w), reverse=True)
     # はじめて言葉を覚えたとき、それまでに知っていた文字の数を残す。
