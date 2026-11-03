@@ -1213,7 +1213,7 @@ def learned_on(state, word):
 
 def it_writes_in_its_own_words(state):
     """最終段階に届いたか。自分の言葉で書けるようになったかどうか。"""
-    return len(state.get("learned_words") or []) >= GROWTH_STAGES[-1][0]
+    return len(blog_manager.words_it_counts(state)) >= GROWTH_STAGES[-1][0]
 
 
 def its_own_home(url):
@@ -4488,7 +4488,7 @@ def how_long_it_holds(state):
 
     知っている言葉が増えるほど、記憶は長く持つようになる。
     言葉を知っていること自体が、新しい言葉を引っ掛ける釘になる。"""
-    return FADE_AFTER_DAYS + len(state["learned_words"]) // MEMORY_GROWS_EVERY
+    return FADE_AFTER_DAYS + len(blog_manager.words_it_counts(state)) // MEMORY_GROWS_EVERY
 
 
 def days_held(state, word):
@@ -4702,11 +4702,10 @@ def interest_grows(state, words):
             interest[script] = min(1.0, round(interest.get(script, 0.0) + INTEREST_GROWS_A_DAY, 4))
 
 
-# 数字だけの言葉は、もう覚えない(2026-11-03、彼女と決めた)。
-# 覚えかけていた数字は「2946」「8217」のような何かの番号ばかりで、言葉というより記号だった。
-# 日記に「602000」のような数字の並びが続くのも、覚えた数字をつなげていたから。
-# 会ったことは、ほかの言葉と同じように覚えかけの記録に残る。辞典の「数字」と同じ決まり
-ONLY_DIGITS = re.compile(r"[0-9０-９]+")
+# 数字だけの言葉も覚える。ただし言葉の数には入れず、辞典にも出さない(2026-11-03、彼女が決めた)。
+# 一度は覚えないようにしたが、「数字を使うのを縛りたいわけではない」と言われて戻した。
+# 言葉の数を使うところ(育ちの段、覚えかけを抱えていられる日数)は、数字を数えない
+ONLY_DIGITS = blog_manager.ONLY_DIGITS
 
 
 def days_needed_for(state, word):
@@ -4735,8 +4734,7 @@ def learn(state):
     learned = [
         word
         for word in words_met(state)
-        if word not in known and not ONLY_DIGITS.fullmatch(word)
-        and days_held(state, word) >= days_needed_for(state, word)
+        if word not in known and days_held(state, word) >= days_needed_for(state, word)
     ]
     learned.sort(key=lambda w: days_held(state, w), reverse=True)
     # はじめて言葉を覚えたとき、それまでに知っていた文字の数を残す。
@@ -5878,7 +5876,7 @@ def write_the_day(state, day):
     save_state(state)
     print(
         f"{elapsed_days(state)}日目のブログを書きました。"
-        f"知っている文字{len(state['seen_chars'])}個 / 言葉{len(state['learned_words'])}個"
+        f"知っている文字{len(state['seen_chars'])}個 / 言葉{len(blog_manager.words_it_counts(state))}個"
     )
 
 
