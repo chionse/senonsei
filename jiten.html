@@ -272,7 +272,8 @@
       var MORE_ROWS = 8;
       var menuOpen = false;
       var FRONT = ["すべて"].concat(SCRIPTS);
-      var BACK = ["四字熟語", "数字", "記号", "絵文字"];
+      // 数字は辞典に出さないので、絞るボタンも置かない(2026-11-03、彼女が決めた)
+      var BACK = ["四字熟語", "記号", "絵文字"];
       var isScript = function (k) { return SCRIPTS.indexOf(k) >= 0 || MORE.indexOf(k) >= 0; };
       var fits = function (d, k) {
         if (k === "すべて") { return true; }
