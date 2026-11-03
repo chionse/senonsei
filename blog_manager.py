@@ -160,9 +160,19 @@ GROWTH_STAGES = [
 FULL_STAGE = ("日記帳の一ページ", 250)
 
 
+# 数字だけの言葉は覚えているが、言葉の数にも辞典にも入れない(2026-11-03、彼女が決めた)。
+# 数字を使うのは縛らない。日記には書ける
+ONLY_DIGITS = re.compile(r"[0-9０-９]+")
+
+
+def words_it_counts(state):
+    """覚えた言葉のうち、言葉として数えるもの。数字だけのものは入れない。"""
+    return [one for one in ((state or {}).get("learned_words") or []) if one and not ONLY_DIGITS.fullmatch(one)]
+
+
 def current_stage(state):
     """今どれだけ書けるかは、覚えている言葉の数で決まる。"""
-    vocabulary = len((state or {}).get("learned_words") or [])
+    vocabulary = len(words_it_counts(state))
     for limit, description, max_length in GROWTH_STAGES:
         if vocabulary < limit:
             return description, max_length
@@ -248,7 +258,7 @@ def side_panel(state, here):
     except ValueError:
         pass
     # 覚えた言葉の数。彼女の書き方のまま(2026-09-30)
-    vocabulary = len([one for one in (state.get("learned_words") or []) if one])
+    vocabulary = len(words_it_counts(state))
     now.append(f'      <p class="side-fact">覚えた言葉 {vocabulary}個</p>')
     if now:
         blocks.append(one_side_block("成長記録", now))
@@ -468,7 +478,7 @@ def how_it_grows(state):
     名前を直しても次の散歩まで古いままだった。"""
     ladder = [(name, limit) for limit, name, _ in GROWTH_STAGES] + [(FULL_STAGE[0], None)]
     now = current_stage(state)[0]
-    vocabulary = len([one for one in ((state or {}).get("learned_words") or []) if one])
+    vocabulary = len(words_it_counts(state))
 
     def how_far(name, limit):
         # 今いる段にだけ、覚えた数と、次の段に上がる数を添える(2026-09-30、彼女と決めた)
@@ -2478,7 +2488,7 @@ def words_for_the_dictionary(state, articles):
 
     日記の書き損じや、言葉がくっついて一語に見えるものは載せない
     (2026-10-14、彼女が決めた)。載せるのは覚えた言葉だけ。"""
-    learned = [one for one in (state.get("learned_words") or []) if one]
+    learned = words_it_counts(state)
     known = set(learned)
     learned_on = state.get("learned_on") or {}
     where = state.get("learned_where") or {}
@@ -3268,7 +3278,7 @@ def generate_index_html(articles, state=None, news=None):
 
     # 最近覚えた言葉。直近のブログの下に、新しいほうから丸い囲いで並べる。
     # 押すと語彙辞典でその言葉が開く(2026-10-14、彼女が決めた)
-    learned = [one for one in (state.get("learned_words") or []) if one]
+    learned = words_it_counts(state)
     kotoba_html = ""
     if learned:
         pills = "\n".join(
