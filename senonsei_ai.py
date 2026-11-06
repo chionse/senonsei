@@ -232,11 +232,16 @@ META_CHARSET = re.compile(r'charset=["\']?([\w-]+)', re.IGNORECASE)
 # ここが効く。日本語のページでは何十文字も差がつくので、
 # 正しい読み方がこれで負けることはない
 READ_WITHOUT_STUMBLING = 10
-# UTF-8 として最後まで読めたことは、それだけで強い証拠になる。
+# UTF-8 として最後まで読めたことは、それだけで決め手になる(read_as_japanese)。
 # UTF-8 は並び方の決まりが厳しく、そうでないものはたいてい途中で詰まる。
-# Shift_JIS は受け入れる並びが広いので、UTF-8 の文章もそのまま読めてしまう。
-# 「きれいに読めた」を同じ重さで見ると、そこで取り違える
-UTF8_READS_STRICTLY = 30
+# Shift_JIS や EUC-JP の日本語は、数文字でもまず UTF-8 としては読めない。
+# 逆に Shift_JIS は受け入れる並びが広いので、UTF-8 の文章もそのまま読めてしまう。
+#
+# 前はこれを日本語らしさ三十文字ぶんの点として足していた。
+# けれど UTF-8 の絵文字を Shift_JIS で読むと、一つが漢字二つ(🏢 が「宖召」)に化けるので、
+# 絵文字の多い英語のページ(GitHub の話し合いの場など)では、化けたほうが
+# 日本語らしく見えて勝っていた。「·」も「ﾂｷ」になり、この子は
+# 「community ﾂｷ Discussions ﾂｷ GitHub」と覚え、化けた絵文字に言葉として会っていた(2026-11-06)
 # 昔のページのURLに埋め込まれている、元のページのURL
 INNER_URL = re.compile(r"/(https?://\S+)$", re.IGNORECASE)
 JAPANESE = re.compile(r"[ぁ-んァ-ヶ一-龯]")
@@ -933,8 +938,18 @@ def how_it_reads():
 
 
 def names_in_brackets(text):
-    """『』や「」で囲まれた名前。文になっているものは名前ではない。"""
-    return {one for one in A_NAME_IN_BRACKETS.findall(text) if not A_SENTENCE.search(one)}
+    """『』や「」で囲まれた名前。文になっているものは名前ではない。
+
+    名前の前後の空白は落とし、中の空白の並びは一つにする。
+    ページのしるしを外すと、その跡が空白になって括弧の内側に残る。
+    Wikipedia の「<a>ローマ進軍</a>」は「 ローマ進軍 」になり、
+    頭の網では「ローマ進軍」と別のものとして並んでいた(2026-11-06)"""
+    names = set()
+    for one in A_NAME_IN_BRACKETS.findall(text):
+        one = " ".join(one.split())
+        if len(one) >= 2 and not A_SENTENCE.search(one):
+            names.add(one)
+    return names
 
 
 def everything_it_has_thought():
@@ -2113,7 +2128,7 @@ def read_as_japanese(raw, content_type):
             # その時 UTF-8 で読めたことは何の証にもならない。
             # ISO-2022-JP は全部英字の範囲で書くので、ここで負けていた
             if kind == "utf8" and max(raw, default=0) >= 0x80:
-                score += UTF8_READS_STRICTLY
+                return text
         readings.append((score, kind, text))
 
     if not readings:
