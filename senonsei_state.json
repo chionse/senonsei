@@ -9049,12 +9049,29 @@
     "http://www.tantokuru.jp/",
     "https://www.igkogyo.co.jp/",
     "https://www2.wagmap.jp/higashine",
-    "http://www.asobia.jp/",
     "https://furusato-higashine.jp/",
     "https://fishbowlindex.jp/higashine/demo/index.pl",
     "https://higashine-iju.jp/",
     "https://www.sakuranbo-m.jp/",
-    "https://public-connect.jp/employer/2588"
+    "https://public-connect.jp/employer/2588",
+    "http://web.archive.org/web/20130521102116/http://www.tantokuru.jp/?ID=12897",
+    "http://web.archive.org/web/20130521102116/http://asobia.jp/bookj/asobia",
+    "http://web.archive.org/web/20130521102116/http://www.netcommons.org/",
+    "http://web.archive.org/web/20130521102116/http://www.tantokuru.jp/",
+    "http://web.archive.org/web/20130521102116/http://www.tantokuru.jp/?ID=15567",
+    "http://web.archive.org/web/20130521102116/http://www.higashine.org/about/",
+    "http://web.archive.org/web/20130521102116/http://www.tantokuru.jp/?ID=11507",
+    "http://web.archive.org/web/20130521102116/http://www.tantokuru.jp/?ID=12255",
+    "http://web.archive.org/web/20130521102116/http://www.tantokuru.jp/?ID=15464",
+    "http://web.archive.org/web/20130521102116/http://www.tantokuru.jp/?ID=14892",
+    "http://web.archive.org/web/20130521102116*/http://asobia.jp/",
+    "http://web.archive.org/web/20130812094121/http://www.city.higashine.yamagata.jp/",
+    "http://web.archive.org/web/20130812094121/http://www.bouken-asobiba-net.com/",
+    "http://web.archive.org/web/20130812094121/http://www.netcommons.org/",
+    "http://web.archive.org/web/20130812094121/http://www.ipa-japan.org/asobiba/",
+    "http://web.archive.org/web/20130812094121/http://www.higashine.com/",
+    "http://web.archive.org/web/20130812103434/http://www.netcommons.org/",
+    "http://web.archive.org/web/20130812095715/http://www.netcommons.org/"
   ],
   "visited": [
     "https://note.com/",
@@ -9959,7 +9976,12 @@
     "https://www.city.higashine.yamagata.jp/section_list/section001/photograph/",
     "https://www.city.higashine.yamagata.jp/section_list/section028/1872",
     "https://www.city.higashine.yamagata.jp/",
-    "https://github.community"
+    "https://github.community",
+    "http://www.asobia.jp/",
+    "http://web.archive.org/web/20130521102116/http://www.asobia.jp/map/",
+    "http://web.archive.org/web/20130521102116/http://www.asobia.jp/index.php?action=pages_view_main&active_action=journal_view_main_detail&post_id=11&comment_flag=1&block_id=64",
+    "http://web.archive.org/web/20130521102116/http://www.asobia.jp/index.php?action=pages_view_main&active_action=journal_view_main_detail&post_id=15&comment_flag=1&block_id=64",
+    "http://web.archive.org/web/20130521102116/http://www.asobia.jp/index.php?action=pages_view_mobile&reader_flag=1"
   ],
   "notes": [
     "27日目: JUST SYSTEM & School、Nikkei Asia\n                            - Business, Politics, Economy and Tech News & Analysis、はてなブックマーク",
@@ -9991,15 +10013,17 @@
     "53日目: Visual Studio Live Share: リアルタイム コード コラボレーション ツール、ジオシティーズ ジャパン - 日本最大のコミュニティサイト、ローカル女子の遠吠え",
     "54日目: 興味 - Wikipedia、•  Companies with worst customer service U.S. 2020 | Statista、「日清のどん兵衛 芋煮うどん」(7月24日発売) | ニュースリリース | 日清食品グループ、STORY [ストーリィ] オフィシャルサイト – 「新しい40代」のためのファッション＆ライフスタイル誌",
     "55日目: Samantha Irby on the Movie 'Wicker'、TPPの関税分野などで応酬…日米、週明けに再協議、はてな匿名ダイアリー、東根市 「ようこそ果樹王国ひがしねへ」",
-    "56日目: community ﾂｷ Discussions ﾂｷ GitHub"
+    "56日目: community ﾂｷ Discussions ﾂｷ GitHub、あそびあランド(むかしのすがた)"
   ],
   "today_walk": {
     "date": "2026-11-06",
     "seen": [
-      "community ﾂｷ Discussions ﾂｷ GitHub"
+      "community ﾂｷ Discussions ﾂｷ GitHub",
+      "あそびあランド(むかしのすがた)"
     ],
     "brought": [
-      109
+      109,
+      144
     ]
   },
   "inner_voice": [
@@ -10341,6 +10365,12 @@
       "since": "2026-11-05",
       "first": "2026-11-05",
       "times": 1
+    },
+    {
+      "what": "こそだてちえぶくろ",
+      "since": "2026-11-06",
+      "first": "2026-11-06",
+      "times": 1
     }
   ],
   "saw_on": "2026-11-06",
@@ -10429,14 +10459,14 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "skills.github.com",
-    "世界最強の魔女、始めました ~私だけ『攻略サイト』を見れる世界で自由に生きます~",
-    "jvn.jp",
-    "actionnetwork.org",
-    "emudhra.we-have-a-problem.com",
-    "https://accounts.google.com/v3/signin/id"
+    "www.hatena.ne.jp",
+    "80億分の1の人気・新着記事まとめ｜note",
+    "nikke.onelink.me",
+    "www.chapitre.com",
+    "www.sbp-direct.com",
+    "www.chk-seiyu.jp"
   ],
-  "how_many_places_left": 2967,
+  "how_many_places_left": 2984,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -10561,7 +10591,8 @@
     "www.nissin.com": "「カップヌードル 異世界合体」シリーズ3品 (11月9日発売) | ニュースリリ",
     "www.harpersbazaar.com": "7 Fall Outfit Ideas for City Street Styl",
     "www.city.higashine.yamagata.jp": "東根市 「ようこそ果樹王国ひがしねへ」",
-    "github.community": "community ﾂｷ Discussions ﾂｷ GitHub"
+    "github.community": "community · Discussions · GitHub",
+    "www.asobia.jp": "あそびあランド-トップページ"
   },
   "went_home": {
     "date": "2026-11-06",
@@ -10613,7 +10644,140 @@
       "31",
       "10",
       "2025",
-      "文字"
+      "文字",
+      "2013",
+      "13",
+      "2012",
+      "2014",
+      "://",
+      "org",
+      "16",
+      "この",
+      "になって",
+      "います",
+      "ログイン",
+      "について",
+      "ブログ",
+      "わせ",
+      "43",
+      "がありま",
+      "にも",
+      "05",
+      "17",
+      "サイト",
+      "説明",
+      "まで",
+      "世代",
+      "えた",
+      "として",
+      "子育",
+      "支援",
+      "となる",
+      "01",
+      "もっと",
+      "読む",
+      "14",
+      "09",
+      "開催",
+      "06",
+      "３",
+      "１",
+      "03",
+      "07",
+      "08",
+      "実施",
+      "します",
+      "にご",
+      "ください",
+      "04",
+      "らせ",
+      "ので",
+      "人気",
+      "共有",
+      "利用",
+      "または",
+      "いただけ",
+      "をご",
+      "には",
+      "などが",
+      "必要",
+      "最新",
+      "20",
+      "50",
+      "100",
+      "環境",
+      "大切",
+      "32",
+      "もありま",
+      "せん",
+      "えて",
+      "うか",
+      "判断",
+      "したり",
+      "プロセス",
+      "...",
+      "テレビ",
+      "紹介",
+      "されます",
+      "18",
+      "にある",
+      "47",
+      "って",
+      "挑戦",
+      "した",
+      "です",
+      "12",
+      "では",
+      "地域",
+      "への",
+      "活動",
+      "っていま",
+      "事業",
+      "との",
+      "により",
+      "していく",
+      "今日",
+      "案内",
+      "9",
+      "30",
+      "00",
+      "その",
+      "場合",
+      "法人",
+      "2016",
+      "41",
+      "35",
+      "健康",
+      "27",
+      "していま",
+      "25",
+      "52",
+      "48",
+      "関連",
+      "検索",
+      "37",
+      "11",
+      "34",
+      "64",
+      ";&",
+      "記事",
+      "提供",
+      "していた",
+      "いたしま",
+      "ありがと",
+      "ます",
+      "から",
+      "簡単",
+      "っている",
+      "でも",
+      "一覧",
+      "戻る",
+      "失敗",
+      "22",
+      "2015",
+      "80",
+      "メニュー",
+      "ダウンロード"
     ]
   },
   "wants_to_say": [
@@ -10983,9 +11147,9 @@
     },
     {
       "what": "05",
-      "since": "2026-10-11",
+      "since": "2026-11-06",
       "first": "2026-10-06",
-      "times": 4,
+      "times": 5,
       "said": ""
     },
     {
@@ -11799,6 +11963,13 @@
       "first": "2026-11-06",
       "times": 1,
       "said": ""
+    },
+    {
+      "what": "読む",
+      "since": "2026-11-06",
+      "first": "2026-11-06",
+      "times": 1,
+      "said": ""
     }
   ],
   "thinking_about": "ます株式会",
@@ -11946,10 +12117,10 @@
       "day": "2026-11-05"
     }
   ],
-  "understood_usually": 0.426845,
+  "understood_usually": 0.447694,
   "its_ways": {
-    "pages_per_site": 10.1,
-    "pull_of_japanese": 1.47,
+    "pages_per_site": 10.0,
+    "pull_of_japanese": 1.48,
     "feeling_keen": 0.35,
     "wish_to_return": 1.9
   },
@@ -12645,7 +12816,7 @@
       }
     }
   ],
-  "woke_at": "2026-11-06 08",
+  "woke_at": "2026-11-06 09",
   "blog_titles": {
     "seen": 76,
     "closed": 2,
@@ -12744,7 +12915,8 @@
     "www.harpersbazaar.com",
     "news.tv-asahi.co.jp",
     "www.city.higashine.yamagata.jp",
-    "github.community"
+    "github.community",
+    "www.asobia.jp"
   ],
   "its_own_figure": {
     "date": "2026-11-05",
@@ -13162,7 +13334,12 @@
     "東根市 「ようこそ果樹王国ひがしねへ」",
     "レポーターミュージアム ～ひがしね百景～ | 東根市 「ようこそ果樹王国ひがしねへ」",
     "こころの体温計  | 東根市 「ようこそ果樹王国ひがしねへ」",
-    "community ﾂｷ Discussions ﾂｷ GitHub"
+    "community ﾂｷ Discussions ﾂｷ GitHub",
+    "あそびあランド(むかしのすがた)",
+    "案内地図 - あそびあランド",
+    "お昼は、カレーライス！ - あそびあランド",
+    "不便な環境が大切なんです - あそびあランド",
+    "あそびあランド-トップページ"
   ],
   "translated_lately": [
     "2008 → 2008年",
