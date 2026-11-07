@@ -8018,7 +8018,6 @@
     "https://www.nihongokentei.jp/",
     "https://econosec.jp/",
     "https://www.tokyoupdates.metro.tokyo.lg.jp/",
-    "https://web.archive.org/web/1998/http://www.nifty.com/",
     "https://www.job.persona-ats.com/ja/note/jobs/9647ade4-6335-49bb-b39c-1e322cf8a348",
     "https://www.job.persona-ats.com/ja/note/jobs/6af0e3f1-ac1c-4d4a-a8f3-88a35eefaf7e",
     "https://forms.gle/DvLFtQFnsMzPm7HE6",
@@ -10085,7 +10084,8 @@
     "http://web.archive.org/web/20201102073152/https://datazoo.jp/w/%E3%83%89%E3%82%A4%E3%83%84/24695496",
     "http://web.archive.org/web/20201102073152/https://datazoo.jp/w/%E5%B1%B1%E5%BD%A2%E5%B8%82%EF%BC%88%E5%B1%B1%E5%BD%A2%EF%BC%89/24695297",
     "http://web.archive.org/web/20230323025648/https://datazoo.jp/w/%E6%9D%91%E4%B8%8A%E5%AE%97%E9%9A%86/59484746",
-    "http://web.archive.org/web/20230323025648/https://datazoo.jp/w/%E7%AC%AC95%E5%9B%9E%E8%A8%98%E5%BF%B5%E9%81%B8%E6%8A%9C%E9%AB%98%E7%AD%89%E5%AD%A6%E6%A0%A1%E9%87%8E%E7%90%83%E5%A4%A7%E4%BC%9A/59485033"
+    "http://web.archive.org/web/20230323025648/https://datazoo.jp/w/%E7%AC%AC95%E5%9B%9E%E8%A8%98%E5%BF%B5%E9%81%B8%E6%8A%9C%E9%AB%98%E7%AD%89%E5%AD%A6%E6%A0%A1%E9%87%8E%E7%90%83%E5%A4%A7%E4%BC%9A/59485033",
+    "https://web.archive.org/web/1998/http://www.nifty.com/"
   ],
   "notes": [
     "28日目: Kids' Space、Kids' Gallery Search、GitHub Careers、アイコン - Wikipedia",
@@ -10117,19 +10117,21 @@
     "54日目: 興味 - Wikipedia、•  Companies with worst customer service U.S. 2020 | Statista、「日清のどん兵衛 芋煮うどん」(7月24日発売) | ニュースリリース | 日清食品グループ、STORY [ストーリィ] オフィシャルサイト – 「新しい40代」のためのファッション＆ライフスタイル誌",
     "55日目: Samantha Irby on the Movie 'Wicker'、TPPの関税分野などで応酬…日米、週明けに再協議、はてな匿名ダイアリー、東根市 「ようこそ果樹王国ひがしねへ」",
     "56日目: community ﾂｷ Discussions ﾂｷ GitHub、あそびあランド(むかしのすがた)、Wikipedia、Belonging Archives - Words Without Borders、NHKニュース 速報・最新情報",
-    "57日目: 青空文庫編 青空文庫の提案、リフォームシオン|リフォームを山形県東根市でするなら、芋煮会でイモニケーション！！ | Nスタ 2015/11/03(火)16:53のニュース | TVでた蔵(むかしのすがた)"
+    "57日目: 青空文庫編 青空文庫の提案、リフォームシオン|リフォームを山形県東根市でするなら、芋煮会でイモニケーション！！ | Nスタ 2015/11/03(火)16:53のニュース | TVでた蔵(むかしのすがた)、https://web.archive.org/web/19981212031407/http://www.nifty.com/"
   ],
   "today_walk": {
     "date": "2026-11-07",
     "seen": [
       "青空文庫編 青空文庫の提案",
       "リフォームシオン|リフォームを山形県東根市でするなら",
-      "芋煮会でイモニケーション！！ | Nスタ 2015/11/03(火)16:53のニュース | TVでた蔵(むかしのすがた)"
+      "芋煮会でイモニケーション！！ | Nスタ 2015/11/03(火)16:53のニュース | TVでた蔵(むかしのすがた)",
+      "https://web.archive.org/web/19981212031407/http://www.nifty.com/"
     ],
     "brought": [
       181,
       62,
-      344
+      344,
+      0
     ]
   },
   "inner_voice": [
@@ -10577,14 +10579,14 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "世界最強の魔女、始めました ~私だけ『攻略サイト』を見れる世界で自由に生きます~",
-    "www.zendesk.nl",
-    "freshdesk.com",
-    "nikkeiasiaandroid.onelink.me",
-    "www.kirkusreviews.com",
-    "jrescue.net"
+    "化学辞典 第2版収録キーワード一覧  - コトバンク",
+    "Google Books Terms of Service",
+    "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
+    "donate.citizen.org",
+    "photos.google.com",
+    "www.nature.com"
   ],
-  "how_many_places_left": 3030,
+  "how_many_places_left": 3029,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -10727,8 +10729,6 @@
   "met_today": {
     "date": "2026-11-07",
     "words": [
-      "めて",
-      "特定",
       "メール",
       "2026",
       "10",
@@ -11126,7 +11126,9 @@
       "いう",
       "結果",
       "最高",
-      "物語"
+      "物語",
+      "07",
+      "80"
     ]
   },
   "wants_to_say": [
@@ -12515,37 +12517,14 @@
       "day": "2026-11-05"
     }
   ],
-  "understood_usually": 0.456151,
+  "understood_usually": 0.473036,
   "its_ways": {
     "pages_per_site": 9.9,
-    "pull_of_japanese": 1.54,
+    "pull_of_japanese": 1.53,
     "feeling_keen": 0.34,
-    "wish_to_return": 1.8
+    "wish_to_return": 1.9
   },
   "came_back": [
-    {
-      "place": "ja.wikipedia.org",
-      "before": {
-        "day": 34,
-        "entrance": "https://ja.wikipedia.org/wiki/%E3%81%B7%E3%82%8D%E3%81%A0%E3%81%8F%E3%81%97%E3%82%87%E3%82%93%E3%83%90%E3%82%AA%E3%83%90%E3%83%96",
-        "knew": 188,
-        "of": 8651,
-        "pages": 4,
-        "title": "ぷろだくしょんバオバブ - Wikipedia",
-        "unread": 0,
-        "vocabulary": 242
-      },
-      "now": {
-        "entrance": "https://ja.wikipedia.org/wiki/%E3%83%A1%E3%82%A4%E3%83%B3%E3%83%9A%E3%83%BC%E3%82%B8",
-        "title": "Wikipedia",
-        "day": 40,
-        "vocabulary": 419,
-        "knew": 373,
-        "of": 11549,
-        "pages": 11,
-        "unread": 0
-      }
-    },
     {
       "place": "v0.wordpress.com",
       "before": {
@@ -13212,9 +13191,32 @@
         "pages": 10,
         "unread": 0
       }
+    },
+    {
+      "place": "www.nifty.com",
+      "before": {
+        "day": 38,
+        "entrance": "https://web.archive.org/web/1998/http://www.nifty.com/",
+        "knew": 25,
+        "of": 47,
+        "pages": 1,
+        "title": "https://web.archive.org/web/199812120314",
+        "unread": 0,
+        "vocabulary": 413
+      },
+      "now": {
+        "entrance": "https://web.archive.org/web/1998/http://www.nifty.com/",
+        "title": "https://web.archive.org/web/199812120314",
+        "day": 57,
+        "vocabulary": 901,
+        "knew": 28,
+        "of": 50,
+        "pages": 1,
+        "unread": 0
+      }
     }
   ],
-  "woke_at": "2026-11-07 15",
+  "woke_at": "2026-11-07 16",
   "blog_titles": {
     "seen": 84,
     "closed": 2,
