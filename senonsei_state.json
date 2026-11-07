@@ -10579,12 +10579,12 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "化学辞典 第2版収録キーワード一覧  - コトバンク",
-    "Google Books Terms of Service",
+    "www.allcinema.net",
+    "www.tv-asahihd.co.jp",
+    "this.kiji.is",
+    "www.bing.com",
     "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
-    "donate.citizen.org",
-    "photos.google.com",
-    "www.nature.com"
+    "www.houjin-bangou.nta.go.jp"
   ],
   "how_many_places_left": 3029,
   "places_known": {
@@ -12417,16 +12417,6 @@
   },
   "slips": [
     {
-      "meant": "です",
-      "wrote": "すで",
-      "day": "2026-10-24"
-    },
-    {
-      "meant": "無料",
-      "wrote": "無料使",
-      "day": "2026-10-25"
-    },
-    {
       "meant": "として",
       "wrote": "と",
       "day": "2026-10-26"
@@ -12515,6 +12505,16 @@
       "meant": "さんの",
       "wrote": "さのん",
       "day": "2026-11-05"
+    },
+    {
+      "meant": "キャリア",
+      "wrote": "キャリ",
+      "day": "2026-11-07"
+    },
+    {
+      "meant": "場所",
+      "wrote": "場",
+      "day": "2026-11-07"
     }
   ],
   "understood_usually": 0.473036,
@@ -13216,7 +13216,7 @@
       }
     }
   ],
-  "woke_at": "2026-11-07 16",
+  "woke_at": "2026-11-07 17",
   "blog_titles": {
     "seen": 84,
     "closed": 2,
