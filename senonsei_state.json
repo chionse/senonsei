@@ -9062,7 +9062,6 @@
     "https://www.city.higashine.yamagata.jp:443/administration/if/bousai",
     "https://www.city.higashine.yamagata.jp:443/news/3890",
     "https://www.ko-yo-print.info/",
-    "https://www.reform-sion.jp/",
     "http://www.jahigashine.or.jp/",
     "https://www.higashine-cherry.jp/",
     "http://www.tantokuru.jp/",
@@ -9134,7 +9133,8 @@
     "https://www.publishersweekly.com/pw/by-topic/industry-news/publisher-news/article/89535-words-without-borders-reboots.html",
     "https://lareviewofbooks.org/article/breaking-into-english/",
     "https://www.pickpik.com/moorea-french-polynesia-tropical-island-pacific-ocean-55761",
-    "https://www.artic.edu/artworks/43390/night-voyage-the-fishing-net"
+    "https://www.artic.edu/artworks/43390/night-voyage-the-fishing-net",
+    "https://www.aozora.gr.jp/index_pages/sakuhin_ra1.html"
   ],
   "visited": [
     "https://note.com/",
@@ -10071,7 +10071,9 @@
     "https://chionse.github.io/senonsei/memo.html",
     "https://www.aozora.gr.jp/",
     "https://www.aozora.gr.jp/cards/001790/card56572.html",
-    "https://www.aozora.gr.jp/cards/001790/files/56572_51810.html"
+    "https://www.aozora.gr.jp/cards/001790/files/56572_51810.html",
+    "https://www.reform-sion.jp/",
+    "https://www.reform-sion.jp/events/event-reporting/events-10590/"
   ],
   "notes": [
     "28日目: Kids' Space、Kids' Gallery Search、GitHub Careers、アイコン - Wikipedia",
@@ -10103,15 +10105,17 @@
     "54日目: 興味 - Wikipedia、•  Companies with worst customer service U.S. 2020 | Statista、「日清のどん兵衛 芋煮うどん」(7月24日発売) | ニュースリリース | 日清食品グループ、STORY [ストーリィ] オフィシャルサイト – 「新しい40代」のためのファッション＆ライフスタイル誌",
     "55日目: Samantha Irby on the Movie 'Wicker'、TPPの関税分野などで応酬…日米、週明けに再協議、はてな匿名ダイアリー、東根市 「ようこそ果樹王国ひがしねへ」",
     "56日目: community ﾂｷ Discussions ﾂｷ GitHub、あそびあランド(むかしのすがた)、Wikipedia、Belonging Archives - Words Without Borders、NHKニュース 速報・最新情報",
-    "57日目: 青空文庫編 青空文庫の提案"
+    "57日目: 青空文庫編 青空文庫の提案、リフォームシオン|リフォームを山形県東根市でするなら"
   ],
   "today_walk": {
     "date": "2026-11-07",
     "seen": [
-      "青空文庫編 青空文庫の提案"
+      "青空文庫編 青空文庫の提案",
+      "リフォームシオン|リフォームを山形県東根市でするなら"
     ],
     "brought": [
-      181
+      181,
+      62
     ]
   },
   "inner_voice": [
@@ -10465,11 +10469,16 @@
       "since": "2026-11-06",
       "first": "2026-11-06",
       "times": 1
+    },
+    {
+      "what": "最後",
+      "since": "2026-11-07",
+      "first": "2026-11-07",
+      "times": 1
     }
   ],
   "saw_on": "2026-11-07",
   "pictures_seen": [
-    "2026-11-03 comic-fuz.com: 山、水、食べ物、袋、本、絵本、女性、飲み物、肌、髪、絵、日本語、中国語、英語、アニメ、漫画、絵本、アート、美術、映画、音楽、ゲーム、料理、旅行、観光、文化、伝統、習慣、祭り、��",
     "2026-11-03 comic-fuz.com: 絵には、少女がストロベリーを食べている、少女がストロベリーを手に持っている",
     "2026-11-04 chionse.github.io: わたしの姿。絵には、頭部が描かれています。頭部には、眉毛があり、その眉毛は、描かれた絵によっては、異なる色で描かれています。頭部には、目が描かれており、その目は、異なる色で描かれています。頭部には",
     "2026-11-04 www.statista.com: スター、コンピュータ、キーボード、モニター、人、チェア、プランター、トレイ、ウェブページ",
@@ -10498,7 +10507,8 @@
     "2026-11-06 www3.nhk.or.jp: 5745",
     "2026-11-06 www3.nhk.or.jp: 白い建物。",
     "2026-11-07 chionse.github.io: わたしの姿。絵には、頭部が描かれています。頭部には、眉毛があり、目が描かれています。眉毛は、紫色で、目は、茶色です。頭部は、描かれた形に従って、左右に広がっています。",
-    "2026-11-07 chionse.github.io: わたしの姿。絵には、女の子が着ている、オレンジ色のドレスがあります。彼女は、手を振り、笑顔で絵に描かれています。"
+    "2026-11-07 chionse.github.io: わたしの姿。絵には、女の子が着ている、オレンジ色のドレスがあります。彼女は、手を振り、笑顔で絵に描かれています。",
+    "2026-11-07 www.reform-sion.jp: 絵には、短い日本語の文字が書かれています。それは「ETC」というもので、絵の中には、その文字が見えるように配置されています。"
   ],
   "impressions": [
     "2026-09-14 note.jp: note株式会社はクリエイターが文章や画像、音声、動画を投稿し、ユーザーがそのコンテンツを楽しんで応援できるメディアプラットフォームです。",
@@ -10553,12 +10563,12 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "うんちミュージアム in どうぶつネットパーク",
-    "forms.gle",
-    "ディープライブラリープロジェクト",
-    "www.minorplanetcenter.net",
-    "www.geocities.jp",
-    "www.mxtv.co.jp"
+    "kanagawa-u.repo.nii.ac.jp",
+    "denfami.jp",
+    "logx.optimizely.com",
+    "www.oozukankou.jp",
+    "mensdatsumou.news.mynavi.jp",
+    "www.radionikkei.jp"
   ],
   "how_many_places_left": 3025,
   "places_known": {
@@ -10688,7 +10698,8 @@
     "github.community": "community · Discussions · GitHub",
     "www.asobia.jp": "あそびあランド-トップページ",
     "wordswithoutborders.org": "Poland Archives - Words Without Borders",
-    "www.aozora.gr.jp": "青空文庫編 青空文庫の提案"
+    "www.aozora.gr.jp": "青空文庫編 青空文庫の提案",
+    "www.reform-sion.jp": "【８月１９日・２９日】「最後のリフォーム」勉強会　開催！|リフォームシオン|リフ"
   },
   "went_home": {
     "date": "2026-11-07",
@@ -10701,30 +10712,6 @@
   "met_today": {
     "date": "2026-11-07",
     "words": [
-      "中国",
-      "指示",
-      "導入",
-      "ポリシー",
-      "検討",
-      "クリエイティブ",
-      "保存",
-      "適切",
-      "見直",
-      "エンタメ",
-      "プロ",
-      "制作",
-      "実現",
-      "インタビュー",
-      "連載",
-      "そう",
-      "思う",
-      "年前",
-      "専門家",
-      "感動",
-      "イラスト",
-      "ています",
-      "フランス",
-      "完全",
       "担当",
       "大切",
       "法人",
@@ -11100,7 +11087,31 @@
       "映画",
       "文章",
       "かったん",
-      "こんにち"
+      "こんにち",
+      "最後",
+      "開催",
+      "48",
+      "00",
+      "会場",
+      "はありま",
+      "安全",
+      "いたしま",
+      "経験",
+      "めの",
+      "参加",
+      "内容",
+      "わせ",
+      "現在",
+      "はこちら",
+      ";&",
+      "イベント",
+      "理由",
+      "一覧",
+      "仕事",
+      "情報",
+      "質問",
+      "2019",
+      "株式会社"
     ]
   },
   "wants_to_say": [
@@ -12321,6 +12332,20 @@
       "first": "2026-11-07",
       "times": 1,
       "said": ""
+    },
+    {
+      "what": "８",
+      "since": "2026-11-07",
+      "first": "2026-11-07",
+      "times": 1,
+      "said": ""
+    },
+    {
+      "what": "はこちら",
+      "since": "2026-11-07",
+      "first": "2026-11-07",
+      "times": 1,
+      "said": ""
     }
   ],
   "thinking_about": "読む っもと",
@@ -12468,10 +12493,10 @@
       "day": "2026-11-05"
     }
   ],
-  "understood_usually": 0.449255,
+  "understood_usually": 0.450857,
   "its_ways": {
     "pages_per_site": 9.9,
-    "pull_of_japanese": 1.52,
+    "pull_of_japanese": 1.53,
     "feeling_keen": 0.34,
     "wish_to_return": 1.8
   },
@@ -13167,11 +13192,11 @@
       }
     }
   ],
-  "woke_at": "2026-11-07 08",
+  "woke_at": "2026-11-07 09",
   "blog_titles": {
-    "seen": 76,
+    "seen": 78,
     "closed": 2,
-    "chars": 2341
+    "chars": 2407
   },
   "replied": {},
   "home_read_on": "2026-11-07",
@@ -13269,7 +13294,8 @@
     "github.community",
     "www.asobia.jp",
     "wordswithoutborders.org",
-    "www.aozora.gr.jp"
+    "www.aozora.gr.jp",
+    "www.reform-sion.jp"
   ],
   "its_own_figure": {
     "date": "2026-11-07",
@@ -13704,7 +13730,9 @@
     "Poland Archives - Words Without Borders",
     "青空文庫　Aozora Bunko",
     "図書カード：青空文庫の提案",
-    "青空文庫編 青空文庫の提案"
+    "青空文庫編 青空文庫の提案",
+    "リフォームシオン|リフォームを山形県東根市でするなら",
+    "【８月１９日・２９日】「最後のリフォーム」勉強会　開催！|リフォームシオン|リフォームを山形県東根市でするなら"
   ],
   "translated_lately": [
     "2008 → 2008年",
