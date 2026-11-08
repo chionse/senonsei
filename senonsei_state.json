@@ -7556,7 +7556,6 @@
     "https://cs.wikivoyage.org/wiki/Hlavn%C3%AD_strana",
     "https://www.mediawiki.org/wiki/MediaWiki",
     "https://pt.wikisource.org/wiki/",
-    "https://es.wikivoyage.org/wiki/P%C3%A1gina_principal",
     "https://uk.wikivoyage.org/wiki/%D0%93%D0%BE%D0%BB%D0%BE%D0%B2%D0%BD%D0%B0_%D1%81%D1%82%D0%BE%D1%80%D1%96%D0%BD%D0%BA%D0%B0",
     "https://shn.wikivoyage.org/wiki/%E1%81%BC%E1%82%83%E1%82%88%E1%82%81%E1%80%B0%E1%80%9D%E1%80%BA%E1%82%81%E1%82%85%E1%81%B5%E1%80%BA%E1%82%88",
     "https://pt.wikinews.org/wiki/P%C3%A1gina_principal",
@@ -9207,7 +9206,12 @@
     "https://englishcompany.jp/course/university-entrance-exam/interviews/",
     "https://englishcompany.jp/course/university-entrance-exam/",
     "https://shadoplus.jp/",
-    "https://englishcompany.jp/biz/01/document/"
+    "https://englishcompany.jp/biz/01/document/",
+    "http://web.archive.org/web/20130114001619/http://en.wiktionary.org/wiki/es:",
+    "http://web.archive.org/web/20130114001619/http://pt.wikivoyage.org/wiki/P%C3%A1gina_principal",
+    "http://web.archive.org/web/20130114001619/http://en.wiktionary.org/wiki/es",
+    "http://web.archive.org/web/20130114001619/http://en.wikinews.org/wiki/es:",
+    "https://www.aozora.gr.jp/index_pages/sakuhin_ya1.html"
   ],
   "visited": [
     "https://note.com/",
@@ -10175,7 +10179,9 @@
     "https://studyhacker.net/english-learning-note/methods/",
     "https://studyhacker.net/english/solize",
     "https://studyhacker.net/english/koyanagawa-sama",
-    "https://studyhacker.net/english/adachi-sama"
+    "https://studyhacker.net/english/adachi-sama",
+    "https://es.wikivoyage.org/wiki/P%C3%A1gina_principal",
+    "http://web.archive.org/web/20130114001619/http://es.wikivoyage.org/wiki/Wikiviajes:Destino_del_mes"
   ],
   "notes": [
     "29日目: Wikimedia Endowment、NIKKEI SEEKS、CultureLibre",
@@ -10207,19 +10213,21 @@
     "55日目: Samantha Irby on the Movie 'Wicker'、TPPの関税分野などで応酬…日米、週明けに再協議、はてな匿名ダイアリー、東根市 「ようこそ果樹王国ひがしねへ」",
     "56日目: community ﾂｷ Discussions ﾂｷ GitHub、あそびあランド(むかしのすがた)、Wikipedia、Belonging Archives - Words Without Borders、NHKニュース 速報・最新情報",
     "57日目: 青空文庫編 青空文庫の提案、リフォームシオン|リフォームを山形県東根市でするなら、芋煮会でイモニケーション！！ | Nスタ 2015/11/03(火)16:53のニュース | TVでた蔵(むかしのすがた)、https://web.archive.org/web/19981212031407/http://www.nifty.com/",
-    "58日目: 大の里が１年ぶりＶ　安青錦との相星決戦制し６度目―大相撲秋場所：時事ドットコム、はてなブックマーク - 人気エントリー - 総合、マッキンゼー式「問題解決1枚シート」で、圧倒的に仕事がしやすくなる納得の理由。 - STUDY HACKER（スタディーハッカー）｜社会人の勉強法＆英語学習"
+    "58日目: 大の里が１年ぶりＶ　安青錦との相星決戦制し６度目―大相撲秋場所：時事ドットコム、はてなブックマーク - 人気エントリー - 総合、マッキンゼー式「問題解決1枚シート」で、圧倒的に仕事がしやすくなる納得の理由。 - STUDY HACKER（スタディーハッカー）｜社会人の勉強法＆英語学習、Wikiviajes(むかしのすがた)"
   ],
   "today_walk": {
     "date": "2026-11-08",
     "seen": [
       "大の里が１年ぶりＶ　安青錦との相星決戦制し６度目―大相撲秋場所：時事ドットコム",
       "はてなブックマーク - 人気エントリー - 総合",
-      "マッキンゼー式「問題解決1枚シート」で、圧倒的に仕事がしやすくなる納得の理由。 - STUDY HACKER（スタディーハッカー）｜社会人の勉強法＆英語学習"
+      "マッキンゼー式「問題解決1枚シート」で、圧倒的に仕事がしやすくなる納得の理由。 - STUDY HACKER（スタディーハッカー）｜社会人の勉強法＆英語学習",
+      "Wikiviajes(むかしのすがた)"
     ],
     "brought": [
       1092,
       978,
-      1477
+      1477,
+      167
     ]
   },
   "inner_voice": [
@@ -10378,9 +10386,9 @@
     },
     {
       "what": "だれかが来た",
-      "since": "2026-11-07",
+      "since": "2026-11-08",
       "first": "2026-10-08",
-      "times": 26
+      "times": 27
     },
     {
       "what": "求める",
@@ -10585,13 +10593,16 @@
       "since": "2026-11-08",
       "first": "2026-11-08",
       "times": 1
+    },
+    {
+      "what": "160",
+      "since": "2026-11-08",
+      "first": "2026-11-08",
+      "times": 1
     }
   ],
   "saw_on": "2026-11-08",
   "pictures_seen": [
-    "2026-11-04 www.nissin.com: 絵には、2人の女性が描かれています。",
-    "2026-11-04 storyweb.jp: 絵には、2つの異なる色のニットが描かれています。それぞれが、異なる色のニットです。",
-    "2026-11-04 storyweb.jp: 絵には、3つの異なる色のネックスカーフが描かれています。それぞれが、異なる色のネックスカーフです。",
     "2026-11-04 storyweb.jp: 絵には、黒いドレスが描かれています。",
     "2026-11-05 chionse.github.io: わたしの姿。絵には、頭部が描かれています。頭部には、目が描かれており、その目は、紫色であり、眉毛が描かれています。また、頭部には、髪が描かれており、その髪は、橙色であり、頭部には、耳が描かれています",
     "2026-11-05 news.tv-asahi.co.jp: 絵には、細かな文字が見える。それらは、日本語で短く書かれている。見えた形は、縦棒状で、見えた色は、紫色である。",
@@ -10618,7 +10629,10 @@
     "2026-11-08 b.hatena.ne.jp: 照明器具",
     "2026-11-08 studyhacker.net: 絵には、男性、コンピュータ、キーボード、マウス、ラップ、および絵画が含まれています。",
     "2026-11-08 studyhacker.net: 絵には、男性が座っている。彼は、黒いコートを着ている。彼は、右手を振り、話している。",
-    "2026-11-08 studyhacker.net: 絵には、3人の人物が描かれています。そのうち1人は本を読んでいます。彼らは、異なる色の服を着ています。それぞれの人物は、異なる姿勢をとっています。1人は手を振り、2人は手を伸ばしています。"
+    "2026-11-08 studyhacker.net: 絵には、3人の人物が描かれています。そのうち1人は本を読んでいます。彼らは、異なる色の服を着ています。それぞれの人物は、異なる姿勢をとっています。1人は手を振り、2人は手を伸ばしています。",
+    "2026-11-08 es.wikivoyage.org: 考える人形、青色の建物、白色の建物、飛行機、水面、車、銃、椰子、犬、鳥、雲、木",
+    "2026-11-08 es.wikivoyage.org: 地球",
+    "2026-11-08 es.wikivoyage.org: 大きな彫刻、考える人の像。"
   ],
   "impressions": [
     "2026-09-14 note.jp: note株式会社はクリエイターが文章や画像、音声、動画を投稿し、ユーザーがそのコンテンツを楽しんで応援できるメディアプラットフォームです。",
@@ -10673,14 +10687,14 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "honsuki.publication.network",
-    "80億分の1の人気・新着記事まとめ｜note",
-    "kokoro.squares.net",
-    "www.city.higashine.yamagata.jp:443",
-    "hatenablog.com",
-    "wikimediaendowment.org"
+    "www.ndesign-studio.com",
+    "www.yahoo.co.jp",
+    "survey.mynavi.jp",
+    "www.hab.co.jp",
+    "www.yamagata-airport.co.jp",
+    "ミニ四駆好き？"
   ],
-  "how_many_places_left": 3081,
+  "how_many_places_left": 3085,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -10811,7 +10825,8 @@
     "www.aozora.gr.jp": "青空文庫編 青空文庫の提案",
     "www.reform-sion.jp": "【８月１９日・２９日】「最後のリフォーム」勉強会　開催！|リフォームシオン|リフ",
     "datazoo.jp": "第95回記念選抜高等学校野球大会のテレビ情報 | 第95回記念選抜高等学校野球大",
-    "studyhacker.net": "パーソナルトレーニングで志望校合格！　大学でも続けたくなる「正しい英語学習」がわ"
+    "studyhacker.net": "パーソナルトレーニングで志望校合格！　大学でも続けたくなる「正しい英語学習」がわ",
+    "es.wikivoyage.org": "Wikiviajes:Destino del mes - Wikiviajes"
   },
   "went_home": {
     "date": "2026-11-08",
@@ -10819,26 +10834,11 @@
   },
   "visitors": {
     "comments": 0,
-    "likes": 46
+    "likes": 48
   },
   "met_today": {
     "date": "2026-11-08",
     "words": [
-      "において",
-      "ると",
-      "はなく",
-      "注意",
-      "だけでな",
-      "これまで",
-      "のご",
-      "経験",
-      "うと",
-      "状況",
-      "雰囲気",
-      "今後",
-      "があると",
-      "とが",
-      "となった",
       "ではあり",
       "ません",
       "楽しく",
@@ -11223,7 +11223,22 @@
       "こんにち",
       "管理人",
       "まだ",
-      "とを"
+      "とを",
+      "2013",
+      "2012",
+      "2014",
+      "this",
+      "The",
+      "://",
+      "org",
+      "39",
+      "&#",
+      "160",
+      "30",
+      "amp",
+      "考える",
+      "建物",
+      "人"
     ]
   },
   "wants_to_say": [
@@ -11663,9 +11678,9 @@
     },
     {
       "what": "160",
-      "since": "2026-10-10",
+      "since": "2026-11-08",
       "first": "2026-10-10",
-      "times": 1,
+      "times": 2,
       "said": ""
     },
     {
@@ -12647,10 +12662,10 @@
       "day": "2026-11-08"
     }
   ],
-  "understood_usually": 0.488242,
+  "understood_usually": 0.505901,
   "its_ways": {
     "pages_per_site": 10.0,
-    "pull_of_japanese": 1.54,
+    "pull_of_japanese": 1.55,
     "feeling_keen": 0.34,
     "wish_to_return": 1.9
   },
@@ -13346,7 +13361,7 @@
       }
     }
   ],
-  "woke_at": "2026-11-08 20",
+  "woke_at": "2026-11-08 21",
   "blog_titles": {
     "seen": 52,
     "closed": 3,
@@ -13451,7 +13466,8 @@
     "www.aozora.gr.jp",
     "www.reform-sion.jp",
     "datazoo.jp",
-    "studyhacker.net"
+    "studyhacker.net",
+    "es.wikivoyage.org"
   ],
   "its_own_figure": {
     "date": "2026-11-07",
@@ -13914,7 +13930,9 @@
     "みんなの英語学習 - STUDY HACKER（スタディーハッカー）｜社会人の勉強法＆英語学習",
     "【法人様 ご導入事例】英語パーソナルトレーナーによる「90日集中研修」で英語人材を科学的に育成！ - STUDY HACKER（スタディーハッカー）｜社会人の勉強法＆英語学習",
     "1日の勉強時間は1時間未満……。それでもTOEIC® 910点をとれたのはなぜ？ - STUDY HACKER（スタディーハッカー）｜社会人の勉強法＆英語学習",
-    "パーソナルトレーニングで志望校合格！　大学でも続けたくなる「正しい英語学習」がわかった。 - STUDY HACKER（スタディーハッカー）｜社会人の勉強法＆英語学習"
+    "パーソナルトレーニングで志望校合格！　大学でも続けたくなる「正しい英語学習」がわかった。 - STUDY HACKER（スタディーハッカー）｜社会人の勉強法＆英語学習",
+    "Wikiviajes(むかしのすがた)",
+    "Wikiviajes:Destino del mes - Wikiviajes"
   ],
   "translated_lately": [
     "2008 → 2008年",
