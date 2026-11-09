@@ -657,7 +657,9 @@ ITS_NAME_IN_REPLIES = "千遠生"
 
 
 def format_comment_date(iso_string):
-    """コメントに記録されたUTC時刻を、日本時間の秒までの表示にする。"""
+    """コメントに記録されたUTC時刻を、日本時間の秒までの表示にする。
+
+    5ch のように、曜日を添えて「2026/11/09(月) 20:11:43」と書く(2026-11-09、彼女が選んだ)。"""
     if not iso_string:
         return ""
     try:
@@ -665,7 +667,18 @@ def format_comment_date(iso_string):
     except ValueError:
         return ""
     jst = dt.astimezone(datetime.timezone(datetime.timedelta(hours=9)))
-    return jst.strftime("%Y-%m-%d %H:%M:%S")
+    return jst.strftime("%Y/%m/%d") + f"({WEEKDAYS_SHOWN[jst.weekday()]}) " + jst.strftime("%H:%M:%S")
+
+
+WEEKDAYS_SHOWN = "月火水木金土日"  # weekday() の 0 が月曜
+
+
+def comment_numbers(comments):
+    """コメントの番号。いちばん古いものが 1。{名札: 番号}
+
+    トップには新しいものしか出さないが、番号はコメントのページと同じにする。"""
+    oldest_first = sorted(comments, key=lambda c: c.get("date", ""))
+    return {c.get("id"): n for n, c in enumerate(oldest_first, 1)}
 
 
 def load_articles():
@@ -1980,6 +1993,8 @@ def site_header():
 FIRST_HEADER = re.compile(r"<header>(.*?)</header>", re.DOTALL)
 FIRST_H1 = re.compile(r"<h1>(.*?)</h1>", re.DOTALL)
 MAIN_OPENS = re.compile(r'<div class="main">\s*(<div class="top-nav">.*?</div>)?', re.DOTALL)
+# コメントのページは、ページの名前もコメントと一緒に枠で囲む(2026-11-09、彼女が選んだ)
+WAKU_OPENS = re.compile(r'\s*<div class="comment-waku">')
 
 
 def put_page_head(html):
@@ -1996,7 +2011,11 @@ def put_page_head(html):
         return html
     inside = FIRST_H1.sub(r'<h2 class="page-name">\1</h2>', header.group(1), count=1)
     head = f'\n  <div class="page-head">{inside.rstrip()}\n  </div>\n'
-    html = html[:opens.end()] + head + html[opens.end():]
+    at = opens.end()
+    waku = WAKU_OPENS.match(html, at)
+    if waku:
+        at = waku.end()
+    html = html[:at] + head + html[at:]
     return html[:header.start()] + site_header() + html[header.end():]
 
 
@@ -3002,11 +3021,15 @@ def generate_jiten_html(state, articles):
         f.write(html)
 
 
-def render_comments(comments):
+def render_comments(comments, numbers=None):
     """コメントを並べる。新しいものが上。返しは、そのコメントの下に古い順で。
 
     名前も本文も、人が外から置いていったものなので、字のまま出す。
-    そのまま埋めると、書かれた <script> がページの中で動いてしまう。"""
+    そのまま埋めると、書かれた <script> がページの中で動いてしまう。
+
+    並びは 5ch のように「番号 名前：〇〇 投稿日：…」の一行に、本文を少し下げて置く
+    (2026-11-09、彼女が選んだ)。番号は numbers(comment_numbers)から。"""
+    numbers = numbers if numbers is not None else comment_numbers(comments)
     if not comments:
         return "  <p>まだコメントはありません。</p>"
     likes = load_likes()
@@ -3026,7 +3049,7 @@ def render_comments(comments):
             + "".join(
                 f"""
       <div class="comment-reply">
-        <div class="comment-name">{escape_html(one['who'])}<span class="comment-date">{format_comment_date(one['date'])}</span></div>
+        <div class="comment-name">名前：<span class="comment-who">{escape_html(one['who'])}</span><span class="comment-date">投稿日：{format_comment_date(one['date'])}</span></div>
         <div class="comment-message">{escape_html(one['said'])}</div>
       </div>"""
                 for one in replies
@@ -3036,7 +3059,7 @@ def render_comments(comments):
 
     return "\n".join(
         f"""  <div class="comment-entry">
-    <div class="comment-name">{escape_html(c.get('name', '名無しさん'))}<span class="comment-date">{format_comment_date(c.get('date', ''))}</span>{liked(c)}</div>
+    <div class="comment-name"><span class="comment-no">{numbers.get(c.get('id'), '')}</span> 名前：<span class="comment-who">{escape_html(c.get('name', '名無しさん'))}</span><span class="comment-date">投稿日：{format_comment_date(c.get('date', ''))}</span>{liked(c)}</div>
     <div class="comment-message">{escape_html(c.get('message', ''))}</div>{replied(c)}
   </div>"""
         for c in comments
@@ -3065,8 +3088,10 @@ def generate_comments_html(comments):
   </header>
 
   <!-- ここから本文の列 -->
+  <div class="comment-waku">
   <div class="comment-list">
 {render_comments(comments)}
+  </div>
   </div>
   <!-- ここまで本文の列 -->
 
@@ -3311,7 +3336,7 @@ def generate_index_html(articles, state=None, news=None):
         news_html += "\n"
 
     comments = load_comments()
-    comments_html = render_comments(comments[:COMMENTS_ON_TOP])
+    comments_html = render_comments(comments[:COMMENTS_ON_TOP], comment_numbers(comments))
     if len(comments) > COMMENTS_ON_TOP:
         # 直近のブログや更新情報と同じ形にそろえる(2026-09-30、彼女と決めた)
         all_comments_html = (
@@ -3345,6 +3370,7 @@ def generate_index_html(articles, state=None, news=None):
 
   {recent_html}{TODAY_MAY_BE_OVER}{kotoba_html}{news_html}
 
+  <div class="comment-waku">
   <div class="section-title" id="comments">コメント</div>
 
   <form class="comment-form" method="POST" action="{COMMENT_WORKER_ENDPOINT}">
@@ -3356,6 +3382,7 @@ def generate_index_html(articles, state=None, news=None):
   <div class="comment-list">
 {comments_html}
   </div>{all_comments_html}
+  </div>
   <!-- ここまで本文の列 -->
 </body>
 </html>
