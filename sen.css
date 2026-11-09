@@ -791,28 +791,45 @@ article.yomimono .article-head {
   margin-top: 0.5rem;
 }
 
-/* コメント */
+/* コメント。5ch のように並べ、コメントのところ全部を薄い青の枠で囲む(2026-11-09、彼女が選んだ)。
+   「番号 名前：〇〇 投稿日：2026/11/09(月) 20:11:43」の一行に、本文を少し下げて置く。
+   名前は 5ch の緑。トップでは見出しと書く欄も、コメントのページではページの名前も枠の中 */
+.comment-waku {
+  border: 2px solid var(--line-color);
+  padding: 0.2rem 1.2rem 1rem;
+  margin-top: 2rem;
+}
+
+.comment-waku .section-title {
+  margin-top: 1rem;
+}
+
 .comment-list {
   margin-bottom: 1.5rem;
 }
 
 .comment-entry {
-  border-bottom: 1px solid var(--line-color);
-  padding: 0.6rem 0;
+  padding: 0.35rem 0 0.95rem;
 }
 
-.comment-entry .comment-name {
-  font-weight: bold;
+.comment-entry .comment-name,
+.comment-reply .comment-name {
+  font-weight: normal;
   font-size: 16px;
 }
 
-.comment-entry .comment-date {
+.comment-who {
+  font-weight: bold;
+  color: #228b22;
+}
+
+.comment-entry .comment-date,
+.comment-reply .comment-date {
   font-weight: normal;
   font-size: 12px;
   font-family: var(--small-font);
   -webkit-font-smoothing: none;
-  opacity: 0.7;
-  margin-left: 0.6rem;
+  margin-left: 0.5rem;
 }
 
 /* コメントのいいねは、ほかの♡と同じ大きさ(18px)。
@@ -822,14 +839,14 @@ article.yomimono .article-head {
 }
 
 .comment-entry .comment-message {
-  margin-top: 0.2rem;
+  margin: 0.35rem 0 0 2rem;
   line-height: 1.5;
   white-space: pre-wrap;
 }
 
-/* コメントへの返し。元のコメントの下に、少し下げて置く */
+/* コメントへの返し。元のコメントの本文の下に、そろえて置く */
 .comment-replies {
-  margin: 0.4rem 0 0 1.5rem;
+  margin: 0.5rem 0 0 2rem;
   padding-left: 0.8rem;
   border-left: 2px solid var(--line-color);
 }
@@ -838,22 +855,8 @@ article.yomimono .article-head {
   margin-top: 0.4rem;
 }
 
-.comment-reply .comment-name {
-  font-weight: bold;
-  font-size: 16px;
-}
-
-.comment-reply .comment-date {
-  font-weight: normal;
-  font-size: 12px;
-  font-family: var(--small-font);
-  -webkit-font-smoothing: none;
-  opacity: 0.7;
-  margin-left: 0.6rem;
-}
-
 .comment-reply .comment-message {
-  margin-top: 0.1rem;
+  margin: 0.2rem 0 0 2rem;
   line-height: 1.5;
   white-space: pre-wrap;
 }
