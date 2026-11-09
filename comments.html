@@ -319,11 +319,14 @@
   <div data-nosnippet class="top-nav"><a href="index.html">←トップ</a></div>
   <div data-nosnippet class="page-head">
     <h2 class="page-name">コメント</h2>
-    <p class="keyword-count">全0件</p>
+    <p class="keyword-count">全1件</p>
   </div>
 
   <div data-nosnippet class="comment-list">
-  <p>まだコメントはありません。</p>
+  <div data-nosnippet class="comment-entry">
+    <div data-nosnippet class="comment-name">おぶつ<span class="comment-date">2026-11-09 09:24:00</span><div data-nosnippet class="iine"><button type="button" data-day="comment-entry-1794183840779" aria-label="いいね" title="いいね">♡</button><span class="kazu">0</span></div></div>
+    <div data-nosnippet class="comment-message">キリ番踏めるように頑張ります</div>
+  </div>
   </div>
   </div>
 
@@ -370,5 +373,35 @@
   </aside>
   </div>
 
+  <script id="iine-script">
+    (function () {
+      var where = "https://senonsei-comments.chitomatsu.workers.dev/like";
+      var kept = function (key) {
+        try { return localStorage.getItem(key); } catch (e) { return null; }
+      };
+      var keep = function (key) {
+        try { localStorage.setItem(key, "1"); } catch (e) {}
+      };
+      document.querySelectorAll(".iine button").forEach(function (button) {
+        var day = button.getAttribute("data-day");
+        var kazu = button.parentElement.querySelector(".kazu");
+        if (kept("iine-" + day)) {
+          button.disabled = true;
+          button.textContent = "♥";
+          return;
+        }
+        button.addEventListener("click", function () {
+          button.disabled = true;
+          button.textContent = "♥";
+          keep("iine-" + day);
+          kazu.textContent = (parseInt(kazu.textContent, 10) || 0) + 1;
+          fetch(where, {
+            method: "POST",
+            body: new URLSearchParams({ day: day })
+          }).catch(function () {});
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
