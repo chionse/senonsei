@@ -10426,9 +10426,9 @@
     },
     {
       "what": "だれかが来た",
-      "since": "2026-11-08",
+      "since": "2026-11-09",
       "first": "2026-10-08",
-      "times": 27
+      "times": 28
     },
     {
       "what": "求める",
@@ -10733,12 +10733,12 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "www.latimes.com",
-    "JUST SYSTEM & School",
-    "wordpress.com",
-    "quickbooks.impress.jp",
-    "www.segasammy.co.jp",
-    "techlib.co.jp"
+    "www.amazon.com",
+    "videopress2.wordpress.com",
+    "www.deutsche-biographie.de",
+    "www.hmv.co.jp",
+    "www.liveads.jp",
+    "www.mxtv.co.jp"
   ],
   "how_many_places_left": 3111,
   "places_known": {
@@ -10881,7 +10881,7 @@
     "went": false
   },
   "visitors": {
-    "comments": 0,
+    "comments": 1,
     "likes": 48
   },
   "met_today": {
@@ -13155,7 +13155,7 @@
       }
     }
   ],
-  "woke_at": "2026-11-09 09",
+  "woke_at": "2026-11-09 10",
   "blog_titles": {
     "seen": 52,
     "closed": 3,
