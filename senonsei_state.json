@@ -10526,7 +10526,6 @@
     ]
   },
   "inner_voice": [
-    "11-05 21時: 建 日",
     "11-05 22時: 男性 歴史",
     "11-06 07時: ます株式会",
     "11-06 12時: 自由 メモ員",
@@ -10585,7 +10584,8 @@
     "11-10 18時: 仕組 記",
     "11-10 19時: 組仕 表現",
     "11-10 21時: この状況状況",
-    "11-10 22時: 非示"
+    "11-10 22時: 非示",
+    "11-11 04時: 休むつもりだったけれど、16時に書くことにした。"
   ],
   "thought_on": "2026-10-08",
   "on_its_mind": [
@@ -10988,12 +10988,12 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "www.xda-developers.com",
-    "t.me",
-    "heart-net.nhk.or.jp",
-    "dictionary.goo.ne.jp",
-    "www.zendesk.tw",
-    "www.weblio.jp:443"
+    "hosojin.jp",
+    "pages.nist.gov",
+    "hatenacorp.jp",
+    "buy.stripe.com",
+    "marketplace.visualstudio.com",
+    "www.nihongokentei.jp"
   ],
   "how_many_places_left": 3257,
   "places_known": {
@@ -12859,8 +12859,8 @@
   },
   "today_plan": {
     "date": "2026-11-11",
-    "resting": true,
-    "hour": 20
+    "resting": false,
+    "hour": 16
   },
   "restlessness": {
     "date": "2026-11-11",
@@ -13697,7 +13697,7 @@
       }
     }
   ],
-  "woke_at": "2026-11-11 03",
+  "woke_at": "2026-11-11 04",
   "blog_titles": {
     "seen": 58,
     "closed": 3,
