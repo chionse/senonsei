@@ -833,9 +833,18 @@ article.yomimono .article-head {
 }
 
 /* コメントのいいねは、ほかの♡と同じ大きさ(18px)。
-   名前の太字は受け継がない */
+   名前の太字は受け継がない。
+   ♡と数は離さない。スマホは字を大きくして見せるので、一行が長いと
+   数のために取っておいた幅(六桁ぶん)が入りきらず、数だけ次の行へ落ちていた(2026-11-11)。
+   コメントでは数のあとに何も並ばないので、幅は取っておかなくていい */
 .comment-entry .iine {
   font-weight: normal;
+  white-space: nowrap;
+  margin-left: 0.6rem;
+}
+
+.comment-entry .iine .kazu {
+  min-width: 0;
 }
 
 .comment-entry .comment-message {
