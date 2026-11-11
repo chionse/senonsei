@@ -7094,7 +7094,6 @@
     "https://ja.wikibooks.org/wiki/Wikijunior:%E3%83%A1%E3%82%A4%E3%83%B3%E3%83%9A%E3%83%BC%E3%82%B8",
     "https://www.atlassian.com/software/statuspage?utm_campaign=www.githubstatus.com&utm_content=SP-notifications&utm_medium=powered-by&utm_source=inapp",
     "https://subscriptions.statuspage.io/slack_authentication/kickoff?page_code=kctbh9vrtdwd",
-    "https://github.careers/",
     "https://www.atlassian.com/legal/cloud-terms-of-service",
     "https://www.atlassian.com/legal/product-specific-terms",
     "https://mnw.wiktionary.org/wiki/%E1%80%9D%E1%80%AD%E1%80%80%E1%80%BA%E1%80%9B%E1%80%BE%E1%80%B1%E1%80%94%E1%80%BA%E1%80%94%E1%80%9B%E1%80%B3:%E1%80%82%E1%81%A0%E1%80%B6%E1%81%9A%E1%80%BA%E1%80%80%E1%80%9B%E1%80%90%E1%80%BA",
@@ -7189,7 +7188,6 @@
     "http://coji.coji.jp/sa/",
     "https://live.nicovideo.jp/watch/lv248719585",
     "http://www.city.ibaraki-koga.lg.jp/06renewal/blog/shakaikyoiku/shakai_32.htm",
-    "http://sayaka.sweet.coocan.jp/profile.htm",
     "https://web.archive.org/web/20131126145759/http://products.alchemist-net.co.jp/products/suzunone/psp/character/04.html",
     "https://circus-co.jp/product/dc12-p/dc_heroine_details.html",
     "https://pro-baobab.jp/actor/%E5%BA%83%E7%80%AC-%E6%AD%A3%E5%BF%97/",
@@ -7563,7 +7561,6 @@
     "https://anond.hatelabo.jp/20261018123010",
     "https://artexhibition.jp/topics/news/20240209-AEJ1854260/",
     "https://dailyportalz.jp/kiji/tatemono-yogore-catalog2",
-    "https://www.rakumachi.jp/news/column/386811",
     "https://zenn.dev/pdfractal/articles/c7af0a168c0552",
     "https://www.cnn.co.jp/fringe/35253682.html",
     "https://anond.hatelabo.jp/20211122102416",
@@ -9553,7 +9550,8 @@
     "https://web.archive.org/web/20111007024132/http://edu.chunichi.co.jp/",
     "https://web.archive.org/web/20111007024132/https://cgi2.chunichi.co.jp/tko/tochu/modama/modama_form.shtml",
     "https://web.archive.org/web/20111007024132/http://gourmet.chunichi.co.jp/",
-    "https://web.archive.org/web/20111007024132/http://drafanclub.jp/"
+    "https://web.archive.org/web/20111007024132/http://drafanclub.jp/",
+    "https://ja.wikipedia.org/wiki/特別:おまかせ表示"
   ],
   "visited": [
     "https://note.com/",
@@ -11096,14 +11094,14 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "link.thenation.com",
-    "classy-online.jp",
-    "www.zendesk.com.mx",
-    "www.iat.co.jp",
-    "dekiru.net",
-    "www.google.fr"
+    "logmi.jp",
+    "daily.jstor.org",
+    "englishcompany.jp",
+    "AI好きの仲間に出会える渋谷の「文化祭」に進化！ 2026年の「AIフェスティバ",
+    "化学辞典 第2版収録キーワード一覧  - コトバンク",
+    "tales-ch.jp"
   ],
-  "how_many_places_left": 3337,
+  "how_many_places_left": 3335,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -13836,7 +13834,7 @@
       }
     }
   ],
-  "woke_at": "2026-11-11 16",
+  "woke_at": "2026-11-11 17",
   "blog_titles": {
     "seen": 63,
     "closed": 3,
