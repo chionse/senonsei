@@ -6217,7 +6217,6 @@
     "背景"
   ],
   "frontier": [
-    "https://bsky.app/intent/compose?text=Report%3A+The+Trump+Administration%E2%80%99s+Stop-Work+Order+and+Funding+Freeze+likely+affected+32+USAID-Funded+Clinical+Trials+https%3A%2F%2Fwww.citizen.org%2Farticle%2Freport-the-trump-administrations-stop-work-order-and-funding-freeze-likely-affected-32-usaid-funded-clinical-trials%2F",
     "https://note.com/tag/A20%20Pro",
     "https://note.com/tag/iPhone%20Duo",
     "https://note.com/tag/PISA2025",
@@ -9551,7 +9550,8 @@
     "https://web.archive.org/web/20111007024132/https://cgi2.chunichi.co.jp/tko/tochu/modama/modama_form.shtml",
     "https://web.archive.org/web/20111007024132/http://gourmet.chunichi.co.jp/",
     "https://web.archive.org/web/20111007024132/http://drafanclub.jp/",
-    "https://ja.wikipedia.org/wiki/特別:おまかせ表示"
+    "http://web.archive.org/web/20250701163541/https://atproto.com/",
+    "http://web.archive.org/web/20250701163541/https://bsky.social/"
   ],
   "visited": [
     "https://note.com/",
@@ -10584,7 +10584,9 @@
     "http://web.archive.org/web/20261015234024/https://gourmet.watch.impress.co.jp/docs/interview/kodawari/2147119.html",
     "http://web.archive.org/web/20261015234024/https://gourmet.watch.impress.co.jp/docs/news/2147915.html",
     "http://web.archive.org/web/20261015234024/https://gourmet.watch.impress.co.jp/docs/news/2147582.html",
-    "https://web.archive.org/web/20111007024132/https://www.chunichi.co.jp/chuspo/article/soccer/news/CK2011091302000074.html"
+    "https://web.archive.org/web/20111007024132/https://www.chunichi.co.jp/chuspo/article/soccer/news/CK2011091302000074.html",
+    "https://bsky.app/intent/compose?text=Report%3A+The+Trump+Administration%E2%80%99s+Stop-Work+Order+and+Funding+Freeze+likely+affected+32+USAID-Funded+Clinical+Trials+https%3A%2F%2Fwww.citizen.org%2Farticle%2Freport-the-trump-administrations-stop-work-order-and-funding-freeze-likely-affected-32-usaid-funded-clinical-trials%2F",
+    "http://web.archive.org/web/20250701163541*/https://bsky.app/intent/compose?text=Report%3A+The+Trump+Administration%E2%80%99s+Stop-Work+Order+and+Funding+Freeze+likely+affected+32+USAID-Funded+Clinical+Trials+https%3A%2F%2Fwww.citizen.org%2Farticle%2Freport-the-trump-administrations-stop-work-order-and-funding-freeze-likely-affected-32-usaid-funded-clinical-trials%2F"
   ],
   "notes": [
     "32日目: 何も見られなかった",
@@ -10616,19 +10618,21 @@
     "58日目: 大の里が１年ぶりＶ　安青錦との相星決戦制し６度目―大相撲秋場所：時事ドットコム、はてなブックマーク - 人気エントリー - 総合、マッキンゼー式「問題解決1枚シート」で、圧倒的に仕事がしやすくなる納得の理由。 - STUDY HACKER（スタディーハッカー）｜社会人の勉強法＆英語学習、Wikiviajes(むかしのすがた)、人気ブログランキングとブログ検索 にほんブログ村",
     "59日目: Edison, Thomas A. (Thomas Alva) (1847-1931) - People and organisations - Trove(むかしのすがた)、あおきさやかはどんな人？ わかりやすく解説 Weblio辞書、無料で小説を書ける、読める、伝えられる - カクヨム、庄内町：庄内町公式ホームページ",
     "60日目: スナッピー (ラジオカー) - Wikipedia、Amazonプライム感謝祭はこれ買って！山崎実業の便利グッズ、コスパ最強スマートウォッチなど12選 - ソレドコ(むかしのすがた)",
-    "61日目: How We Protect Your Service Data (Enterprise Services) - Zendesk、グルメ Watch：コンビニやカフェなど身近な食の最新ニュース、中日スポーツ:としまえん敷地に女子の”聖地”　３万人収容スタジアム建設構想:サッカー(CHUNICHI Web)"
+    "61日目: How We Protect Your Service Data (Enterprise Services) - Zendesk、グルメ Watch：コンビニやカフェなど身近な食の最新ニュース、中日スポーツ:としまえん敷地に女子の”聖地”　３万人収容スタジアム建設構想:サッカー(CHUNICHI Web)、Bluesky(むかしのすがた)"
   ],
   "today_walk": {
     "date": "2026-11-11",
     "seen": [
       "How We Protect Your Service Data (Enterprise Services) - Zendesk",
       "グルメ Watch：コンビニやカフェなど身近な食の最新ニュース",
-      "中日スポーツ:としまえん敷地に女子の”聖地”　３万人収容スタジアム建設構想:サッカー(CHUNICHI Web)"
+      "中日スポーツ:としまえん敷地に女子の”聖地”　３万人収容スタジアム建設構想:サッカー(CHUNICHI Web)",
+      "Bluesky(むかしのすがた)"
     ],
     "brought": [
       2001,
       986,
-      147
+      147,
+      14
     ]
   },
   "inner_voice": [
@@ -10787,9 +10791,9 @@
     },
     {
       "what": "だれかが来た",
-      "since": "2026-11-10",
+      "since": "2026-11-11",
       "first": "2026-10-08",
-      "times": 34
+      "times": 35
     },
     {
       "what": "求める",
@@ -11094,12 +11098,12 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "keizai-dousureba.hatenablog.jp",
-    "www.iconiqcapital.com",
-    "www.nikkei4946.com",
-    "web-coias.u-aizu.ac.jp",
-    "www.preciousplatinum.jp",
-    "www.zendesk.tw"
+    "www.nps.gov",
+    "k-tai.watch.impress.co.jp",
+    "www.dvdtalk.com",
+    "gras-group.co.jp",
+    "www.blackrock.com",
+    "thesaurus.weblio.jp"
   ],
   "how_many_places_left": 3335,
   "places_known": {
@@ -11124,7 +11128,7 @@
     "chionse.github.io": "過去のブログ",
     "v0.wordpress.com": "VideoPress – The finest video for WordPr",
     "www.culture-libre.org": "TuxFamily: Free hosting for free people",
-    "bsky.app": "Bluesky",
+    "bsky.app": "Wayback Machine",
     "ja.wikibooks.org": "Wikibooks:なぜフリーの教科書を使うのか - Wikibooks",
     "www.justnet.ne.jp": "うんちミュージアム in どうぶつネットパーク",
     "books.google.com": "Google Books Terms of Service",
@@ -11249,20 +11253,11 @@
   },
   "visitors": {
     "comments": 6,
-    "likes": 57
+    "likes": 58
   },
   "met_today": {
     "date": "2026-11-11",
     "words": [
-      "23",
-      "24",
-      "25",
-      "26",
-      "27",
-      "28",
-      "29",
-      "30",
-      "いた",
       "んだ",
       "場所",
       "ほか",
@@ -11653,7 +11648,16 @@
       "個人情報",
       "される",
       "1",
-      "サイト"
+      "サイト",
+      "3",
+      "22",
+      "2026",
+      "2",
+      "99",
+      "14",
+      "5",
+      "9",
+      "11"
     ]
   },
   "wants_to_say": [
@@ -13025,8 +13029,7 @@
     "en.wikibooks.org": "https://en.wikibooks.org/wiki/Wikibooks:General_disclaimer",
     "fr.wikipedia.org": "https://fr.wikipedia.org/w/index.php?title=Discussion_utilisateur:Cantons-de-l%27Est&oldid=235673647",
     "phabricator.wikimedia.org": "https://phabricator.wikimedia.org/tag/charts",
-    "ja.wikibooks.org": "https://ja.wikibooks.org/wiki/Wikibooks:%E3%82%A6%E3%82%A3%E3%82%AD%E3%83%96%E3%83%83%E3%82%AF%E3%82%B9%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6",
-    "bsky.app": "https://bsky.app/intent/compose?text=Report%3A+The+Trump+Administration%E2%80%99s+Stop-Work+Order+and+Funding+Freeze+likely+affected+32+USAID-Funded+Clinical+Trials+https%3A%2F%2Fwww.citizen.org%2Farticle%2Freport-the-trump-administrations-stop-work-order-and-funding-freeze-likely-affected-32-usaid-funded-clinical-trials%2F"
+    "ja.wikibooks.org": "https://ja.wikibooks.org/wiki/Wikibooks:%E3%82%A6%E3%82%A3%E3%82%AD%E3%83%96%E3%83%83%E3%82%AF%E3%82%B9%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6"
   },
   "remembered_on": "2026-11-11",
   "homesickness": {
@@ -13135,37 +13138,14 @@
       "day": "2026-11-11"
     }
   ],
-  "understood_usually": 0.533544,
+  "understood_usually": 0.526023,
   "its_ways": {
     "pages_per_site": 9.7,
-    "pull_of_japanese": 1.59,
+    "pull_of_japanese": 1.58,
     "feeling_keen": 0.34,
-    "wish_to_return": 1.7
+    "wish_to_return": 1.8
   },
   "came_back": [
-    {
-      "place": "ja.wikipedia.org",
-      "before": {
-        "day": 44,
-        "entrance": "https://ja.wikipedia.org/wiki/特別:おまかせ表示",
-        "knew": 322,
-        "of": 3213,
-        "pages": 8,
-        "title": "セッソ・マット - Wikipedia",
-        "unread": 0,
-        "vocabulary": 503
-      },
-      "now": {
-        "entrance": "https://ja.wikipedia.org/wiki/%E3%83%A1%E3%82%A4%E3%83%B3%E3%83%9A%E3%83%BC%E3%82%B8",
-        "title": "メインページ - Wikipedia(むかしのすがた)",
-        "day": 45,
-        "vocabulary": 505,
-        "knew": 155,
-        "of": 437,
-        "pages": 3,
-        "unread": 0
-      }
-    },
     {
       "place": "chionse.github.io",
       "before": {
@@ -13832,9 +13812,32 @@
         "pages": 2,
         "unread": 0
       }
+    },
+    {
+      "place": "bsky.app",
+      "before": {
+        "day": 15,
+        "entrance": "https://bsky.app/intent/compose?text=Report%3A+The+Trump+Administration%E2%80%99s+Stop-Work+Order+and+Funding+Freeze+likely+affected+32+USAID-Funded+Clinical+Trials+https%3A%2F%2Fwww.citizen.org%2Farticle%2Freport-the-trump-administrations-stop-work-order-and-funding-freeze-likely-affected-32-usaid-funded-clinical-trials%2F",
+        "knew": 1,
+        "of": 28,
+        "pages": 1,
+        "title": "Bluesky",
+        "unread": 0,
+        "vocabulary": 14
+      },
+      "now": {
+        "entrance": "https://bsky.app/intent/compose?text=Report%3A+The+Trump+Administration%E2%80%99s+Stop-Work+Order+and+Funding+Freeze+likely+affected+32+USAID-Funded+Clinical+Trials+https%3A%2F%2Fwww.citizen.org%2Farticle%2Freport-the-trump-administrations-stop-work-order-and-funding-freeze-likely-affected-32-usaid-funded-clinical-trials%2F",
+        "title": "Bluesky(むかしのすがた)",
+        "day": 61,
+        "vocabulary": 902,
+        "knew": 49,
+        "of": 485,
+        "pages": 2,
+        "unread": 0
+      }
     }
   ],
-  "woke_at": "2026-11-11 18",
+  "woke_at": "2026-11-11 19",
   "blog_titles": {
     "seen": 63,
     "closed": 3,
@@ -13960,7 +13963,8 @@
     "www.zendesk.nl",
     "mail.google.com",
     "gourmet.watch.impress.co.jp",
-    "www.chunichi.co.jp"
+    "www.chunichi.co.jp",
+    "bsky.app"
   ],
   "its_own_figure": {
     "date": "2026-11-11",
@@ -14470,7 +14474,8 @@
     "【インタビュー】発泡酒から“ビール”へとリニューアルした「金麦」は日々の食卓向けに開発  - グルメ Watch",
     "ビッグボーイ、栗づくしの「甘栗のモンブランファッジサンデー」を発売！　ミニサイズや渋皮栗アイスも登場  - グルメ Watch",
     "フレッシュネスバーガー「フライドチキン」30円引きで販売。好きなソースが選べるセットも登場  - グルメ Watch",
-    "中日スポーツ:としまえん敷地に女子の”聖地”　３万人収容スタジアム建設構想:サッカー(CHUNICHI Web)"
+    "中日スポーツ:としまえん敷地に女子の”聖地”　３万人収容スタジアム建設構想:サッカー(CHUNICHI Web)",
+    "Bluesky(むかしのすがた)"
   ],
   "translated_lately": [
     "2008 → 2008年",
