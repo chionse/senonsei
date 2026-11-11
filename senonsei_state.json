@@ -9419,7 +9419,6 @@
     "https://www.similarweb.com/top-websites/",
     "https://www.socialmediatoday.com/news/New-Report-Suggests-Hate-Speech-Rising-on-Twitter/645482/",
     "https://www.cnn.com/2023/07/24/tech/twitter-rebrands-x-elon-musk-hnk-intl/index.html",
-    "https://web.archive.org/web/20220708223335/https://www3.nhk.or.jp/news/html/20220709/k10013709181000.html",
     "https://twinavi.jp/guide/section/twitter/step1",
     "https://web.archive.org/web/20230724203836/https://www3.nhk.or.jp/news/html/20230725/k10014141211000.html",
     "https://web.archive.org/web/20241110235517/https://www.cnbctv18.com/technology/x-tv-apps-beta-version-rolled-out-on-android-tvs-lg-amazon-fire-tv-and-google-tv-19471283.htm",
@@ -9551,7 +9550,8 @@
     "https://web.archive.org/web/20111007024132/http://gourmet.chunichi.co.jp/",
     "https://web.archive.org/web/20111007024132/http://drafanclub.jp/",
     "http://web.archive.org/web/20250701163541/https://atproto.com/",
-    "http://web.archive.org/web/20250701163541/https://bsky.social/"
+    "http://web.archive.org/web/20250701163541/https://bsky.social/",
+    "https://web.archive.org/web/20220708223335/http://k.nhk.jp/knews/20220709/k10013709181000.html"
   ],
   "visited": [
     "https://note.com/",
@@ -10586,7 +10586,11 @@
     "http://web.archive.org/web/20261015234024/https://gourmet.watch.impress.co.jp/docs/news/2147582.html",
     "https://web.archive.org/web/20111007024132/https://www.chunichi.co.jp/chuspo/article/soccer/news/CK2011091302000074.html",
     "https://bsky.app/intent/compose?text=Report%3A+The+Trump+Administration%E2%80%99s+Stop-Work+Order+and+Funding+Freeze+likely+affected+32+USAID-Funded+Clinical+Trials+https%3A%2F%2Fwww.citizen.org%2Farticle%2Freport-the-trump-administrations-stop-work-order-and-funding-freeze-likely-affected-32-usaid-funded-clinical-trials%2F",
-    "http://web.archive.org/web/20250701163541*/https://bsky.app/intent/compose?text=Report%3A+The+Trump+Administration%E2%80%99s+Stop-Work+Order+and+Funding+Freeze+likely+affected+32+USAID-Funded+Clinical+Trials+https%3A%2F%2Fwww.citizen.org%2Farticle%2Freport-the-trump-administrations-stop-work-order-and-funding-freeze-likely-affected-32-usaid-funded-clinical-trials%2F"
+    "http://web.archive.org/web/20250701163541*/https://bsky.app/intent/compose?text=Report%3A+The+Trump+Administration%E2%80%99s+Stop-Work+Order+and+Funding+Freeze+likely+affected+32+USAID-Funded+Clinical+Trials+https%3A%2F%2Fwww.citizen.org%2Farticle%2Freport-the-trump-administrations-stop-work-order-and-funding-freeze-likely-affected-32-usaid-funded-clinical-trials%2F",
+    "https://web.archive.org/web/20220708223335/https://www3.nhk.or.jp/news/html/20220709/k10013709181000.html",
+    "https://web.archive.org/web/20220708223335/https://www3.nhk.or.jp/news/html/20220709/amp/k10013709181000.html",
+    "https://web.archive.org/web/20220708223335*/https://www3.nhk.or.jp/news/html/20220709/k10013709181000.html",
+    "https://web.archive.org/web/20220708223342/https://www3.nhk.or.jp/news/html/20220709/k10013709181000.html"
   ],
   "notes": [
     "32日目: 何も見られなかった",
@@ -10618,7 +10622,7 @@
     "58日目: 大の里が１年ぶりＶ　安青錦との相星決戦制し６度目―大相撲秋場所：時事ドットコム、はてなブックマーク - 人気エントリー - 総合、マッキンゼー式「問題解決1枚シート」で、圧倒的に仕事がしやすくなる納得の理由。 - STUDY HACKER（スタディーハッカー）｜社会人の勉強法＆英語学習、Wikiviajes(むかしのすがた)、人気ブログランキングとブログ検索 にほんブログ村",
     "59日目: Edison, Thomas A. (Thomas Alva) (1847-1931) - People and organisations - Trove(むかしのすがた)、あおきさやかはどんな人？ わかりやすく解説 Weblio辞書、無料で小説を書ける、読める、伝えられる - カクヨム、庄内町：庄内町公式ホームページ",
     "60日目: スナッピー (ラジオカー) - Wikipedia、Amazonプライム感謝祭はこれ買って！山崎実業の便利グッズ、コスパ最強スマートウォッチなど12選 - ソレドコ(むかしのすがた)",
-    "61日目: How We Protect Your Service Data (Enterprise Services) - Zendesk、グルメ Watch：コンビニやカフェなど身近な食の最新ニュース、中日スポーツ:としまえん敷地に女子の”聖地”　３万人収容スタジアム建設構想:サッカー(CHUNICHI Web)、Bluesky(むかしのすがた)"
+    "61日目: How We Protect Your Service Data (Enterprise Services) - Zendesk、グルメ Watch：コンビニやカフェなど身近な食の最新ニュース、中日スポーツ:としまえん敷地に女子の”聖地”　３万人収容スタジアム建設構想:サッカー(CHUNICHI Web)、Bluesky(むかしのすがた)、イーロン・マスク氏 ツイッターと合意の買収計画を撤回 | NHK | IT・ネット"
   ],
   "today_walk": {
     "date": "2026-11-11",
@@ -10626,13 +10630,15 @@
       "How We Protect Your Service Data (Enterprise Services) - Zendesk",
       "グルメ Watch：コンビニやカフェなど身近な食の最新ニュース",
       "中日スポーツ:としまえん敷地に女子の”聖地”　３万人収容スタジアム建設構想:サッカー(CHUNICHI Web)",
-      "Bluesky(むかしのすがた)"
+      "Bluesky(むかしのすがた)",
+      "イーロン・マスク氏 ツイッターと合意の買収計画を撤回 | NHK | IT・ネット"
     ],
     "brought": [
       2001,
       986,
       147,
-      14
+      14,
+      13
     ]
   },
   "inner_voice": [
@@ -11098,12 +11104,12 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "hatenacorp.jp",
-    "tg.wikibooks.org",
-    "hatena.co.jp",
-    "www.weblio.jp:443",
-    "daily.jstor.org",
-    "www.ks-connection.gr.jp"
+    "Wikisource:Wikisourceについて - Wikisource",
+    "jijibs.co.jp",
+    "www.nihongokentei.jp",
+    "Yahoo!ジオシティーズ: \n    ゲーム",
+    "bookshop.org",
+    "to-corona-ex.com"
   ],
   "how_many_places_left": 3335,
   "places_known": {
@@ -11174,7 +11180,7 @@
     "cwe.mitre.org": "CWE - \nCVE → CWE Mapping \"Root Cause Map",
     "freedomdefined.org": "Definition/Ca - Definition of Free Cultu",
     "policies.hatena.ne.jp": "ブックマーク一覧ページに対するブックマークコメントでの誹謗 - Hatena P",
-    "www3.nhk.or.jp": "NHKの海外向け日本語サービス NHKワールド・プレミアム・ラジオ日本",
+    "www3.nhk.or.jp": "イーロン・マスク氏 ツイッターと合意の買収計画を撤回 | NHK | IT・ネッ",
     "jisin.jp": "百恵さんの介護支える友和の覚悟「妻を楽にするのが夫の務め」 | 女性自身",
     "www.cnnchile.com": "Rentas Vitalicias: la opción más elegida",
     "www.kids-space.gr.jp": "Kids' Space",
@@ -11258,26 +11264,6 @@
   "met_today": {
     "date": "2026-11-11",
     "words": [
-      "んだ",
-      "場所",
-      "ほか",
-      "この",
-      "文字",
-      "ほど",
-      "ページ",
-      "☆",
-      "今日",
-      "ブログ",
-      "変更",
-      "直近",
-      "09",
-      "っている",
-      "08",
-      "とを",
-      "07",
-      "06",
-      "われた",
-      "05",
       "81",
       "04",
       "03",
@@ -11657,7 +11643,27 @@
       "14",
       "5",
       "9",
-      "11"
+      "11",
+      "79",
+      "28",
+      "7",
+      "複数",
+      "があった",
+      "4",
+      "ドル",
+      "すること",
+      "8",
+      "{{",
+      "}}",
+      "データ",
+      "この",
+      "24",
+      "多く",
+      "まれてい",
+      "じます",
+      "ページ",
+      "制作",
+      "08"
     ]
   },
   "wants_to_say": [
@@ -12990,6 +12996,20 @@
       "first": "2026-11-11",
       "times": 1,
       "said": ""
+    },
+    {
+      "what": "みに",
+      "since": "2026-11-11",
+      "first": "2026-11-11",
+      "times": 1,
+      "said": ""
+    },
+    {
+      "what": "データ",
+      "since": "2026-11-11",
+      "first": "2026-11-11",
+      "times": 1,
+      "said": ""
     }
   ],
   "thinking_about": "自じゃない。",
@@ -13138,37 +13158,14 @@
       "day": "2026-11-11"
     }
   ],
-  "understood_usually": 0.526023,
+  "understood_usually": 0.520742,
   "its_ways": {
-    "pages_per_site": 9.7,
-    "pull_of_japanese": 1.58,
-    "feeling_keen": 0.34,
-    "wish_to_return": 1.8
+    "pages_per_site": 9.6,
+    "pull_of_japanese": 1.57,
+    "feeling_keen": 0.33,
+    "wish_to_return": 1.9
   },
   "came_back": [
-    {
-      "place": "chionse.github.io",
-      "before": {
-        "day": 44,
-        "entrance": "https://chionse.github.io/senonsei/",
-        "knew": 410,
-        "of": 691,
-        "pages": 11,
-        "title": "千遠生のサイト",
-        "unread": 0,
-        "vocabulary": 467
-      },
-      "now": {
-        "entrance": "https://chionse.github.io/senonsei/",
-        "title": "千遠生のサイト",
-        "day": 46,
-        "vocabulary": 510,
-        "knew": 425,
-        "of": 725,
-        "pages": 11,
-        "unread": 0
-      }
-    },
     {
       "place": "sugarpot.justnet.ne.jp",
       "before": {
@@ -13835,13 +13832,36 @@
         "pages": 2,
         "unread": 0
       }
+    },
+    {
+      "place": "www3.nhk.or.jp",
+      "before": {
+        "day": 56,
+        "entrance": "https://www3.nhk.or.jp/news/",
+        "knew": 333,
+        "of": 1572,
+        "pages": 3,
+        "title": "NHKニュース 速報・最新情報",
+        "unread": 0,
+        "vocabulary": 901
+      },
+      "now": {
+        "entrance": "https://web.archive.org/web/20220708223335/https://www3.nhk.or.jp/news/html/20220709/k10013709181000.html",
+        "title": "イーロン・マスク氏 ツイッターと合意の買収計画を撤回 | NHK | IT・ネッ",
+        "day": 61,
+        "vocabulary": 902,
+        "knew": 128,
+        "of": 577,
+        "pages": 4,
+        "unread": 0
+      }
     }
   ],
-  "woke_at": "2026-11-11 21",
+  "woke_at": "2026-11-11 22",
   "blog_titles": {
-    "seen": 63,
+    "seen": 66,
     "closed": 3,
-    "chars": 2105
+    "chars": 2183
   },
   "replied": {
     "entry-1794222703861": {
@@ -14475,7 +14495,8 @@
     "ビッグボーイ、栗づくしの「甘栗のモンブランファッジサンデー」を発売！　ミニサイズや渋皮栗アイスも登場  - グルメ Watch",
     "フレッシュネスバーガー「フライドチキン」30円引きで販売。好きなソースが選べるセットも登場  - グルメ Watch",
     "中日スポーツ:としまえん敷地に女子の”聖地”　３万人収容スタジアム建設構想:サッカー(CHUNICHI Web)",
-    "Bluesky(むかしのすがた)"
+    "Bluesky(むかしのすがた)",
+    "イーロン・マスク氏 ツイッターと合意の買収計画を撤回 | NHK | IT・ネット"
   ],
   "translated_lately": [
     "2008 → 2008年",
