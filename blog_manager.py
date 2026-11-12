@@ -888,12 +888,15 @@ def render_unlockable_list(entries, prefix, per_page=None):
 
     # 何枚かに分かれた。並び順は書いたままで、開いたものが
     # 飛び飛びに現れる。そこが面白いところなので触らない
-    listed = ""
+    # 何枚かの一覧は、同じ場所に重ねて置く(keyword-sheets)。いちばん背の高い一枚に
+    # 合わせて場所を取るので、めくっても下の数字が動かない(2026-11-12、彼女に言われた)
+    listed = '      <div class="keyword-sheets">\n'
     for index, sheet in enumerate(sheets, start=1):
         hidden = "" if index == 1 else " hidden"
         listed += f"""      <ul class="keyword-list" id="{prefix}sheet{index}"{hidden}>
 {sheet}      </ul>
 """
+    listed += "      </div>\n"
     turning = "".join(
         f'<span class="{"here" if i == 1 else ""}" id="{prefix}turn{i}"'
         f" onclick=\"turnTo('{prefix}', {i}, {len(sheets)})\">{i}</span>"
