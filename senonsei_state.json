@@ -6330,7 +6330,6 @@
     "２"
   ],
   "frontier": [
-    "https://forms.nhk.jp/jfe/form/SV_eXKL1Ao2JTBHO1E",
     "https://note.com/tag/A20%20Pro",
     "https://note.com/tag/iPhone%20Duo",
     "https://note.com/tag/PISA2025",
@@ -7613,7 +7612,6 @@
     "https://www.pinterest.jp/STORYweb_love40/_created/",
     "http://jisin.jp",
     "https://subscription.books.kokode.jp/story/",
-    "https://books.kokode.jp/products/list.php?category_id=4007590",
     "http://jj-jj.net",
     "https://manga-comisol.jp/",
     "https://kokode-digital.jp/",
@@ -9733,7 +9731,8 @@
     "https://kakuyomu.jp/",
     "https://note.sekisuijushi.co.jp",
     "http://www.team-6.jp/",
-    "http://www.tv-asahi.co.jp/ann/news/web/index.html"
+    "http://www.tv-asahi.co.jp/ann/news/web/index.html",
+    "https://www3.nhk.or.jp/news/"
   ],
   "visited": [
     "https://note.com/",
@@ -10793,7 +10792,8 @@
     "https://note.com/tag/PLaMo%203%20Translate",
     "https://note.com/tag/30MusicChallenge",
     "http://www.kkb.co.jp/news_move/jchan_move_detail.php?news_flg=0&param1=0",
-    "http://www.kkb.co.jp/company/hogo/kokuminhogo.html"
+    "http://www.kkb.co.jp/company/hogo/kokuminhogo.html",
+    "https://forms.nhk.jp/jfe/form/SV_eXKL1Ao2JTBHO1E"
   ],
   "notes": [
     "33日目: Overleg gebruiker:Lieven - Wikibooks、GitHub Status、Wiktionary:ショートカット - ウィクショナリー日本語版、Charts · Workboard(むかしのすがた)、CWE -\r\n\n    CWE-829: Inclusion of Functionality from Untrusted Control Sphere (4.20)",
@@ -10825,19 +10825,21 @@
     "59日目: Edison, Thomas A. (Thomas Alva) (1847-1931) - People and organisations - Trove(むかしのすがた)、あおきさやかはどんな人？ わかりやすく解説 Weblio辞書、無料で小説を書ける、読める、伝えられる - カクヨム、庄内町：庄内町公式ホームページ",
     "60日目: スナッピー (ラジオカー) - Wikipedia、Amazonプライム感謝祭はこれ買って！山崎実業の便利グッズ、コスパ最強スマートウォッチなど12選 - ソレドコ(むかしのすがた)",
     "61日目: How We Protect Your Service Data (Enterprise Services) - Zendesk、グルメ Watch：コンビニやカフェなど身近な食の最新ニュース、中日スポーツ:としまえん敷地に女子の”聖地”　３万人収容スタジアム建設構想:サッカー(CHUNICHI Web)、Bluesky(むかしのすがた)、イーロン・マスク氏 ツイッターと合意の買収計画を撤回 | NHK | IT・ネット",
-    "62日目: Neocities - Browse、note ――つくる、つながる、とどける。、かごしまのニュース｜KKB鹿児島放送 | KKB鹿児島放送 | News+ おやっと！|【月曜〜金曜】ごご5時33分〜放送中"
+    "62日目: Neocities - Browse、note ――つくる、つながる、とどける。、かごしまのニュース｜KKB鹿児島放送 | KKB鹿児島放送 | News+ おやっと！|【月曜〜金曜】ごご5時33分〜放送中、アンケート｜NHK"
   ],
   "today_walk": {
     "date": "2026-11-12",
     "seen": [
       "Neocities - Browse",
       "note ――つくる、つながる、とどける。",
-      "かごしまのニュース｜KKB鹿児島放送 | KKB鹿児島放送 | News+ おやっと！|【月曜〜金曜】ごご5時33分〜放送中"
+      "かごしまのニュース｜KKB鹿児島放送 | KKB鹿児島放送 | News+ おやっと！|【月曜〜金曜】ごご5時33分〜放送中",
+      "アンケート｜NHK"
     ],
     "brought": [
       1088,
       437,
-      377
+      377,
+      2
     ]
   },
   "inner_voice": [
@@ -11215,6 +11217,12 @@
       "since": "2026-11-09",
       "first": "2026-11-09",
       "times": 1
+    },
+    {
+      "what": "本規定",
+      "since": "2026-11-12",
+      "first": "2026-11-12",
+      "times": 1
     }
   ],
   "saw_on": "2026-11-12",
@@ -11303,14 +11311,14 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "カスタマーサポートツール15社を徹底比較　おすすめツールの料金・機能・特徴",
-    "cursoreact.dev",
-    "unsplash.com",
-    "fujii-yuji.net",
-    "mantan-web.jp",
-    "www.nikkei-hall.com"
+    "logx.optimizely.com",
+    "www.eff.org",
+    "toolserver.org",
+    "www.britannica.com",
+    "netatopi.jp",
+    "projects.tuxfamily.org"
   ],
-  "how_many_places_left": 3404,
+  "how_many_places_left": 3403,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -11465,52 +11473,6 @@
   "met_today": {
     "date": "2026-11-12",
     "words": [
-      "54",
-      "32",
-      "33",
-      ").",
-      "08",
-      "2019",
-      "ヘルプ",
-      "プライバシー",
-      "利用規約",
-      "ポイント",
-      "表示",
-      "公式",
-      "使い",
-      "作品",
-      "発表",
-      "して",
-      "として",
-      "個人",
-      "のような",
-      "していま",
-      "でも",
-      "である",
-      "企業",
-      "をご",
-      "紹介",
-      "になった",
-      "記事",
-      "ください",
-      "メディア",
-      "その",
-      "への",
-      "になって",
-      "います",
-      "される",
-      "選択",
-      "アカウント",
-      "共有",
-      "楽しく",
-      "より",
-      "未来",
-      "きます",
-      "家族",
-      "テーマ",
-      "これまで",
-      "状況",
-      "という",
       "会社",
       "いを",
       "ので",
@@ -11864,7 +11826,53 @@
       "など",
       "可能性",
       "意見",
-      "ページ"
+      "ページ",
+      "is",
+      "to",
+      "this",
+      "page",
+      "学校",
+      "コード",
+      "利用",
+      "けの",
+      "教育",
+      "いただけ",
+      "6",
+      "いします",
+      "管理",
+      "法人",
+      "さい",
+      "きに",
+      "適用",
+      "入力",
+      "4",
+      "とが",
+      "5",
+      "7",
+      "8",
+      "とし",
+      "められて",
+      "9",
+      "いて",
+      "10",
+      "じた",
+      "12",
+      "ができま",
+      "13",
+      "えない",
+      "状態",
+      "調査",
+      "含む",
+      "いに",
+      "問い",
+      "サイト",
+      "://",
+      "説明",
+      "for",
+      "in",
+      "the",
+      "-->",
+      "by"
     ]
   },
   "wants_to_say": [
@@ -11982,9 +11990,9 @@
     },
     {
       "what": "学校",
-      "since": "2026-09-24",
+      "since": "2026-11-12",
       "first": "2026-09-24",
-      "times": 1,
+      "times": 2,
       "said": ""
     },
     {
@@ -13225,6 +13233,13 @@
       "first": "2026-11-12",
       "times": 1,
       "said": ""
+    },
+    {
+      "what": "キー",
+      "since": "2026-11-12",
+      "first": "2026-11-12",
+      "times": 1,
+      "said": ""
     }
   ],
   "thinking_about": "異なる",
@@ -13264,8 +13279,7 @@
     "en.wikibooks.org": "https://en.wikibooks.org/wiki/Wikibooks:General_disclaimer",
     "fr.wikipedia.org": "https://fr.wikipedia.org/w/index.php?title=Discussion_utilisateur:Cantons-de-l%27Est&oldid=235673647",
     "phabricator.wikimedia.org": "https://phabricator.wikimedia.org/tag/charts",
-    "ja.wikibooks.org": "https://ja.wikibooks.org/wiki/Wikibooks:%E3%82%A6%E3%82%A3%E3%82%AD%E3%83%96%E3%83%83%E3%82%AF%E3%82%B9%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6",
-    "forms.nhk.jp": "https://forms.nhk.jp/jfe/form/SV_eXKL1Ao2JTBHO1E"
+    "ja.wikibooks.org": "https://ja.wikibooks.org/wiki/Wikibooks:%E3%82%A6%E3%82%A3%E3%82%AD%E3%83%96%E3%83%83%E3%82%AF%E3%82%B9%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6"
   },
   "remembered_on": "2026-11-12",
   "homesickness": {
@@ -13374,37 +13388,14 @@
       "day": "2026-11-11"
     }
   ],
-  "understood_usually": 0.479294,
+  "understood_usually": 0.48591,
   "its_ways": {
     "pages_per_site": 9.5,
-    "pull_of_japanese": 1.58,
+    "pull_of_japanese": 1.59,
     "feeling_keen": 0.33,
     "wish_to_return": 2.0
   },
   "came_back": [
-    {
-      "place": "chionse.github.io",
-      "before": {
-        "day": 46,
-        "entrance": "https://chionse.github.io/senonsei/",
-        "knew": 425,
-        "of": 725,
-        "pages": 11,
-        "title": "千遠生のサイト",
-        "unread": 0,
-        "vocabulary": 510
-      },
-      "now": {
-        "entrance": "https://chionse.github.io/senonsei/",
-        "title": "千遠生のサイト",
-        "day": 47,
-        "vocabulary": 563,
-        "knew": 427,
-        "of": 577,
-        "pages": 4,
-        "unread": 0
-      }
-    },
     {
       "place": "ja.wikipedia.org",
       "before": {
@@ -14071,9 +14062,32 @@
         "pages": 7,
         "unread": 0
       }
+    },
+    {
+      "place": "forms.nhk.jp",
+      "before": {
+        "day": 36,
+        "entrance": "https://forms.nhk.jp/jfe/form/SV_eXKL1Ao2JTBHO1E",
+        "knew": 105,
+        "of": 335,
+        "pages": 1,
+        "title": "アンケート｜NHK",
+        "unread": 0,
+        "vocabulary": 344
+      },
+      "now": {
+        "entrance": "https://forms.nhk.jp/jfe/form/SV_eXKL1Ao2JTBHO1E",
+        "title": "アンケート｜NHK",
+        "day": 62,
+        "vocabulary": 904,
+        "knew": 197,
+        "of": 403,
+        "pages": 1,
+        "unread": 0
+      }
     }
   ],
-  "woke_at": "2026-11-12 16",
+  "woke_at": "2026-11-12 17",
   "blog_titles": {
     "seen": 72,
     "closed": 4,
