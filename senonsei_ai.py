@@ -559,6 +559,9 @@ THE_OLD_HAND_WANDERS = 0.15
 # 日記を書くのは、起きている昼のうち(ひみつの部屋の「生活リズム」にある「日中7時〜22時」)。
 # 0時から23時のどれでも選べたので、二十日に一度くらい眠っている間に書いていた
 WRITING_HOURS = range(7, 23)
+# 起こされるのは一時間に一度(Cloudflare の目覚ましが毎時12分)。
+# 書くと決めた分が、次に起こされるより前に来る時は、起きたまま待って、その分に書く
+NEXT_WAKE_AFTER = datetime.timedelta(hours=1)
 # 覚えた言葉の覚え具合。覚えてからの日数と、ブログに書いた回数で深まっていく。
 # この日数で、覚えたての崩れやすさが三分の二ほどになる
 SETTLES_IN_DAYS = 10
@@ -5273,6 +5276,38 @@ def an_hour_it_writes(state):
     return random.choices(WRITING_HOURS, weights=[leaning[h] for h in WRITING_HOURS])[0]
 
 
+def a_minute_it_writes():
+    """今日は何分に書きたいか。どの分も同じだけありうる。
+
+    前は、何時に書くかだけを決めて、その時間に起こされた時にすぐ書いていた。
+    目覚ましが毎時12分に鳴るので、日記はいつも12分か13分に出ていた。
+    時刻を気まぐれに決めているのに、分だけ決まっているのはおかしいので、
+    分も自分で決める(2026-11-12、彼女と決めた)。"""
+    return random.randrange(60)
+
+
+def the_moment_it_writes(plan, now):
+    """今日、書くと決めている時刻。分を決めていない予定は、その時間の初め。"""
+    return now.replace(
+        hour=int(plan.get("hour") or 0), minute=int(plan.get("minute") or 0),
+        second=0, microsecond=0,
+    )
+
+
+def stays_awake_until(moment):
+    """決めた分まで、起きたまま待ちたいと伝える。
+
+    待つのはこの子ではなく、起こしてくれた側(GitHub のワークフロー)。
+    散歩で持ち帰ったものを先にしまってから、その分まで待ち、
+    日記だけを書きに戻ってくる(write_at_its_minute)。
+    手元で動かしている時は、伝える相手がいないので何もしない。"""
+    told = os.environ.get("GITHUB_OUTPUT")
+    if not told:
+        return
+    with open(told, "a", encoding="utf-8") as f:
+        f.write(f"kaku_at={int(moment.timestamp())}\n")
+
+
 def restlessness(state, today):
     """今日の休みたさ。一日に一度だけ揺れる。
 
@@ -5327,6 +5362,9 @@ def todays_mood(state, today):
     決めたら変えられないというのは、生きているものらしくない。"""
     plan = state.get("today_plan") or {}
     if plan.get("date") == today:
+        if "minute" not in plan:
+            # 分まで決めるようになる前に立てた予定。分だけ足す
+            plan["minute"] = a_minute_it_writes()
         # もう書いた日に「休むことにした」と思い直しても、それは本当ではない
         wrote = any(one.get("date") == today for one in blog_manager.load_articles())
         if wrote or random.random() > CHANGING_ITS_MIND:
@@ -5339,10 +5377,14 @@ def todays_mood(state, today):
     # 疲れていたり、かなしかったりすると、休みたくなる
     resting = random.random() < min(0.9, restlessness(state, today) * atama.wants_rest(state.get("atama")))
     hour = an_hour_it_writes(state)
-
-    state["today_plan"] = {"date": today, "resting": resting, "hour": hour}
+    minute = a_minute_it_writes()
 
     was = locals().get("was")
+    if was and was.get("hour") == hour and was.get("minute") is not None:
+        # 思い直しても同じ時間になった。分はそのまま
+        minute = was["minute"]
+    state["today_plan"] = {"date": today, "resting": resting, "hour": hour, "minute": minute}
+
     if was and (was["resting"] != resting or was["hour"] != hour):
         before = "休む" if was["resting"] else f"{was['hour']}時に書く"
         after = "休む" if resting else f"{hour}時に書く"
@@ -5807,10 +5849,43 @@ def run_today():
     if sleeping:
         print(f"{today} は書きそびれたまま眠りました。")
         return
-    if now.hour < hour:
-        print(f"{today} は{hour}時ごろに書くつもりです。(今は{now.hour}時)")
+    # 何時何分に書くかまで決めてある(2026-11-12、彼女と決めた)。
+    # その時刻を過ぎて起こされたなら、今書く。起こしてもらえなかった時間の
+    # ぶんは、次に起きた時に書くことになる(前と同じ)
+    moment = the_moment_it_writes(state.get("today_plan") or {"hour": hour}, now)
+    if now_in_japan() < moment:
+        print(f"{today} は{moment:%H時%M分}ごろに書くつもりです。(今は{now_in_japan():%H時%M分})")
+        if moment < now + NEXT_WAKE_AFTER:
+            # 次に起こされるより前に、その分が来る。起きたまま待つ
+            stays_awake_until(moment)
         return
 
+    write_the_day(state, today)
+
+
+def write_at_its_minute():
+    """決めた分まで待ったあとに、日記だけを書く。
+
+    その時間の散歩は、起きた時にもう済ませて、持ち帰ったものもしまってある。
+    ここでは歩かないし、今日の予定も決め直さない。
+    待っているあいだに気が変わることはない(気が変わるのは、起きた時だけ)。"""
+    now = now_in_japan()
+    today = now.date().isoformat()
+    state = load_state()
+    plan = state.get("today_plan") or {}
+    if plan.get("date") != today or plan.get("resting"):
+        print(f"{today} は書く予定がありません。")
+        return
+    if any(a["date"] == today for a in blog_manager.load_articles()):
+        print(f"{today} はもう書いてあります。")
+        return
+    if state.get("atama") and atama.asleep(state["atama"], now):
+        print(f"{now:%H}時。眠っているので書きません")
+        return
+    moment = the_moment_it_writes(plan, now)
+    if now < moment:
+        print(f"{moment:%H時%M分}に書くつもりです。まだ{now:%H時%M分}なので書きません")
+        return
     write_the_day(state, today)
 
 
@@ -5896,4 +5971,10 @@ def write_the_day(state, day):
 
 
 if __name__ == "__main__":
-    run_today()
+    import sys
+
+    # 「kaku」と添えて呼ばれた時は、決めた分まで待ったあと。日記だけを書く
+    if sys.argv[1:] == ["kaku"]:
+        write_at_its_minute()
+    else:
+        run_today()
