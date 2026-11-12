@@ -1253,6 +1253,25 @@ article.yomimono .article-head {
   display: none;
 }
 
+/* 何枚かに分かれた一覧は、同じ場所に重ねて置く。見えているのは一枚だけ。
+   いちばん背の高い一枚に合わせて場所を取るので、少ししか並んでいない一枚に
+   めくっても、下の数字(1 2 …)が上がってこない(2026-11-12、彼女に言われた)。
+   上下の空きは、重ねる前の一覧と同じ */
+.keyword-sheets {
+  display: grid;
+  margin: 1em 0;
+}
+
+.keyword-sheets > .keyword-list {
+  grid-area: 1 / 1;
+  margin: 0;
+}
+
+.keyword-sheets > .keyword-list[hidden] {
+  display: grid;
+  visibility: hidden;
+}
+
 /* 一覧をめくるところ。1 2 3 … と並ぶ */
 .page-turn {
   text-align: center;
