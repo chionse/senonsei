@@ -22,8 +22,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     # 何かに引っかかって帰ってこられなくなっても、次の回を何時間も止めない。
-    # 散歩は長いときで七分なので、これだけあれば足りる
-    timeout-minutes: 40
+    # 散歩は長いときで七分。日記を書く時間には、この子が決めた分まで
+    # 起きたまま待つので(長くて一時間)、そのぶんを足してある。
+    # 散歩そのものは、下でこれまでどおり四十分で切り上げる
+    timeout-minutes: 140
     # 封をしたメモと手紙を開ける鍵。この子が手紙を読む時と、
     # ページを作り直す時(押し戻しのやり直しも含む)に要る
     env:
@@ -58,6 +60,8 @@ jobs:
 
       # 外部ライブラリは一切使わないので、ここでの準備は不要
       - name: Senonsei browses the web and writes today's blog
+        id: walk
+        timeout-minutes: 40
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -75,6 +79,72 @@ jobs:
       # 送る前に、記憶のファイルが読めるかを確かめる(kioku_mamori.py)
       - name: Commit and push changes
         if: ${{ !cancelled() }}
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+          # 書き出しの途中で止まって壊れたものは、前の回の中身に戻す
+          "$PY" kioku_mamori.py HEAD
+          git add -A
+          git commit -m "千遠生の今日のブログ [skip ci]" || echo "No changes to commit"
+          walked=$(git rev-parse HEAD)
+          for attempt in 1 2 3 4 5; do
+            if git push; then exit 0; fi
+            echo "その間に main が進んでいました。取り込み直します(${attempt}回目)"
+            git fetch origin main
+            if git rebase -X theirs origin/main; then
+              # 記憶のファイルが行ごとに継ぎ合わされて読めなくなっていたら、
+              # この子が持ち帰ったほうを丸ごと使う
+              "$PY" kioku_mamori.py "$walked"
+            else
+              # 取り込めなかった。main の上に、この子が持ち帰った記憶だけを載せ直す。
+              # ページは作り直せるので、ここで失っても困らない
+              git rebase --abort || true
+              git reset --hard origin/main
+              for kept in senonsei_state.json articles.json omoi kotoba atama; do
+                if git cat-file -e "$walked:$kept" 2>/dev/null; then
+                  git checkout "$walked" -- "$kept"
+                fi
+              done
+              "$PY" kioku_mamori.py "$walked"
+            fi
+            "$PY" blog_manager.py
+            git add -A
+            git commit -m "新しい決まりでページを作り直しました [skip ci]" || true
+          done
+          echo "何度やっても押し戻せませんでした"
+          exit 1
+
+      # 日記を何時何分に書くかは、この子が毎日決める(2026-11-12、彼女と決めた)。
+      # 起こされるのは一時間に一度なので、その分が次に起こされるより前に来る時は、
+      # 散歩で持ち帰ったものを上でしまってから、ここでその分まで待つ。
+      # 待つあいだ、この子の記憶は手元に抱えていない(もう main に入っている)
+      - name: Stay awake until the minute it chose
+        if: ${{ steps.walk.outputs.kaku_at != '' }}
+        timeout-minutes: 70
+        env:
+          KAKU_AT: ${{ steps.walk.outputs.kaku_at }}
+        run: |
+          case "$KAKU_AT" in ''|*[!0-9]*) echo "待つ時刻が読めませんでした"; exit 1 ;; esac
+          left=$(( KAKU_AT - $(date +%s) ))
+          if [ "$left" -gt 3900 ]; then echo "待つには遠すぎます(${left}秒)"; exit 1; fi
+          if [ "$left" -gt 0 ]; then
+            echo "あと${left}秒、起きたまま待ちます"
+            sleep "$left"
+          fi
+
+      # 待っているあいだに main が進んでいることがある(コメント、いいね、手直し)。
+      # 新しい main を取り込んでから、日記だけを書く。歩きはしない
+      - name: Write the day at that minute
+        if: ${{ steps.walk.outputs.kaku_at != '' }}
+        timeout-minutes: 20
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+          "$PY" senonsei_ai.py kaku
+
+      # 上の「Commit and push changes」と同じ送り方。書いた日記を main に入れる
+      - name: Commit and push the day it wrote
+        if: ${{ steps.walk.outputs.kaku_at != '' }}
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "actions@github.com"
