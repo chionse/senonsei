@@ -7705,10 +7705,8 @@
     "https://mastodon.world/@longreads",
     "https://cookiedatabase.org/tcf/purposes/",
     "http://www.automattic.com/?utm_source=longreads&utm_medium=automattic_referred&utm_campaign=footer",
-    "https://magazine.atavist.com/2026/the-bleeding-hearts-austria-robbery",
     "https://www.mariemohanna.fr/",
     "https://magazine.atavist.com/subscribe/",
-    "https://magazine.atavist.com/2026/the-bleeding-hearts-austria-robbery?src=longreads",
     "https://www.theguardian.com/lifeandstyle/article/2024/jun/01/jon-ronson-its-getting-harder-to-be-optimistic?src=longreads",
     "https://www.newyorker.com/news/the-new-yorker-interview/jon-ronsons-guide-to-the-culture-wars?src=longreads",
     "https://www.newyorker.com/magazine/2026/06/15/andrew-tates-empire-of-abuse",
@@ -9904,7 +9902,9 @@
     "https://linkage-inc.co.jp/",
     "https://have-fun.tech/",
     "https://github.com/soudai",
-    "https://ja.wikipedia.org/wiki/特別:おまかせ表示"
+    "https://www.aozora.gr.jp/index_pages/sakuhin_ha1.html",
+    "https://matthewwolfe.net/",
+    "https://c0.wp.com"
   ],
   "visited": [
     "https://note.com/",
@@ -10975,7 +10975,14 @@
     "https://agilejourney.uzabase.com/entry/2026/08/27/103000",
     "https://agilejourney.uzabase.com/entry/2026/09/24/103000",
     "https://agilejourney.uzabase.com/entry/2022/07/28/103000",
-    "https://agilejourney.uzabase.com/entry/2026/10/15/103000"
+    "https://agilejourney.uzabase.com/entry/2026/10/15/103000",
+    "https://magazine.atavist.com/2026/the-bleeding-hearts-austria-robbery?src=longreads",
+    "https://magazine.atavist.com/my-account/lost-password",
+    "https://magazine.atavist.com/2026/the-rise-and-fall-of-a-supercop-belgium-cocaine",
+    "https://magazine.atavist.com/2026/the-bleeding-hearts-austria-robbery",
+    "https://magazine.atavist.com/2026/toxic-lies-radiation-paducah",
+    "https://magazine.atavist.com/my-account",
+    "https://magazine.atavist.com/xmlrpc.php?rsd"
   ],
   "notes": [
     "34日目: ぷろだくしょんバオバブ - Wikipedia、利用者情報の外部送信について - Hatena Policies(むかしのすがた)、NHKニュース 速報・最新情報、「市長に全責任がある」石垣市の国際フェリーがたった4カ月で運休に…現役市議が明かす「市民が赤字補償」の“とんでもスキーム” | 女性自身、CNN Chile",
@@ -11007,17 +11014,19 @@
     "60日目: スナッピー (ラジオカー) - Wikipedia、Amazonプライム感謝祭はこれ買って！山崎実業の便利グッズ、コスパ最強スマートウォッチなど12選 - ソレドコ(むかしのすがた)",
     "61日目: How We Protect Your Service Data (Enterprise Services) - Zendesk、グルメ Watch：コンビニやカフェなど身近な食の最新ニュース、中日スポーツ:としまえん敷地に女子の”聖地”　３万人収容スタジアム建設構想:サッカー(CHUNICHI Web)、Bluesky(むかしのすがた)、イーロン・マスク氏 ツイッターと合意の買収計画を撤回 | NHK | IT・ネット",
     "62日目: Neocities - Browse、note ――つくる、つながる、とどける。、かごしまのニュース｜KKB鹿児島放送 | KKB鹿児島放送 | News+ おやっと！|【月曜〜金曜】ごご5時33分〜放送中、アンケート｜NHK",
-    "63日目: タンタンの冒険/ユニコーン号の秘密 - Wikipedia、XP・エクストリームプログラミングの始め方を専門家が語る｜セミナーレポート - Agile Journey"
+    "63日目: タンタンの冒険/ユニコーン号の秘密 - Wikipedia、XP・エクストリームプログラミングの始め方を専門家が語る｜セミナーレポート - Agile Journey、The Ex-Cop Who Stole Millions to Become a Real-Life Robin Hood - The Atavist Magazine"
   ],
   "today_walk": {
     "date": "2026-11-13",
     "seen": [
       "タンタンの冒険/ユニコーン号の秘密 - Wikipedia",
-      "XP・エクストリームプログラミングの始め方を専門家が語る｜セミナーレポート - Agile Journey"
+      "XP・エクストリームプログラミングの始め方を専門家が語る｜セミナーレポート - Agile Journey",
+      "The Ex-Cop Who Stole Millions to Become a Real-Life Robin Hood - The Atavist Magazine"
     ],
     "brought": [
       1763,
-      438
+      438,
+      1713
     ]
   },
   "inner_voice": [
@@ -11401,13 +11410,16 @@
       "since": "2026-11-12",
       "first": "2026-11-12",
       "times": 1
+    },
+    {
+      "what": "1048",
+      "since": "2026-11-13",
+      "first": "2026-11-13",
+      "times": 1
     }
   ],
   "saw_on": "2026-11-13",
   "pictures_seen": [
-    "2026-11-08 blogmura.com: この絵に見えるものは、円形のもので、白い色で描かれています。",
-    "2026-11-09 www.weblio.jp: ウェブロ (Weblio)",
-    "2026-11-09 www.weblio.jp: ウェブロ (Weblio)",
     "2026-11-09 www.town.shonai.lg.jp: 絵には、紫色の背景と、白文字で書かれた文字があります。文字は、日本語で書かれており、見えた形や色を、見えたとおりに書いています。",
     "2026-11-09 www.town.shonai.lg.jp: 絵には、緑色のキャラクターがいます。",
     "2026-11-09 www.town.shonai.lg.jp: 絵には、色の薄い円形のものがいくつかあります。",
@@ -11434,7 +11446,10 @@
     "2026-11-12 www.kkb.co.jp: 船",
     "2026-11-13 agilejourney.uzabase.com: 絵には、細かな点があり、それらが混ざっている。",
     "2026-11-13 agilejourney.uzabase.com: 絵には、2人の男性が写っています。1人は、白いシャツを着ています。2人目は、黒いシャツを着ています。それぞれが、異なる色の帽子をかぶっています。1人目は、白い帽子をかぶっています。2人目は、黒い帽子をかぶっ",
-    "2026-11-13 agilejourney.uzabase.com: 絵には、細い線が多く描かれています。その中には、人が笑っている写真があります。その写真は、日本語で書かれています。"
+    "2026-11-13 agilejourney.uzabase.com: 絵には、細い線が多く描かれています。その中には、人が笑っている写真があります。その写真は、日本語で書かれています。",
+    "2026-11-13 magazine.atavist.com: 絵には、人のようなものがいくつかあります。その中には、絵の中心にいるものがあります。その中心にいるものは、絵の中心にいるものを見て",
+    "2026-11-13 magazine.atavist.com: 三人の人が、木の枝の上に立っている。",
+    "2026-11-13 magazine.atavist.com: アトミックシティ"
   ],
   "impressions": [
     "2026-09-14 note.jp: note株式会社はクリエイターが文章や画像、音声、動画を投稿し、ユーザーがそのコンテンツを楽しんで応援できるメディアプラットフォームです。",
@@ -11489,12 +11504,12 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "www.unicode.org",
-    "www.navitime.co.jp",
-    "ko.wikiversity.org",
-    "www.yamagata-airport.co.jp",
-    "利用案内 | NHK ONE インフォメーション",
-    "su.wikisource.org"
+    "iss.ndl.go.jp",
+    "wikimediaendowment.org",
+    "www.radionikkei.jp",
+    "フライドバイ乗っ取り未遂で露呈した航空保安対策の溝、「内部の脅威」は想定せず(1",
+    "jp.loropiana.com",
+    "うんちミュージアム in どうぶつネットパーク"
   ],
   "how_many_places_left": 3563,
   "places_known": {
@@ -11638,7 +11653,8 @@
     "gourmet.watch.impress.co.jp": "フレッシュネスバーガー「フライドチキン」30円引きで販売。好きなソースが選べるセ",
     "www.chunichi.co.jp": "中日スポーツ:としまえん敷地に女子の”聖地”　３万人収容スタジアム建設構想:サッ",
     "neocities.org": "Neocities - Dannarchy",
-    "www.kkb.co.jp": "KKB鹿児島放送｜国民保護業務計画｜株式会社鹿児島放送国民保護業務計画 （国民保"
+    "www.kkb.co.jp": "KKB鹿児島放送｜国民保護業務計画｜株式会社鹿児島放送国民保護業務計画 （国民保",
+    "magazine.atavist.com": "https://magazine.atavist.com/xmlrpc.php?"
   },
   "went_home": {
     "date": "2026-11-13",
@@ -11651,68 +11667,6 @@
   "met_today": {
     "date": "2026-11-13",
     "words": [
-      "写真",
-      "方法",
-      "関係",
-      "2026",
-      "ケース",
-      "ません",
-      "必要",
-      "今回",
-      "していま",
-      "問題",
-      "共有",
-      "という",
-      "ての",
-      "判断",
-      "ではなく",
-      "データ",
-      "えない",
-      "結果",
-      "くの",
-      "支援",
-      "いました",
-      "さん",
-      "以下",
-      "のは",
-      "われる",
-      "からは",
-      "機能",
-      "れない",
-      "これは",
-      "状況",
-      "だから",
-      "可能性",
-      "りません",
-      "状態",
-      "はなく",
-      "協力",
-      "していく",
-      "ような",
-      "をご",
-      "になりま",
-      "できない",
-      "のお",
-      "変更",
-      "です",
-      "本当",
-      "対応",
-      "になって",
-      "りたい",
-      "場合",
-      "検討",
-      "こと",
-      "めに",
-      "仕事",
-      "自分",
-      "うと",
-      "整理",
-      "ると",
-      "めて",
-      "からない",
-      "いや",
-      "会話",
-      "ている",
       "めの",
       "理解",
       "すること",
@@ -12050,7 +12004,69 @@
       "24",
       "27",
       "07",
-      "23"
+      "23",
+      "The",
+      "to",
+      "&#",
+      "0",
+      "00",
+      "the",
+      "in",
+      "be",
+      "of",
+      "22",
+      "2013",
+      "for",
+      "this",
+      "2014",
+      "50",
+      "2015",
+      "2012",
+      "2009",
+      "2011",
+      "19",
+      "160",
+      "000",
+      "29",
+      "11",
+      "2018",
+      "人",
+      "2026",
+      "2016",
+      "28",
+      "18",
+      "1980",
+      "5",
+      "54",
+      "8",
+      "13",
+      "26",
+      ").",
+      "2010",
+      "70",
+      "12",
+      "2020",
+      "6",
+      "77",
+      "62",
+      "80",
+      "82",
+      "83",
+      "2025",
+      "88",
+      "500",
+      "99",
+      "55",
+      "58",
+      "32",
+      "53",
+      "25",
+      "9",
+      "2021",
+      "2008",
+      "100",
+      "2000",
+      "600"
     ]
   },
   "wants_to_say": [
@@ -13425,6 +13441,13 @@
       "first": "2026-11-13",
       "times": 1,
       "said": ""
+    },
+    {
+      "what": "1048",
+      "since": "2026-11-13",
+      "first": "2026-11-13",
+      "times": 1,
+      "said": ""
     }
   ],
   "thinking_about": "葉言 非示",
@@ -13575,10 +13598,10 @@
       "day": "2026-11-12"
     }
   ],
-  "understood_usually": 0.495543,
+  "understood_usually": 0.471858,
   "its_ways": {
-    "pages_per_site": 9.3,
-    "pull_of_japanese": 1.59,
+    "pages_per_site": 9.2,
+    "pull_of_japanese": 1.6,
     "feeling_keen": 0.33,
     "wish_to_return": 2.0
   },
@@ -14274,7 +14297,7 @@
       }
     }
   ],
-  "woke_at": "2026-11-13 08",
+  "woke_at": "2026-11-13 09",
   "blog_titles": {
     "seen": 77,
     "closed": 4,
@@ -14403,7 +14426,8 @@
     "www.chunichi.co.jp",
     "bsky.app",
     "neocities.org",
-    "www.kkb.co.jp"
+    "www.kkb.co.jp",
+    "magazine.atavist.com"
   ],
   "its_own_figure": {
     "date": "2026-11-12",
@@ -14938,7 +14962,11 @@
     "インディ・ジョーンズ/最後の聖戦 - Wikipedia",
     "ハイ・インシデント/警察ファイルJ - Wikipedia",
     "吉羽龍太郎さんに聞く、ステークホルダーとの信頼を築く方法 - Agile Journey",
-    "データベース設計の基本とアジャイル開発 - そーだいが解説する変化に対応する実装 - Agile Journey"
+    "データベース設計の基本とアジャイル開発 - そーだいが解説する変化に対応する実装 - Agile Journey",
+    "The Ex-Cop Who Stole Millions to Become a Real-Life Robin Hood - The Atavist Magazine",
+    "My account - The Atavist Magazine",
+    "The Rise and Fall of a Supercop - The Atavist Magazine",
+    "Toxic Lies - The Atavist Magazine"
   ],
   "translated_lately": [
     "2008 → 2008年",
@@ -14948,7 +14976,9 @@
     "2008 → 2008年",
     "2008 → 2008年",
     "2008 → 2008年",
-    "thomas a. edison → トーマス・エジソン"
+    "thomas a. edison → トーマス・エジソン",
+    "1983 → 1983年",
+    "2008 → 2008年"
   ],
   "shiori": {},
   "books_read": [
