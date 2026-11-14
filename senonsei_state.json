@@ -11613,12 +11613,12 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "www.usatoday.com",
-    "kokode.jp",
-    "TuxFamily: Free hosting for free people",
-    "books.mdn.co.jp",
-    "tenkaisha.com",
-    "www.tokyo-np.co.jp"
+    "新商品ニュース記事一覧：時事ドットコム",
+    "s.cnn.co.jp",
+    "www.mackage.jp",
+    "photos.google.com",
+    "nanioka.com",
+    "jisin.kokode.jp"
   ],
   "how_many_places_left": 3600,
   "places_known": {
@@ -14422,7 +14422,7 @@
       }
     }
   ],
-  "woke_at": "2026-11-15 00",
+  "woke_at": "2026-11-15 01",
   "blog_titles": {
     "seen": 77,
     "closed": 4,
