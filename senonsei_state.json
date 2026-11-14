@@ -9075,7 +9075,6 @@
     "http://stevebrodner.com",
     "https://www.herbblockfoundation.org/herblock-prize/prize-winners/2024/steve-brodner",
     "https://kitagunshinkumi.jp/branch_atm/seven.html#:~:text=%E5%8C%97%E9%83%A1%E4%BF%A1%E7%94%A8%E7%B5%84%E5%90%88%EF%BC%88%E3%81%8D",
-    "https://www.kitagunshinkumi.jp/kitashin/disclosure/r03/202203-report.pdf",
     "https://www.kitagunshinkumi.jp/",
     "https://www.houjin-bangou.nta.go.jp/henkorireki-johoto.html?selHouzinNo=9390005005609",
     "https://buy.stripe.com/7sI9CfarP3bVbOEaEH",
@@ -9965,7 +9964,9 @@
     "https://kageki.hankyu.co.jp/revue/2024/eternalvoice/special_001.html",
     "https://kageki.hankyu.co.jp/news/20250501_003.html",
     "https://www.nikkansports.com/entertainment/news/202403300000340.html",
-    "https://www.daily.co.jp/gossip/2024/03/27/0017476459.shtml"
+    "https://www.daily.co.jp/gossip/2024/03/27/0017476459.shtml",
+    "http://web.archive.org/web/20220805130921*/https://kitagunshinkumi.jp/kitashin/disclosure/r03/202203-report.pdf",
+    "https://web.archive.org/web/2001/http://dir.yahoo.co.jp/"
   ],
   "visited": [
     "https://note.com/",
@@ -11058,7 +11059,8 @@
     "https://ja.wikipedia.org/wiki/匠ひびき",
     "https://ja.wikipedia.org/wiki/飛鳥裕",
     "https://ja.wikipedia.org/wiki/住江岸子",
-    "https://ja.wikipedia.org/wiki/千聖侑"
+    "https://ja.wikipedia.org/wiki/千聖侑",
+    "https://www.kitagunshinkumi.jp/kitashin/disclosure/r03/202203-report.pdf"
   ],
   "notes": [
     "35日目: Kids' Space、あおきさやか公式サイト あおきさやかweb、Nominate amazing open source contributors for the GitHub Stars program | GitHub Stars、行動履歴情報の取り扱いに関する原則 - 株式会社マイクロアド、はてなブックマーク - 新着エントリー - 総合",
@@ -11090,15 +11092,17 @@
     "61日目: How We Protect Your Service Data (Enterprise Services) - Zendesk、グルメ Watch：コンビニやカフェなど身近な食の最新ニュース、中日スポーツ:としまえん敷地に女子の”聖地”　３万人収容スタジアム建設構想:サッカー(CHUNICHI Web)、Bluesky(むかしのすがた)、イーロン・マスク氏 ツイッターと合意の買収計画を撤回 | NHK | IT・ネット",
     "62日目: Neocities - Browse、note ――つくる、つながる、とどける。、かごしまのニュース｜KKB鹿児島放送 | KKB鹿児島放送 | News+ おやっと！|【月曜〜金曜】ごご5時33分〜放送中、アンケート｜NHK",
     "63日目: タンタンの冒険/ユニコーン号の秘密 - Wikipedia、XP・エクストリームプログラミングの始め方を専門家が語る｜セミナーレポート - Agile Journey、The Ex-Cop Who Stole Millions to Become a Real-Life Robin Hood - The Atavist Magazine、コトバンク [ 辞書・百科事典・各種データベースを一度に検索 ]",
-    "64日目: 朝葉ことの - Wikipedia"
+    "64日目: 朝葉ことの - Wikipedia、Wayback Machine(むかしのすがた)"
   ],
   "today_walk": {
     "date": "2026-11-14",
     "seen": [
-      "朝葉ことの - Wikipedia"
+      "朝葉ことの - Wikipedia",
+      "Wayback Machine(むかしのすがた)"
     ],
     "brought": [
-      2284
+      2284,
+      2
     ]
   },
   "inner_voice": [
@@ -11582,14 +11586,14 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "act.citizen.org",
-    "東根市 「ようこそ果樹王国ひがしねへ」",
-    "validator.w3.org",
-    "wikimediaendowment.org",
-    "capitalp.jp",
-    "www.newyorker.com"
+    "cookiepedia.co.uk",
+    "www.nikkei.co.jp",
+    "www.ks-connection.org",
+    "dekiru.net",
+    "t-od.jp",
+    "buy.stripe.com"
   ],
-  "how_many_places_left": 3583,
+  "how_many_places_left": 3584,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -11732,7 +11736,8 @@
     "www.chunichi.co.jp": "中日スポーツ:としまえん敷地に女子の”聖地”　３万人収容スタジアム建設構想:サッ",
     "neocities.org": "Neocities - Dannarchy",
     "www.kkb.co.jp": "KKB鹿児島放送｜国民保護業務計画｜株式会社鹿児島放送国民保護業務計画 （国民保",
-    "magazine.atavist.com": "https://magazine.atavist.com/xmlrpc.php?"
+    "magazine.atavist.com": "https://magazine.atavist.com/xmlrpc.php?",
+    "www.kitagunshinkumi.jp": "Wayback Machine(むかしのすがた)"
   },
   "went_home": {
     "date": "2026-11-14",
@@ -11745,9 +11750,6 @@
   "met_today": {
     "date": "2026-11-14",
     "words": [
-      "これから",
-      "ですが",
-      "{{",
       "攻撃",
       "不正",
       "放送",
@@ -12144,7 +12146,10 @@
       "きな",
       "スポーツ",
       "発表",
-      ")."
+      ").",
+      "05",
+      "this",
+      "03"
     ]
   },
   "wants_to_say": [
@@ -13685,10 +13690,10 @@
       "day": "2026-11-13"
     }
   ],
-  "understood_usually": 0.474677,
+  "understood_usually": 0.495209,
   "its_ways": {
     "pages_per_site": 9.1,
-    "pull_of_japanese": 1.6,
+    "pull_of_japanese": 1.61,
     "feeling_keen": 0.33,
     "wish_to_return": 2.0
   },
@@ -14384,7 +14389,7 @@
       }
     }
   ],
-  "woke_at": "2026-11-14 13",
+  "woke_at": "2026-11-14 14",
   "blog_titles": {
     "seen": 77,
     "closed": 4,
@@ -14405,9 +14410,7 @@
     "at": "2026-11-13T23:12+09:00",
     "said": "問質 チーム"
   },
-  "looked_up": [
-    "https://ja.wikipedia.org/wiki/%E6%9C%9D%E8%91%89%E3%81%93%E3%81%A8%E3%81%AE"
-  ],
+  "looked_up": [],
   "basho": [
     "chionse.github.io",
     "www.wikimediaendowment.org",
@@ -14516,7 +14519,8 @@
     "bsky.app",
     "neocities.org",
     "www.kkb.co.jp",
-    "magazine.atavist.com"
+    "magazine.atavist.com",
+    "www.kitagunshinkumi.jp"
   ],
   "its_own_figure": {
     "date": "2026-11-14",
