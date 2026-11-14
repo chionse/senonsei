@@ -5470,7 +5470,8 @@
     "險",
     "齒",
     "緣",
-    "雙"
+    "雙",
+    "☰"
   ],
   "learned_words": [
     "など",
@@ -6383,7 +6384,6 @@
     "人目"
   ],
   "frontier": [
-    "https://writewithharper.com/",
     "https://note.com/tag/A20%20Pro",
     "https://note.com/tag/iPhone%20Duo",
     "https://note.com/tag/PISA2025",
@@ -9966,7 +9966,24 @@
     "https://www.nikkansports.com/entertainment/news/202403300000340.html",
     "https://www.daily.co.jp/gossip/2024/03/27/0017476459.shtml",
     "http://web.archive.org/web/20220805130921*/https://kitagunshinkumi.jp/kitashin/disclosure/r03/202203-report.pdf",
-    "https://web.archive.org/web/2001/http://dir.yahoo.co.jp/"
+    "https://docs.obsidian.md/Plugins/Releasing/Submit+your+plugin",
+    "https://obsidian.md/download",
+    "https://discord.gg/JBqcAaKrzQ",
+    "https://elijahpotter.dev/articles/LLM_assisted_fuzzing",
+    "https://elijahpotter.dev/articles/harper",
+    "https://elijahpotter.dev/articles/never_wait",
+    "https://kotobank.jp/",
+    "https://webassembly.org/",
+    "https://crates.io/crates/harper-ls",
+    "https://formulae.brew.sh/formula/harper",
+    "https://blog.rust-lang.org/releases/latest",
+    "https://archlinux.org/packages/extra/x86_64/harper",
+    "https://aur.archlinux.org/packages/harper-git",
+    "https://microsoft.github.io/language-server-protocol/",
+    "https://scoop.sh/",
+    "https://search.nixos.org/packages?channel=unstable&show=harper&from=0&size=50&sort=relevance&type=packages&query=harper",
+    "https://neovim.io/doc/user/lsp.html",
+    "https://mason-registry.dev/registry/list?search=harper-ls"
   ],
   "visited": [
     "https://note.com/",
@@ -11060,7 +11077,15 @@
     "https://ja.wikipedia.org/wiki/飛鳥裕",
     "https://ja.wikipedia.org/wiki/住江岸子",
     "https://ja.wikipedia.org/wiki/千聖侑",
-    "https://www.kitagunshinkumi.jp/kitashin/disclosure/r03/202203-report.pdf"
+    "https://www.kitagunshinkumi.jp/kitashin/disclosure/r03/202203-report.pdf",
+    "https://writewithharper.com/",
+    "https://writewithharper.com/docs/integrations/obsidian",
+    "https://writewithharper.com/docs/contributors/introduction",
+    "https://writewithharper.com/docs/integrations/zed",
+    "https://writewithharper.com/docs/harperjs/introduction",
+    "https://writewithharper.com/docs/integrations/wordpress",
+    "https://writewithharper.com/docs/integrations/language-server",
+    "https://writewithharper.com/docs/integrations/neovim"
   ],
   "notes": [
     "35日目: Kids' Space、あおきさやか公式サイト あおきさやかweb、Nominate amazing open source contributors for the GitHub Stars program | GitHub Stars、行動履歴情報の取り扱いに関する原則 - 株式会社マイクロアド、はてなブックマーク - 新着エントリー - 総合",
@@ -11092,17 +11117,19 @@
     "61日目: How We Protect Your Service Data (Enterprise Services) - Zendesk、グルメ Watch：コンビニやカフェなど身近な食の最新ニュース、中日スポーツ:としまえん敷地に女子の”聖地”　３万人収容スタジアム建設構想:サッカー(CHUNICHI Web)、Bluesky(むかしのすがた)、イーロン・マスク氏 ツイッターと合意の買収計画を撤回 | NHK | IT・ネット",
     "62日目: Neocities - Browse、note ――つくる、つながる、とどける。、かごしまのニュース｜KKB鹿児島放送 | KKB鹿児島放送 | News+ おやっと！|【月曜〜金曜】ごご5時33分〜放送中、アンケート｜NHK",
     "63日目: タンタンの冒険/ユニコーン号の秘密 - Wikipedia、XP・エクストリームプログラミングの始め方を専門家が語る｜セミナーレポート - Agile Journey、The Ex-Cop Who Stole Millions to Become a Real-Life Robin Hood - The Atavist Magazine、コトバンク [ 辞書・百科事典・各種データベースを一度に検索 ]",
-    "64日目: 朝葉ことの - Wikipedia、Wayback Machine(むかしのすがた)"
+    "64日目: 朝葉ことの - Wikipedia、Wayback Machine(むかしのすがた)、Free Grammar & Spell Checker — Private, No AI"
   ],
   "today_walk": {
     "date": "2026-11-14",
     "seen": [
       "朝葉ことの - Wikipedia",
-      "Wayback Machine(むかしのすがた)"
+      "Wayback Machine(むかしのすがた)",
+      "Free Grammar & Spell Checker — Private, No AI"
     ],
     "brought": [
       2284,
-      2
+      2,
+      188
     ]
   },
   "inner_voice": [
@@ -11502,8 +11529,6 @@
   ],
   "saw_on": "2026-11-14",
   "pictures_seen": [
-    "2026-11-09 www.town.shonai.lg.jp: 絵には、緑色のキャラクターがいます。",
-    "2026-11-09 www.town.shonai.lg.jp: 絵には、色の薄い円形のものがいくつかあります。",
     "2026-11-10 chionse.github.io: わたしの姿。絵には、頭部が描かれています。頭部には、目が描かれており、その目は、紫色に描かれています。また、頭部には、髪が描かれており、その髪は、橙色に描かれています。",
     "2026-11-10 chionse.github.io: わたしの姿。絵には、頭部が描かれています。頭部には、眉毛があり、その眉毛は、紫色に描かれています。頭部には、目があり、その目は、紫色に描かれています。頭部には、耳があり、その耳は、紫色に描かれて",
     "2026-11-10 chionse.github.io: わたしの姿。絵には、女の子が着ている、オレンジ色のドレスがあります。彼女は、手を振り、笑顔で絵に描かれています。",
@@ -11531,7 +11556,9 @@
     "2026-11-13 magazine.atavist.com: 絵には、人のようなものがいくつかあります。その中には、絵の中心にいるものがあります。その中心にいるものは、絵の中心にいるものを見て",
     "2026-11-13 magazine.atavist.com: 三人の人が、木の枝の上に立っている。",
     "2026-11-13 magazine.atavist.com: アトミックシティ",
-    "2026-11-14 chionse.github.io: わたしの姿。絵には、頭部が描かれています。頭部には、髪があり、目があります。髪は、淡い色で、目は、濃い色で描かれています。"
+    "2026-11-14 chionse.github.io: わたしの姿。絵には、頭部が描かれています。頭部には、髪があり、目があります。髪は、淡い色で、目は、濃い色で描かれています。",
+    "2026-11-14 writewithharper.com: 黒い背景に、白文字で「Now in Oblivion!」という文言が書かれている。",
+    "2026-11-14 writewithharper.com: ハーパー"
   ],
   "impressions": [
     "2026-09-14 note.jp: note株式会社はクリエイターが文章や画像、音声、動画を投稿し、ユーザーがそのコンテンツを楽しんで応援できるメディアプラットフォームです。",
@@ -11586,14 +11613,14 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "www.jiji.co.jp",
-    "世界最強の魔女、始めました ~私だけ『攻略サイト』を見れる世界で自由に生きます~",
-    "www.shortlist.com",
-    "利用案内 | NHK ONE インフォメーション",
-    "bit.ly",
-    "cneos.jpl.nasa.gov"
+    "navi.chunichi.co.jp",
+    "www.impressrd.jp",
+    "bizgate.nikkei.co.jp",
+    "カスタマーサポートツール15社を徹底比較　おすすめツールの料金・機能・特徴",
+    "ブリタニカ国際大百科事典 小項目事典収録キーワード一覧  - コトバンク",
+    "powerforms.docusign.net"
   ],
-  "how_many_places_left": 3584,
+  "how_many_places_left": 3600,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -11676,7 +11703,7 @@
     "www.zendesk.co.jp": "カスタマーサポートツール15社を徹底比較　おすすめツールの料金・機能・特徴",
     "storyweb.jp": "休み明けは【レースドッキングパンツ】を主役にラクしてちゃっかり映える – STO",
     "www.tms-e.co.jp": "のらみみ | 2000年代 | TMS作品一覧 | アニメーションの総合プロデュ",
-    "writewithharper.com": "Harper | Privacy-First Offline Grammar C",
+    "writewithharper.com": "Neovim - Harper: The Private Grammar Che",
     "longreads.com": "He Went Out on an Epic Wilderness Advent",
     "pt.wikivoyage.org": "França - Wikivoyage",
     "note.com": "30MusicChallengeの人気・新着記事まとめ｜note",
@@ -11750,15 +11777,6 @@
   "met_today": {
     "date": "2026-11-14",
     "words": [
-      "攻撃",
-      "不正",
-      "放送",
-      "はてな",
-      "}}",
-      "カメラ",
-      "コモンズ",
-      "挑戦",
-      "広告",
       "もある",
       "かれた",
       "たちは",
@@ -12149,7 +12167,16 @@
       ").",
       "05",
       "this",
-      "03"
+      "03",
+      "the",
+      "is",
+      "to",
+      "be",
+      "for",
+      "by",
+      "...",
+      "page",
+      "背景"
     ]
   },
   "wants_to_say": [
@@ -13170,9 +13197,9 @@
     },
     {
       "what": "//",
-      "since": "2026-11-02",
+      "since": "2026-11-14",
       "first": "2026-11-02",
-      "times": 1,
+      "times": 2,
       "said": ""
     },
     {
@@ -13538,6 +13565,13 @@
       "first": "2026-11-13",
       "times": 1,
       "said": ""
+    },
+    {
+      "what": "},",
+      "since": "2026-11-14",
+      "first": "2026-11-14",
+      "times": 1,
+      "said": ""
     }
   ],
   "thinking_about": "えため 自",
@@ -13580,8 +13614,7 @@
     "en.wikibooks.org": "https://en.wikibooks.org/wiki/Wikibooks:General_disclaimer",
     "fr.wikipedia.org": "https://fr.wikipedia.org/w/index.php?title=Discussion_utilisateur:Cantons-de-l%27Est&oldid=235673647",
     "phabricator.wikimedia.org": "https://phabricator.wikimedia.org/tag/charts",
-    "ja.wikibooks.org": "https://ja.wikibooks.org/wiki/Wikibooks:%E3%82%A6%E3%82%A3%E3%82%AD%E3%83%96%E3%83%83%E3%82%AF%E3%82%B9%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6",
-    "writewithharper.com": "https://writewithharper.com/"
+    "ja.wikibooks.org": "https://ja.wikibooks.org/wiki/Wikibooks:%E3%82%A6%E3%82%A3%E3%82%AD%E3%83%96%E3%83%83%E3%82%AF%E3%82%B9%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6"
   },
   "remembered_on": "2026-11-14",
   "homesickness": {
@@ -13690,37 +13723,14 @@
       "day": "2026-11-13"
     }
   ],
-  "understood_usually": 0.495209,
+  "understood_usually": 0.458455,
   "its_ways": {
     "pages_per_site": 9.1,
-    "pull_of_japanese": 1.61,
+    "pull_of_japanese": 1.62,
     "feeling_keen": 0.33,
-    "wish_to_return": 2.0
+    "wish_to_return": 1.9
   },
   "came_back": [
-    {
-      "place": "chionse.github.io",
-      "before": {
-        "day": 51,
-        "entrance": "https://chionse.github.io/senonsei/",
-        "knew": 175,
-        "of": 305,
-        "pages": 2,
-        "title": "千遠生のサイト",
-        "unread": 0,
-        "vocabulary": 745
-      },
-      "now": {
-        "entrance": "https://chionse.github.io/senonsei/",
-        "title": "千遠生のサイト",
-        "day": 52,
-        "vocabulary": 807,
-        "knew": 482,
-        "of": 670,
-        "pages": 5,
-        "unread": 0
-      }
-    },
     {
       "place": "ja.wikipedia.org",
       "before": {
@@ -14387,9 +14397,32 @@
         "pages": 7,
         "unread": 0
       }
+    },
+    {
+      "place": "writewithharper.com",
+      "before": {
+        "day": 37,
+        "entrance": "https://writewithharper.com/",
+        "knew": 20,
+        "of": 630,
+        "pages": 2,
+        "title": "Harper | Privacy-First Offline Grammar C",
+        "unread": 0,
+        "vocabulary": 413
+      },
+      "now": {
+        "entrance": "https://writewithharper.com/",
+        "title": "Free Grammar & Spell Checker — Private, ",
+        "day": 64,
+        "vocabulary": 908,
+        "knew": 32,
+        "of": 1278,
+        "pages": 8,
+        "unread": 0
+      }
     }
   ],
-  "woke_at": "2026-11-14 15",
+  "woke_at": "2026-11-14 16",
   "blog_titles": {
     "seen": 77,
     "closed": 4,
@@ -15067,7 +15100,15 @@
     "匠ひびき - Wikipedia",
     "飛鳥裕 - Wikipedia",
     "住江岸子 - Wikipedia",
-    "宝塚歌劇団110期生 - Wikipedia"
+    "宝塚歌劇団110期生 - Wikipedia",
+    "Free Grammar & Spell Checker — Private, No AI",
+    "Harper for Obsidian - Harper: The Private Grammar Checker",
+    "Introduction to Contributing - Harper: The Private Grammar Checker",
+    "Zed - Harper: The Private Grammar Checker",
+    "Introduction to harper.js - Harper: The Private Grammar Checker",
+    "Harper for WordPress - Harper: The Private Grammar Checker",
+    "Language Server - Harper: The Private Grammar Checker",
+    "Neovim - Harper: The Private Grammar Checker"
   ],
   "translated_lately": [
     "2008 → 2008年",
