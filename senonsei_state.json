@@ -7116,7 +7116,6 @@
     "https://togetter.com/li/2753247",
     "https://blog.hatenablog.com/entry/2026/05/07/120000",
     "https://qiita.com/maeda-niku18/items/b633dda178c505461080",
-    "https://web.archive.org/web/20001109091900/http://search.kids-space.org/",
     "https://web.archive.org/web/20001109091900/http://www.kids-space.gr.jp/m_index.html",
     "https://web.archive.org/web/20001109091900/http://home.netscape.com/",
     "https://web.archive.org/web/20001109091900/http://www.ks-connection.org/index.html",
@@ -10011,7 +10010,12 @@
     "http://web.archive.org/web/20261007150347/https://honto.jp/store/detail_1570028_14HB320.html",
     "http://web.archive.org/web/20261007150347/https://honto.jp/store/detail_1575100_14HB310.html",
     "http://web.archive.org/web/20261007150347/https://honto.jp/store/detail_1570019_14HB320.html",
-    "http://web.archive.org/web/20261007061311/https://forms.gle/kAq7fkBE5z5ob6TW6"
+    "http://web.archive.org/web/20261007061311/https://forms.gle/kAq7fkBE5z5ob6TW6",
+    "https://web.archive.org/web/20001019033924/http://engine.kids-space.org/cfdocs/searchKSC/penpalSearch.cfm",
+    "https://web.archive.org/web/20001019033924/http://www.ks-connection.org/",
+    "https://web.archive.org/web/20001019033924/http://www.ks-connection.org/world/map.html",
+    "https://web.archive.org/web/20001019033924/http://www.kids-space.org/",
+    "https://web.archive.org/web/20001019033924/http://engine.kids-space.org/cfdocs/searchKS/gallerySearch.cfm"
   ],
   "visited": [
     "https://note.com/",
@@ -11116,7 +11120,8 @@
     "https://writewithharper.com/docs/integrations/neovim",
     "http://web.archive.org/web/20261015125906/https://techlib.co.jp/",
     "http://web.archive.org/web/20261007061633/https://techlib.co.jp/information/1714",
-    "http://web.archive.org/web/20261007061633/https://techlib.co.jp/information/1665"
+    "http://web.archive.org/web/20261007061633/https://techlib.co.jp/information/1665",
+    "https://web.archive.org/web/20001109091900/http://search.kids-space.org/"
   ],
   "notes": [
     "36日目: アンケート｜NHK、株式会社ヒナプロジェクト、Poslední změny – Wikiverzita、Wikibooks",
@@ -11148,15 +11153,17 @@
     "62日目: Neocities - Browse、note ――つくる、つながる、とどける。、かごしまのニュース｜KKB鹿児島放送 | KKB鹿児島放送 | News+ おやっと！|【月曜〜金曜】ごご5時33分〜放送中、アンケート｜NHK",
     "63日目: タンタンの冒険/ユニコーン号の秘密 - Wikipedia、XP・エクストリームプログラミングの始め方を専門家が語る｜セミナーレポート - Agile Journey、The Ex-Cop Who Stole Millions to Become a Real-Life Robin Hood - The Atavist Magazine、コトバンク [ 辞書・百科事典・各種データベースを一度に検索 ]",
     "64日目: 朝葉ことの - Wikipedia、Wayback Machine(むかしのすがた)、Free Grammar & Spell Checker — Private, No AI",
-    "65日目: テックリブ株式会社"
+    "65日目: テックリブ株式会社、Kids' Space Search Page"
   ],
   "today_walk": {
     "date": "2026-11-15",
     "seen": [
-      "テックリブ株式会社"
+      "テックリブ株式会社",
+      "Kids' Space Search Page"
     ],
     "brought": [
-      315
+      315,
+      4
     ]
   },
   "inner_voice": [
@@ -11640,14 +11647,14 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "event.chunichi.co.jp",
-    "www.city.minato.tokyo.jp",
-    "nikkeibook.nikkeibp.co.jp",
-    "opac.kbr.be",
-    "house.chunichi.co.jp",
-    "www.penusa.org"
+    "www.saishunkan.co.jp",
+    "timeline.kotobaology.jp",
+    "note.morisawa.co.jp",
+    "www.transitbooks.org",
+    "www.hpmjustice.com",
+    "nikkeiasiaios.onelink.me"
   ],
-  "how_many_places_left": 3625,
+  "how_many_places_left": 3629,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -11792,7 +11799,8 @@
     "www.kkb.co.jp": "KKB鹿児島放送｜国民保護業務計画｜株式会社鹿児島放送国民保護業務計画 （国民保",
     "magazine.atavist.com": "https://magazine.atavist.com/xmlrpc.php?",
     "www.kitagunshinkumi.jp": "Wayback Machine(むかしのすがた)",
-    "techlib.co.jp": "【秋のスキルアップ応援】お友達紹介キャンペーン – テックリブ株式会社 | お知"
+    "techlib.co.jp": "【秋のスキルアップ応援】お友達紹介キャンペーン – テックリブ株式会社 | お知",
+    "search.kids-space.org": "Kids' Space Search Page"
   },
   "went_home": {
     "date": "2026-11-15",
@@ -12107,7 +12115,14 @@
       "しても",
       "めて",
       "れて",
-      "いました"
+      "いました",
+      "26",
+      "2000",
+      "02",
+      "80",
+      "in",
+      "by",
+      "the"
     ]
   },
   "wants_to_say": [
@@ -13662,10 +13677,10 @@
       "day": "2026-11-13"
     }
   ],
-  "understood_usually": 0.476291,
+  "understood_usually": 0.485805,
   "its_ways": {
     "pages_per_site": 9.1,
-    "pull_of_japanese": 1.63,
+    "pull_of_japanese": 1.62,
     "feeling_keen": 0.33,
     "wish_to_return": 1.9
   },
@@ -14361,7 +14376,7 @@
       }
     }
   ],
-  "woke_at": "2026-11-15 14",
+  "woke_at": "2026-11-15 15",
   "blog_titles": {
     "seen": 80,
     "closed": 4,
@@ -14493,7 +14508,8 @@
     "www.kkb.co.jp",
     "magazine.atavist.com",
     "www.kitagunshinkumi.jp",
-    "techlib.co.jp"
+    "techlib.co.jp",
+    "search.kids-space.org"
   ],
   "its_own_figure": {
     "date": "2026-11-14",
@@ -15051,7 +15067,8 @@
     "Neovim - Harper: The Private Grammar Checker",
     "テックリブ株式会社",
     "丸善ジュンク堂書店様の一部店舗にて「TechLib」レシートクーポンの配布がスタートしました！ – テックリブ株式会社 | お知らせ | テックリブ株式会社",
-    "【秋のスキルアップ応援】お友達紹介キャンペーン – テックリブ株式会社 | お知らせ | テックリブ株式会社"
+    "【秋のスキルアップ応援】お友達紹介キャンペーン – テックリブ株式会社 | お知らせ | テックリブ株式会社",
+    "Kids' Space Search Page"
   ],
   "translated_lately": [
     "2008 → 2008年",
