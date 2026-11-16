@@ -5544,7 +5544,65 @@
     "衾",
     "湛",
     "豈",
-    "狹"
+    "狹",
+    "賣",
+    "檐",
+    "覓",
+    "頬",
+    "蛤",
+    "搖",
+    "燒",
+    "沾",
+    "裳",
+    "歸",
+    "遲",
+    "煤",
+    "榾",
+    "稻",
+    "錨",
+    "鶯",
+    "觸",
+    "槌",
+    "棕",
+    "櫚",
+    "枇",
+    "杷",
+    "楢",
+    "鬚",
+    "杙",
+    "髯",
+    "撓",
+    "鍬",
+    "荊",
+    "廚",
+    "鋤",
+    "絃",
+    "虻",
+    "焔",
+    "兔",
+    "鷦",
+    "鷯",
+    "曳",
+    "棹",
+    "腋",
+    "挾",
+    "泛",
+    "舳",
+    "竿",
+    "鋸",
+    "椚",
+    "螻",
+    "蛄",
+    "皀",
+    "莢",
+    "藜",
+    "脛",
+    "擧",
+    "蒜",
+    "舊",
+    "鴫",
+    "塒",
+    "櫨"
   ],
   "learned_words": [
     "など",
@@ -11319,6 +11377,7 @@
     "https://web.archive.org/web/20100524110419/http://www.time.com/time/business/article/0,8599,1990582,00.html",
     "https://www.aozora.gr.jp/index_pages/sakuhin_na1.html",
     "https://www.aozora.gr.jp/cards/000118/card613.html",
+    "https://www.aozora.gr.jp/cards/000118/files/613_36802.html",
     "https://www.aozora.gr.jp/cards/000118/files/613_36802.html"
   ],
   "notes": [
@@ -11351,19 +11410,21 @@
     "63日目: タンタンの冒険/ユニコーン号の秘密 - Wikipedia、XP・エクストリームプログラミングの始め方を専門家が語る｜セミナーレポート - Agile Journey、The Ex-Cop Who Stole Millions to Become a Real-Life Robin Hood - The Atavist Magazine、コトバンク [ 辞書・百科事典・各種データベースを一度に検索 ]",
     "64日目: 朝葉ことの - Wikipedia、Wayback Machine(むかしのすがた)、Free Grammar & Spell Checker — Private, No AI",
     "65日目: テックリブ株式会社、Kids' Space Search Page、Form",
-    "66日目: Le droit d’auteur renouvelé | FAITS ET CAUSES、Show Business: What's Old Is Gold: A Triumph for Indy - TIME、長塚節 長塚節歌集　上"
+    "66日目: Le droit d’auteur renouvelé | FAITS ET CAUSES、Show Business: What's Old Is Gold: A Triumph for Indy - TIME、長塚節 長塚節歌集　上、長塚節 長塚節歌集　上"
   ],
   "today_walk": {
     "date": "2026-11-16",
     "seen": [
       "Le droit d’auteur renouvelé | FAITS ET CAUSES",
       "Show Business: What's Old Is Gold: A Triumph for Indy - TIME",
+      "長塚節 長塚節歌集　上",
       "長塚節 長塚節歌集　上"
     ],
     "brought": [
       357,
       250,
-      1243
+      1243,
+      1153
     ]
   },
   "inner_voice": [
@@ -11859,12 +11920,12 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "www.ryuzee.com",
-    "wordpress.com",
-    "shonenjumpplus.com",
-    "airline.ikaros.jp",
-    "paintmanga.web.fc2.com",
-    "Wiktionary:投稿ブロックの方針 - ウィクショナリー日本語版"
+    "jp.loropiana.com",
+    "fabli.shop",
+    "regenerativo.org",
+    "digg.com",
+    "natalie.mu",
+    "art.nikkei-ps.co.jp"
   ],
   "how_many_places_left": 3735,
   "places_known": {
@@ -12028,23 +12089,6 @@
   "met_today": {
     "date": "2026-11-16",
     "words": [
-      "続ける",
-      "まった",
-      "われる",
-      "えること",
-      "ると",
-      "いと",
-      "がない",
-      "一部",
-      "もありま",
-      "複数",
-      "きに",
-      "があった",
-      "をはじめ",
-      "うか",
-      "められて",
-      "便利",
-      "まり",
       "えば",
       "製品",
       "セキュリティ",
@@ -12427,7 +12471,24 @@
       "にも",
       "見る",
       "いや",
-      "させる"
+      "させる",
+      "りに",
+      "のか",
+      "まず",
+      "らし",
+      "りの",
+      "持つ",
+      "との",
+      "一人",
+      "により",
+      "けて",
+      "いま",
+      "なり",
+      "など",
+      "こと",
+      "にある",
+      "での",
+      "いが"
     ]
   },
   "wants_to_say": [
@@ -13865,6 +13926,20 @@
       "first": "2026-11-16",
       "times": 1,
       "said": ""
+    },
+    {
+      "what": "しさ",
+      "since": "2026-11-16",
+      "first": "2026-11-16",
+      "times": 1,
+      "said": ""
+    },
+    {
+      "what": "苧集",
+      "since": "2026-11-16",
+      "first": "2026-11-16",
+      "times": 1,
+      "said": ""
     }
   ],
   "thinking_about": "ってしたから。",
@@ -14016,37 +14091,14 @@
       "day": "2026-11-15"
     }
   ],
-  "understood_usually": 0.493186,
+  "understood_usually": 0.46119,
   "its_ways": {
     "pages_per_site": 9.0,
-    "pull_of_japanese": 1.58,
+    "pull_of_japanese": 1.57,
     "feeling_keen": 0.33,
-    "wish_to_return": 1.6
+    "wish_to_return": 1.5
   },
   "came_back": [
-    {
-      "place": "chionse.github.io",
-      "before": {
-        "day": 53,
-        "entrance": "https://chionse.github.io/senonsei/",
-        "knew": 495,
-        "of": 662,
-        "pages": 6,
-        "title": "千遠生のサイト",
-        "unread": 0,
-        "vocabulary": 883
-      },
-      "now": {
-        "entrance": "https://chionse.github.io/senonsei/",
-        "title": "千遠生のサイト",
-        "day": 54,
-        "vocabulary": 901,
-        "knew": 483,
-        "of": 633,
-        "pages": 4,
-        "unread": 0
-      }
-    },
     {
       "place": "ja.wikipedia.org",
       "before": {
@@ -14713,9 +14765,32 @@
         "pages": 3,
         "unread": 0
       }
+    },
+    {
+      "place": "www.aozora.gr.jp",
+      "before": {
+        "day": 66,
+        "entrance": "https://www.aozora.gr.jp/index_pages/sakuhin_na1.html",
+        "knew": 220,
+        "of": 1840,
+        "pages": 3,
+        "title": "長塚節 長塚節歌集　上",
+        "unread": 0,
+        "vocabulary": 911
+      },
+      "now": {
+        "entrance": "https://www.aozora.gr.jp/cards/000118/files/613_36802.html",
+        "title": "長塚節 長塚節歌集　上",
+        "day": 66,
+        "vocabulary": 912,
+        "knew": 97,
+        "of": 1529,
+        "pages": 1,
+        "unread": 0
+      }
     }
   ],
-  "woke_at": "2026-11-16 12",
+  "woke_at": "2026-11-16 13",
   "blog_titles": {
     "seen": 80,
     "closed": 4,
@@ -15437,11 +15512,11 @@
   "shiori": {
     "https://www.aozora.gr.jp/cards/000118/files/613_36802.html": {
       "title": "長塚節 長塚節歌集　上",
-      "at": 8003,
+      "at": 16013,
       "of": 32044,
       "since": "2026-11-16",
-      "times": 1,
-      "want": 0.85
+      "times": 2,
+      "want": 0.722
     }
   },
   "books_read": [
