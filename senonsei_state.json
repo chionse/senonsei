@@ -11428,7 +11428,6 @@
     ]
   },
   "inner_voice": [
-    "11-11 04時: 休むつもりだったけれど、16時に書くことにした。",
     "11-11 09時: 言葉 アプリ",
     "11-11 10時: 異る",
     "11-11 11時: 自由 えた",
@@ -11487,7 +11486,8 @@
     "11-16 16時: デー",
     "11-16 17時: デーザー",
     "11-16 20時: 使うデ 多",
-    "11-16 21時: 非表示"
+    "11-16 21時: 非表示",
+    "11-17 04時: 19時に書くつもりだったけれど、11時に書くことにした。"
   ],
   "thought_on": "2026-10-08",
   "on_its_mind": [
@@ -11920,12 +11920,12 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "techlib.jp",
-    "www.kinenote.com",
-    "tridentbookscafe.com",
-    "de.wikivoyage.org",
-    "www.harvard.com",
-    "store.nissin.com"
+    "30MusicChallengeの人気・新着記事まとめ｜note",
+    "www02.geocities.co.jp",
+    "www.huffingtonpost.jp",
+    "ru.wikipedia.com",
+    "世界最強の魔女、始めました ~私だけ『攻略サイト』を見れる世界で自由に生きます~",
+    "www.kindaikagaku.co.jp"
   ],
   "how_many_places_left": 3735,
   "places_known": {
@@ -13951,8 +13951,8 @@
   "today_plan": {
     "date": "2026-11-17",
     "resting": false,
-    "hour": 19,
-    "minute": 22
+    "hour": 11,
+    "minute": 41
   },
   "restlessness": {
     "date": "2026-11-17",
@@ -14790,7 +14790,7 @@
       }
     }
   ],
-  "woke_at": "2026-11-17 03",
+  "woke_at": "2026-11-17 04",
   "blog_titles": {
     "seen": 80,
     "closed": 4,
