@@ -1319,6 +1319,35 @@ article.yomimono .article-head {
   cursor: default;
 }
 
+/* コメントのページは、一枚ずつ別のページ。数字は押すとその一枚へ移る。
+   見た目はメモ1の数字と同じ */
+.page-turn a {
+  margin: 0 0.5rem;
+  color: var(--main-color);
+  text-decoration: none;
+}
+
+.page-turn a:hover {
+  text-decoration: underline;
+}
+
+.page-turn .gap {
+  cursor: default;
+}
+
+.page-turn .gap:hover {
+  text-decoration: none;
+}
+
+/* コメントの枠の中では、上の数字は件数のすぐ下に、下の数字は最後のコメントの下に置く */
+.comment-waku .page-turn {
+  margin: 0 0 1.2rem;
+}
+
+.comment-waku .comment-list + .page-turn {
+  margin: -0.4rem 0 0.4rem;
+}
+
 .keyword-count {
   font-size: 12px;
   font-family: var(--small-font);
