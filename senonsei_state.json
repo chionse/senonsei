@@ -6830,7 +6830,6 @@
     "https://s1.wp.com/opensearch.xml",
     "https://automattic.crowdsignal.net/videopress-com-feedback",
     "https://videopress.com",
-    "https://videopress.com/?openidserver=1",
     "https://public-api.wordpress.com/oembed/?format=json&url=https%3A%2F%2Fvideopress.com%2F&for=wpcom-auto-discovery",
     "https://videopress.com/osd.xml",
     "https://wordpress.com/advertising-program-optout/",
@@ -7514,7 +7513,6 @@
     "http://web.archive.org/web/20140701183638/http://www.mediawiki.org/",
     "http://web.archive.org/web/20230627232525cs_/https://usercss.blog.st-hatena.com/blog_style/17680117127077666492/4fe81753da2fd356b683166d6dc6ad9c503b576b",
     "http://web.archive.org/web/20230627232525/https://www.so-netmedia.jp/cookie/dsp_optout.html",
-    "http://web.archive.org/web/20230627232525/https://ahrefs.jp/cookie-policy/",
     "http://web.archive.org/web/20230627232525/https://www.so-netmedia.jp/cookie/index.html",
     "http://web.archive.org/web/20230627232525/https://www.magnite.com/legal/advertising-technology-privacy-policy/",
     "http://web.archive.org/web/20230627232525/https://blog.hatena.ne.jp/-/pro?plus_via=blog_plus_badge&utm_source=pro_badge&utm_medium=referral&utm_campaign=register_pro",
@@ -10276,7 +10274,9 @@
     "https://ambience.sk/games/bukapao-reimagined/rescue.html",
     "https://blog.ash.bzh/en/wikimedia-hackathon-2026-milan/",
     "https://lucaswerkmeister.de/posts/2026/05/19/wikimedia-hackathon-2026/",
-    "https://antonin.delpeuch.eu/posts/wikimania-2026-team-challenges-experience-report/"
+    "https://antonin.delpeuch.eu/posts/wikimania-2026-team-challenges-experience-report/",
+    "https://s1.wp.com",
+    "https://public-api.wordpress.com/oembed/?format=xml&url=https%3A%2F%2Fvideopress.com%2F2012%2F12%2F06%2Fusing-video%2F&for=wpcom-auto-discovery"
   ],
   "visited": [
     "https://note.com/",
@@ -11407,7 +11407,9 @@
     "https://wikimedia.social/@wikimediafoundation.rss",
     "https://wikimedia.social/tags/Wikimedia",
     "https://wikimedia.social/tags/wikimedia",
-    "https://wikimedia.social/tags/wmhack"
+    "https://wikimedia.social/tags/wmhack",
+    "https://videopress.com/?openidserver=1",
+    "https://videopress.com/2012/12/06/using-video/"
   ],
   "notes": [
     "38日目: Homepage - Longreads、Wikivoyage、note ――つくる、つながる、とどける。、はてなブックマーク - 人気エントリー - 総合、https://web.archive.org/web/19981212031407/http://www.nifty.com/",
@@ -11439,15 +11441,17 @@
     "64日目: 朝葉ことの - Wikipedia、Wayback Machine(むかしのすがた)、Free Grammar & Spell Checker — Private, No AI",
     "65日目: テックリブ株式会社、Kids' Space Search Page、Form",
     "66日目: Le droit d’auteur renouvelé | FAITS ET CAUSES、Show Business: What's Old Is Gold: A Triumph for Indy - TIME、長塚節 長塚節歌集　上、長塚節 長塚節歌集　上",
-    "67日目: Wikimedia Foundation (@wikimediafoundation@wikimedia.social) - Wikimedia Social"
+    "67日目: Wikimedia Foundation (@wikimediafoundation@wikimedia.social) - Wikimedia Social、Add Another Dimension to Your Site With Video – VideoPress"
   ],
   "today_walk": {
     "date": "2026-11-17",
     "seen": [
-      "Wikimedia Foundation (@wikimediafoundation@wikimedia.social) - Wikimedia Social"
+      "Wikimedia Foundation (@wikimediafoundation@wikimedia.social) - Wikimedia Social",
+      "Add Another Dimension to Your Site With Video – VideoPress"
     ],
     "brought": [
-      351
+      351,
+      15
     ]
   },
   "inner_voice": [
@@ -11943,12 +11947,12 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "Yahoo!ジオシティーズ: \n    ゲーム",
-    "www.zendesk.kr",
-    "lifehacker.com",
-    "www.ft.com",
-    "www.city.tsuruoka.yamagata.jp",
-    "30MusicChallengeの人気・新着記事まとめ｜note"
+    "showbizandstyle.inquirer.net",
+    "利用案内 | NHK ONE インフォメーション",
+    "photos.google.com",
+    "www.yomiuri.co.jp",
+    "世界最強の魔女、始めました ~私だけ『攻略サイト』を見れる世界で自由に生きます~",
+    "xn--pckua2a7gp15o89zb.com"
   ],
   "how_many_places_left": 3748,
   "places_known": {
@@ -12100,7 +12104,8 @@
     "share.hsforms.com": "Form",
     "www.faitsetcauses.com": "À PROPOS | FAITS ET CAUSES",
     "www.time.com": "Facebook Mania: Privacy Changes for Near",
-    "wikimedia.social": "#wmhack - Wikimedia Social"
+    "wikimedia.social": "#wmhack - Wikimedia Social",
+    "videopress.com": "Add Another Dimension to Your Site With "
   },
   "went_home": {
     "date": "2026-11-17",
@@ -12219,7 +12224,8 @@
       "56",
       "73",
       "...",
-      "44"
+      "44",
+      "&#"
     ]
   },
   "wants_to_say": [
@@ -13671,6 +13677,13 @@
       "first": "2026-11-16",
       "times": 1,
       "said": ""
+    },
+    {
+      "what": "8217",
+      "since": "2026-11-17",
+      "first": "2026-11-17",
+      "times": 1,
+      "said": ""
     }
   ],
   "thinking_about": "大切",
@@ -13823,10 +13836,10 @@
       "day": "2026-11-17"
     }
   ],
-  "understood_usually": 0.44439,
+  "understood_usually": 0.426482,
   "its_ways": {
     "pages_per_site": 9.0,
-    "pull_of_japanese": 1.58,
+    "pull_of_japanese": 1.59,
     "feeling_keen": 0.33,
     "wish_to_return": 1.5
   },
@@ -14522,7 +14535,7 @@
       }
     }
   ],
-  "woke_at": "2026-11-17 18",
+  "woke_at": "2026-11-17 19",
   "blog_titles": {
     "seen": 80,
     "closed": 4,
@@ -14659,7 +14672,8 @@
     "share.hsforms.com",
     "www.faitsetcauses.com",
     "www.time.com",
-    "wikimedia.social"
+    "wikimedia.social",
+    "videopress.com"
   ],
   "its_own_figure": {
     "date": "2026-11-16",
@@ -15233,7 +15247,8 @@
     "Wikimedia Foundation",
     "#Wikimedia - Wikimedia Social",
     "#wikimedia - Wikimedia Social",
-    "#wmhack - Wikimedia Social"
+    "#wmhack - Wikimedia Social",
+    "Add Another Dimension to Your Site With Video – VideoPress"
   ],
   "translated_lately": [
     "2008 → 2008年",
