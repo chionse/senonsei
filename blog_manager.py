@@ -88,10 +88,17 @@ NAMES_NOT_TAKEN = ("ちおんせ", "ちとせ", "千音瀬")
 LIKES_FOLDER = "likes"
 COMMENT_WORKER_ENDPOINT = "https://senonsei-comments.chitomatsu.workers.dev/"
 RECENT_COUNT = 10  # トップページに表示する直近記事の件数(最新1件を除く)
-# トップページに出すコメントの数。残りは comments.html にぜんぶ出す。
+# トップページに出すコメントの数。残りは comments.html から先に出す。
 # ここが千遠生のページである以上、人の言葉がページの大半を
 # 占めてしまわないように
 COMMENTS_ON_TOP = 5
+# コメントのページ一枚に並べる数(2026-11-17、彼女が決めた。メモ1の一枚と同じ数)。
+# 一枚に全部並べていると、何十年かで何千件にもなり、開くだけで重くなる。
+# 一枚めが comments.html(いちばん新しいもの)、二枚めからは comments-2.html …
+COMMENTS_PER_PAGE = 50
+COMMENTS_PAGE = "comments.html"
+# めくる数字を全部並べるのは、これだけの枚数まで。超えたら、前後と端だけを出す
+TURNS_SHOWN_ALL = 9
 # メモ1の一枚に並べる数。五列十行で、どの画面でもちょうど一画面に
 # 収まる数。一画面が一枚なら、穴の開き方が一目で見える
 KEYWORDS_PER_PAGE = 50
@@ -3069,11 +3076,82 @@ def render_comments(comments, numbers=None):
     )
 
 
+def comments_page_name(number):
+    """コメントのページの、何枚めかの名前。一枚めは comments.html のまま。"""
+    return COMMENTS_PAGE if number == 1 else f"comments-{number}.html"
+
+
+def all_comments_pages(comments):
+    """コメントのページを全部。コメントが無くても一枚はある。"""
+    sheets = max(1, -(-len(comments) // COMMENTS_PER_PAGE))
+    return [comments_page_name(n) for n in range(1, sheets + 1)]
+
+
+A_COMMENTS_PAGE = re.compile(r"^comments-\d+\.html$")
+
+
+def clear_old_comments_pages(keep):
+    """コメントが減って(消して)要らなくなった、後ろのほうのページを片付ける。"""
+    alive = set(keep)
+    for name in os.listdir("."):
+        if A_COMMENTS_PAGE.match(name) and name not in alive:
+            os.remove(name)
+
+
+def turns_to_show(here, how_many):
+    """めくる数字のうち、出すもの。間を飛ばすところは None。
+
+    枚数が少ないうちは全部。多くなったら、最初と最後と、今の前後二枚だけ。
+    何十年かで何百枚になっても、数字が何行にも並ばないように"""
+    if how_many <= TURNS_SHOWN_ALL:
+        return list(range(1, how_many + 1))
+    kept = {1, how_many} | {n for n in range(here - 2, here + 3) if 1 <= n <= how_many}
+    shown, last = [], 0
+    for n in sorted(kept):
+        if n - last > 1:
+            shown.append(None)
+        shown.append(n)
+        last = n
+    return shown
+
+
+def comments_page_turn(here, how_many):
+    """コメントのページの下と上に置く、めくる数字。一枚しかなければ出さない。"""
+    if how_many <= 1:
+        return ""
+    parts = []
+    for n in turns_to_show(here, how_many):
+        if n is None:
+            parts.append('<span class="gap">…</span>')
+        elif n == here:
+            parts.append(f'<span class="here">{n}</span>')
+        else:
+            parts.append(f'<a href="{comments_page_name(n)}">{n}</a>')
+    return f'\n  <div class="page-turn">{"".join(parts)}</div>'
+
+
 def generate_comments_html(comments):
-    """置いていかれた言葉を、ぜんぶ並べたページ。
+    """置いていかれた言葉を並べたページ。五十件ずつ、何枚かに分ける。
 
     トップページは千遠生のためのページなので、そちらには
-    新しいものだけを出す。消えるわけではなく、ここに残る。"""
+    新しいものだけを出す。消えるわけではなく、ここに残る。
+    番号(5ch のような 1、2、3 …)は、どの一枚でも続きのまま。"""
+    numbers = comment_numbers(comments)
+    pages = all_comments_pages(comments)
+    for index, page in enumerate(pages):
+        here = index + 1
+        sheet = comments[index * COMMENTS_PER_PAGE:(index + 1) * COMMENTS_PER_PAGE]
+        generate_comments_sheet_html(comments, sheet, numbers, page, here, len(pages))
+    clear_old_comments_pages(pages)
+
+
+def generate_comments_sheet_html(comments, sheet, numbers, page, here, how_many):
+    """コメントのページの一枚。めくる数字は、上と下に同じものを置く。
+
+    上の数字は、どの一枚でも同じ場所に出る。下の数字は、読み終えたところから
+    そのまま次へ行けるように"""
+    turn = comments_page_turn(here, how_many)
+    listed = render_comments(sheet, numbers) if comments else render_comments([])
     html = f"""<!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -3091,17 +3169,17 @@ def generate_comments_html(comments):
   </header>
 
   <!-- ここから本文の列 -->
-  <div class="comment-waku">
+  <div class="comment-waku">{turn}
   <div class="comment-list">
-{render_comments(comments)}
-  </div>
+{listed}
+  </div>{turn}
   </div>
   <!-- ここまで本文の列 -->
 
 </body>
 </html>
 """
-    with open("comments.html", "w", encoding="utf-8") as f:
+    with open(page, "w", encoding="utf-8") as f:
         f.write(html)
 
 
@@ -3614,13 +3692,15 @@ def regenerate_pages(articles):
     generate_about_html(about)
     generate_jiten_html(state, articles)
 
+    # コメントのページの二枚めから(一枚めの comments.html は EVERY_PAGE に入っている)
+    more_comments = tuple(all_comments_pages(load_comments())[1:])
     every_page = (
-        EVERY_PAGE + tuple(all_news_pages(news)) + tuple(all_himitsu_pages(himitsu))
+        EVERY_PAGE + more_comments + tuple(all_news_pages(news)) + tuple(all_himitsu_pages(himitsu))
         + ((ABOUT_PAGE,) if about else ())
     )
     side_panels(every_page)
     page_heads_on_pages(every_page)
-    iine_on_pages(EVERY_PAGE + tuple(all_himitsu_pages(himitsu)))
+    iine_on_pages(EVERY_PAGE + more_comments + tuple(all_himitsu_pages(himitsu)))
     keshiki_on_pages(every_page + (JITEN_PAGE,))
     icons_on_pages(every_page + (JITEN_PAGE,))
     out_of_search_snippets(every_page + (JITEN_PAGE,))
