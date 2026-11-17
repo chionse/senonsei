@@ -5,7 +5,7 @@
   <title>千遠生のサイト</title>
   <meta name="description" content="千遠生のサイト" />
   <meta name="viewport" content="width=1200" />
-  <link rel="stylesheet" href="sen.css?v=4202746046" />
+  <link rel="stylesheet" href="sen.css?v=3866473683" />
   <script id="keshiki-script">
     (function () {
       var kusa = ["kusa/kusa-1.webp", "kusa/kusa-2.webp", "kusa/kusa-3.webp", "kusa/kusa-4.webp", "kusa/kusa-5.webp", "kusa/kusa-6.webp", "kusa/kusa-7.webp", "kusa/kusa-8.webp", "kusa/kusa-9.webp", "kusa/kusa-10.webp"];
@@ -417,8 +417,51 @@
   <form class="comment-form" method="POST" action="https://senonsei-comments.chitomatsu.workers.dev/">
     <input type="text" name="name" placeholder="名前" required />
     <textarea name="message" placeholder="コメント" required></textarea>
-    <button type="submit">送信</button>
+    <div data-nosnippet class="comment-send">
+      <p class="comment-sent" id="comment-sent" hidden>送信されました。反映までしばらくお待ちください。</p>
+      <button type="submit">送信</button>
+    </div>
   </form>
+  <iframe name="kakikomi" id="kakikomi" title="" hidden sandbox="allow-same-origin"></iframe>
+  <script>
+    (function () {
+      var form = document.querySelector(".comment-form");
+      var box = document.getElementById("kakikomi");
+      var sent = document.getElementById("comment-sent");
+      if (!form || !box || !sent) { return; }
+      var button = form.querySelector("button[type=submit]");
+      var waiting = false;
+      var giveUp = null;
+      form.target = "kakikomi";
+      var done = function () {
+        waiting = false;
+        button.disabled = false;
+        clearTimeout(giveUp);
+      };
+      form.addEventListener("submit", function (event) {
+        if (waiting) { event.preventDefault(); return; }
+        waiting = true;
+        sent.hidden = true;
+        // 押した直後に止めると、閲覧機によっては送る前に止まってしまう
+        setTimeout(function () { if (waiting) { button.disabled = true; } }, 0);
+        giveUp = setTimeout(done, 60000);
+      });
+      box.addEventListener("load", function () {
+        if (!waiting) { return; }
+        done();
+        var home = false;
+        try { home = box.contentWindow.location.host === location.host; } catch (e) { home = false; }
+        if (home) {
+          form.querySelector("textarea").value = "";
+          sent.hidden = false;
+        } else {
+          form.target = "_self";
+          form.submit();
+        }
+      });
+      form.addEventListener("input", function () { sent.hidden = true; });
+    })();
+  </script>
 
   <div data-nosnippet class="comment-list">
   <div data-nosnippet class="comment-entry">
