@@ -901,8 +901,32 @@ article.yomimono .article-head {
 
 .comment-form button {
   cursor: pointer;
-  align-self: flex-start;
   padding: 0.4rem 1.5rem;
+}
+
+/* 送信の釦は右に置く(2026-11-17、彼女に言われた)。
+   送ったあとの言葉は、釦の左に並べる */
+.comment-send {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+}
+
+.comment-sent {
+  margin: 0;
+  font-size: 16px;
+}
+
+.comment-sent[hidden] {
+  display: none;
+}
+
+/* 送っているあいだは押せない */
+.comment-form button:disabled {
+  cursor: default;
+  opacity: 0.5;
 }
 
 /* 過去ログ: 左にログの列、中央に選んだ記事 */

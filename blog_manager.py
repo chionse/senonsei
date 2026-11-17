@@ -3223,6 +3223,64 @@ def what_it_meant_to_do(plan, first):
 # 次に起こされるまでは、昨日の様子が「今日のブログ」に残っていた。
 # 開いた時に日付が変わっていたら、ページのほうで「まだ」に戻し、
 # 昨日の記事は直近のブログの先頭へ移す(2026-10-14、彼女と決めた)
+# コメントを送ったあとに出す言葉。彼女の言葉のまま(2026-11-17)
+COMMENT_SENT = "送信されました。反映までしばらくお待ちください。"
+
+# コメントを送っても、この画面のまま。送ったことを言葉で知らせる(2026-11-17、彼女に言われた)。
+#
+# 前は、送ると受け取り口(Cloudflare)へ移り、そこからトップへ戻されていた。
+# 画面がまるごと読み直されるだけで、送れたのかどうかが分からなかった。
+#
+# 受け取り口には手を入れない。送り先を、見えない小さな窓(kakikomi)にする。
+# 受け取れたら、受け取り口はトップへ戻す。窓の中がこのサイトに戻ってきたら、送れたということ。
+# 受け取れなかった時は、窓の中が受け取り口のまま(よその場所なので中を覗けない)。
+# その時は前と同じように、この画面で送り直して、受け取り口の言うことを見せる。
+#
+# 窓の中ではページの仕掛けを動かさない(sandbox)。来訪者の数が増えたりしない。
+# 送っているあいだは、送信の釦を押せない。二度押して同じコメントが二つ届いていた。
+# 仕掛けの動かない閲覧機では、前と同じように画面ごと移る
+COMMENT_SENDING = """
+  <iframe name="kakikomi" id="kakikomi" title="" hidden sandbox="allow-same-origin"></iframe>
+  <script>
+    (function () {
+      var form = document.querySelector(".comment-form");
+      var box = document.getElementById("kakikomi");
+      var sent = document.getElementById("comment-sent");
+      if (!form || !box || !sent) { return; }
+      var button = form.querySelector("button[type=submit]");
+      var waiting = false;
+      var giveUp = null;
+      form.target = "kakikomi";
+      var done = function () {
+        waiting = false;
+        button.disabled = false;
+        clearTimeout(giveUp);
+      };
+      form.addEventListener("submit", function (event) {
+        if (waiting) { event.preventDefault(); return; }
+        waiting = true;
+        sent.hidden = true;
+        // 押した直後に止めると、閲覧機によっては送る前に止まってしまう
+        setTimeout(function () { if (waiting) { button.disabled = true; } }, 0);
+        giveUp = setTimeout(done, 60000);
+      });
+      box.addEventListener("load", function () {
+        if (!waiting) { return; }
+        done();
+        var home = false;
+        try { home = box.contentWindow.location.host === location.host; } catch (e) { home = false; }
+        if (home) {
+          form.querySelector("textarea").value = "";
+          sent.hidden = false;
+        } else {
+          form.target = "_self";
+          form.submit();
+        }
+      });
+      form.addEventListener("input", function () { sent.hidden = true; });
+    })();
+  </script>"""
+
 TODAY_MAY_BE_OVER = f"""
   <script>
     (function () {{
@@ -3379,8 +3437,11 @@ def generate_index_html(articles, state=None, news=None):
   <form class="comment-form" method="POST" action="{COMMENT_WORKER_ENDPOINT}">
     <input type="text" name="name" placeholder="名前" required />
     <textarea name="message" placeholder="コメント" required></textarea>
-    <button type="submit">送信</button>
-  </form>
+    <div class="comment-send">
+      <p class="comment-sent" id="comment-sent" hidden>{COMMENT_SENT}</p>
+      <button type="submit">送信</button>
+    </div>
+  </form>{COMMENT_SENDING}
 
   <div class="comment-list">
 {comments_html}
