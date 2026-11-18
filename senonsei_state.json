@@ -6615,7 +6615,6 @@
     "https://www.eff.org/",
     "http://www.twnside.org.sg/",
     "http://digitalarchivejapan.org/",
-    "http://www.impressrd.jp/",
     "http://thinktppip.jp/",
     "https://www.slideshare.net/takahashim/osc201703-aozorahack",
     "https://aozoraslackin.herokuapp.com/",
@@ -9703,7 +9702,6 @@
     "https://www.mbc.co.jp/person/hamano.html",
     "https://kbc.co.jp/r-radio/kbc_gira/",
     "https://kbc.co.jp/aitagirl/",
-    "https://web.archive.org/web/1998/http://www.nifty.com/",
     "https://web.archive.org/web/20230317191421/https://www.bbc.com/news/business-64037261",
     "https://web.archive.org/web/20240110052614/https://www.nikkansports.com/general/news/202401100000234.html",
     "https://web.archive.org/web/20240212003543/https://www.hrdive.com/news/x-elon-musk-opens-job-search-function/700391/",
@@ -11540,7 +11538,8 @@
     "https://ad-lp.news.mynavi.jp/download/221025/",
     "https://ad-lp.news.mynavi.jp/service/tokusyu-lead-generation/tokusyuu-plan4/",
     "https://ad-lp.news.mynavi.jp/blog/webinar/question",
-    "https://ad-lp.news.mynavi.jp/download/260909/?hsLang=ja-jp"
+    "https://ad-lp.news.mynavi.jp/download/260909/?hsLang=ja-jp",
+    "https://web.archive.org/web/1998/http://www.nifty.com/"
   ],
   "notes": [
     "39日目: コトバンク [ 辞書・百科事典・各種データベースを一度に検索 ]、インターネットアーカイブに10万円寄付した - FIRE: 投資でセミリタイアする九条日記、XP・エクストリームプログラミングの始め方を専門家が語る｜セミナーレポート - Agile Journey、小説家になろう - みんなのための小説投稿サイト",
@@ -11572,19 +11571,21 @@
     "65日目: テックリブ株式会社、Kids' Space Search Page、Form",
     "66日目: Le droit d’auteur renouvelé | FAITS ET CAUSES、Show Business: What's Old Is Gold: A Triumph for Indy - TIME、長塚節 長塚節歌集　上、長塚節 長塚節歌集　上",
     "67日目: Wikimedia Foundation (@wikimediafoundation@wikimedia.social) - Wikimedia Social、Add Another Dimension to Your Site With Video – VideoPress",
-    "68日目: CNN Chile、Wikivoyage – Informazioni di viaggio gratuite dal mondo、【公式】広告問い合わせ・媒体資料 | マイナビニュース/TECH＋"
+    "68日目: CNN Chile、Wikivoyage – Informazioni di viaggio gratuite dal mondo、【公式】広告問い合わせ・媒体資料 | マイナビニュース/TECH＋、https://web.archive.org/web/19981212031407/http://www.nifty.com/"
   ],
   "today_walk": {
     "date": "2026-11-18",
     "seen": [
       "CNN Chile",
       "Wikivoyage – Informazioni di viaggio gratuite dal mondo",
-      "【公式】広告問い合わせ・媒体資料 | マイナビニュース/TECH＋"
+      "【公式】広告問い合わせ・媒体資料 | マイナビニュース/TECH＋",
+      "https://web.archive.org/web/19981212031407/http://www.nifty.com/"
     ],
     "brought": [
       436,
       2601,
-      241
+      241,
+      0
     ]
   },
   "inner_voice": [
@@ -12080,14 +12081,14 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "www.omniture.com",
-    "www.afpbb.com",
-    "bizgate.nikkei.co.jp",
-    "mk.wikibooks.org",
-    "www.forbes.com",
-    "gtwaction.org"
+    "id.ndl.go.jp",
+    "www.mare-inc.net",
+    "www.tokyo-np.co.jp",
+    "30MusicChallengeの人気・新着記事まとめ｜note",
+    "www.bunka.go.jp",
+    "Související změny – Wikiverzita"
   ],
-  "how_many_places_left": 3856,
+  "how_many_places_left": 3854,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -12253,7 +12254,6 @@
   "met_today": {
     "date": "2026-11-18",
     "words": [
-      "45",
       "16",
       "00",
       "2025",
@@ -12652,7 +12652,8 @@
       "とを",
       "っている",
       "123",
-      "ります"
+      "ります",
+      "きな"
     ]
   },
   "wants_to_say": [
@@ -14283,37 +14284,14 @@
       "day": "2026-11-18"
     }
   ],
-  "understood_usually": 0.390491,
+  "understood_usually": 0.413942,
   "its_ways": {
     "pages_per_site": 9.0,
-    "pull_of_japanese": 1.62,
+    "pull_of_japanese": 1.61,
     "feeling_keen": 0.33,
-    "wish_to_return": 1.6
+    "wish_to_return": 1.5
   },
   "came_back": [
-    {
-      "place": "storyweb.jp",
-      "before": {
-        "day": 37,
-        "entrance": "http://storyweb.jp/",
-        "knew": 266,
-        "of": 3271,
-        "pages": 11,
-        "title": "STORY [ストーリィ] オフィシャルサイト – 「新しい40代」のためのファ",
-        "unread": 0,
-        "vocabulary": 378
-      },
-      "now": {
-        "entrance": "http://storyweb.jp/",
-        "title": "STORY [ストーリィ] オフィシャルサイト – 「新しい40代」のためのファ",
-        "day": 54,
-        "vocabulary": 901,
-        "knew": 375,
-        "of": 1506,
-        "pages": 4,
-        "unread": 0
-      }
-    },
     {
       "place": "chionse.github.io",
       "before": {
@@ -14980,9 +14958,32 @@
         "pages": 5,
         "unread": 0
       }
+    },
+    {
+      "place": "www.nifty.com",
+      "before": {
+        "day": 57,
+        "entrance": "https://web.archive.org/web/1998/http://www.nifty.com/",
+        "knew": 28,
+        "of": 50,
+        "pages": 1,
+        "title": "https://web.archive.org/web/199812120314",
+        "unread": 0,
+        "vocabulary": 901
+      },
+      "now": {
+        "entrance": "https://web.archive.org/web/1998/http://www.nifty.com/",
+        "title": "https://web.archive.org/web/199812120314",
+        "day": 68,
+        "vocabulary": 916,
+        "knew": 28,
+        "of": 50,
+        "pages": 1,
+        "unread": 0
+      }
     }
   ],
-  "woke_at": "2026-11-18 14",
+  "woke_at": "2026-11-18 15",
   "blog_titles": {
     "seen": 81,
     "closed": 4,
