@@ -5680,7 +5680,52 @@
     "嵩",
     "盈",
     "穎",
-    "祟"
+    "祟",
+    "芒",
+    "栲",
+    "竪",
+    "瓢",
+    "收",
+    "蜀",
+    "鰺",
+    "樒",
+    "笥",
+    "尨",
+    "辭",
+    "譬",
+    "從",
+    "價",
+    "雖",
+    "發",
+    "斥",
+    "莖",
+    "嘴",
+    "筌",
+    "盥",
+    "朸",
+    "麩",
+    "犢",
+    "涎",
+    "蒿",
+    "洟",
+    "峽",
+    "鑄",
+    "橿",
+    "爭",
+    "劔",
+    "刹",
+    "鸞",
+    "竺",
+    "嗅",
+    "柞",
+    "蘖",
+    "裝",
+    "醉",
+    "蹄",
+    "杣",
+    "藥",
+    "蕪",
+    "祕"
   ],
   "learned_words": [
     "など",
@@ -10604,8 +10649,7 @@
     "https://goodbyelara.com/",
     "https://victoria-anime.com/",
     "https://kokoore-anime.com/",
-    "https://sh-anime.shochiku.co.jp/worldisdancing-anime/",
-    "https://blogmura.com/"
+    "https://sh-anime.shochiku.co.jp/worldisdancing-anime/"
   ],
   "visited": [
     "https://note.com/",
@@ -11787,7 +11831,8 @@
     "https://animeanime.jp/article/2026/10/19/103995.html",
     "https://animeanime.jp/article/2026/11/18/104895.html",
     "https://animeanime.jp/article/2026/10/28/104294.html",
-    "https://animeanime.jp/article/2026/06/02/99624.html"
+    "https://animeanime.jp/article/2026/06/02/99624.html",
+    "https://www.aozora.gr.jp/cards/000118/files/613_36802.html"
   ],
   "notes": [
     "40日目: Accueil、ジオシティーズ ジャパン - 日本最大のコミュニティサイト、Wikipedia、README.jp へようこそ！",
@@ -11819,19 +11864,21 @@
     "66日目: Le droit d’auteur renouvelé | FAITS ET CAUSES、Show Business: What's Old Is Gold: A Triumph for Indy - TIME、長塚節 長塚節歌集　上、長塚節 長塚節歌集　上",
     "67日目: Wikimedia Foundation (@wikimediafoundation@wikimedia.social) - Wikimedia Social、Add Another Dimension to Your Site With Video – VideoPress",
     "68日目: CNN Chile、Wikivoyage – Informazioni di viaggio gratuite dal mondo、【公式】広告問い合わせ・媒体資料 | マイナビニュース/TECH＋、https://web.archive.org/web/19981212031407/http://www.nifty.com/",
-    "69日目: エンジン形式 - Wikipedia、広瀬 正志 – 株式会社 ぷろだくしょんバオバブ、2020年秋アニメなに見てる？ オンエア前調査の王者「魔法科高校の劣等生」を抑えた1位は!?　dアニメストア調査 | アニメ！アニメ！"
+    "69日目: エンジン形式 - Wikipedia、広瀬 正志 – 株式会社 ぷろだくしょんバオバブ、2020年秋アニメなに見てる？ オンエア前調査の王者「魔法科高校の劣等生」を抑えた1位は!?　dアニメストア調査 | アニメ！アニメ！、長塚節 長塚節歌集　上"
   ],
   "today_walk": {
     "date": "2026-11-19",
     "seen": [
       "エンジン形式 - Wikipedia",
       "広瀬 正志 – 株式会社 ぷろだくしょんバオバブ",
-      "2020年秋アニメなに見てる？ オンエア前調査の王者「魔法科高校の劣等生」を抑えた1位は!?　dアニメストア調査 | アニメ！アニメ！"
+      "2020年秋アニメなに見てる？ オンエア前調査の王者「魔法科高校の劣等生」を抑えた1位は!?　dアニメストア調査 | アニメ！アニメ！",
+      "長塚節 長塚節歌集　上"
     ],
     "brought": [
       1220,
       21,
-      4848
+      4848,
+      1060
     ]
   },
   "inner_voice": [
@@ -12245,6 +12292,12 @@
       "since": "2026-11-19",
       "first": "2026-11-19",
       "times": 1
+    },
+    {
+      "what": "菩提樹",
+      "since": "2026-11-19",
+      "first": "2026-11-19",
+      "times": 1
     }
   ],
   "saw_on": "2026-11-19",
@@ -12333,14 +12386,14 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "vscode.dev",
-    "recurly.com",
-    "www.allmusic.com",
-    "q.statista.com",
-    "www.asakura.co.jp",
-    "timeline.kotobaology.jp"
+    "www.kindaikagaku.co.jp",
+    "subscriptions.thenation.com",
+    "www.tokyo-np.co.jp",
+    "ndlsearch.ndl.go.jp",
+    "www.atlassian.com",
+    "englishcompany.jp"
   ],
-  "how_many_places_left": 3995,
+  "how_many_places_left": 3994,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -12508,40 +12561,6 @@
   "met_today": {
     "date": "2026-11-19",
     "words": [
-      "にした",
-      "発表",
-      "00",
-      "じて",
-      "調査",
-      "する",
-      "での",
-      "43",
-      "50",
-      "まで",
-      "購入",
-      "され",
-      "結果",
-      "22",
-      "グルメ",
-      "40",
-      "めた",
-      "世界",
-      "世代",
-      "人気",
-      "われた",
-      "構成",
-      "漫画",
-      "高い",
-      "実際",
-      "32",
-      "81",
-      "公開",
-      "2021",
-      "とした",
-      "発売",
-      "登場",
-      "との",
-      "になる",
       "った",
       "一部",
       "1",
@@ -12907,7 +12926,41 @@
       "映像",
       "見る",
       "サービス",
-      "画像"
+      "画像",
+      "には",
+      "されてい",
+      "最近",
+      "文章",
+      "かったん",
+      "ってる",
+      "しいもの",
+      "からない",
+      "こんにち",
+      "管理人",
+      "ってもら",
+      "認識",
+      "123",
+      "ります",
+      "その",
+      "なり",
+      "らし",
+      "まず",
+      "ページ",
+      "のは",
+      "きに",
+      "して",
+      "として",
+      "以外",
+      "注目",
+      "失敗",
+      "では",
+      "今日",
+      "たり",
+      "あり",
+      "のために",
+      "みの",
+      "きを",
+      "まで"
     ]
   },
   "wants_to_say": [
@@ -14401,6 +14454,20 @@
       "first": "2026-11-19",
       "times": 1,
       "said": ""
+    },
+    {
+      "what": "／＼",
+      "since": "2026-11-19",
+      "first": "2026-11-19",
+      "times": 1,
+      "said": ""
+    },
+    {
+      "what": "萬葉",
+      "since": "2026-11-19",
+      "first": "2026-11-19",
+      "times": 1,
+      "said": ""
     }
   ],
   "thinking_about": "データ 失",
@@ -14553,37 +14620,14 @@
       "day": "2026-11-19"
     }
   ],
-  "understood_usually": 0.452121,
+  "understood_usually": 0.428293,
   "its_ways": {
     "pages_per_site": 9.2,
-    "pull_of_japanese": 1.62,
+    "pull_of_japanese": 1.61,
     "feeling_keen": 0.33,
-    "wish_to_return": 1.5
+    "wish_to_return": 1.6
   },
   "came_back": [
-    {
-      "place": "anond.hatelabo.jp",
-      "before": {
-        "day": 52,
-        "entrance": "https://anond.hatelabo.jp/",
-        "knew": 266,
-        "of": 847,
-        "pages": 2,
-        "title": "はてな匿名ダイアリー",
-        "unread": 0,
-        "vocabulary": 880
-      },
-      "now": {
-        "entrance": "https://anond.hatelabo.jp/",
-        "title": "はてな匿名ダイアリー",
-        "day": 55,
-        "vocabulary": 901,
-        "knew": 327,
-        "of": 1098,
-        "pages": 2,
-        "unread": 0
-      }
-    },
     {
       "place": "ja.wikipedia.org",
       "before": {
@@ -15250,9 +15294,32 @@
         "pages": 9,
         "unread": 0
       }
+    },
+    {
+      "place": "www.aozora.gr.jp",
+      "before": {
+        "day": 66,
+        "entrance": "https://www.aozora.gr.jp/cards/000118/files/613_36802.html",
+        "knew": 97,
+        "of": 1529,
+        "pages": 1,
+        "title": "長塚節 長塚節歌集　上",
+        "unread": 0,
+        "vocabulary": 912
+      },
+      "now": {
+        "entrance": "https://www.aozora.gr.jp/cards/000118/files/613_36802.html",
+        "title": "長塚節 長塚節歌集　上",
+        "day": 69,
+        "vocabulary": 926,
+        "knew": 105,
+        "of": 1517,
+        "pages": 1,
+        "unread": 0
+      }
     }
   ],
-  "woke_at": "2026-11-19 18",
+  "woke_at": "2026-11-19 19",
   "blog_titles": {
     "seen": 90,
     "closed": 4,
@@ -16021,11 +16088,11 @@
   "shiori": {
     "https://www.aozora.gr.jp/cards/000118/files/613_36802.html": {
       "title": "長塚節 長塚節歌集　上",
-      "at": 16013,
+      "at": 24021,
       "of": 32044,
       "since": "2026-11-16",
-      "times": 2,
-      "want": 0.722
+      "times": 3,
+      "want": 0.614
     }
   },
   "books_read": [
