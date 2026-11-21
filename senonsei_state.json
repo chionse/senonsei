@@ -8628,7 +8628,6 @@
     "https://www.job.persona-ats.com/ja/note/jobs/2cf08f7c-110a-4145-8794-0463913baf45",
     "https://www.job.persona-ats.com/ja/note/jobs/a1b38cf3-ed40-49ab-81ec-9c056f91d799",
     "https://talesandco.com/",
-    "https://open.talentio.com/r/1/c/note/pages/115854",
     "https://www.caa.go.jp/notice/entry/035270/",
     "https://amzn.asia/d/fh4GPFV",
     "https://web.archive.org/web/2002/http://www.readme.jp/",
@@ -12030,7 +12029,9 @@
     "https://www.tca-pictures.net/skystage/Prgm/Detail/9233.html",
     "http://web.archive.org/web/20200924203840/https://www.tca-pictures.net/skystage/program/this_month.html",
     "http://web.archive.org/web/20200924203840/https://www.tca-pictures.net/skystage/program/next_month.html",
-    "http://web.archive.org/web/20200924203840/https://www.tca-pictures.net/skystage/nowon/stage.html"
+    "http://web.archive.org/web/20200924203840/https://www.tca-pictures.net/skystage/nowon/stage.html",
+    "https://open.talentio.com/r/1/c/note/pages/115854",
+    "http://web.archive.org/web/20260629140958*/https://open.talentio.com/r/1/c/note/pages/115854"
   ],
   "notes": [
     "42日目: PCからAndroidを操作できるGUIアプリ「Escrcpy」v3.3.1、既存の全機能が無償に - 窓の杜、ESA-S2P-PD-HO-0262、GitHub Shop、まじかる☆ＳＫＹ",
@@ -12062,19 +12063,21 @@
     "68日目: CNN Chile、Wikivoyage – Informazioni di viaggio gratuite dal mondo、【公式】広告問い合わせ・媒体資料 | マイナビニュース/TECH＋、https://web.archive.org/web/19981212031407/http://www.nifty.com/",
     "69日目: エンジン形式 - Wikipedia、広瀬 正志 – 株式会社 ぷろだくしょんバオバブ、2020年秋アニメなに見てる？ オンエア前調査の王者「魔法科高校の劣等生」を抑えた1位は!?　dアニメストア調査 | アニメ！アニメ！、長塚節 長塚節歌集　上",
     "70日目: Gestione Trasporti Metropolitani SpA - Pescara(むかしのすがた)、3月 - Wikipedia、小説家になろう - みんなのための小説投稿サイト、Wikipedia、はてなブックマーク - 新着エントリー - 総合",
-    "71日目: Official Ryanair website | Cheap flights in Europe | Ryanair、Kids' Space、番組詳細｜宝塚歌劇 衛星放送チャンネル｜タカラヅカ・スカイ・ステージ(むかしのすがた)"
+    "71日目: Official Ryanair website | Cheap flights in Europe | Ryanair、Kids' Space、番組詳細｜宝塚歌劇 衛星放送チャンネル｜タカラヅカ・スカイ・ステージ(むかしのすがた)、iOSエンジニア / note株式会社(むかしのすがた)"
   ],
   "today_walk": {
     "date": "2026-11-21",
     "seen": [
       "Official Ryanair website | Cheap flights in Europe | Ryanair",
       "Kids' Space",
-      "番組詳細｜宝塚歌劇 衛星放送チャンネル｜タカラヅカ・スカイ・ステージ(むかしのすがた)"
+      "番組詳細｜宝塚歌劇 衛星放送チャンネル｜タカラヅカ・スカイ・ステージ(むかしのすがた)",
+      "iOSエンジニア / note株式会社(むかしのすがた)"
     ],
     "brought": [
       233,
       1,
-      69
+      69,
+      3
     ]
   },
   "inner_voice": [
@@ -12582,14 +12585,14 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "manabow.com",
-    "dekiru.net",
-    "転生幼女、教団はじめました。 1　～新しい家族とのんびり暮らしたいのに、最強の聖",
+    "gendai.media",
     "comic-curea.jp",
-    "www.zendesk.com",
-    "うんちミュージアム in どうぶつネットパーク"
+    "www.penguin.com",
+    "www.kindaikagaku.co.jp",
+    "うんちミュージアム in どうぶつネットパーク",
+    "response.jp"
   ],
-  "how_many_places_left": 4077,
+  "how_many_places_left": 4076,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -12747,7 +12750,8 @@
     "animeanime.jp": "【2026夏アニメ】7月放送のアニメ一覧（放送開始日＆配信情報＆声優・スタッフ＆",
     "www.gtmpescara.it": "Sitemap\n\t\t\t\t\t\tSitemap Index",
     "www.ryanair.com": "Check-in",
-    "www.tca-pictures.net": "NOW ON STAGE｜宝塚歌劇 衛星放送チャンネル｜タカラヅカ・スカイ・ステ"
+    "www.tca-pictures.net": "NOW ON STAGE｜宝塚歌劇 衛星放送チャンネル｜タカラヅカ・スカイ・ステ",
+    "open.talentio.com": "Wayback Machine"
   },
   "went_home": {
     "date": "2026-11-21",
@@ -12955,7 +12959,12 @@
       "22",
       "26",
       "14",
-      "27"
+      "27",
+      "エンジニア",
+      "2027",
+      "54",
+      "78",
+      "page"
     ]
   },
   "wants_to_say": [
@@ -14672,10 +14681,10 @@
       "day": "2026-11-19"
     }
   ],
-  "understood_usually": 0.494857,
+  "understood_usually": 0.495145,
   "its_ways": {
     "pages_per_site": 9.2,
-    "pull_of_japanese": 1.65,
+    "pull_of_japanese": 1.66,
     "feeling_keen": 0.34,
     "wish_to_return": 1.9
   },
@@ -15371,7 +15380,7 @@
       }
     }
   ],
-  "woke_at": "2026-11-21 19",
+  "woke_at": "2026-11-21 20",
   "blog_titles": {
     "seen": 98,
     "closed": 4,
@@ -15516,7 +15525,8 @@
     "animeanime.jp",
     "www.gtmpescara.it",
     "www.ryanair.com",
-    "www.tca-pictures.net"
+    "www.tca-pictures.net",
+    "open.talentio.com"
   ],
   "its_own_figure": {
     "date": "2026-11-19",
@@ -16150,7 +16160,8 @@
     "Cheap flights to Alicante (ALC) from €21.99 | Ryanair.com",
     "Check-in",
     "番組詳細｜宝塚歌劇 衛星放送チャンネル｜タカラヅカ・スカイ・ステージ(むかしのすがた)",
-    "NOW ON STAGE｜宝塚歌劇 衛星放送チャンネル｜タカラヅカ・スカイ・ステージ"
+    "NOW ON STAGE｜宝塚歌劇 衛星放送チャンネル｜タカラヅカ・スカイ・ステージ",
+    "iOSエンジニア / note株式会社(むかしのすがた)"
   ],
   "translated_lately": [
     "2008 → 2008年",
