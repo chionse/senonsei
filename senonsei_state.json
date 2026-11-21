@@ -6740,7 +6740,6 @@
     "),"
   ],
   "frontier": [
-    "https://web.archive.org/web/20001110124000/http://www.kids-space.gr.jp/m_index.html",
     "https://note.com/tag/A20%20Pro",
     "https://note.com/tag/iPhone%20Duo",
     "https://note.com/tag/PISA2025",
@@ -12017,7 +12016,8 @@
     "https://www.ryanair.com/flights/ie/en/flights-to-gdansk",
     "https://www.ryanair.com/flights/ie/en/flights-to-malaga",
     "https://www.ryanair.com/flights/ie/en/flights-to-alicante",
-    "https://www.ryanair.com/us/en/lp/check-in"
+    "https://www.ryanair.com/us/en/lp/check-in",
+    "https://web.archive.org/web/20001110124000/http://www.kids-space.gr.jp/m_index.html"
   ],
   "notes": [
     "42日目: PCからAndroidを操作できるGUIアプリ「Escrcpy」v3.3.1、既存の全機能が無償に - 窓の杜、ESA-S2P-PD-HO-0262、GitHub Shop、まじかる☆ＳＫＹ",
@@ -12049,15 +12049,17 @@
     "68日目: CNN Chile、Wikivoyage – Informazioni di viaggio gratuite dal mondo、【公式】広告問い合わせ・媒体資料 | マイナビニュース/TECH＋、https://web.archive.org/web/19981212031407/http://www.nifty.com/",
     "69日目: エンジン形式 - Wikipedia、広瀬 正志 – 株式会社 ぷろだくしょんバオバブ、2020年秋アニメなに見てる？ オンエア前調査の王者「魔法科高校の劣等生」を抑えた1位は!?　dアニメストア調査 | アニメ！アニメ！、長塚節 長塚節歌集　上",
     "70日目: Gestione Trasporti Metropolitani SpA - Pescara(むかしのすがた)、3月 - Wikipedia、小説家になろう - みんなのための小説投稿サイト、Wikipedia、はてなブックマーク - 新着エントリー - 総合",
-    "71日目: Official Ryanair website | Cheap flights in Europe | Ryanair"
+    "71日目: Official Ryanair website | Cheap flights in Europe | Ryanair、Kids' Space"
   ],
   "today_walk": {
     "date": "2026-11-21",
     "seen": [
-      "Official Ryanair website | Cheap flights in Europe | Ryanair"
+      "Official Ryanair website | Cheap flights in Europe | Ryanair",
+      "Kids' Space"
     ],
     "brought": [
-      233
+      233,
+      1
     ]
   },
   "inner_voice": [
@@ -12565,14 +12567,14 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "mantan-web.jp",
-    "www.linkedin.com",
-    "www.nikkansports.com",
-    "www.statista-research.com",
-    "www.campingclasse.it",
-    "www.ganganonline.com"
+    "fortune.com",
+    "example.org",
+    "gooday.nikkei.co.jp",
+    "forms.hsforms.com",
+    "tonarinoyj.jp",
+    "www.kobayashi.co.jp"
   ],
-  "how_many_places_left": 4070,
+  "how_many_places_left": 4069,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -12851,7 +12853,14 @@
       "2025",
       "えてほし",
       "できてい",
-      "になるこ"
+      "になるこ",
+      "1999",
+      "02",
+      "2000",
+      "this",
+      "://",
+      "org",
+      "..."
     ]
   },
   "wants_to_say": [
@@ -14445,8 +14454,7 @@
     "en.wikibooks.org": "https://en.wikibooks.org/wiki/Wikibooks:General_disclaimer",
     "fr.wikipedia.org": "https://fr.wikipedia.org/w/index.php?title=Discussion_utilisateur:Cantons-de-l%27Est&oldid=235673647",
     "phabricator.wikimedia.org": "https://phabricator.wikimedia.org/tag/charts",
-    "ja.wikibooks.org": "https://ja.wikibooks.org/wiki/Wikibooks:%E3%82%A6%E3%82%A3%E3%82%AD%E3%83%96%E3%83%83%E3%82%AF%E3%82%B9%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6",
-    "www.kids-space.gr.jp": "https://web.archive.org/web/20001110124000/http://www.kids-space.gr.jp/m_index.html"
+    "ja.wikibooks.org": "https://ja.wikibooks.org/wiki/Wikibooks:%E3%82%A6%E3%82%A3%E3%82%AD%E3%83%96%E3%83%83%E3%82%AF%E3%82%B9%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6"
   },
   "remembered_on": "2026-11-21",
   "homesickness": {
@@ -14555,37 +14563,14 @@
       "day": "2026-11-19"
     }
   ],
-  "understood_usually": 0.458565,
+  "understood_usually": 0.478093,
   "its_ways": {
     "pages_per_site": 9.2,
-    "pull_of_japanese": 1.63,
+    "pull_of_japanese": 1.64,
     "feeling_keen": 0.34,
-    "wish_to_return": 1.8
+    "wish_to_return": 1.9
   },
   "came_back": [
-    {
-      "place": "www.jiji.com",
-      "before": {
-        "day": 43,
-        "entrance": "https://www.jiji.com/jc/article?k=2026090600216&g=pol",
-        "knew": 303,
-        "of": 2329,
-        "pages": 9,
-        "title": "国民民主代表選、玉木氏３選　「議席増やし政権担う」：時事ドットコム",
-        "unread": 0,
-        "vocabulary": 454
-      },
-      "now": {
-        "entrance": "https://www.jiji.com/jc/article?k=2026092700217&g=spo",
-        "title": "大の里が１年ぶりＶ　安青錦との相星決戦制し６度目―大相撲秋場所：時事ドットコム",
-        "day": 58,
-        "vocabulary": 901,
-        "knew": 537,
-        "of": 3142,
-        "pages": 10,
-        "unread": 0
-      }
-    },
     {
       "place": "b.hatena.ne.jp",
       "before": {
@@ -15252,9 +15237,32 @@
         "pages": 9,
         "unread": 0
       }
+    },
+    {
+      "place": "www.kids-space.gr.jp",
+      "before": {
+        "day": 35,
+        "entrance": "https://web.archive.org/web/20001110124000/http://www.kids-space.gr.jp/m_index.html",
+        "knew": 37,
+        "of": 214,
+        "pages": 1,
+        "title": "Kids' Space",
+        "unread": 0,
+        "vocabulary": 294
+      },
+      "now": {
+        "entrance": "https://web.archive.org/web/20001110124000/http://www.kids-space.gr.jp/m_index.html",
+        "title": "Kids' Space",
+        "day": 71,
+        "vocabulary": 940,
+        "knew": 47,
+        "of": 221,
+        "pages": 1,
+        "unread": 0
+      }
     }
   ],
-  "woke_at": "2026-11-21 14",
+  "woke_at": "2026-11-21 15",
   "blog_titles": {
     "seen": 98,
     "closed": 4,
