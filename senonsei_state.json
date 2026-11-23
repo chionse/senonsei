@@ -5898,7 +5898,10 @@
     "樔",
     "衙",
     "苅",
-    "艮"
+    "艮",
+    "聚",
+    "讲",
+    "势"
   ],
   "learned_words": [
     "など",
@@ -8380,7 +8383,6 @@
     "https://usercss.blog.st-hatena.com/blog_style/13574176438043582822/02198f39cd7d04cbaea497a9174e5bd9216f24fa",
     "https://kdmsnr.com/",
     "https://www.docswell.com/s/kdmsnr/Z97LLK-xp-back-to-the-basics",
-    "https://uzabase-tech.connpass.com/event/249180/",
     "https://www.ohmsha.co.jp/book/9784274217623/",
     "https://www.jetbrains.com/ja-jp/code-with-me/",
     "https://www.kadokawa.co.jp/product/302007001102/",
@@ -9106,7 +9108,6 @@
     "https://tedlive.ted.com/",
     "https://blog.ted.com",
     "https://tedatwork.ted.com",
-    "https://audiocollective.ted.com",
     "https://web.archive.org/web/20010118205200/http://www02.geocities.co.jp/geogong/current.html",
     "https://web.archive.org/web/20010118205200/http://www02.geocities.co.jp/members/info/system_status.html",
     "https://web.archive.org/web/20010118205200/http://www02.geocities.co.jp/neighborhoods/",
@@ -9931,7 +9932,6 @@
     "https://blogmura.muragon.com/entry/676.html",
     "https://marine.blogmura.com/",
     "https://blogmura.muragon.com/entry/687.html",
-    "https://muragon.com/app",
     "https://www.murauchi.co.jp/recruit/jobs/",
     "https://blogmura.muragon.com/",
     "http://web.archive.org/web/20190329120311/https://nla.gov.au/nla.party-814017",
@@ -11088,7 +11088,11 @@
     "https://www.shopify.com?utm_campaign=poweredby&utm_medium=shopify&utm_source=onlinestore",
     "https://donate.feministpress.org/forms/newsletter-signup",
     "https://www.eventbrite.com/e/feminist-press-and-roxane-gay-present-feminist-canaries-tickets-2000312837544?aff=oddtdtcreator&utm_campaign=featured_banner_FeministPressxRoxaneGayPresent&utm_medium=referral&utm_source=later-linkinbio",
-    "https://shop.app"
+    "https://shop.app",
+    "https://giving.ted.com/page/tedmember?utm_medium=website&utm_source=main-nav-header&utm_campaign=membership-ted",
+    "https://auth.ted.com/users/new?context=ted.www%2Fnav",
+    "https://www.ted.com/podcasts",
+    "https://ucarecdn.com/"
   ],
   "visited": [
     "https://note.com/",
@@ -12328,7 +12332,8 @@
     "https://ja.wikipedia.org/wiki/横浜市",
     "https://blog.comnico.jp/we-love-social/sns-users",
     "https://npmjs.org/",
-    "http://www.feministpress.org"
+    "http://www.feministpress.org",
+    "https://audiocollective.ted.com"
   ],
   "notes": [
     "44日目: Wayback Machine(むかしのすがた)、募集職種一覧_2026/10更新｜note株式会社、コトバンク [ 辞書・百科事典・各種データベースを一度に検索 ]、本がすき。、セッソ・マット - Wikipedia",
@@ -12360,17 +12365,19 @@
     "70日目: Gestione Trasporti Metropolitani SpA - Pescara(むかしのすがた)、3月 - Wikipedia、小説家になろう - みんなのための小説投稿サイト、Wikipedia、はてなブックマーク - 新着エントリー - 総合",
     "71日目: Official Ryanair website | Cheap flights in Europe | Ryanair、Kids' Space、番組詳細｜宝塚歌劇 衛星放送チャンネル｜タカラヅカ・スカイ・ステージ(むかしのすがた)、iOSエンジニア / note株式会社(むかしのすがた)",
     "72日目: 長塚節 長塚節歌集　上、Weblio 翻訳、Wikipedia、【2026年11月版】日本国内・国外人気SNSユーザー数ランキング｜X（Twitter）、Instagram、TikTokなど15媒体",
-    "73日目: npm - Node Package Manager(むかしのすがた)、Feminist Press"
+    "73日目: npm - Node Package Manager(むかしのすがた)、Feminist Press、TED Podcasts"
   ],
   "today_walk": {
     "date": "2026-11-23",
     "seen": [
       "npm - Node Package Manager(むかしのすがた)",
-      "Feminist Press"
+      "Feminist Press",
+      "TED Podcasts"
     ],
     "brought": [
       2,
-      60
+      60,
+      1640
     ]
   },
   "inner_voice": [
@@ -12890,14 +12897,14 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "my.visualstudio.com",
-    "www.gesap.it",
-    "ja.wikiversity.org",
-    "maintainers.github.com",
-    "thinktppip.jp",
-    "link.thenation.com"
+    "www.narinari.com",
+    "hbb.afl.rakuten.co.jp",
+    "www.comnico.jp",
+    "www.vulture.com",
+    "circus.nandemo.gr.jp",
+    "www.britannica.com"
   ],
-  "how_many_places_left": 4215,
+  "how_many_places_left": 4216,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -13060,7 +13067,8 @@
     "translate.weblio.jp": "有償の翻訳ソフト - Weblio 翻訳",
     "blog.comnico.jp": "【2026年11月版】日本国内・国外人気SNSユーザー数ランキング｜X（Twit",
     "npmjs.org": "npm - Node Package Manager(むかしのすがた)",
-    "www.feministpress.org": "Feminist Press"
+    "www.feministpress.org": "Feminist Press",
+    "audiocollective.ted.com": "TED Podcasts"
   },
   "went_home": {
     "date": "2026-11-23",
@@ -13151,7 +13159,120 @@
       "39",
       "2026",
       "6",
-      "7"
+      "7",
+      "100",
+      "amp",
+      "中文",
+      "8",
+      "4",
+      "\":{\"",
+      "\":\"",
+      "\",\"",
+      "88",
+      "2",
+      "60",
+      "04",
+      "5",
+      "64",
+      "66",
+      "86",
+      "11",
+      "79",
+      "70",
+      "2019",
+      "40",
+      "34",
+      "32",
+      "67",
+      "55",
+      "90",
+      "be",
+      "72",
+      "20",
+      "47",
+      "56",
+      "81",
+      "69",
+      "23",
+      "12",
+      "22",
+      "76",
+      "94",
+      "27",
+      "000",
+      "84",
+      "58",
+      "10",
+      "33",
+      "29",
+      "65",
+      "03",
+      "08",
+      "75",
+      "06",
+      "49",
+      "62",
+      "02",
+      "63",
+      "31",
+      "46",
+      "2025",
+      "85",
+      "78",
+      "68",
+      "41",
+      "21",
+      "98",
+      "35",
+      "51",
+      "93",
+      "57",
+      "07",
+      "53",
+      "44",
+      "132",
+      "28",
+      "14",
+      "05",
+      "52",
+      "92",
+      "99",
+      "59",
+      "250",
+      "45",
+      "71",
+      "43",
+      "19",
+      "48",
+      "87",
+      "2012",
+      "83",
+      "61",
+      "2020",
+      "50",
+      "73",
+      "77",
+      "82",
+      "97",
+      "09",
+      "89",
+      "74",
+      "91",
+      "110",
+      "37",
+      "96",
+      "38",
+      "36",
+      "13",
+      "1000",
+      "300",
+      "2017",
+      "2018",
+      "2014",
+      "\\\"",
+      "2016",
+      "2023",
+      "2021"
     ]
   },
   "wants_to_say": [
@@ -14284,9 +14405,9 @@
     },
     {
       "what": "\":",
-      "since": "2026-11-12",
+      "since": "2026-11-23",
       "first": "2026-11-05",
-      "times": 2,
+      "times": 3,
       "said": ""
     },
     {
@@ -14620,9 +14741,9 @@
     },
     {
       "what": "51",
-      "since": "2026-11-18",
+      "since": "2026-11-23",
       "first": "2026-11-18",
-      "times": 1,
+      "times": 2,
       "said": "2026-11-21"
     },
     {
@@ -14903,10 +15024,10 @@
       "day": "2026-11-22"
     }
   ],
-  "understood_usually": 0.462308,
+  "understood_usually": 0.429714,
   "its_ways": {
     "pages_per_site": 9.3,
-    "pull_of_japanese": 1.68,
+    "pull_of_japanese": 1.69,
     "feeling_keen": 0.34,
     "wish_to_return": 1.8
   },
@@ -15602,7 +15723,7 @@
       }
     }
   ],
-  "woke_at": "2026-11-23 16",
+  "woke_at": "2026-11-23 17",
   "blog_titles": {
     "seen": 99,
     "closed": 4,
@@ -15752,7 +15873,8 @@
     "translate.weblio.jp",
     "blog.comnico.jp",
     "npmjs.org",
-    "www.feministpress.org"
+    "www.feministpress.org",
+    "audiocollective.ted.com"
   ],
   "its_own_figure": {
     "date": "2026-11-19",
@@ -16407,7 +16529,8 @@
     "横浜市 - Wikipedia",
     "【2026年11月版】日本国内・国外人気SNSユーザー数ランキング｜X（Twitter）、Instagram、TikTokなど15媒体",
     "npm - Node Package Manager(むかしのすがた)",
-    "Feminist Press"
+    "Feminist Press",
+    "TED Podcasts"
   ],
   "translated_lately": [
     "2008 → 2008年",
