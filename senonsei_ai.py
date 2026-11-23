@@ -32,6 +32,7 @@ import urllib.request
 import urllib.robotparser
 import zlib
 from html import unescape
+from html.parser import HTMLParser
 
 import atama
 import blog_manager
@@ -2260,25 +2261,199 @@ def look_with_a_browser(url):
     return html
 
 
-def seems_unbuilt(html):
+class PageReader(HTMLParser):
+    """ページを、閲覧機と同じ決まりで読む(Python にもとから入っている読み方)。
+
+    前は、しるし(<…>)を文字の並びの決まり(正規表現)で探して外していた。
+    それだと、しるしの書き方が少し変わっているだけで、しるしの切れ端が
+    文字として漏れ出し、この子はそれを言葉として覚えていた。
+    「&amp;」のような書き方もほどいていなかったので、「amp」や「&#」に
+    毎日会っていた(2026-11-23、彼女と決めた)。
+
+    読み方を替えても、この子の拾い方は変えない。しるしのあったところは
+    前と同じように空白にし、<script> と <style> の中は読まない。"""
+
+    # 中を読まないしるし。閉じていなければ、そこから先は全部読まない(閲覧機と同じ)
+    UNREAD = ("script", "style")
+    # 絵の在りかが書かれる札。遅れて出す絵は data-src や data-original などに本物を置く
+    A_PICTURE_SOURCE = re.compile(r"src$|^data-original$|^data-lazy", re.IGNORECASE)
+
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.parts = []
+        self.links = []
+        self.frames = []
+        self.pictures = []
+        self.title = None
+        self.og_title = None
+        self.og_article = False
+        self.heading = None
+        self.article = False
+        self.script = False
+        self.tongues = []
+        self.wrapped = []  # <![CDATA[ … ]]> の中身。あとで同じ読み方で読む
+        self._unread = None
+        self._title = None
+        self._heading = None
+
+    def handle_starttag(self, tag, attrs):
+        self.parts.append(" ")
+        if self._heading is not None:
+            self._heading.append(" ")
+        found = {}
+        for name, value in attrs:
+            found.setdefault(name, value or "")
+        if tag in self.UNREAD:
+            self._unread = tag
+            self.script = self.script or tag == "script"
+            return
+        for name, value in attrs:
+            # href を持つしるしは全部(a、area、link …)。前の読み方と同じ
+            if name.endswith("href") and value:
+                kept = value.split("#", 1)[0].strip()
+                if kept:
+                    self.links.append(kept)
+        if tag == "frame" and found.get("src"):
+            kept = found["src"].split("#", 1)[0].strip()
+            if kept:
+                self.frames.append(kept)
+        elif tag == "img":
+            # 遅れて出す絵は、src には仮の絵(透明の点など)、data-src などに本物を置く。
+            # 絵らしいもののうち、本物の置き場所を先に見る
+            sources = [(n, v.strip()) for n, v in attrs if v and self.A_PICTURE_SOURCE.search(n) and v.strip()]
+            pictures = [one for one in sources if LOOKS_LIKE_A_PICTURE.search(one[1])]
+            held = [one for one in pictures if one[0] != "src"]
+            chosen = held or pictures or sources
+            if chosen:
+                self.pictures.append(chosen[-1][1])
+        elif tag == "title" and self.title is None and self._title is None:
+            self._title = []
+        elif tag == "h1" and self.heading is None and self._heading is None:
+            self._heading = []
+        elif tag == "article":
+            self.article = True
+        elif tag == "meta":
+            said = (found.get("property") or found.get("name") or "").strip().lower()
+            if said == "og:title" and self.og_title is None:
+                self.og_title = found.get("content", "")
+            elif said == "og:type" and found.get("content", "").strip().lower().startswith("article"):
+                self.og_article = True
+        elif tag == "a" and "interlanguage-link-target" in found.get("class", "").split():
+            self.tongues.append(found)
+
+    def handle_endtag(self, tag):
+        self.parts.append(" ")
+        if tag == self._unread:
+            self._unread = None
+        elif tag == "title" and self._title is not None:
+            self.title = "".join(self._title)
+            self._title = None
+        elif tag == "h1" and self._heading is not None:
+            self.heading = "".join(self._heading)
+            self._heading = None
+        elif self._heading is not None:
+            self._heading.append(" ")
+
+    def handle_data(self, data):
+        if self._unread:
+            return
+        self.parts.append(data)
+        if self._title is not None:
+            self._title.append(data)
+        if self._heading is not None:
+            self._heading.append(data)
+
+    def handle_comment(self, data):
+        self.parts.append(" ")
+
+    def handle_decl(self, decl):
+        self.parts.append(" ")
+
+    def handle_pi(self, data):
+        self.parts.append(" ")
+
+    def unknown_decl(self, data):
+        self.parts.append(" ")
+        if data.startswith("CDATA["):
+            self.wrapped.append(data[len("CDATA["):])
+
+    @property
+    def text(self):
+        return "".join(self.parts)
+
+
+def read_the_page(html):
+    """ページを読む。読み方がどこかで詰まったら、前の読み方で読む。"""
+    reader = PageReader()
+    try:
+        reader.feed(html)
+        reader.close()
+        # RSS などの <![CDATA[ … ]]> の中は、それ自体がページの書き方をしている
+        for inside in reader.wrapped:
+            more = PageReader()
+            more.feed(inside)
+            more.close()
+            reader.parts.append(more.text)
+            reader.links.extend(more.links)
+            reader.pictures.extend(more.pictures)
+        if reader._title is not None and reader.title is None:
+            reader.title = "".join(reader._title)  # 閉じていない題
+        return reader
+    except Exception as error:
+        print(f"ページの読み方で詰まったので、前の読み方で読みます({str(error)[:40]})")
+        return read_the_page_roughly(html)
+
+
+class RoughPage:
+    """前の読み方(正規表現)で読んだページ。新しい読み方で詰まった時だけ使う。"""
+
+    def __init__(self, html):
+        body = SCRIPT_OR_STYLE.sub(" ", html)
+        self.text = unescape(TAG.sub(" ", body))
+        self.links = [unescape(one) for one in LINK_HREF.findall(body)]
+        self.frames = [unescape(one) for one in FRAME_SRC.findall(body)]
+        self.pictures = [unescape(one) for one in IMG_SRC.findall(body)]
+        found = TITLE_TAG.search(html)
+        self.title = unescape(TAG.sub("", found.group(1))) if found else None
+        found = OG_TITLE.search(html)
+        self.og_title = unescape(found.group(1)) if found else None
+        self.og_article = bool(AN_ARTICLE.search(html)) and not re.search(r"<article\b", html, re.IGNORECASE)
+        self.article = bool(re.search(r"<article\b", html, re.IGNORECASE))
+        found = FIRST_HEADING.search(html)
+        self.heading = unescape(TAG.sub(" ", found.group(1))) if found else None
+        self.script = bool(re.search(r"<script\b", html, re.IGNORECASE))
+        self.tongues = []
+        for tag in INTERLANGUAGE_LINK.findall(html):
+            got = {}
+            for name in ("hreflang", "data-title", "href"):
+                one = re.search(rf'\b{name}="([^"]+)"', tag)
+                if one:
+                    got[name] = unescape(one.group(1))
+            self.tongues.append(got)
+
+
+def read_the_page_roughly(html):
+    return RoughPage(html)
+
+
+def seems_unbuilt(page):
     """届いた紙が、組み立て待ちのまま空っぽに見えるか。"""
-    if not re.search(r"<script\b", html, re.IGNORECASE):
+    if not page.script:
         return False
-    shown = " ".join(TAG.sub(" ", SCRIPT_OR_STYLE.sub(" ", html)).split())
-    return len(unescape(shown)) < LOOKS_EMPTY
+    return len(" ".join(page.text.split())) < LOOKS_EMPTY
 
 
-def a_blog_post_title(html):
+def a_blog_post_title(page, html):
     """そのページが誰かのブログの一記事なら、その記事の題。違えば None。
 
     記事の作りをしていて、書いた日付があるものをブログの一記事と見る。
     題は日本語のものだけ。この子が書く題は日本語なので。"""
-    if not AN_ARTICLE.search(html) or not A_DATE_WRITTEN.search(html):
+    if not (page.article or page.og_article) or not A_DATE_WRITTEN.search(html):
         return None
-    found = OG_TITLE.search(html) or FIRST_HEADING.search(html)
-    if not found:
+    found = page.og_title if page.og_title is not None else page.heading
+    if found is None:
         return None
-    title = " ".join(unescape(TAG.sub(" ", found.group(1))).split())
+    title = " ".join(found.split())
     title = THE_NAME_AFTER.split(title)[0].strip()
     if not title or len(title) > A_TITLE_AT_MOST or not JAPANESE.search(title):
         return None
@@ -2289,20 +2464,20 @@ INTERLANGUAGE_LINK = re.compile(r"<a\b[^>]*\binterlanguage-link-target\b[^>]*>")
 INTERLANGUAGE_PATH = re.compile(r"//([a-z\-]+)\.wikipedia\.org/wiki/([^\"#?]+)")
 
 
-def other_tongues_in(html):
+def other_tongues_in(page):
     """Wikipedia の記事にある、同じ話の別の言葉版。(言葉の印, その版の題) の並び。"""
     found = []
-    for tag in INTERLANGUAGE_LINK.findall(html):
-        lang = re.search(r'hreflang="([^"]+)"', tag)
-        named = re.search(r'data-title="([^"]+)"', tag)
-        path = INTERLANGUAGE_PATH.search(tag)
+    for tag in page.tongues:
+        lang = tag.get("hreflang")
+        named = tag.get("data-title")
+        path = INTERLANGUAGE_PATH.search(tag.get("href", ""))
         if named:
-            title = unescape(named.group(1))
+            title = named
         elif path:
             title = urllib.parse.unquote(path.group(2)).replace("_", " ")
         else:
             continue
-        code = lang.group(1) if lang else (path.group(1) if path else "")
+        code = lang if lang else (path.group(1) if path else "")
         if code:
             found.append((code, title))
     return found
@@ -2376,36 +2551,34 @@ def open_page(url, most=PAGE_BYTES_AT_MOST):
         return read_a_pdf(raw, final_url)
 
     html = read_as_japanese(raw, content_type)
+    page = read_the_page(html)
     # 昔の姿(web.archive.org)は、その頃の紙がそのまま残っているので借りない
     from_the_past = urllib.parse.urlparse(final_url).netloc.lower().endswith("archive.org")
-    if "html" in content_type and not from_the_past and seems_unbuilt(html):
+    if "html" in content_type and not from_the_past and seems_unbuilt(page):
         built = look_with_a_browser(final_url)
         if built:
             html = built
+            page = read_the_page(html)
 
-    found = TITLE_TAG.search(html)
-    # 題にも &amp; や &#064; が入っている。ほどかないと、
-    # この子はその形のまま場所の名前として覚える
-    title = unescape(TAG.sub("", found.group(1))).strip() if found else final_url
-    A_BLOG_POST_TITLE[0] = a_blog_post_title(html)
-    OTHER_TONGUES[0] = other_tongues_in(html) if "wikipedia.org" in place_of(final_url) else []
-
-    body = SCRIPT_OR_STYLE.sub(" ", html)
-    text = TAG.sub(" ", body)
+    # 題にも &amp; や &#064; が入っている。読み方がほどいてくれる。
+    # ほどかないと、この子はその形のまま場所の名前として覚える
+    title = page.title.strip() if page.title is not None else final_url
+    A_BLOG_POST_TITLE[0] = a_blog_post_title(page, html)
+    OTHER_TONGUES[0] = other_tongues_in(page) if "wikipedia.org" in place_of(final_url) else []
 
     links = []
-    for href in FRAME_SRC.findall(body) + LINK_HREF.findall(body):
-        absolute = urllib.parse.urljoin(final_url, unescape(href.strip()))
+    for href in page.frames + page.links:
+        absolute = urllib.parse.urljoin(final_url, href.strip())
         if is_walkable(absolute):
             links.append(absolute)
 
     pictures = []
-    for src in IMG_SRC.findall(body):
-        absolute = urllib.parse.urljoin(final_url, unescape(src.strip()))
+    for src in page.pictures:
+        absolute = urllib.parse.urljoin(final_url, src.strip())
         if LOOKS_LIKE_A_PICTURE.search(absolute) and not AVOID.search(absolute):
             pictures.append(absolute)
 
-    return title, text, links, list(dict.fromkeys(pictures))
+    return title, page.text, links, list(dict.fromkeys(pictures))
 
 
 def a_year_in_the_past():
