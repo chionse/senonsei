@@ -36,7 +36,8 @@ jobs:
       # 書き出したページはここに置いたまま捨てる。main には何も入らない
       - name: Try the programs
         run: |
-          python -m py_compile *.py
+          python -m py_compile *.py karada/*.py
+          python -c "import senonsei_ai, blog_manager, kioku_mamori, atama, pdf_yomu, fuuin"
           python blog_manager.py
 
       - name: Take in the new parts
