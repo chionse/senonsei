@@ -9445,7 +9445,6 @@
     "http://www.publishinggenius.com/",
     "http://brevitymag.com/",
     "http://www.riverheadbooks.com/",
-    "http://www.feministpress.org",
     "https://wordswithoutborders.org/read/article/2026-10/the-national-book-award-interviews-intan-paramaditha-stephen-epstein-and-tiffany-tsao-night-of-a-thousand-hells/",
     "https://wordswithoutborders.org/read/type/graphic-literature/",
     "https://wordswithoutborders.org/read/collection/the-ottaway-award-for-the-promotion-of-international-literature/",
@@ -11073,7 +11072,23 @@
     "https://markezine.jp/news/detail/76964",
     "https://www.lycbiz.com/jp/download/line/",
     "https://investor.fb.com/investor-events/default.aspx",
-    "http://web.archive.org/web/20100626010201/http://nodejs.org/"
+    "http://web.archive.org/web/20100626010201/http://nodejs.org/",
+    "https://feministpress.org/pages/submission-guidelines",
+    "https://feministpress.org/pages/apprenticeship",
+    "https://feministpress.org/.well-known/ucp",
+    "https://feministpress.org/collections/women-in-translation/products/9781558612983-human-sacrifices",
+    "https://feministpress.org/collections/coming-soon/products/9781558613775-a-secret-woman",
+    "https://feministpress.org/account",
+    "https://feministpress.org/collections/amethyst-editions",
+    "https://feministpress.org/collections/coming-soon",
+    "https://donate.feministpress.org/forms/feminist-press-donation-form",
+    "https://productreviews.shopifycdn.com",
+    "https://fonts.shopifycdn.com",
+    "https://feminist-press.myshopify.com/collections/all?filter.p.product_type=Paperback",
+    "https://www.shopify.com?utm_campaign=poweredby&utm_medium=shopify&utm_source=onlinestore",
+    "https://donate.feministpress.org/forms/newsletter-signup",
+    "https://www.eventbrite.com/e/feminist-press-and-roxane-gay-present-feminist-canaries-tickets-2000312837544?aff=oddtdtcreator&utm_campaign=featured_banner_FeministPressxRoxaneGayPresent&utm_medium=referral&utm_source=later-linkinbio",
+    "https://shop.app"
   ],
   "visited": [
     "https://note.com/",
@@ -12312,7 +12327,8 @@
     "https://ja.wikipedia.org/wiki/木枯らし",
     "https://ja.wikipedia.org/wiki/横浜市",
     "https://blog.comnico.jp/we-love-social/sns-users",
-    "https://npmjs.org/"
+    "https://npmjs.org/",
+    "http://www.feministpress.org"
   ],
   "notes": [
     "44日目: Wayback Machine(むかしのすがた)、募集職種一覧_2026/10更新｜note株式会社、コトバンク [ 辞書・百科事典・各種データベースを一度に検索 ]、本がすき。、セッソ・マット - Wikipedia",
@@ -12344,15 +12360,17 @@
     "70日目: Gestione Trasporti Metropolitani SpA - Pescara(むかしのすがた)、3月 - Wikipedia、小説家になろう - みんなのための小説投稿サイト、Wikipedia、はてなブックマーク - 新着エントリー - 総合",
     "71日目: Official Ryanair website | Cheap flights in Europe | Ryanair、Kids' Space、番組詳細｜宝塚歌劇 衛星放送チャンネル｜タカラヅカ・スカイ・ステージ(むかしのすがた)、iOSエンジニア / note株式会社(むかしのすがた)",
     "72日目: 長塚節 長塚節歌集　上、Weblio 翻訳、Wikipedia、【2026年11月版】日本国内・国外人気SNSユーザー数ランキング｜X（Twitter）、Instagram、TikTokなど15媒体",
-    "73日目: npm - Node Package Manager(むかしのすがた)"
+    "73日目: npm - Node Package Manager(むかしのすがた)、Feminist Press"
   ],
   "today_walk": {
     "date": "2026-11-23",
     "seen": [
-      "npm - Node Package Manager(むかしのすがた)"
+      "npm - Node Package Manager(むかしのすがた)",
+      "Feminist Press"
     ],
     "brought": [
-      2
+      2,
+      60
     ]
   },
   "inner_voice": [
@@ -12778,6 +12796,12 @@
       "since": "2026-11-22",
       "first": "2026-11-22",
       "times": 1
+    },
+    {
+      "what": "95",
+      "since": "2026-11-23",
+      "first": "2026-11-23",
+      "times": 1
     }
   ],
   "saw_on": "2026-11-20",
@@ -12866,14 +12890,14 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "www.wowow.co.jp",
-    "getpocket.com",
-    "edu-naigai.jiji.com",
-    "hubspot-cta-redirect-na2-prod.s3.amazonaws.com",
-    "kbc.co.jp",
-    "laws-lois.justice.gc.ca"
+    "www.zendesk.fr",
+    "www.tokyo-np.co.jp",
+    "overthesea.neocities.org",
+    "www.google.fr",
+    "www.sakuranbo-m.jp",
+    "nhk.qualtrics.com"
   ],
-  "how_many_places_left": 4200,
+  "how_many_places_left": 4215,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -13035,7 +13059,8 @@
     "open.talentio.com": "Wayback Machine",
     "translate.weblio.jp": "有償の翻訳ソフト - Weblio 翻訳",
     "blog.comnico.jp": "【2026年11月版】日本国内・国外人気SNSユーザー数ランキング｜X（Twit",
-    "npmjs.org": "npm - Node Package Manager(むかしのすがた)"
+    "npmjs.org": "npm - Node Package Manager(むかしのすがた)",
+    "www.feministpress.org": "Feminist Press"
   },
   "went_home": {
     "date": "2026-11-23",
@@ -13100,7 +13125,33 @@
       "is",
       "for",
       "to",
-      "the"
+      "the",
+      "らしい",
+      "時点",
+      "をあげた",
+      "たら",
+      "of",
+      "in",
+      "0",
+      "00",
+      "by",
+      "17",
+      "95",
+      "15",
+      "24",
+      "18",
+      "30",
+      "9",
+      "54",
+      "16",
+      "25",
+      "42",
+      "3",
+      "&#",
+      "39",
+      "2026",
+      "6",
+      "7"
     ]
   },
   "wants_to_say": [
@@ -14692,6 +14743,13 @@
       "first": "2026-11-22",
       "times": 1,
       "said": ""
+    },
+    {
+      "what": "95",
+      "since": "2026-11-23",
+      "first": "2026-11-23",
+      "times": 1,
+      "said": ""
     }
   ],
   "thinking_about": "自由じゃない。",
@@ -14845,10 +14903,10 @@
       "day": "2026-11-22"
     }
   ],
-  "understood_usually": 0.483372,
+  "understood_usually": 0.462308,
   "its_ways": {
     "pages_per_site": 9.3,
-    "pull_of_japanese": 1.67,
+    "pull_of_japanese": 1.68,
     "feeling_keen": 0.34,
     "wish_to_return": 1.8
   },
@@ -15544,7 +15602,7 @@
       }
     }
   ],
-  "woke_at": "2026-11-23 12",
+  "woke_at": "2026-11-23 13",
   "blog_titles": {
     "seen": 99,
     "closed": 4,
@@ -15693,7 +15751,8 @@
     "open.talentio.com",
     "translate.weblio.jp",
     "blog.comnico.jp",
-    "npmjs.org"
+    "npmjs.org",
+    "www.feministpress.org"
   ],
   "its_own_figure": {
     "date": "2026-11-19",
@@ -16347,7 +16406,8 @@
     "木枯らし - Wikipedia",
     "横浜市 - Wikipedia",
     "【2026年11月版】日本国内・国外人気SNSユーザー数ランキング｜X（Twitter）、Instagram、TikTokなど15媒体",
-    "npm - Node Package Manager(むかしのすがた)"
+    "npm - Node Package Manager(むかしのすがた)",
+    "Feminist Press"
   ],
   "translated_lately": [
     "2008 → 2008年",
