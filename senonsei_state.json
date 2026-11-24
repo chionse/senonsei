@@ -12357,7 +12357,8 @@
     "http://www.planalto.gov.br/ccivil_03/leis/L8723.htm",
     "http://web.archive.org/web/20091011221441*/http://www.planalto.gov.br/ccivil_03/Leis/L8723.htm",
     "http://www.unionenaturisti.org",
-    "http://web.archive.org/web/20041216094931*/http://www.unionenaturisti.org/"
+    "http://web.archive.org/web/20041216094931*/http://www.unionenaturisti.org/",
+    "https://web.archive.org/web/1998/http://www.nifty.com/"
   ],
   "notes": [
     "45日目: メインページ - Wikipedia(むかしのすがた)",
@@ -12389,15 +12390,17 @@
     "71日目: Official Ryanair website | Cheap flights in Europe | Ryanair、Kids' Space、番組詳細｜宝塚歌劇 衛星放送チャンネル｜タカラヅカ・スカイ・ステージ(むかしのすがた)、iOSエンジニア / note株式会社(むかしのすがた)",
     "72日目: 長塚節 長塚節歌集　上、Weblio 翻訳、Wikipedia、【2026年11月版】日本国内・国外人気SNSユーザー数ランキング｜X（Twitter）、Instagram、TikTokなど15媒体",
     "73日目: npm - Node Package Manager(むかしのすがた)、Feminist Press、TED Podcasts、L8723(むかしのすがた)",
-    "74日目: UNI - home(むかしのすがた)"
+    "74日目: UNI - home(むかしのすがた)、https://web.archive.org/web/19981212031407/http://www.nifty.com/"
   ],
   "today_walk": {
     "date": "2026-11-24",
     "seen": [
-      "UNI - home(むかしのすがた)"
+      "UNI - home(むかしのすがた)",
+      "https://web.archive.org/web/19981212031407/http://www.nifty.com/"
     ],
     "brought": [
-      86
+      86,
+      0
     ]
   },
   "inner_voice": [
@@ -12929,12 +12932,12 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "www.nikkei.co.jp",
-    "news.sky.com",
-    "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
-    "www.city.itabashi.tokyo.jp",
-    "note.morisawa.co.jp",
-    "housecleaning.news.mynavi.jp"
+    "www.nihongokentei.jp",
+    "転生幼女、教団はじめました。 1　～新しい家族とのんびり暮らしたいのに、最強の聖",
+    "phab.wmfusercontent.org",
+    "ショウとカット  - にほんブログ村",
+    "www.imdb.com",
+    "www.google.fr"
   ],
   "how_many_places_left": 4235,
   "places_known": {
@@ -13146,7 +13149,11 @@
       "11",
       "1",
       "page",
-      "is"
+      "is",
+      "12",
+      "1998",
+      "1999",
+      "07"
     ]
   },
   "wants_to_say": [
@@ -14899,37 +14906,14 @@
       "day": "2026-11-22"
     }
   ],
-  "understood_usually": 0.441988,
+  "understood_usually": 0.472789,
   "its_ways": {
     "pages_per_site": 9.3,
-    "pull_of_japanese": 1.71,
+    "pull_of_japanese": 1.7,
     "feeling_keen": 0.34,
-    "wish_to_return": 1.8
+    "wish_to_return": 1.9
   },
   "came_back": [
-    {
-      "place": "soredoko.jp",
-      "before": {
-        "day": 19,
-        "entrance": "https://soredoko.jp/",
-        "knew": 15,
-        "of": 3702,
-        "pages": 12,
-        "title": "ソレドコ",
-        "unread": 0,
-        "vocabulary": 19
-      },
-      "now": {
-        "entrance": "https://soredoko.jp/entry/2026/10/16/090000",
-        "title": "Amazonプライム感謝祭はこれ買って！山崎実業の便利グッズ、コスパ最強スマート",
-        "day": 60,
-        "vocabulary": 902,
-        "knew": 500,
-        "of": 2165,
-        "pages": 6,
-        "unread": 0
-      }
-    },
     {
       "place": "chionse.github.io",
       "before": {
@@ -15596,9 +15580,32 @@
         "pages": 9,
         "unread": 0
       }
+    },
+    {
+      "place": "www.nifty.com",
+      "before": {
+        "day": 68,
+        "entrance": "https://web.archive.org/web/1998/http://www.nifty.com/",
+        "knew": 28,
+        "of": 50,
+        "pages": 1,
+        "title": "https://web.archive.org/web/199812120314",
+        "unread": 0,
+        "vocabulary": 916
+      },
+      "now": {
+        "entrance": "https://web.archive.org/web/1998/http://www.nifty.com/",
+        "title": "https://web.archive.org/web/199812120314",
+        "day": 74,
+        "vocabulary": 972,
+        "knew": 31,
+        "of": 51,
+        "pages": 1,
+        "unread": 0
+      }
     }
   ],
-  "woke_at": "2026-11-24 13",
+  "woke_at": "2026-11-24 14",
   "blog_titles": {
     "seen": 99,
     "closed": 4,
