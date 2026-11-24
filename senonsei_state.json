@@ -12412,7 +12412,6 @@
     ]
   },
   "inner_voice": [
-    "11-19 11時: 非表示",
     "11-19 12時: 非表示",
     "11-19 13時: ページ",
     "11-19 14時: 本当 自自由",
@@ -12471,7 +12470,8 @@
     "11-24 18時: 更新",
     "11-24 19時: デタジル",
     "11-24 20時: デデジタル",
-    "11-24 21時: 非表示"
+    "11-24 21時: 非表示",
+    "11-24 22時: 非表示"
   ],
   "thought_on": "2026-10-08",
   "on_its_mind": [
@@ -12940,12 +12940,12 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "umamusume.jp",
-    "【秋のスキルアップ応援】お友達紹介キャンペーン – テックリブ株式会社 | お知",
-    "雑誌 - 無料・試し読みも！honto電子書籍ストア",
-    "tonarinoyj.jp",
-    "minorplanetcenter.net",
-    "www.kentuckypress.com"
+    "id.ndl.go.jp",
+    "www.mitre.org",
+    "新商品ニュース記事一覧：時事ドットコム",
+    "thetenthmosaic.jp",
+    "smart.yamagata-np.jp",
+    "gl.wikipedia.org"
   ],
   "how_many_places_left": 4235,
   "places_known": {
@@ -15714,7 +15714,7 @@
       }
     }
   ],
-  "woke_at": "2026-11-24 21",
+  "woke_at": "2026-11-24 22",
   "blog_titles": {
     "seen": 99,
     "closed": 4,
