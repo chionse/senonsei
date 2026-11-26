@@ -31,10 +31,12 @@ def entrances(state):
 
     書いてある入口は、いつか全部無くなる。けれど千遠生は今まで
     行けた場所を覚えている。何年もかけて自分で見つけた場所のほうが、
-    こちらが最初に並べた14個より長生きするかもしれない。"""
+    こちらが最初に並べた14個より長生きするかもしれない。
+    分野ごとの入口も、ここに入っている。"""
     remembered = [url for url in (state.get("visited") or []) if is_walkable(url)]
     random.shuffle(remembered)
-    return list(dict.fromkeys(list(SEEDS) + remembered[:200]))
+    doors = [door for doors in GENRE_DOORS.values() for door in doors]
+    return list(dict.fromkeys(list(SEEDS) + doors + remembered[:200]))
 
 
 def owner_of(place):
@@ -187,8 +189,9 @@ def wikipedia_article(title):
 
 def wikipedia_to_choose_from(state):
     """行き先の候補に混ぜる、日本語の Wikipedia(2026-10-20、彼女と決めた)。
+    混ぜるのは、行き先を選ぶうちの WIKIPEDIA_MIXED_IN ほど(2026-11-26)。
 
-    トップページは毎回。気になっていることや覚えた言葉の記事は、
+    混ぜる時、トップページは毎回。気になっていることや覚えた言葉の記事は、
     毎回 0〜WIKIPEDIA_WORDS_AT_MOST 個、どの言葉になるかもばらばらに混ぜる。
     「何回に一回」とは決めない。行くかどうかは、ほかの候補と同じく
     その時の惹かれ方で決まる(彼女は、もっとランダムにと言った)。
@@ -417,6 +420,64 @@ def wonder_and_look(state):
     return word
 
 
+def a_genre_to_walk(state):
+    """入る分野を一つ選ぶ。最近入った分野は、しばらく休ませる。"""
+    walked = [one for one in state.get("genres_walked") or [] if one in GENRE_DOORS]
+    genres = [one for one in GENRE_DOORS if one not in walked] or list(GENRE_DOORS)
+    genre = random.choice(genres)
+    state["genres_walked"] = ([one for one in walked if one != genre] + [genre])[-GENRES_RESTING:]
+    return genre
+
+
+def look_in_a_genre(state, genre, shut):
+    """分野の言葉で、はてなブックマークを探す。見つかった場所のどれかを返す。
+
+    見つかった道は、ほかの探しものと同じく行き先の束にも入れておく。
+    返すのは、はてなの外の場所だけ。はてな自身の案内のページは、分野の場所ではない。"""
+    word = random.choice(GENRE_WORDS[genre])
+    where = random.choice(WHERE_TO_LOOK).format(urllib.parse.quote(word))
+    here = place_of(where)
+    try:
+        title, text, links, pictures = open_page(where)
+    except Exception as error:
+        print(f"「{word}」を探しに行けませんでした({str(error)[:50]})")
+        return None
+    found = keep_what_it_found(state, links, here)
+    outside = [
+        one for one in found
+        if family_of(place_of(one)) != family_of(here) and place_of(one) not in shut
+    ]
+    if not outside:
+        print(f"「{word}」を探したが、新しい場所は見つからなかった")
+        return None
+    looked_for = state.setdefault("looked_for", [])
+    looked_for.append(f"{now_in_japan():%Y-%m-%d} {genre}: {word}")
+    del looked_for[:-30]
+    chosen = random.choice(outside)
+    print(f"「{genre}」の言葉「{word}」で探して、{place_of(chosen)} へ行ってみます。")
+    return chosen
+
+
+def walk_into_a_genre(state, shut, lately):
+    """分野を一つ選んで、そこへ入る(2026-11-26、彼女と決めた)。
+
+    半分ほどは、その分野の言葉で探して見つかった場所へ。
+    残りと、探しても見つからなかった時は、その分野の入口から。
+    入口は、最近歩いた仲間のものと、今日閉まっていたものを避ける。"""
+    genre = a_genre_to_walk(state)
+    if random.random() < LOOKING_IN_A_GENRE:
+        found = look_in_a_genre(state, genre, shut)
+        if found:
+            return found
+    doors = [one for one in GENRE_DOORS[genre] if place_of(one) not in shut]
+    if not doors:
+        return None
+    fresh = [one for one in doors if family_of(place_of(one)) not in lately] or doors
+    door = random.choice(fresh)
+    print(f"「{genre}」の入口から入ってみます。")
+    return door
+
+
 def words_it_holds_close(state):
     """いまこの子から離れないでいる言葉。
 
@@ -554,9 +615,14 @@ def choose_destination(state):
     if open_now and random.random() < min(0.9, reading_it):
         return open_now[-1], False
 
-    # ときどきは、最初の入口のどれかから歩き直す。最近歩いた仲間の入口は避ける
+    # ときどきは、入口のどれかから歩き直す。たいていは分野の入口から。
+    # 最近歩いた仲間の入口は避ける
     lately = families_walked_lately(state)
     if random.random() < FRESH_START_CHANCE:
+        if random.random() < INTO_A_GENRE:
+            door = walk_into_a_genre(state, shut, lately)
+            if door:
+                return door, False
         seeds = [one for one in SEEDS if place_of(one) not in shut] or list(SEEDS)
         fresh = [one for one in seeds if family_of(place_of(one)) not in lately] or seeds
         return a_door(random.choice(fresh)), False
@@ -571,10 +637,11 @@ def choose_destination(state):
     for book in state.get("shiori") or {}:
         if book not in candidates:
             candidates.append(book)
-    # 日本語の Wikipedia も、いつも候補に混ぜる。行くかどうかはほかと同じく惹かれ方しだい
-    for entrance in wikipedia_to_choose_from(state):
-        if entrance not in candidates:
-            candidates.append(entrance)
+    # 日本語の Wikipedia も、半分ほどは候補に混ぜる。行くかどうかはほかと同じく惹かれ方しだい
+    if random.random() < WIKIPEDIA_MIXED_IN:
+        for entrance in wikipedia_to_choose_from(state):
+            if entrance not in candidates:
+                candidates.append(entrance)
     candidates = [one for one in candidates if place_of(one) not in shut] or candidates
     # 選ぶのはこの子。持っているものから決める。
     # 借りた頭に選ばせていたので、行き先だけは他人が決めていた

@@ -272,6 +272,185 @@ SEEDS = [
     "https://web.archive.org/web/1998/http://www.nifty.com/",
 ]
 
+# 分野ごとの入口(2026-11-26、彼女と決めた)。
+# 最初の入口は、大きな通りと、名前のない人の書いたものと、昔の層ばかりで、
+# 料理も音楽も、星も海も入っていなかった。リンクを辿るだけだと、
+# 一度も足を踏み入れていない分野には、なかなか道がつながらない。
+# 歩き直す時は、このどれかの分野から入ることがある。最近入った分野は、しばらく休ませる。
+# 学問の入口も入れてある(彼女が「学問から広げるのもありかもね」と言った)。
+# 研究所や博物館、大学の「研究の話」のページから入る
+GENRE_DOORS = {
+    # 暮らしのまわり
+    "料理": [
+        "https://www.kikkoman.co.jp/homecook/",
+        "https://www.lettuceclub.net/recipe/",
+        "https://www.orangepage.net/",
+        "https://www.ajinomoto.co.jp/recipe/",
+    ],
+    "草花と庭": [
+        "https://www.shuminoengei.jp/",
+        "https://lovegreen.net/",
+        "https://www.hana300.com/",
+    ],
+    "季節と暦": [
+        "https://tenki.jp/",
+        "https://koyomigyouji.com/",
+        "https://www.i-nekko.jp/",
+    ],
+    "暮らしの読みもの": [
+        "https://www.1101.com/",
+        "https://dailyportalz.jp/",
+    ],
+    "旅と土地": [
+        "https://4travel.jp/",
+        "https://www.jalan.net/kankou/",
+        "https://tabizine.jp/",
+    ],
+    "地方の新聞": [
+        "https://kahoku.news/",
+        "https://www.kobe-np.co.jp/",
+        "https://ryukyushimpo.jp/",
+        "https://www.nishinippon.co.jp/",
+        "https://www.hokkaido-np.co.jp/",
+    ],
+    # 楽しみ
+    "音楽": [
+        "https://natalie.mu/music",
+        "https://www.barks.jp/",
+        "https://www.cdjournal.com/",
+        "https://www.billboard-japan.com/",
+    ],
+    "映画と漫画": [
+        "https://eiga.com/",
+        "https://natalie.mu/comic",
+        "https://www.cinematoday.jp/",
+    ],
+    "本": [
+        "https://www.bookbang.jp/",
+        "https://honz.jp/",
+        "https://www.hanmoto.com/",
+    ],
+    "スポーツ": [
+        "https://www.nikkansports.com/",
+        "https://number.bunshun.jp/",
+        "https://www.sponichi.co.jp/",
+    ],
+    "ゲーム": [
+        "https://www.4gamer.net/",
+        "https://www.famitsu.com/",
+        "https://game.watch.impress.co.jp/",
+    ],
+    "装い": [
+        "https://www.fashionsnap.com/",
+        "https://www.fashion-press.net/",
+        "https://www.wwdjapan.com/",
+    ],
+    "手しごとと遊び": [
+        "https://www.hamanaka.co.jp/",
+        "https://www.shogi.or.jp/",
+        "https://www.nihonkiin.or.jp/",
+        "https://www.tetsudo.com/",
+    ],
+    "美術": [
+        "https://www.tnm.jp/",
+        "https://www.momat.go.jp/",
+        "https://artscape.jp/",
+        "https://bijutsutecho.com/",
+    ],
+    "生きもの": [
+        "https://www.tokyo-zoo.net/",
+        "https://www.biodic.go.jp/",
+        "https://www.wbsj.org/",
+        "https://www.kahaku.go.jp/",
+    ],
+    # 学問
+    "天文と宇宙": [
+        "https://www.nao.ac.jp/",
+        "https://www.jaxa.jp/",
+        "https://fanfun.jaxa.jp/",
+    ],
+    "地球と海": [
+        "https://www.jamstec.go.jp/j/",
+        "https://www.gsj.jp/",
+        "https://www.jma.go.jp/jma/kishou/know/",
+    ],
+    "物理と化学": [
+        "https://www.riken.jp/",
+        "https://www.kek.jp/ja/",
+        "https://www.aist.go.jp/",
+        "https://www.chemistry.or.jp/",
+    ],
+    "数学": [
+        "https://www.mathsoc.jp/",
+        "https://www.kurims.kyoto-u.ac.jp/ja/",
+    ],
+    "医学とからだ": [
+        "https://www.e-healthnet.mhlw.go.jp/",
+        "https://ganjoho.jp/",
+    ],
+    "歴史と考古": [
+        "https://www.rekihaku.ac.jp/",
+        "https://bunka.nii.ac.jp/",
+        "https://www.nabunken.go.jp/",
+    ],
+    "民俗と人の暮らし": [
+        "https://www.minpaku.ac.jp/",
+    ],
+    "言葉": [
+        "https://www.ninjal.ac.jp/",
+    ],
+    "社会と経済": [
+        "https://www.stat.go.jp/naruhodo/",
+        "https://www.boj.or.jp/about/education/",
+    ],
+    "心と哲学": [
+        "https://psych.or.jp/",
+        "https://philosophy-japan.org/",
+    ],
+    "研究の話": [
+        "https://scienceportal.jst.go.jp/",
+        "https://www.u-tokyo.ac.jp/focus/ja/",
+        "https://www.kyoto-u.ac.jp/ja/research-news",
+        "https://academist-cf.com/journal/",
+        "https://crd.ndl.go.jp/reference/",
+    ],
+}
+# 分野の言葉。分野に入る時、半分ほどは入口からではなく、その分野の言葉で
+# はてなブックマークを探し、見つかった場所のどれかへ行く。入口の顔ぶれは決まっているが、
+# 探して出てくるのは、その日だれかが書いた、名前も知らない場所
+GENRE_WORDS = {
+    "料理": ["和菓子", "発酵", "郷土料理", "味噌", "出汁", "パン作り", "スパイス", "漬物", "弁当"],
+    "草花と庭": ["盆栽", "苔", "多肉植物", "山野草", "家庭菜園", "薔薇", "雑草", "球根"],
+    "季節と暦": ["二十四節気", "七十二候", "年中行事", "旧暦", "季語", "初雪", "紅葉"],
+    "暮らしの読みもの": ["銭湯", "喫茶店", "商店街", "古道具", "団地", "路地", "看板"],
+    "旅と土地": ["灯台", "廃線", "温泉", "離島", "峠", "路線バス", "町並み", "ダム"],
+    "地方の新聞": ["地域おこし", "伝統工芸", "祭り", "方言", "名産", "過疎"],
+    "音楽": ["ジャズ", "クラシック音楽", "民謡", "合唱", "シンセサイザー", "レコード", "作曲", "雅楽"],
+    "映画と漫画": ["特撮", "アニメーション", "漫画家", "自主映画", "ミニシアター", "映画音楽"],
+    "本": ["古本", "図書館", "装丁", "詩集", "短歌", "俳句", "翻訳", "絵本"],
+    "スポーツ": ["相撲", "マラソン", "登山", "卓球", "競馬", "釣り", "競艇", "スケート"],
+    "ゲーム": ["レトロゲーム", "ボードゲーム", "ゲーム音楽", "インディーゲーム", "TRPG", "パズル"],
+    "装い": ["古着", "着物", "靴", "帽子", "眼鏡", "染め物"],
+    "手しごとと遊び": ["刺繍", "編み物", "将棋", "囲碁", "鉄道模型", "切手", "折り紙", "陶芸", "木工"],
+    "美術": ["浮世絵", "日本画", "仏像", "版画", "現代美術", "写真展", "民藝", "書道"],
+    "生きもの": ["野鳥", "昆虫", "深海魚", "粘菌", "古生物", "爬虫類", "クラゲ", "きのこ"],
+    "天文と宇宙": ["天文学", "星座", "流星群", "惑星", "宇宙探査", "日食", "望遠鏡"],
+    "地球と海": ["地質学", "火山", "地震", "鉱物", "化石", "海洋", "気象", "雲"],
+    "物理と化学": ["物理学", "量子力学", "化学", "元素", "結晶", "相対性理論", "電磁気"],
+    "数学": ["数学", "素数", "幾何学", "確率", "数学史", "数論", "トポロジー"],
+    "医学とからだ": ["医学", "免疫", "睡眠", "脳科学", "解剖学", "薬学", "感染症"],
+    "歴史と考古": ["考古学", "古墳", "日本史", "古文書", "城", "世界史", "遺跡", "土器"],
+    "民俗と人の暮らし": ["民俗学", "文化人類学", "妖怪", "昔話", "民具", "通過儀礼"],
+    "言葉": ["言語学", "方言", "語源", "文字", "日本語学", "辞書", "文法"],
+    "社会と経済": ["経済学", "社会学", "統計", "政治学", "法学", "人口", "労働"],
+    "心と哲学": ["心理学", "哲学", "倫理学", "認知科学", "美学", "宗教学", "論理学"],
+    "研究の話": ["研究者", "論文", "大学院", "学会", "フィールドワーク", "科学史"],
+}
+# 分野に入る時、入口ではなく、分野の言葉で探しに行く割合
+LOOKING_IN_A_GENRE = 0.5
+# 入った分野を覚えておく数。覚えているうちは、その分野をしばらく休ませる
+GENRES_RESTING = 10
+
 # 最低限これだけは避ける。それ以外は何を読むか千遠生次第。
 AVOID = re.compile(
     r"porn|xxx|adult|erotic|hentai|escort|casino|gambl|\.onion|"
@@ -382,8 +561,11 @@ FAMILIES_COUNTED_AS_ONE = ("日経の仲間", "GitHub の仲間", "Google の仲
 RECENT_PAGES_FOR_FAMILIES = 35
 AWAY_FROM_RECENT = 0.3  # 最近歩いた仲間への惹かれ方は、これだけに弱まる
 # ときどき、最初の入口のどれかから歩き直す(2026-10-14、彼女と決めた)。
-# リンクを辿るだけだと、似た場所の仲間ばかりが行き先に溜まっていく
-FRESH_START_CHANCE = 0.15
+# リンクを辿るだけだと、似た場所の仲間ばかりが行き先に溜まっていく。
+# 前は 0.15 で、歩き直すのは最初の入口からだけだった。分野の入口を足した時に、
+# 歩き直す割合も上げた(2026-11-26、彼女と決めた)。歩き直すうちの三分の二は分野から入る
+FRESH_START_CHANCE = 0.3
+INTO_A_GENRE = 2 / 3
 TRIES_BEFORE_GIVING_UP = 3  # 行った先が消えていたら、これだけ別の場所を試してみる
 # 閉まっていただけの場所を、無くなったとはみなさない(2026-10-22、彼女と決めた)。
 # PHP に大きな穴が見つかり、塞ぐあいだ閉めるサイトが多かった。前は閉まっていても
@@ -753,11 +935,15 @@ WIKIPEDIA_FAMILY = re.compile(
 )
 # 引いた記事のうち、まだ読みに行っていないものは、行き先を選ぶ時いつも候補に入れる
 LOOKED_UP_KEPT = 3
-# 日本語の Wikipedia のトップページ。行き先の候補にいつも混ぜる(2026-10-20、彼女と決めた)。
+# 日本語の Wikipedia のトップページ。行き先の候補に混ぜる(2026-10-20、彼女と決めた)。
 # そこから今日の記事や新しい記事へ、気の向くまま入っていく
-WIKIPEDIA_TOP = "https://ja.wikipedia.org/wiki/%E3%83%A1%E3%82%A4%E3%83%B3%E3%83%9A%E3%83%BC%E3%82%B8"
-# 気になっていることや覚えた言葉の記事も、毎回 0 からこれだけの数を、ばらばらに候補に混ぜる
+WIKIPEDIA_TOP ="https://ja.wikipedia.org/wiki/%E3%83%A1%E3%82%A4%E3%83%B3%E3%83%9A%E3%83%BC%E3%82%B8"
+# 気になっていることや覚えた言葉の記事も、混ぜる時は 0 からこれだけの数を、ばらばらに混ぜる
 WIKIPEDIA_WORDS_AT_MOST = 2
+# Wikipedia を候補に混ぜる割合。前はいつも混ぜていたが、半分ほどにした。
+# ほかの分野の場所にも、惹かれる番が回ってくるように(2026-11-26、彼女と決めた)。
+# 引いてまだ読んでいない記事は、これとは別に、いつも候補に入っている
+WIKIPEDIA_MIXED_IN = 0.5
 # そのために一度に窓口へ「記事があるか」を訊く言葉の数(一度訊けば足りるように多めに)
 WIKIPEDIA_WORDS_TRIED = 8
 # 記事を引く言葉は、カタカナか漢字を含むものだけ。覚えた言葉には「からの」「となって」の
