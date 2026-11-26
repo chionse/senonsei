@@ -2081,6 +2081,20 @@ def blog_start_date(articles):
     return datetime.date.fromisoformat(earliest)
 
 
+# タイトルロゴの色(images/logo.png から拾った)。ロゴの虹の、外から内への並び。
+# 過去のブログで選んだ日の枠を、日ごとにこの中の一色にする(2026-11-26、彼女が決めた)
+LOGO_COLORS = ("#ff00b6", "#8300ff", "#0a00ff", "#00ffd7", "#69ff00", "#f0ff00")
+
+
+def color_of_the_day(date_str):
+    """その日の枠の色。一日ごとに虹の並びを一つずつ進む。同じ日はいつも同じ色。"""
+    try:
+        day = datetime.date.fromisoformat(date_str).toordinal()
+    except ValueError:
+        return LOGO_COLORS[2]
+    return LOGO_COLORS[day % len(LOGO_COLORS)]
+
+
 def generate_kakodogu_html(articles):
     """左に年・月・日の3列。それぞれの中で下に積み重なり、選ぶと隣の列が変わる。"""
     ordered = sorted_articles(articles)
@@ -2090,7 +2104,7 @@ def generate_kakodogu_html(articles):
     entries_html = ""
     for index, art in enumerate(ordered):
         hidden = "" if index == 0 else " hidden"
-        entries_html += f"""    <div class="entry" id="entry-{art['date']}"{hidden}>
+        entries_html += f"""    <div class="entry" id="entry-{art['date']}" style="--waku: {color_of_the_day(art['date'])}"{hidden}>
       <div class="entry-title">{art['title']}</div>
       <div class="date">{art['date']} {art.get('time', '')}{iine_html(art['date'], likes)}</div>
       <p>{art['content']}</p>
