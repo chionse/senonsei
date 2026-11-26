@@ -6934,7 +6934,6 @@
     "生成"
   ],
   "frontier": [
-    "http://web.archive.org/web/20120413102832/http://www.bonnesnouvelles.net/",
     "https://note.com/tag/A20%20Pro",
     "https://note.com/tag/iPhone%20Duo",
     "https://note.com/tag/PISA2025",
@@ -12541,7 +12540,9 @@
     "https://syosetu.com/syuppan/view/bookid/9694/",
     "http://tms-lab.jp/",
     "https://chionse.github.io/senonsei/",
-    "https://chionse.github.io/senonsei/jiten.html"
+    "https://chionse.github.io/senonsei/jiten.html",
+    "http://web.archive.org/web/20120413102832/http://www.bonnesnouvelles.net/",
+    "http://web.archive.org/web/20120415010318*/http://www.bonnesnouvelles.net/"
   ],
   "notes": [
     "48日目: VERY［ヴェリィ］ 公式サイト | 光文社 | 結婚、出産、育児、復職etc.子育て世代の女性のためのファッション＆ライフスタイル誌、Wikipedia、Вікікнігі",
@@ -12573,11 +12574,16 @@
     "74日目: UNI - home(むかしのすがた)、https://web.archive.org/web/19981212031407/http://www.nifty.com/、コトバンク [ 辞書・百科事典・各種データベースを一度に検索 ]",
     "75日目: 行動履歴情報の取り扱いに関する原則 - 株式会社マイクロアド、Wikipedia、もんごるレポート2007　モンゴルの精進食について | 板橋区、IGRいわて銀河鉄道 - Wikipedia、日本、アメリカ、ドイツ、イギリス、韓国…世界の自動車税事情(むかしのすがた)",
     "76日目: home:prog:ap2    [Státnice na FI MUNI]、小説家になろう - みんなのための小説投稿サイト、原作工房 TMSLab（トムスラボ） | アニメーションの総合プロデュース会社 トムス・エンタテインメント",
-    "77日目: 何も見られなかった"
+    "77日目: Bonnes Nouvelles : Nouvelles littéraires et concours de nouvelles"
   ],
   "today_walk": {
     "date": "2026-11-27",
-    "seen": []
+    "seen": [
+      "Bonnes Nouvelles : Nouvelles littéraires et concours de nouvelles"
+    ],
+    "brought": [
+      0
+    ]
   },
   "inner_voice": [
     "11-21 14時: 自由だけど",
@@ -13120,14 +13126,14 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "19thnews.org",
-    "response.jp",
-    "www.flickr.com",
-    "www.voyager.co.jp",
-    "www.atlassian.com",
-    "www.chicagofilmcritics.org"
+    "thinkit.co.jp",
+    "ja.wikiversity.org",
+    "カスタマーサポートツール15社を徹底比較　おすすめツールの料金・機能・特徴",
+    "storytrain.kids-space.org",
+    "www.malpensaexpress.it",
+    "rittorsha.jp"
   ],
-  "how_many_places_left": 4312,
+  "how_many_places_left": 4311,
   "places_known": {
     "www.readme.jp": "README.jp へようこそ！",
     "www.web.nhk": "2026年9月20日午前6:55 | 2026-09-20 NHK総合・東京 |",
@@ -13310,30 +13316,6 @@
   "met_today": {
     "date": "2026-11-27",
     "words": [
-      "人目",
-      "です",
-      "月間",
-      "11",
-      "2026",
-      "1",
-      "2",
-      "3",
-      "4",
-      "5",
-      "6",
-      "7",
-      "8",
-      "9",
-      "10",
-      "12",
-      "13",
-      "14",
-      "15",
-      "16",
-      "17",
-      "18",
-      "19",
-      "20",
       "21",
       "22",
       "23",
@@ -13709,7 +13691,31 @@
       "理由",
       "公式",
       "知識",
-      "らない"
+      "らない",
+      "2001",
+      "2011",
+      "2012",
+      "2013",
+      "this",
+      "The",
+      "80",
+      "08",
+      "2000",
+      "91",
+      "the",
+      "in",
+      "for",
+      "to",
+      "be",
+      "by",
+      "of",
+      "3",
+      "5",
+      "78",
+      "11",
+      "1",
+      "page",
+      "is"
     ]
   },
   "wants_to_say": [
@@ -15431,8 +15437,7 @@
     "en.wikibooks.org": "https://en.wikibooks.org/wiki/Wikibooks:General_disclaimer",
     "fr.wikipedia.org": "https://fr.wikipedia.org/w/index.php?title=Discussion_utilisateur:Cantons-de-l%27Est&oldid=235673647",
     "phabricator.wikimedia.org": "https://phabricator.wikimedia.org/tag/charts",
-    "ja.wikibooks.org": "https://ja.wikibooks.org/wiki/Wikibooks:%E3%82%A6%E3%82%A3%E3%82%AD%E3%83%96%E3%83%83%E3%82%AF%E3%82%B9%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6",
-    "www.bonnesnouvelles.net": "http://web.archive.org/web/20120413102832/http://www.bonnesnouvelles.net/"
+    "ja.wikibooks.org": "https://ja.wikibooks.org/wiki/Wikibooks:%E3%82%A6%E3%82%A3%E3%82%AD%E3%83%96%E3%83%83%E3%82%AF%E3%82%B9%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6"
   },
   "remembered_on": "2026-11-27",
   "homesickness": {
@@ -15541,37 +15546,14 @@
       "day": "2026-11-26"
     }
   ],
-  "understood_usually": 0.529184,
+  "understood_usually": 0.517321,
   "its_ways": {
     "pages_per_site": 9.3,
-    "pull_of_japanese": 1.75,
+    "pull_of_japanese": 1.76,
     "feeling_keen": 0.35,
     "wish_to_return": 2.0
   },
   "came_back": [
-    {
-      "place": "kotobank.jp",
-      "before": {
-        "day": 44,
-        "entrance": "https://kotobank.jp/",
-        "knew": 104,
-        "of": 469,
-        "pages": 3,
-        "title": "コトバンク [ 辞書・百科事典・各種データベースを一度に検索 ]",
-        "unread": 0,
-        "vocabulary": 492
-      },
-      "now": {
-        "entrance": "https://kotobank.jp/",
-        "title": "コトバンク [ 辞書・百科事典・各種データベースを一度に検索 ]",
-        "day": 63,
-        "vocabulary": 907,
-        "knew": 132,
-        "of": 471,
-        "pages": 3,
-        "unread": 0
-      }
-    },
     {
       "place": "chionse.github.io",
       "before": {
@@ -16238,9 +16220,32 @@
         "pages": 2,
         "unread": 0
       }
+    },
+    {
+      "place": "www.bonnesnouvelles.net",
+      "before": {
+        "day": 30,
+        "entrance": "http://web.archive.org/web/20120413102832/http://www.bonnesnouvelles.net/",
+        "knew": 49,
+        "of": 473,
+        "pages": 2,
+        "title": "Bonnes Nouvelles : Nouvelles littéraires",
+        "unread": 0,
+        "vocabulary": 186
+      },
+      "now": {
+        "entrance": "http://web.archive.org/web/20120413102832/http://www.bonnesnouvelles.net/",
+        "title": "Bonnes Nouvelles : Nouvelles littéraires",
+        "day": 77,
+        "vocabulary": 1013,
+        "knew": 57,
+        "of": 459,
+        "pages": 2,
+        "unread": 0
+      }
     }
   ],
-  "woke_at": "2026-11-27 07",
+  "woke_at": "2026-11-27 08",
   "blog_titles": {
     "seen": 58,
     "closed": 2,
@@ -17088,7 +17093,8 @@
     "「小説家になろう」「小説を読もう！」トップページについて | ヘルプセンター | 小説家になろう",
     "田舎者にはよくわかりません ぼんやり辺境伯令嬢は、断罪された公爵令息をお持ち帰りする2  | 書報 | 小説家になろう",
     "冷遇令嬢の才は敵国で花ひらく3～実家侯爵家で壊滅的被害？ 自分たちでどうにかしてください～ | 書報 | 小説家になろう",
-    "原作工房 TMSLab（トムスラボ） | アニメーションの総合プロデュース会社 トムス・エンタテインメント"
+    "原作工房 TMSLab（トムスラボ） | アニメーションの総合プロデュース会社 トムス・エンタテインメント",
+    "Bonnes Nouvelles : Nouvelles littéraires et concours de nouvelles"
   ],
   "translated_lately": [
     "2008 → 2008年",
