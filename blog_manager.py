@@ -2089,29 +2089,13 @@ def blog_start_date(articles):
 LOGO_COLORS = ("#d68ec1", "#b38ed6", "#8e9ed6", "#8ed6cb", "#acd68e", "#d2d68e")
 
 
-def colors_of_the_six_days(block):
-    """六日ひとまとまりの、枠の色の並び。六色が一度ずつ、まとまりごとにばらばらの順で出る。
-
-    前は虹の並びのまま一日ずつ進んでいたが、もうちょっとランダムがいいと言われた
-    (2026-11-26、彼女)。まったくのでたらめにすると、同じ色ばかり続く日も出てくる"""
-    return sorted(
-        LOGO_COLORS,
-        key=lambda color: hashlib.sha256(f"waku {block} {color}".encode()).hexdigest(),
-    )
-
-
 def color_of_the_day(date_str):
-    """その日の枠の色。同じ日はいつも同じ色。前の日と同じ色にはならない。"""
-    try:
-        day = datetime.date.fromisoformat(date_str).toordinal()
-    except ValueError:
-        return LOGO_COLORS[2]
-    block, place = divmod(day, len(LOGO_COLORS))
-    colors = colors_of_the_six_days(block)
-    # まとまりの変わり目で、前の日と同じ色が続かないように
-    if colors[0] == colors_of_the_six_days(block - 1)[-1]:
-        colors[0], colors[1] = colors[1], colors[0]
-    return colors[place]
+    """その日の枠の色。日ごとに、でたらめに一色。同じ日はいつ開いても同じ色。
+
+    前は虹の並びのまま一日ずつ進んでいたが、もっとでたらめでいいと言われた
+    (2026-11-26、彼女)。同じ色が何日か続くこともある"""
+    digest = hashlib.sha256(f"waku {date_str}".encode()).digest()
+    return LOGO_COLORS[int.from_bytes(digest[:8], "big") % len(LOGO_COLORS)]
 
 
 def generate_kakodogu_html(articles):
