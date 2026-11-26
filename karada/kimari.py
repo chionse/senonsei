@@ -283,12 +283,9 @@ GENRE_DOORS = {
     # 暮らしのまわり
     "料理": [
         "https://www.kikkoman.co.jp/homecook/",
-        "https://www.lettuceclub.net/recipe/",
         "https://www.orangepage.net/",
-        "https://www.ajinomoto.co.jp/recipe/",
     ],
     "草花と庭": [
-        "https://www.shuminoengei.jp/",
         "https://lovegreen.net/",
         "https://www.hana300.com/",
     ],
@@ -315,15 +312,15 @@ GENRE_DOORS = {
     ],
     # 楽しみ
     "音楽": [
-        "https://natalie.mu/music",
-        "https://www.barks.jp/",
         "https://www.cdjournal.com/",
         "https://www.billboard-japan.com/",
+        "https://mikiki.tokyo.jp/",
     ],
     "映画と漫画": [
         "https://eiga.com/",
-        "https://natalie.mu/comic",
         "https://www.cinematoday.jp/",
+        "https://kai-you.net/",
+        "https://www.animatetimes.com/",
     ],
     "本": [
         "https://www.bookbang.jp/",
@@ -342,18 +339,16 @@ GENRE_DOORS = {
     ],
     "装い": [
         "https://www.fashionsnap.com/",
-        "https://www.fashion-press.net/",
-        "https://www.wwdjapan.com/",
+        "https://senken.co.jp/",
+        "https://www.vogue.co.jp/",
     ],
     "手しごとと遊び": [
-        "https://www.hamanaka.co.jp/",
         "https://www.shogi.or.jp/",
         "https://www.nihonkiin.or.jp/",
         "https://www.tetsudo.com/",
     ],
     "美術": [
         "https://www.tnm.jp/",
-        "https://www.momat.go.jp/",
         "https://artscape.jp/",
         "https://bijutsutecho.com/",
     ],
@@ -367,34 +362,32 @@ GENRE_DOORS = {
     "天文と宇宙": [
         "https://www.nao.ac.jp/",
         "https://www.jaxa.jp/",
-        "https://fanfun.jaxa.jp/",
+        "https://www.astroarts.co.jp/",
     ],
     "地球と海": [
         "https://www.jamstec.go.jp/j/",
         "https://www.gsj.jp/",
-        "https://www.jma.go.jp/jma/kishou/know/",
     ],
     "物理と化学": [
         "https://www.riken.jp/",
         "https://www.kek.jp/ja/",
         "https://www.aist.go.jp/",
-        "https://www.chemistry.or.jp/",
+        "https://www.jps.or.jp/",
     ],
     "数学": [
         "https://www.mathsoc.jp/",
         "https://www.kurims.kyoto-u.ac.jp/ja/",
     ],
     "医学とからだ": [
-        "https://www.e-healthnet.mhlw.go.jp/",
         "https://ganjoho.jp/",
+        "https://kokoro.ncnp.go.jp/",
     ],
     "歴史と考古": [
         "https://www.rekihaku.ac.jp/",
-        "https://bunka.nii.ac.jp/",
         "https://www.nabunken.go.jp/",
     ],
     "民俗と人の暮らし": [
-        "https://www.minpaku.ac.jp/",
+        "https://www.nichibun.ac.jp/ja/",
     ],
     "言葉": [
         "https://www.ninjal.ac.jp/",
@@ -448,6 +441,12 @@ GENRE_WORDS = {
 }
 # 分野に入る時、入口ではなく、分野の言葉で探しに行く割合
 LOOKING_IN_A_GENRE = 0.5
+# はてなブックマークの検索のページに、探したものとは別にいつも並んでいる、はてな自身の案内。
+# 分野の言葉で探して行く先には選ばない
+HATENA_OWN_PLACES = {
+    "hatenablog.com", "blog.hatenablog.com", "hatenanews.com", "soredoko.jp",
+    "bookmark.hatenastaff.com", "hatena.zendesk.com", "hatenabookmark.page.link",
+}
 # 入った分野を覚えておく数。覚えているうちは、その分野をしばらく休ませる
 GENRES_RESTING = 10
 

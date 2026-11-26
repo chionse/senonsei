@@ -433,7 +433,7 @@ def look_in_a_genre(state, genre, shut):
     """分野の言葉で、はてなブックマークを探す。見つかった場所のどれかを返す。
 
     見つかった道は、ほかの探しものと同じく行き先の束にも入れておく。
-    返すのは、はてなの外の場所だけ。はてな自身の案内のページは、分野の場所ではない。"""
+    返すのは、検索で出てきた場所だけ。はてな自身の案内のページは、分野の場所ではない。"""
     word = random.choice(GENRE_WORDS[genre])
     where = random.choice(WHERE_TO_LOOK).format(urllib.parse.quote(word))
     here = place_of(where)
@@ -445,7 +445,9 @@ def look_in_a_genre(state, genre, shut):
     found = keep_what_it_found(state, links, here)
     outside = [
         one for one in found
-        if family_of(place_of(one)) != family_of(here) and place_of(one) not in shut
+        if family_of(place_of(one)) != family_of(here)
+        and place_of(one) not in HATENA_OWN_PLACES
+        and place_of(one) not in shut
     ]
     if not outside:
         print(f"「{word}」を探したが、新しい場所は見つからなかった")
