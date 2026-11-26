@@ -982,17 +982,25 @@ article.yomimono .article-head {
   display: flex;
   justify-content: center;
   align-items: flex-start;
+  /* 枠は、上の横線と左の縦線に、きわきわまで寄せる(2026-11-26、彼女が選んだ)。
+     列のあいだの空き(2rem)と、上の空き(1rem)を、4px だけ残して詰める */
+  margin-top: calc(4px - 1rem);
+  margin-left: calc(4px - 2rem);
 }
 
 /* 記事は上から左揃えで積む。中央揃えだと、長い文になった日に
    行の頭が揃わなくなって読めない。幅の上限は、一行が長くなりすぎて
    目が戻る場所を見失わないように */
 .log-view .entry {
-  padding: 0.5rem 0 0;
+  padding: 1rem 1.2rem 1.2rem;
   text-align: left;
   min-width: 0;
   max-width: 26rem;
   margin-right: auto;
+  /* 選んだ日のブログを、コメントと同じ薄い青の枠で囲む(2026-11-26、彼女が選んだ)。
+     枠の幅は右の線の端まで、高さは中身なり */
+  flex: 1;
+  border: 2px solid var(--line-color);
 }
 
 .log-view .entry-title {
