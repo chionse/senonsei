@@ -49,14 +49,62 @@ def check(genre, url):
             f"\taway={len(away)}\t{inner}\t{flag}")
 
 
-jobs = [(g, u) for g, doors in s.GENRE_DOORS.items() for u in doors]
+MORE = {
+    "料理": s.GENRE_DOORS["料理"], "草花と庭": s.GENRE_DOORS["草花と庭"], "季節と暦": s.GENRE_DOORS["季節と暦"],
+    "音楽": ["https://mikiki.tokyo.jp/", "https://ototoy.jp/top/"],
+    "映画と漫画": ["https://kai-you.net/", "https://www.animatetimes.com/"],
+    "装い": ["https://senken.co.jp/", "https://www.vogue.co.jp/"],
+    "手しごとと遊び": ["https://www.origami.gr.jp/"],
+    "天文と宇宙": ["https://www.astroarts.co.jp/"],
+    "地球と海": ["https://www.gsi.go.jp/"],
+    "物理と化学": ["https://www.jps.or.jp/"],
+    "医学とからだ": ["https://kokoro.ncnp.go.jp/", "https://www.ncgm.go.jp/"],
+    "民俗と人の暮らし": ["https://www.nichibun.ac.jp/ja/", "https://www.jasca.org/", "https://www.mingeikan.or.jp/"],
+    "言葉": ["https://www.bunka.go.jp/kokugo_nihongo/"],
+    "歴史と考古": ["https://bunka.nii.ac.jp/"],
+}
+jobs = [(g, u) for g, doors in MORE.items() for u in doors]
 with concurrent.futures.ThreadPoolExecutor(8) as pool:
     for line in pool.map(lambda job: check(*job), jobs):
         print(line, flush=True)
 
+print("---- はてなの検索の形 ----")
+import collections, urllib.request
+from html.parser import HTMLParser
+
+class Anchors(HTMLParser):
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.stack, self.found = [], []
+    def handle_starttag(self, tag, attrs):
+        a = dict(attrs)
+        if tag == "a" and a.get("href"):
+            path = ">".join(c for c in self.stack[-3:] if c)
+            self.found.append((path + "|" + (a.get("class") or ""), a["href"]))
+        if tag not in ("br", "img", "meta", "link", "input", "hr", "source", "wbr"):
+            self.stack.append((a.get("class") or tag).split(" ")[0])
+    def handle_endtag(self, tag):
+        if self.stack and tag not in ("br", "img"):
+            self.stack.pop()
+
+for where in ("https://b.hatena.ne.jp/search/tag?q=%E7%9F%AD%E6%AD%8C", "https://b.hatena.ne.jp/search/text?q=%E9%8A%AD%E6%B9%AF"):
+    req = urllib.request.Request(where, headers={"User-Agent": s.USER_AGENT})
+    html = urllib.request.urlopen(req, timeout=25).read().decode("utf-8", "replace")
+    parser = Anchors(); parser.feed(html)
+    groups = collections.defaultdict(list)
+    for key, href in parser.found:
+        full = urllib.parse.urljoin(where, href)
+        if s.family_of(s.place_of(full)) != s.family_of("b.hatena.ne.jp"):
+            groups[key].append(s.place_of(full))
+    for key, places in sorted(groups.items(), key=lambda kv: -len(kv[1])):
+        print(len(places), key, places[:4], flush=True)
+    entries = [h for k, h in parser.found if "/entry/" in h]
+    print("entry links", len(entries), entries[:5], flush=True)
+    time.sleep(2)
+
 print("---- 分野の言葉で探す ----")
 hatena = s.family_of("b.hatena.ne.jp")
-for n, (genre, words) in enumerate(s.GENRE_WORDS.items()):
+for n, (genre, words) in enumerate(list(s.GENRE_WORDS.items())[:3]):
     word = random.choice(words)
     where = s.WHERE_TO_LOOK[n % 2].format(urllib.parse.quote(word))
     try:
