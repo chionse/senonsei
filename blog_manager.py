@@ -1593,6 +1593,20 @@ def comment_liked_as(one):
     return None
 
 
+def its_reply_liked_as(comment):
+    """千遠生がそのコメントに返した言葉への、いいねの宛先(2026-11-26、彼女に言われた)。
+
+    千遠生の返しは一つのコメントに一つだけなので、コメントの名札から作れる。
+    受け取り口(Cloudflare)が受け取る宛先の形は決まっていて、
+    変えると彼女が受け取り口を貼り直すことになる。そこで今の形
+    (comment-entry-<十から十六桁の数>)のまま、コメントの数(十三桁、千分の一秒の時刻)の
+    うしろに 000 を足す。十六桁の時刻になるのは三万年先なので、本物のコメントとは重ならない。"""
+    key = comment_liked_as(comment)
+    if not key or len(key) - len("comment-entry-") > 13:
+        return None
+    return key + "000"
+
+
 def iine_html(date_str, likes=None):
     """いいね。ブログの日付のほか、ひみつの部屋やコメントの宛先も受け取る。"""
     if likes is None:
@@ -3050,6 +3064,11 @@ def render_comments(comments, numbers=None):
         key = comment_liked_as(c)
         return iine_html(key, likes) if key else ""
 
+    def reply_liked(c, one):
+        # いいねできるのは千遠生の返しだけ(管理人の返しには付けない)
+        key = its_reply_liked_as(c) if one["who"] == ITS_NAME_IN_REPLIES else None
+        return iine_html(key, likes) if key else ""
+
     def replied(c):
         replies = replies_to(c, her_replies, its_replies)
         if not replies:
@@ -3059,7 +3078,7 @@ def render_comments(comments, numbers=None):
             + "".join(
                 f"""
       <div class="comment-reply">
-        <div class="comment-name">名前：<span class="comment-who">{escape_html(one['who'])}</span><span class="comment-date">投稿日：{format_comment_date(one['date'])}</span></div>
+        <div class="comment-name">名前：<span class="comment-who">{escape_html(one['who'])}</span><span class="comment-date">投稿日：{format_comment_date(one['date'])}</span>{reply_liked(c, one)}</div>
         <div class="comment-message">{escape_html(one['said'])}</div>
       </div>"""
                 for one in replies
