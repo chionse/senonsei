@@ -2090,12 +2090,12 @@ LOGO_COLORS = ("#d68ec1", "#b38ed6", "#8e9ed6", "#8ed6cb", "#acd68e", "#d2d68e")
 
 
 def color_of_the_day(date_str):
-    """その日の枠の色。一日ごとに虹の並びを一つずつ進む。同じ日はいつも同じ色。"""
-    try:
-        day = datetime.date.fromisoformat(date_str).toordinal()
-    except ValueError:
-        return LOGO_COLORS[2]
-    return LOGO_COLORS[day % len(LOGO_COLORS)]
+    """その日の枠の色。日ごとに、でたらめに一色。同じ日はいつ開いても同じ色。
+
+    前は虹の並びのまま一日ずつ進んでいたが、もっとでたらめでいいと言われた
+    (2026-11-26、彼女)。同じ色が何日か続くこともある"""
+    digest = hashlib.sha256(f"waku {date_str}".encode()).digest()
+    return LOGO_COLORS[int.from_bytes(digest[:8], "big") % len(LOGO_COLORS)]
 
 
 def generate_kakodogu_html(articles):
