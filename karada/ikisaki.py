@@ -33,7 +33,10 @@ def entrances(state):
     行けた場所を覚えている。何年もかけて自分で見つけた場所のほうが、
     こちらが最初に並べた14個より長生きするかもしれない。
     分野ごとの入口も、ここに入っている。"""
-    remembered = [url for url in (state.get("visited") or []) if is_walkable(url)]
+    remembered = [
+        url for url in (state.get("visited") or [])
+        if is_walkable(url) and how_seldom(place_of(url)) == 1
+    ]
     random.shuffle(remembered)
     doors = [door for doors in GENRE_DOORS.values() for door in doors]
     return list(dict.fromkeys(list(SEEDS) + doors + remembered[:200]))
@@ -54,6 +57,11 @@ def family_of(place):
         if owner in members:
             return family
     return owner
+
+
+def how_seldom(place):
+    """その場所への惹かれ方を、どれだけに弱めるか。ほとんど行かない場所でなければ 1。"""
+    return HARDLY_EVER.get(family_of(place), 1)
 
 
 def families_walked_lately(state):
@@ -447,6 +455,7 @@ def look_in_a_genre(state, genre, shut):
         one for one in found
         if family_of(place_of(one)) != family_of(here)
         and place_of(one) not in HATENA_OWN_PLACES
+        and how_seldom(place_of(one)) == 1
         and place_of(one) not in shut
     ]
     if not outside:
@@ -648,9 +657,11 @@ def choose_destination(state):
     # 選ぶのはこの子。持っているものから決める。
     # 借りた頭に選ばせていたので、行き先だけは他人が決めていた
     close = evened_out(words_it_holds_close(state))
-    # 最近歩いた仲間の場所には、しばらく惹かれにくい
+    # 最近歩いた仲間の場所には、しばらく惹かれにくい。ほとんど行かない場所には、もっと
     weights = [
-        what_draws_it(state, url, close) * (AWAY_FROM_RECENT if family_of(place_of(url)) in lately else 1)
+        what_draws_it(state, url, close)
+        * (AWAY_FROM_RECENT if family_of(place_of(url)) in lately else 1)
+        * how_seldom(place_of(url))
         for url in candidates
     ]
     chosen = random.choices(candidates, weights=weights)[0]
