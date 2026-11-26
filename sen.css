@@ -997,10 +997,11 @@ article.yomimono .article-head {
   min-width: 0;
   max-width: 26rem;
   margin-right: auto;
-  /* 選んだ日のブログを、コメントと同じ薄い青の枠で囲む(2026-11-26、彼女が選んだ)。
-     枠の幅は右の線の端まで、高さは中身なり */
+  /* 選んだ日のブログを枠で囲む(2026-11-26、彼女が選んだ)。
+     枠の幅は右の線の端まで、高さは中身なり。
+     色はタイトルロゴの色から、日ごとに一色(--waku。blog_manager.py の color_of_the_day) */
   flex: 1;
-  border: 2px solid var(--line-color);
+  border: 2px solid var(--waku, var(--line-color));
 }
 
 .log-view .entry-title {
