@@ -2081,9 +2081,12 @@ def blog_start_date(articles):
     return datetime.date.fromisoformat(earliest)
 
 
-# タイトルロゴの色(images/logo.png から拾った)。ロゴの虹の、外から内への並び。
-# 過去のブログで選んだ日の枠を、日ごとにこの中の一色にする(2026-11-26、彼女が決めた)
-LOGO_COLORS = ("#ff00b6", "#8300ff", "#0a00ff", "#00ffd7", "#69ff00", "#f0ff00")
+# タイトルロゴの色。ロゴの虹の、外から内への並び。
+# 過去のブログで選んだ日の枠を、日ごとにこの中の一色にする(2026-11-26、彼女が決めた)。
+# ロゴそのままの色(#ff00b6 #8300ff #0a00ff #00ffd7 #69ff00 #f0ff00)は濃すぎたので、
+# 色あいはそのままに、今までの枠の青(sen.css の --line-color、#8e9ed6)と同じ薄さにしてある。
+# 青は、今までの枠の青そのもの
+LOGO_COLORS = ("#d68ec1", "#b38ed6", "#8e9ed6", "#8ed6cb", "#acd68e", "#d2d68e")
 
 
 def color_of_the_day(date_str):
