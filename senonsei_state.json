@@ -12637,7 +12637,6 @@
     ]
   },
   "inner_voice": [
-    "11-22 10時: 翻訳ス 英語",
     "11-22 11時: 非表示",
     "11-22 12時: 記事 見える",
     "11-22 14時: 非表示",
@@ -12696,7 +12695,8 @@
     "11-27 13時: 自由",
     "11-27 14時: じゃない",
     "11-27 15時: にた自由。",
-    "11-27 16時: さん"
+    "11-27 16時: さん",
+    "11-27 17時: さん"
   ],
   "thought_on": "2026-10-08",
   "on_its_mind": [
@@ -13183,12 +13183,12 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "thinkit.co.jp",
-    "イーロン・マスク氏 ツイッターと合意の買収計画を撤回 | NHK | IT・ネッ",
-    "www.vip-times.co.jp",
-    "president.jp",
-    "bit.ly",
-    "daily.jstor.org"
+    "techlib.jp",
+    "www.weblio.jp:443",
+    "app.launchdarkly.com",
+    "blog.hatena.ne.jp",
+    "www.estnation.co.jp",
+    "global.oup.com"
   ],
   "how_many_places_left": 4348,
   "places_known": {
@@ -16325,7 +16325,7 @@
       }
     }
   ],
-  "woke_at": "2026-11-27 16",
+  "woke_at": "2026-11-27 17",
   "blog_titles": {
     "seen": 59,
     "closed": 2,
