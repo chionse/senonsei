@@ -12586,7 +12586,8 @@
     "http://web.archive.org/web/20120415010318*/http://www.bonnesnouvelles.net/",
     "https://audee.jp/news/show/69516",
     "http://www.sekab.com/default.asp?id=1901&refid=1982",
-    "http://web.archive.org/web/20110716035019*/http://www.sekab.com/default.asp?id=1901&refid=1982"
+    "http://web.archive.org/web/20110716035019*/http://www.sekab.com/default.asp?id=1901&refid=1982",
+    "https://www.aozora.gr.jp/cards/000118/files/613_36802.html"
   ],
   "notes": [
     "48日目: VERY［ヴェリィ］ 公式サイト | 光文社 | 結婚、出産、育児、復職etc.子育て世代の女性のためのファッション＆ライフスタイル誌、Wikipedia、Вікікнігі",
@@ -12618,19 +12619,21 @@
     "74日目: UNI - home(むかしのすがた)、https://web.archive.org/web/19981212031407/http://www.nifty.com/、コトバンク [ 辞書・百科事典・各種データベースを一度に検索 ]",
     "75日目: 行動履歴情報の取り扱いに関する原則 - 株式会社マイクロアド、Wikipedia、もんごるレポート2007　モンゴルの精進食について | 板橋区、IGRいわて銀河鉄道 - Wikipedia、日本、アメリカ、ドイツ、イギリス、韓国…世界の自動車税事情(むかしのすがた)",
     "76日目: home:prog:ap2    [Státnice na FI MUNI]、小説家になろう - みんなのための小説投稿サイト、原作工房 TMSLab（トムスラボ） | アニメーションの総合プロデュース会社 トムス・エンタテインメント",
-    "77日目: Bonnes Nouvelles : Nouvelles littéraires et concours de nouvelles、30日後に閉まるとしまえん|【7日目】放送後記【あと24日】\t|AuDee（オーディー）(むかしのすがた)、FAQ about Ethanol(むかしのすがた)"
+    "77日目: Bonnes Nouvelles : Nouvelles littéraires et concours de nouvelles、30日後に閉まるとしまえん|【7日目】放送後記【あと24日】\t|AuDee（オーディー）(むかしのすがた)、FAQ about Ethanol(むかしのすがた)、長塚節 長塚節歌集　上"
   ],
   "today_walk": {
     "date": "2026-11-27",
     "seen": [
       "Bonnes Nouvelles : Nouvelles littéraires et concours de nouvelles",
       "30日後に閉まるとしまえん|【7日目】放送後記【あと24日】\t|AuDee（オーディー）(むかしのすがた)",
-      "FAQ about Ethanol(むかしのすがた)"
+      "FAQ about Ethanol(むかしのすがた)",
+      "長塚節 長塚節歌集　上"
     ],
     "brought": [
       0,
       124,
-      124
+      124,
+      3
     ]
   },
   "inner_voice": [
@@ -13180,12 +13183,12 @@
     "2026-10-07 style.nikkei.com: 酒飲みがダイエット成功のために常備したいつまみ5選について紹介しているページです。"
   ],
   "where_it_will_go": [
-    "www.city.ozu.ehime.jp",
-    "marketplace.visualstudio.com",
-    "feministpress.org",
-    "イーロン・マスク氏 ツイッターと合意の買収計画を撤回 | NHK | IT・ネッ",
-    "www.autech.co.jp",
-    "wikimediaendowment.org"
+    "www.theatlantic.com",
+    "hellofive.jp",
+    "en.wikisource.org",
+    "Yahoo!ジオシティーズ: \n    ゲーム",
+    "カスタマーサポートツール15社を徹底比較　おすすめツールの料金・機能・特徴",
+    "フライドバイ乗っ取り未遂で露呈した航空保安対策の溝、「内部の脅威」は想定せず(1"
   ],
   "how_many_places_left": 4348,
   "places_known": {
@@ -13372,7 +13375,6 @@
   "met_today": {
     "date": "2026-11-27",
     "words": [
-      "センター",
       "すが",
       "スタート",
       "となり",
@@ -13771,7 +13773,8 @@
       "34",
       "36",
       "37",
-      "46"
+      "46",
+      "より"
     ]
   },
   "wants_to_say": [
@@ -15623,37 +15626,14 @@
       "day": "2026-11-27"
     }
   ],
-  "understood_usually": 0.524667,
+  "understood_usually": 0.486486,
   "its_ways": {
     "pages_per_site": 9.3,
-    "pull_of_japanese": 1.76,
+    "pull_of_japanese": 1.75,
     "feeling_keen": 0.35,
     "wish_to_return": 2.0
   },
   "came_back": [
-    {
-      "place": "chionse.github.io",
-      "before": {
-        "day": 62,
-        "entrance": "https://chionse.github.io/senonsei/",
-        "knew": 510,
-        "of": 702,
-        "pages": 5,
-        "title": "千遠生のサイト",
-        "unread": 0,
-        "vocabulary": 902
-      },
-      "now": {
-        "entrance": "https://chionse.github.io/senonsei/",
-        "title": "千遠生のサイト",
-        "day": 64,
-        "vocabulary": 907,
-        "knew": 498,
-        "of": 673,
-        "pages": 5,
-        "unread": 0
-      }
-    },
     {
       "place": "ja.wikipedia.org",
       "before": {
@@ -16320,9 +16300,32 @@
         "pages": 2,
         "unread": 0
       }
+    },
+    {
+      "place": "www.aozora.gr.jp",
+      "before": {
+        "day": 72,
+        "entrance": "https://www.aozora.gr.jp/cards/000118/files/613_36802.html",
+        "knew": 100,
+        "of": 1498,
+        "pages": 1,
+        "title": "長塚節 長塚節歌集　上",
+        "unread": 0,
+        "vocabulary": 944
+      },
+      "now": {
+        "entrance": "https://www.aozora.gr.jp/cards/000118/files/613_36802.html",
+        "title": "長塚節 長塚節歌集　上",
+        "day": 77,
+        "vocabulary": 1017,
+        "knew": 1,
+        "of": 7,
+        "pages": 1,
+        "unread": 0
+      }
     }
   ],
-  "woke_at": "2026-11-27 11",
+  "woke_at": "2026-11-27 12",
   "blog_titles": {
     "seen": 59,
     "closed": 2,
@@ -17194,21 +17197,17 @@
     "1972 → 1972年",
     "2008 → 2008年"
   ],
-  "shiori": {
-    "https://www.aozora.gr.jp/cards/000118/files/613_36802.html": {
-      "title": "長塚節 長塚節歌集　上",
-      "at": 32021,
-      "of": 32044,
-      "since": "2026-11-16",
-      "times": 4,
-      "want": 0.522
-    }
-  },
+  "shiori": {},
   "books_read": [
     {
       "title": "青空文庫編 青空文庫の提案",
       "url": "https://www.aozora.gr.jp/cards/001790/files/56572_51810.html",
       "on": "2026-11-07"
+    },
+    {
+      "title": "長塚節 長塚節歌集　上",
+      "url": "https://www.aozora.gr.jp/cards/000118/files/613_36802.html",
+      "on": "2026-11-27"
     }
   ],
   "closed_places": {
